@@ -1,0 +1,22 @@
+This directory contains the functions to extract paper header/reference fields.
+
+File List:
+
+CRFModel_reference: CRF trained model for references
+CRFModel_header: CRF trained model for headers
+
+Sample Usage in TestUI.java
+1: create an IEInterface instance, and load in the model 
+   IEInterface ieInterface = new IEInterface(new File(modelFileName));
+   ieInterface.loadCRF();
+
+2: After the model has been read in, it can be used to tag new samples
+ 2.1: tag new samples in a test file, each sample is separated by a pre-defined separator. 
+   ieInterface.viterbiCRF(new File(testFile), true, "<NEWREFERENCE>");
+
+ 2.2: tag a given string directly
+    String str = "G. E. Hinton, T. J. Sejnowski, and D. H. Ackley. Boltzmann machines: Constraint satisfaction networks that learn. Technical Report CMU-CS-84-119, Carnegie-Mellon University, Pittsburg, PA, May 1984.";
+   String retStr = ieInterface.viterbiCRFString(str, true);
+
+
+Let me know if you have any problems in using the methods (fuchun@cs.umass.edu).

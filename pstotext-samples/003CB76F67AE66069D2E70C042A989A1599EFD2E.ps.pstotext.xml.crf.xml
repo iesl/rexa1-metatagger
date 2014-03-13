@@ -1,0 +1,1393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <content>
+    <headers headerID="p1x118.0y720.0">
+      <title>Transition of Ground State of Boson-Fermion Model and Renormalizable Field Theory</title>
+      <authors>
+        <author>
+          <author-first>Masao</author-first>
+          <author-last>Hirokawa</author-last>
+        </author>
+      </authors>
+      <institution>Department of Mathematics, Faculty of Science, Okayama University,</institution>
+      <address>Okayama 700-8530, Japan</address>
+      <email>e-mail: hirokawa@math.okayama-u.ac.jp</email>
+    </headers>
+    <body>1 Introduction 
+Recently, mathematical techniques for non-perturbative way to analyze models in quantum 
+electrodynamics (QED) are developing gradually. In the development, we face some cases so that we cannot analyze 
+the ground state energy of models in QED by the regular perturbation theory [LL, Hi, HS]. Especially, 
+Lieb and Loss showed in [LL, Theorem 1.1] the curious results on the upper and lower estimates of the 
+ground state energy of so-called Pauli-Fierz model describing electrons interacting with the radiation field. 
+Their result means that the renormalized mass of the model cannot be calculated by the perturbation 
+theory not only in the case of large coupling length but also small one. They showed that the order in 
+the coupling length is less than the order of the square derived by the regular perturbation theory. Its 
+physical reason has not clarified yet to author's best knowledge. Moreover, Griesemer, Lieb, and Loss 
+showed in [GLL] that the Pauli-Fierz model has a ground state for all values of the coupling length. Thus, 
+their results mean that the Pauli-Fierz model has a non-perturbative ground state for the all coupling 
+length. Considering the history of physics, we should have succeeded in the mass renormalization for 
+non-relativistic treatment by Pauli and Fierz. What on physics may have happened to the Pauli-Fierz 
+model? We are much interested in the physical reason for the existence of such a ground state refusing 
+the perturbation theory, and also we are interested in the influence on the renormalizable field theory. 
+On the other hand, for the Weisskopf-Wigner (WW) model (i.e., the Dicke model in the rotating 
+wave approximation), we know that a non-perturbative ground state appears in the case with the large 
+coupling length [Hi], and the ground state energy is so low that the regular perturbation theory cannot 
+give it. Here WW model describes a two level system coupled with a Bose field, and it was actively 
+argued as a simple version of the Lee model [Le], the Dicke model for superradiance [Di], a simple model 
+of spin-photon model of quantum optics and NMR, and the model describing the elementary process of 
+the decay from neutron to proton and 
+#- -meson. And also it is to argue the spontaneous emission in 
+the Weisskopf-Wigner theory [WW]. For the emission and absorption of photons between the two-level 
+system, we face the difficulty of the resonance scattering in the regular perturbation theory. So, the 
+Weisskopf-Wigner theory is for the higher order revision for the regular perturbation theory, and WW 
+model has the effect of this revision. Then, the ground state energy with the order in the coupling length 
+is less than the order of square coming from the regular perturbation theory. For WW model this order 
+less than the order of square is available even for the sufficiently small coupling length i.e., in the region 
+of the perturbation theory. But in [Hi, Lemma 2.2] we knew that growing the coupling length restore the 
+same order as the regular perturbation theory. 
+As mentioned above the WW model is a simplification of the Lee model, and moreover the Lee 
+model can be decomposed into a direct sum of the Hamiltonian H 1 equivalent to WW model and a free 
+Hamiltonian H 2 (see (2.4) below), so we can expect that Lee model has the similar non-perturbative 
+ground state in the case with the large coupling length. Moreover, it is well known that, for the Lee 
+model, renormalizations with perturbative way and non-perturbative way imply the same result. Thus, 
+in this paper, we reconsider the Lee model in the light of the renormalizable field theory in the early 
+stage and quantum optics for the case including the large coupling length. More precisely, we return 
+to the early stage of the renormalizable field theory developed by Lee, Klln, and Pauli, and we show 
+the limit of the successful result of renormalizations with perturbative and non-perturbative ways. We 
+show also the existence of a non-perturbative ground state when we are beyond perturbation theory. As 
+for the ground state energy of the Lee model, as well as WW model, the ground state energy for the 
+small coupling length has the order less than that of square because of the higher order revision for the 
+regular perturbation theory following the Weisskopf-Wigner theory. But the non-perturbative ground 
+1 
+state energy recovers the order of the square, which is the same order as that by regular perturbation 
+theory, in the coupling length when the Lee model is outside the region of the regular perturbation theory. 
+We investigate the behavior of the ground state energy with the Jaynes-Cummings model [Mi, 6.4] in 
+quantum optics. 
+As to such a low energy of the non-perturbative ground state beyond the regular perturbation theory, 
+a similar non-perturbative ground state is shown in physics by Preparata [Pr90, Pr95] and Enz [En]. 
+It is called superradiant ground state from the point of view of superradiance of soft photons. The 
+superradiance was, of course, found by Dicke in [Di]. Its existence is proved with the path-integral 
+method by Preparata, and with another manner by Enz. But it has not yet been clarified whether 
+the ground state showed in [Hi] is superradiant or not. By the way, in [Hi] we had adhered to the 
+coupling length. But, following the recent result [Bi01] by Billionnet, we should consider the condition of 
+physical parameter B g,which represents a relation of the coupling length and an infrared or ultraviolet 
+singularity condition. We apply the same method as [Hi] to a special Lee Model and prove there also 
+exists the similar non-perturbative ground state being still in the standard state space. Thus, we show 
+that the non-perturbative ground state is stable, and moreover the ground state energy is also lower than 
+the normal renormalized mass showed in [Le] by Lee. 
+In Lee's renormalization argument, there is the possibility that such a ground state becomes a ghost. 
+Actually, Lee noted briefly in [Le, footnote 4] the existence of another state from the state with the 
+normal renormalized mass. And moreover, in the process of developing the renormalizable field theory, 
+Kalln and Pauli investigated precisely in [KP] the existence of another state than the normal state, 
+and they showed concrete form of the state and it has lower energy than the normal renormalized mass. 
+But we cannot understand their extra ground state in the standard Hilbert space theory because it has 
+negative `norm' coming from complex renormalization constant. We are interested in the relation among 
+the states which we show in this paper, Preparata found, and Lee, Klln and Pauli found. 
+For a while, let us review Lee's renormalization argument [Le], Klln and Pauli's [KP] renormalization 
+argument, and the Weisskopf-Wigner model [Hi]. 
+1.1 Lee's Renormalization Argument 
+The Lee model describes the interacting system between two neutral fermion fields V and N and a 
+neutral scalar boson field #. In this paper, we use the natural units, ~ = c = 1. Let   V ,   + V 
+and 
+  N ,   + N 
+be annihilation and creation operators of V -particle and N-particle, respectively, and let # # , # + # 
+be annihilation and creation operators of #-particle, respectively. Then, the Hamiltonian of the Lee model 
+is given by 
+H := H 0 + gH I , (1.1) 
+H 0 := m V 
+Z R d 
+d d p   + V 
+(p)   V 
+(p) + m N 
+Z R d 
+d d p   + N 
+(p)   N 
+(p) 
++ Z R d 
+d d k !(k)# + # 
+(k)# # 
+(k) (1.2) 
+H I := Z R d 
+R d 
+d d pd d k 
+# (! (k)) 
+p 2! (k)   + V 
+(p)   N 
+(p - k) # # 
+(k) 
++  V 
+(p)   + N 
+(p - k) # + # 
+(k) # , (1.3) 
+where !(k) gives the dispersion relation defined by !(k) := p k 2 + 2 (# 0), and m V } 0, m N } 0, and 
+# 0 are bare masses of V -particle, N-particle, and #-particle, respectively. And g is the bare coupling 
+constant, # is introduced as a cutoff function of energy. We note that the following: although V -particle 
+and N-particle have momenta, they do not have kinetic energies. Thus, we here understand that the 
+masses m V 
+and m N 
+are so heavy that we can ignore the kinetic energies. 
+The interaction Hamiltonian H I represents the reaction 
+V # N + #. (1.4) 
+Namely, a V -particle emits a #-particle, and changes into an N-particle. On the other side, an N-particle 
+absorbs a #-particle, and changes into a V -particle. Moreover, m V 
+has a renormalization because of the 
+process of V ! N + # ! V , and the process of N + # ! V ! N + # means the scattering of #-particle 
+2 
+by N-particle. Thus, the physical system described by H possesses two conservation laws: 
+N V 
++ N N 
+= constant, (1.5) 
+N V 
++ N # 
+= constant, (1.6) 
+where N V 
+, N N 
+, and N # 
+are the total number of V -particles, N-particles, and #-particles, respectively. 
+Because of these conservation laws (1.5) and (1.6), the eigenstate of H contains only a finite number of 
+particles. So, the eigenstate can be solved directly, and Lee performed that in [Le]. 
+Let |V (p)i and |N (p)i be the state of the bare V -particle and N-particle, respectively. We denote the 
+state of the corresponding physical particles by |V(p)i and |N(p)i. Then, by (1.4), (1.5), and (1.6), we 
+have 
+|N(p)i = |N (p)i, (1.7) 
+|V(p)i := Z 1/2 
+V 
+# |V (p)i + g Z R d 
+d d k f (k) # + # 
+(k)|N (p - k)i # , (1.8) 
+where Z 1/2 
+V 
+is a normalization constant, and the function, f(k), is determined latter for an ultraviolet 
+cutoff. 
+We now follow the theory of renormalization by the power series method [Dy, Sa, Wa] in the 
+perturbative way. We denote the renormalized mass of V -particle, renormalized constant of wave function, and 
+renormalized coupling constant by m c , Z 2 , and g c . Then, as Lee proved in [Le], the self-energy is given 
+by 
+#(p 0 ) = g 2 Z R d 
+d d k |# (! (k)) | 2 
+2! (k) 
+1 
+(p 
+0- m N - ! (k)) , (1.9) 
+where p 0 
+is- i times the fourth component p 4 of the momentum vector p, i.e., p 0 = - ip 4 . So, the 
+renormalized constant Z 2 is given by Z - 1 
+2 # Z - 1 
+2 (m c ) = d#(p 0 )/dp 0 at p 0 = m c on the mass shell 
+p 2 +m 2 
+c = 0. Namely, 
+Z - 1 
+2 # Z - 1 
+2 (m c ) = 1 + g 2 Z R d 
+d d k |# (! (k)) | 2 
+2! (k) 
+1 
+(m c - m N - ! (k)) 2 . (1.10) 
+Following the way by [Sa], we put 
+g 2 
+c := Z 2 g 2 . (1.11) 
+Then, by (1.10) we have 
+g 2 = g 2 
+c 
+( 1 - g 2 
+c Z R d 
+d d k |# (! (k)) | 2 
+2! (k) 
+1 
+(m c - m N - ! (k)) 2 
+) - 1 
+, (1.12) 
+Z 2 = 1 - g 2 
+c Z R d 
+d d k |# (! (k)) | 2 
+2! (k) 
+1 
+(m c - m N - ! (k)) 2 
+(1.13) 
+as shown in [Le, (26), (27)]. Thus, g and Z 2 are dependent of m c , g c , and #, i.e., g = g(m c , g c , #), 
+Z 2 = Z 2 (m c , g c , #). Then, following the primal policy of renormalization, we insert observed values into 
+m c and g c respectively, and Z 2 has to be finite as # ! 1 for the fixed m c and g c . Then, when we regard 
+m c and g c as independent variables, we can define a function, Z ren 
+2 (m c , g c , #), from Z 2 , i.e., 
+Z ren 
+2 (m c , g c , #) is defined by (1.13) for independent variables, m c , g c 2 R (1.14) 
+Since the physical meaning of Z ren 
+2 is the probability of existence of a state, we have to avoid a ghost 
+(Z ren 
+2 &lt; 0). Thus, we cannot take such a limit freely, and we have to keep (m c , g c , #) really so that Z ren 
+2 
+can be between 0 and 1 (see the conclusion of [KP]). This is one of Lee's statements in [Le, KP] as to 
+the non-unitary-equivalence between the bare particle states and physical particle states. Set 
+g crit := ( Z R d 
+d d k |# (! (k)) | 2 
+2! (k) 
+1 
+(m c - m N - ! (k)) 2 
+) - 1/2 
+. (1.15) 
+3 
+Then, 
+Z ren 
+2 = 
+1- g 2 
+c 
+g 2 
+crit 
+. (1.16) 
+And the renormalized coupling constant, g c , has to satisfy |g c | # g crit to Z ren 
+2 lies between zero and one. 
+On the other hand, we have 
+g c = g ( 1 + g 2 Z R d 
+d d k |# (! (k)) | 2 
+2! (k) 
+1 
+(m c - m N - ! (k)) 2 
+)- 1 
+. (1.17) 
+So, when we regard g and m c as independent variables, we can define a function, g ren 
+c , from g c , i.e., 
+g ren 
+c (m c , g, #) is defined by (1.17) for independent variables m c , g 2 R. (1.18) 
+So, it is important to check the normal zone, Gmc ,# , which is given by the range of the function, g c (g) = 
+g c (m c , g, #), of g 2 R for fixed m c and # arbitrarily, i.e., Gmc ,# := {g c (m c , g, #) | - 1 &lt; g &lt; 1}. Because, 
+if the observed coupling constant, g obs , is more than g " (g, #) := sup g g c (m c , g, #) (i.e., g obs } g " (g, #)), 
+we cannot take g c as g c = g obs . For the fixed m c , by (1.17) 
+|g c | # ( 4 Z R d 
+d d k |# (! (k)) | 2 
+2! (k) 
+1 
+(m c - m N - ! (k)) 2 
+) - 1/2 
+, (1.19) 
+g c ! 0 as |g| !1. (1.20) 
+Thus, |g c | &lt; g crit now. 
+On the other hand, for the Lee model we can determine m c independently of the perturbative way. 
+As we did in [AH00, 6.2] and [Hi, (2.11)] we introduce a function, D(z; #), of z by 
+D(z; #) 
+:=- z +m V - # 2 Z R d 
+d d k |# (! (k)) | 2 
+2! (k) 
+1 
+!(k) + m N - z 
+(1.21) 
+defined for all z 2 C and every # 2 R such that |# (! (k)) | 2 /! (k) |z - m N - !(k)| is Lebesgue integrable 
+on R d . In the same way as [AH00, 6.2], D(z; #) is defined in the cut plane Cm N 
+,:= C \ [ m N 
++ , 1) , 
+# 0, and analytic there. It is easy to see that D(x; #) is monotone decreasing in x &lt; m N 
++ . Hence, 
+the limit d(#) := lim x"m N 
++D(x; #) exists, and 
+d(#) = - - m N 
++ m V - # 2 lim 
+t#0 
+Z R d 
+d d k |# (! (k)) | 2 
+2! (k) 
+1 
+!(k) - m N - + t 
+. (1.22) 
+In the case of d(g) &lt; 0, D(z; g) = 0 has a solution, z = m Vc 
+. Thus, by this solution, m Vc 
+, and (1.8), 
+we know that 
+|V(p)i = Z 1/2 
+Vc 
+( |V (p)i + g Z R d 
+d d k 
+# (! (k)) 
+p 2! (k) 
+1 
+m Vc - m N - ! (k) # + (k)|N (p - k)i ) (1.23) 
+is an eigenstate of H with H |V(p)i = m Vc |V(p)i, where we took Z V 
+as Z V 
+= Z Vc # Z 2 (m Vc 
+). Therefore, 
+a candidate for m c is m Vc 
+, i.e., m c = m Vc 
+. Moreover, 
+m Vc &lt; m N 
++ (1.24) 
+for every |g| satisfying D(0; g) &lt; 0. 
+By the way, using the fact that scattering state satisfies the Lippmann-Schwinger equation, it is known 
+that the scattering amplitude is given by 
+g 2 
+Vc 
+# (! (k)) 
+p 2! (k) 
+# (! (k 0 )) 
+p 2! (k 0 ) #(p + k - p 0 - k 0 ) 1 
+m N 
++ ! (k) - m Vc 
+( 1 - g 2 
+Vc 
+Z R d 
+d d k 0 |# (! (k 0 )) | 2 
+2! (k 0 ) 
+m N 
++ ! (k) - m Vc 
+(! (k) - ! (k 0 ) + i#) m Vc - m N - ! (k 0 ) # 2 
+) - 1 
+(1.25) 
+4 
+(e.g., see [Ta, (53)]), where p and k denote the momenta of scattering state of N-particle and #-particle 
+respectively, p 0 and k 0 are those of N-particle and #-particle coming into a detector respectively, and 
+moreover g 2 
+Vc 
+:= Z Vc g 2 , i# (# } 0) comes from the adiabatic factor in the Lippmann-Schwinger equation, 
+and i# means the outgoing plane wave. Thus, since differential cross-section is given by the square of the 
+absolute value of the scattering amplitude, (1.24) means that 
+V -particle is stable for every g with D(0; g) &lt; 0, i.e., (1.26) 
+V -particles do not decay into N-particles and #-particles spontaneously beyond (1.24) because (1.5) holds 
+and the resonance scattering hardly occurs since ! (k 0 ) # } m Vc - m N 
+, which comes from all higher 
+order revisions 
+N + # ! V ! N + # ! V ! N + # ! 
+for the regular perturbation theory following the Weisskopf-Wigner theory. On the other hand, even if 
+m N &lt; m V 
+first, we have (1.24) as long as the coupling constant g satisfies D(0; g) &lt; 0. Thus, in the 
+process from m N &lt; m V 
+to (1.24), 
+N-particle is unstable for every g satisfying D(0; g) &lt; 0, i.e., (1.27) 
+N-particles decay into V -particles by absorbing #-particles. 
+1.2 Klln and Pauli's Renormalization Argument 
+In this subsection, we review Klln and Pauli's renormalization argument in [KP] in terms of our 
+situation. 
+We set 
+m V 
+= m N 
+= m } 0, (1.28) 
+#m := m Vc - m. (1.29) 
+Then, by (1.11), (1.13), and (1.22) we know that z = m Vc 
+is a solution of 
+D(z; g) = - z +m - #m - 
+g 2 
+c 
+2Z 2 
+Z R d 
+d d k |# (! (k)) | 2 
+! (k) 
+1 
+! (k) - z - m Vc 
++ #m # = 0. 
+(1.30) 
+Kalln and Pauli derived 
+h(z - m Vc 
+) 
+:= z - m Vc # " 1 + g 2 
+c 
+2 Z R d 
+d d k |# (! (k)) | 2 
+! (k) 
+z - m Vc 
+(! (k) - #m) 2 ! (k) - #m - z - m Vc fiff # 
+= 0. (1.31) 
+from (1.30) by using (1.29) and (1.16) in [KP]. Of course, z = m Vc 
+is a solution of (1.31), but Klln and 
+Pauli found that there exists another solution z = #KP , living on the real axis with #KP &lt; m Vc 
+[KP, II 
+and Appendix I]. And, they gave the concrete form of the state with energy #KP as 
+|VKP (p)i = 1 
+p |h 0 (#KP )| 
+( Z ren 1/2 
+Vc |V (p)i + g c Z R d 
+d d k 
+# (! (k)) 
+p 2! (k) 
+
+1 
+! (k) - #KP - #m 
+# + (k)|N (p - k)i # , 
+where |VKP (p)i has not yet been normalized. Then, the normalization becomes negative because Z ren 
+Vc 
+makes a ghost (i.e., Z ren 2 
+Vc 
+&lt; 0) for so large coupling as to exist the solution. Here we regarded Z Vc 
+as the 
+function Z ren 
+Vc 
+of independent variables m Vc 
+, g c running over R respectively, and # in the sense of (1.14). 
+So, such a mathematically strange situation occurs. In order to cope with this trouble, they introduced 
+an indefinite metric in the Hilbert space [KP, III]. 
+5 
+1.3 Wigner-Weisskopf Model 
+In this subsection, we review and modify the results on the Weisskopf-Wigner model in [Hi] to apply 
+them to physics of #-meson. 
+Nuclear force is the first example with the strong interaction between elementary particles. The 
+coupling length of the interaction between baryon and meson is in the region from 0.1 to 10, and it 
+is very large as compared with 1/137, that of quantum electrodynamics. As is well known, nuclear 
+force connects nucleus and nucleon. Nucleon is a generic name of proton (p) and neutron (n), and is 
+constructed by u-quark and d-quark. The particle taking a job of nuclear force is #-meson. Physics 
+for #-meson was investigated actively in 1940s and 1950s (see [HT]). On the other hand, as mentioned 
+in introduction, mathematics for the non-perturbative treatment of models with large coupling length 
+which physicists once argued such as #-meson is recently and gradually established. In this subsection, 
+by applying mathematical techniques developed recently to the theory of #-meson, we argue rigorously 
+existence and nonexistence of state in the elementary process of n # p + 
+#- for each total charge Q and 
+all coupling length g. Here `state' means that eigenvector of the Hamiltonian for our model is still alive 
+in the Hilbert space representing the statespace. 
+The model with the interaction between #-meson and nucleon considering all elementary processes, 
+p # p + # 0 , p # n + # + , and n # p + # - , is described by the following Hamiltonian (see [HT]): 
+H = H 0 + H 0 , (1.32) 
+H 0 = X 
+`,m,# 
+Z 1 
+0 
+d 3 k !(k)a + #m 
+` (k)a #m 
+` (k), (1.33) 
+H 0 = f 
+X m# 
+Z 1 
+0 
+d 3 k k 2 
+(12# 2 !(k)) 1/2 #(k)# ##m n a #m 
+1 (k) + a + #m 
+` (k) o , (1.34) 
+where # # and #m are the standard #-matrices and Pauli's #-matrices. 
+We now assume !(k) = p k 2 +m 2 , where m is the mass of #-meson. We set 
+H#m = Z 1 
+0 
+d 3 k !(k)a + #m 
+` 
+(k)a #m 
+` (k) + f 
+
+Z 1 
+0 
+d 3 k k 2 
+(12# 2 !(k)) 1/2 #(k)# ##m n a #m 
+1 (k) + a + #m 
+` 
+(k) o . 
+Then, regarding H # F # , A and B j in [AH97, (1.6)] as C 2 
+# C 2 
+# F # , 0 and # ##m , respectively, where 
+F # is the boson Fock space representing the state space for #-meson, we know that H#m is an example 
+of the generalized spin-boson model we called in [AH97]. By [AH97, Theorem 1.2 and Remark 1.2], H#m 
+has a ground state, which implied that if #(k) is continuous, and R R 3 d 3 k k 4 #(k) 2 &lt; 1, then there is a 
+ground state for H . 
+Unfortunately, the only thing we can say for H now is the above assertion with the estimates of the 
+ground state energy in [AH97, Proposition 1.4], and we do not have physical properties for H . In order 
+to argue physical properties for #-meson more precisely in this paper, we treat the elementary process 
+n # p + # - without p # p + # 0 and p # n + # + from now on. 
+We express nucleon coupling #-meson by |p) and |n) as |p) = # 1 
+0 # # # and |n) = # 0 
+1 # # # be the 
+bare state of proton and neutron respectively, where # # is the vacuum of #-meson. Set 
+# + = # 0 1 
+0 0 # , # - = # 0 0 
+1 0 # , # 3 = # 1 0 
+0 - 1 # . (1.35) 
+Thus, the operation of # and # 3 acting on nucleon are 
+# - |p) = |n) # - |n) = 0, 
+# + |n) = |p) # - |p) = 0, (1.36) 
+# 3 |p) = |p) # 3 |n) = -  n). 
+Then, following [HT], we employ the interaction which occurs n # p + # - with the form, 
+(# + ) (creation operator of # - -meson) + (# - ) (annihilation operator of # - -meson). 
+6 
+So, the Hamiltonian describing the process, n # p + 
+#- , is given by 
+H 
+#- = H # - ,0 + H 0 # - , (1.37) 
+H # - ,0 = 
+1- # 3 
+2 E 0 + Z R 3 
+d 3 k !(k)a + (k)a(k) (1.38) 
+H 0 
+# - = g Z R 3 
+d 3 k #(k) # # - a(k) + # +a + (k) # , (1.39) 
+where a(k) and a + (k) are the annihilation and creation operators respectively with 
+# a(k) , a + (k 0 ) # = #(k - k 0 ), (1.40) 
+[a(k) , a(k 0 )] = # a + (k) , a + (k 0 ) # = 0, (1.41) 
+and E 0 denotes the difference of masses between proton and neutron. The dispersion relation between 
+the energy and momentum is denoted by !(k). In the case of non-relativistic energy, !(k) is given 
+as !(k) = m + k 2 
+m 
+as in [HT]. But this dispersion relation does not make a sense for so high energy. 
+To consider the case of higher energy, we set !(k) = p k 2 + m 2 in the case of relativistic energy as in 
+[Le]. For a ultraviolet cutoff function #(k), Henley and Thirring set #(k) = #(k) in [HT] because they 
+treated boson as non-relativistic. On the other hand, Lee set #(k) = # (! (k)) / p 2!(k) in [Le] because 
+he treated boson as relativistic. We assume that #(k) is positive, continuous, spherically symmetric and 
+R R 3 d 3 k #(k) 2 &lt; 1. Then, the state space for H # - as a Hilbert space F is given by F = C 2 
+# F # . And, 
+we get 
+H # - ,0 |p) = 0 and H # - ,0 |n) = E 0 |n). (1.42) 
+Moreover, the physical state |pi of proton is same as its bare state, i.e., |pi = |p), so we have 
+H # - |pi = 0. (1.43) 
+The point eigenvalues # p (H # - ,0 ) of H # - ,0 are 0 and E 0 , i.e., # p (H # - ,0 ) = {0, E 0 }. 
+We note here that H # - is the same Hamiltonian as in [Hi, (2.10)]. Thus, for the Pauli matrix 
+# 1 = # 0 1 
+1 0 # , we have that # 1 H # - # 1 is the Wigner-Weisskopf Hamiltonian called in [Hi, (2.4)] or the 
+spin-boson Hamiltonian with the rotating wave approximation called in [HS, 6]. 
+The total charge Q is given by 
+Q = 1 
+2 # 3 - Z R 3 
+d 3 k a + (k)a(k). (1.44) 
+Then, H # - conserves the total charge, [H # - , Q] = 0. Therefore, H # - can be written as the direct sum 
+of HQ=- (2# - 1)/2 's (# = 0, 1, 2, ), where HQ=- (2# - 1)/2 is the restricted H # - on the space of all states 
+with Q = - (2# - 1)/2. We note here that 1 
+2 - U # 
+1 QU 1 is written by NP in [HS, (6.2)] and [Hi, (2.17)] as 
+the total number operator. 
+It is easy to check the states with Q = 1 
+2 
+, but it is well-known that it is difficult to show that 
+existence of states with Q = - N 
+2 for large odd number N as Henley and Thirring wrote in their text 
+book [HT]. In this subsection, we prove that the existence of a state with Q = - 2(# - 1) 
+2 
+for N 3 # # 2, 
+and argue when the state appears. We know that the appearance is not standard one. 
+Here we introduce a physical parameter B g,m consisting of the coupling length and the self-energy of 
+boson part as follows: 
+B g,m := Z R 3 
+d 3 k B g,m (k), B g,m (k) := g 2 # 2 (k) 
+! (k) , (1.45) 
+which is a modification of the parameter introduced in [Bi01] by Billionnet. The importance of # 2 (k)/!(k) 
+was also pointed out in [AE, IV.A]. And, in the same way as (1.21), we introduce a function D(z; g) of z 
+by 
+D(z; g) 
+:=- z + 0 - g 2 Z R 3 
+d 3 k |# (k) | 2 
+!(k) - z 
+. (1.46) 
+7 
+And also, we obtain a parameter as the limit dm (g) := lim x"m D(x; g) because it exists. For fixed mass 
+m, the parameter dm (g) becomes negative, dm (g) &lt; 0, when |g| grows. 
+We treat now the case of m } 0, then the existence of the ground state comes from [AH97, Theorem 
+1.2]. In the case of m = 0, the existence is due to Grard's work [G], which is explained in Section 2. 
+We denote the ground state and ground state energy by |# grd i and E grd , respectively: 
+H 
+#- |# grd i = E grd |# grd i. (1.47) 
+To restrain a state from appearing for NP # 2, we define a differential operator DHS by 
+DHS := 1 
+2 # 1 
+|r k !| 2 r k ! r k + r k r k ! 
+1 
+|r k !| 2 
+# . (1.48) 
+The operator DHS was introduced by Hbner and Spohn in [HS, (2.9)] to apply the Mourre estimate, 
+and it is called conjugate operator by mathematicians. 
+Our !(k) and #(k) satisfy the assumptions [HS, (A.1) &amp; (A.2)]. If D(z; g) = 0 has a solution, then 
+we can make a state with Q = - 1 
+2 
+. But, under dm (g) # 0, since it menas [HS, (6.3)], we cannot make 
+any state with Q = - 1 
+2 
+as Hbner and Spohn mentioned after [HS, (6.3)]. Thus, with the result in [HS, 
+Proposition 15], we obtain the following: 
+[Q = - 1 
+2 
+] Suppose that 
+g 2 Z R 3 
+d 3 k |DHS#(k)| 2 &lt; 1 and Z R 3 
+d 3 k |D 2 
+HS #(k)| 2 &lt; 1. (1.49) 
+Then, state with Q = 1 
+2 
+exists for all g with dm (g) # 0, and it is |p) of which energy is 0. There is no state 
+with Q = - 2# - 1 
+2 
+for # 2 N. Moreover, the essential spectra of H # - is given as # ess (H # - ) = [m , 1). 
+Here `essential spectra' means all continuous energy levels and point energies of infinitely degenerated 
+eigenstates. All the results about essential spectra in this paper are due to [Ar00]. In the case of m = 0, 
+we can use Skibsted's results instead of Hbner and Spohn's, which is explained in Section 2. 
+But, if dm (g) &lt; 0, then the condition [HS, (6.3)] breaks. Namely, D(z; g) = 0 has a real solution, 
+z = E c . So we can make an eigenvector with E c as its eigenvalue. Namely, the physical state of neutron 
+|ni is given by 
+|ni = Z 1/2 
+c # # - + g Z R 3 
+d 3 k 
+# (k) 
+E c - ! (k) a + (k) # |p) (1.50) 
+with H # - |ni = E c |ni, where Z c is the normalization. Then, 
+E c &lt; m for every |g| satisfying D(0; g) &lt; 0, (1.51) 
+which means that as to E c the decay from neutron to proton and # - -meson is stable. E c does not have 
+the same order in the coupling length as g 2 following from the regular perturbation theory. We have that 
+E c # g s Z d 3 k |# (k) | 2 as g !1, (1.52) 
+where we note that the term with the order g vanishes in the regular perturbation theory. 
+Since HQ=- 1/2 has a state, this is the different result from the result which Hbner and Spohn 
+mentioned after [HS, (6.3)] and before [HS, Proposition 15]. But, if we assume the hypotheses in [HS, 
+Prosoition 15], then all HQ=- (2# - 1)/2 (N 3 # # 2) have no state by [HS, Prosoition 15]. 
+The following condition is to avoid the # decay in the meaning of the remark mentioned by Henley 
+and Thirring for n # p + # - in [HT]: 
+(Anti #) The function |#(k)| 2 
+|x - !(k)| 
+is not Lebesgue integrable for all x 2 (m , 1). 
+And set 
+M g := Z R 3 
+d 3 k #(k) 2 
+{!(k) - 0 + B g,m } - 1 
+. (1.53) 
+Then, we obtain the following (see [Hi, Theorem 2.1]): 
+[Q = 1 
+2 
+] Assume (Anti #) and (1.49). Then, for all g with dm (g) &lt; 0 
+8 
+(i) State with Q 
+=- 1 
+2 
+exists, and it is |ni of which energy is E c . 
+(ii) State with Q = 1 
+2 
+exists, and it is |p) of which energy is 0. 
+(iii) There is no state with Q 
+=2#- 1 
+2 for N 3 # # 2. 
+(iv) 
+If B g,m &lt; E 0 , then |p) is a unique ground state and |ni a unique excited state. 
+If B g,m = E 0 , then |p) and |ni are 2-fold degenerate ground states. 
+If B g,m } E 0 and 
+2m - E 0 } B 
+g,m- g 2 M g + M - 1 
+g Z R 3 
+d 3 k #(k) 2 , 
+then |ni is a unique ground state and |p) a unique excited state. Moreover, the essential spectra of 
+H 
+#- is given as # ess (H # - ) = [min {0 , E c } + m , 1 ) 
+The hypotheses in the above statement requires that B g,m is not so large. 
+Avron and Elgart argued the complex solution in the lower half plane of the analytic continuation of 
+D(z; g) = 0, which is called `resonance pole' by mathematicians, associated with the state with Q = - 1 
+2 
+[AE, APPENDIX]. On the other hand, without (Anti #) there is also a possibility of the # decay in the 
+meaning of the remark mentioned by Henley and Thirring [HT] for n # p + # - . Consider the following 
+fiff (k) instead of #(k) so that fiff (k) breaks (Anti #): 
+#(k) = 0 for |k| # # with a constant # } 0. (1.54) 
+Let (#) := sup 
+|k|## !(k). Suppose that 
+lim 
+x#(#) 
+Z |k|## 
+d 3 k |#(k)| 2 
+|x - !(k)| 
+= +1. (1.55) 
+Then, D(x; g) restricted in x 2 ((#) , 1) has a unique simple zero E 0 c in ((#) , 1), which means that 
+the neutron becomes unstable for the decay into proton and #-meson. Thus, we have another physical 
+state |n 0 i given by 
+|n 0 i = Z 0 
+c 
+1/2 # # - + g Z d 3 k # (k) 
+E 0 c - ! (k) a + (k) # |p), (1.56) 
+and it is the resonance state caused by the scattering between proton and #-meson. The state |n 0 i is 
+also an eigenstate of H # - with H # - |n 0 i = E 0 c |n 0 i, where Z 0 
+c is the normalization (see [AH00, Remark6.4] 
+and [Bi98]). Therefore, in the same way as the previous result we have the following result, which is a 
+rigorous proof of the statement in [HT] on the # decay for Q = - 1 
+2 
+: 
+[# Decay for Q = - 1 
+2 
+] If (1.54), (1.55), and (1.49) hold, then, concerning the state with Q = - 1 
+2 
+, 
+the two physical states of neutron always exist, and they are |ni and |n 0 i. There is no state besides 
+|p), |ni, and |n 0 i. The situation about the switch between the ground state and excited state is same as 
+previous result about Q = - 1 
+2 
+. 
+We can prove that, for sufficiently large B g,m (i.e., B g,m # 1), there is a state with Q = - 2# - 1 
+2 
+for 
+N 3 # # 2, and it becomes the ground state |# grd i. So, it is different from any state in the above two 
+results. 
+As to B g,m ! 1, when we fix m # 0, we have, of course, B g,m ! 1 for |g| ! 1. Moreover, we 
+consider the low energy limit (infrared catastrophe) or high energy limit (ultraviolet catastrophe) in the 
+following sense: set 
+Im := Z R 3 
+d 3 k |# (k) | 2 
+! (k) %1 (1.57) 
+as m # 0 for fixed #(k) or as #(k) ! 1 for fixed m. Then, we have B g,m !1 when m # 0 as long as g is 
+fixed even if |g| is small or when #(k) ! 1 for fixed g and m. 
+By using the manner to get [Hi, (2.73)] with a little modification, we get 
+lim sup 
+Bg,m!1 
+E c 
+B g,m 
+= lim sup 
+Bg,m!1 
+I - 1 
+m Z R 3 
+d 3 k |# (k) | 2 
+E c - !(k) 
+. 
+9 
+And, we can prove that the right hand side of the above equality is zero in the same way as [Hi, (2.74)] 
+with divergent Im by (1.57) or finite Im because E c ! 1 as B g,m ! 1, but the left hand side of the 
+above equality is not zero in the same argument as that about the inequality after[Hi, (2.74)]. This is a 
+contradiction. Therefore, 
+E c } E grd for B g,m # 1. (1.58) 
+Since E grd 6= 0 by (1.58), |# grd i is not a state with Q = 1 
+2 
+. Suppose that |# grd i is a state with 
+Q = - 1 
+2 
+. Then, by [Hi, Lemma 2.1(b)] or by solving |# grd i with Q = - 1 
+2 
+directly, we know that |# grd i 
+has the same form of (1.50) and (1.56). So, E grd must be a solution of D(z; g) = 0, since there is no 
+solution but E c and E 0 c , we have E c = E grd , which contradicts (1.58). Therefore, |# grd i is a state with 
+Q = - 2# - 1 
+2 
+for some N 3 # # 2. 
+It is easy check that |p) and |ni (also |ni if it exists) are still state of H 
+#- . 
+Namely, we obtain 
+[Q = - 2# - 1 
+2 
+with N 3 # # 2] If B g,# 1, then there always exists a ground state |# grd i with 
+Q = - 2# - 1 
+2 
+for some N 3 # # 2 different from both |p) and |ni. Moreover, |p) and |ni (also |n 0 i if it exists) 
+become excited states of H # , and the essential spectra of H # - is given as # ess (H # - ) = [E grd +m , 1). 
+We note here that if the hypotheses in the above statement satisfies, then the ground state, # grd , always 
+appears with Q = - 2# - 1 
+2 for some N 3 # # 2. In this sense, the appearance of # grd is stable. We 
+conjecture that the # in Q gets large as B g,# 1 grows. Although we cannot prove that yet, we can see 
+the tendency in the Jaynes-Cummings model [Mi, 6.4] for our model as we show in the next section. 
+2 Transition of Ground State of Lee Model 
+In this section, we use !(k) = p k 2 + 2 defined in $ 1.1 for the sake of simplicity though we can 
+treat more general !(k) with certain mathematical conditions. For each # 0 we take # (k) so that 
+# (! (k)) / p ! (k) gets independent of # 0. So, we set # (k) := # (! (k)) / p 2! (k) independent of # 0, 
+and we assume that # 2 L 2 (R d ), real-valued and continuous. 
+We here employ special annihilation and creation operators for   V 
+,   + V 
+, and   N 
+,   + N 
+, namely we define 
+them by Pauli's spin-flip matrices. Let state space F for H be the Hilbert space given by F := C 2 
+#C 2 
+#F b , 
+where F b is a boson Fock space over L 2 (R d ). For operators A, B on C 2 and C acting on F b , we denote 
+A# B #C acting on F by just ABC with abbreviation. Then, we set 
+  V 
+=   + N 
+= # - # # 0 0 
+1 0 # and   + V 
+=   N 
+= #+ # # 0 1 
+0 0 # , (2.1) 
+where #are Pauli's spin-flip matrices. So, the Hamiltonian H in this section has the following form: 
+H = H 0 + gH I , 
+where 
+H 0 = m V 
+  + V 
+  V 
++ m N 
+  + N 
+  N 
++ Z R d 
+d d k ! (k) # + # 
+(k) # # 
+(k) (2.2) 
+H I = Z R d 
+d d k #(k)   + V 
+  N # # 
+(k) +   V   + N 
+# + # 
+(k) # . (2.3) 
+So, #(k) is a real-valued ultraviolet cutoff function independent of . We note here the following: we 
+set H = C 2 
+# C 2 , A = m V 
+  + V 
+  V 
++m N 
+  + N 
+  V 
+, B 1 =   + V 
+  N 
++   V 
+  + N # / p 2, B 2 = i   + V 
+  
+
+N  V 
+  + N # / p 2; 
+# 1 = #, and # 2 = i#. Then, we know that the special Lee model is one example of the generalized 
+spin-boson (GSB) model which we defined in [AH97]. 
+The point eigenvalues # p (H 0 ) of H 0 are 0, m V 
+, m N 
+, m V 
++m N 
+, i.e., # p (H 0 ) = {0, m V 
+, m N 
+, m V 
++m N }. 
+The essential spectrum # ess (H 0 ) is [ 0 , 1 ), i.e., # ess (H 0 ) = [ 0 , 1 ), where # ess (T ) for a Hamiltonian T 
+is the set of spectrum (energies) of T except simple or finitely degenerate discrete eigenvalues. 
+By the way, we can decompose H into the direct sum of H 1 and H 2 , 
+H = H 1 # H 2 , (2.4) 
+10 
+where 
+H 1 := m V 
+  + V 
+  V 
+  N 
+  + N 
++ m N 
+  V 
+  + V 
+  + N 
+  N 
++   + V 
+  V 
+  N 
+  + N 
++   V 
+  + V 
+  + N 
+  N # H # + H I 
+(2.5) 
+H 2 := m V 
+  + V 
+  V 
+  + N 
+  N 
++ m N 
+  + V 
+  V 
+  + N 
+  N 
++   + V 
+  V 
+  + N 
+  N 
++   V 
+  + V 
+  N 
+  + N # H # , (2.6) 
+H # := Z R d 
+d d 
+k !(k)# + # 
+(k)# # 
+(k). (2.7) 
+Then, since the infimum of the energy of H 2 is zero, the ground state of H 1 becomes that of H . Namely, 
+to investigate the ground state of H we have only to study the ground state of H 1 . We denote the state 
+space which H j acts on by F j for j = 1, 2. Then, F = F 1 # F 2 . Then, H 1 on F 1 is unitary equivalent 
+to the Weisskopf-Wigner model argued in 1.3 and given by [Hi, (3.11)] (#, " + 
+0 , " + 
+1 in [Hi, (3.11)] are 
+our g/2, m V 
+, m N 
+respectively). Therefore, we can understand that the regular renormalized mass m Vc 
+satisfying 
+m Vc 
+= m V 
++ g 2 Z R d 
+d d k |# (! (k)) | 2 
+2! (k) 
+1 
+m Vc - (m N 
++ ! (k)) (2.8) 
+represents the higher order revision for H 1 in Weisskopf-Wigner theory. Thus, m Vc 
+does not have the 
+same order in the coupling length as g 2 following from the regular perturbation theory. We note here 
+that m Vc # g q R R 3 d 3 k |# (! (k)) | 2 /(2! (k)) as g ! 1, and the term with the order g vanishes in the 
+regular perturbation theory as remarked in (1.52). 
+By applying the argument in 1.3 for the case of } 0, and by applying [Sk, Theorem 3.1] for the cases 
+of = 0, in the same way as [Hi, Proposition 2.1], we know that if #(k) has some proper mathematical 
+conditions, then the normal renormalized mass m Vc 
+is the ground state energy of H for such small |g| 
+with fixed # 0 as d(g) &lt; 0, and moreover, other excited state energies are 0, m N , m V 
++m N 
+only. More 
+precisely, in the case of = 0, let 
+g nor := # 2 Z R d 
+d d k |#(k)| 2 # - 1 
+, #(k) := @#(k) 
+@|k| 
++ (d - 1) #(k) 
+2|k| . (2.9) 
+If d(g) &lt; 0 and ! - 1 # 2 L 2 (R d ), then the total number of bound states of H 1 defined by (2.5) is just 2 
+for |g| &lt; g nor . Thus, the ground state energy of H is the normal renormalized mass m Vc 
+for |g| &lt; g nor 
+with = 0. 
+By applying the argument 1.3 to the direct sum decomposition (2.4) to our special Lee model, for 
+sufficiently large B g,# 1, we can prove mathematically the existence of the ground state different from 
+|Vi so that the ground state energy is less than the energy of |Vi. Of course, it is not strange state such 
+as Klln and Pauli showed in [KP], namely our ground state lies in the standard Hilbert space F . 
+Namely, if B g,# 1, then there exists a ground state different from |Vi, and |Vi becomes an excited 
+state of H . 
+We have 
+# p (H) # # E grd , m Vc 
+, 0, m N 
+, m V 
++ mN # 
+with E grd &lt; m Vc 
+&lt; 0 &lt; m N 
+&lt; m V 
++ mN , (2.10) 
+min {m V , m N } - B g,# E grd # 
+m V 
++m N 
+
+21 
+4 B g,(2.11) 
+for B g,# 1. Moreover, by [Ar00], we have 
+# ess (H) = [E grd + , 1 ) (2.12) 
+for B g,# 1. 
+Therefore, H for B g,# 1 and H for B g,# 1 are different physics respectively, which gives a 
+transition of ground state in the same way as H in 1.3. Moreover, by (2.11) the non-perturbative 
+ground state energy recovers the order of the square in the coupling length when the Lee model is outside 
+the region of the regular perturbation theory. In order to get such a ground state |# grd i, it is important 
+that we balance the coupling length with the infrared singularity Isuch that (1.57) holds. Namely, even 
+if |g| (resp. I) is large, the very small I(resp. |g|) breaks (1.57), which is not enough to get |# grd i. For 
+11 
+the appearance of |# grd i, we have to add not only the coupling length but also the infrared singularity 
+IRinto sufficient condition. 
+In the case of = 0 with (1.57), we cannot prove the self-adjointness for = 0 by the Kato-Rellich 
+theorem [RS2, Theorem X.12], so we cannot apply the regular perturbation theory to this case. Of course, 
+we cannot employ the regular perturbation theory in the case |g| # 1 with the fixed # 0. Therefore, 
+|# grd i appears in the case beyond the perturbation theory. 
+As to the extra bound states with non-standard resonance, the recent Billionnet's works [Bi98, Bi01] 
+are interesting and worth noting. As remarked in [AH00, Remark 6.4] and [Hi, Remark 2.6], if we add 
+an extra condition to #(k) in the same way as the case of the # decay, then an extra eigenvalues appears 
+in [m N 
++ , 1), and it is different from E grd , m Vc 
+, 0, and m V 
++mN . Billionnet showed in [Bi98, Bi01] 
+that the reason why such eigenvalues appear is not for the result of the preceding complex eigenvalue 
+of resonance turning into real eigenvalues when the coupling is continuously increased. We indeed knew 
+that E grd , m Vc 
+, 0, and m V +mN are stable for B g,# 1 in our Lee model. Moreover, Billionnet clarified 
+in [Bi01] the way of appearance through the non-standard resonance. 
+Once we have the ground state |# grd i different from |Vi, by applying [AH01, Theorem 3.1] in the 
+same way as [AH01, Theorem 4.5], we obtain that there exist (g 0 , 0 ) in A := {(g , ) | g 2 R and with 
+-w # d(g) &lt; 0 } such that Hd g=g 0 ,=0 
+which is H with g = g 0 and = 0 has a degenerate ground 
+states. And, there exist (g 1 , 1 
+) in A such that inf # #(Hd g=g 1 ,=1 
+) \ {E grd } # &lt; inf # ess (Hd g=g 1 ,=1 
+). 
+The conservation law (1.6) on the total number of V -particles and #-particles decomposes the state 
+space F into the direct sum of some sectors as follows: 
+For (1.6), we define the number operator N V # 
+by 
+N V # 
+:=   + V 
+  V 
++ N # (2.13) 
+where N # denotes the number operator of #-particle, i.e., 
+N # := Z R d 
+d d k # + # 
+(k)# # 
+(k). (2.14) 
+Then, the conservation law (1.6) is reflected in the relation, 
+[H , N V # 
+] = 0. (2.15) 
+We denote the orthogonal projection onto the `-#-particle space in F b by P (`) 
+# 
+for each ` 2 N. Then, we 
+get N # 
+= P `=0 `P (`) 
+# 
+. Then, the spectral resolution of N V # 
+is given by 
+N V # 
+= X `=0 
+`P ` . (2.16) 
+Here we set P (- 1) 
+# # 0. 
+We set F j (`) := P ` F j for j = 1, 2 and ` = 0, 1, 2, . Then, 
+F 1 = 
+1 
+M `=0 
+F 1 (`). (2.17) 
+We denote the vacuum by |0i. Since |V i =   + V |0i and |N i =   + N |0i, we have 
+|Vi = Z 1/2 
+2 
+(   + V |0i + g 0 Z R d 
+d d k 
+# 2 (k) 
+m c - m N - ! (k)   + N # + # 
+(k)|0i ) (2.18) 
+by (1.8). Therefore, it is clear that |Vi is an eigenstate of H 1 with 
+|Vi 2 F 1 (1). (2.19) 
+Since our ground state # grd still lives in the standard state space F , # grd has to belong to one of 
+the sectors F 1 (`)'s (` 2 {0} [ N). Of course, # g has the positive norm because it is in the standard 
+state space, which is a difference from the Klln and Pauli's state |VKP i. Moreover, their state |VKP i 
+belongs to the sector F 1 (1), but our # grd does not belong to F 1 (1). Because, we can prove in the same 
+way as [Hi, Lemma 2.1(c)] that |# grd i = c|Vi for some complex constant c contradicts the fact that the 
+the ground state energy is less than m Vc 
+. Therefore, |# grd i is different from |VKP i. 
+12 
+3 Superradiant Ground State(?) 
+In the previous section, we proved mathematically that the ground state |# grd i another from |Vi appears, 
+and |Vi becomes an excited state of H . We are interested in the physical reason of the appearance of 
+such a ground state |# grd i. 
+We have to note that the ground state of H does not have the form of (1.23) in spite of (1.5), (1.6), 
+and (1.26). Moreover, since E grd is much lower than m Vc 
+, V -particle has to emit so many #-particles. But 
+considering (1.5), (1.6), and (1.26), such a emission is not observable in the reaction (1.4), namely, the 
+emission is prohibited from breaking the conservation laws (1.5) and (1.6). Moreover, remember that the 
+infrared singularity (1.57) plays an important role for the existence of # grd with fixed the coupling length 
+g, and that for each concrete model the individual coupling constant is fixed. Thus, such #-particles may 
+be like soft photons. Although we cannot give concretely a form of the ground state, we can consider 
+the Jaynes-Cummings model [Mi, 6.4] in the light of quantum optics, the case of #-particle for the mode 
+with k (i.e., one mode), at very low energy (or mass). 
+We consider the following Hamiltonian H(k) for the system of V -particle, N-particle, and #-particle 
+for the mode with k: 
+H(k) := m V   + V 
+  V 
++ m N   + N 
+  N 
++!(k)# + # 
+(k)# # 
+(k) + g#(k)   + V 
+  N # # 
+(k) +   V   + N 
+# + # 
+(k) # , (3.1) 
+where we employed (2.1) again. F 1 
+b (k) is the state space of one-mode #-particle with k. Then, all 
+eigenvalues E n k 
+(n k 
+= 0, 1, 2, ) of H(k) are given as 
+E n k 
+= # n k 
++ 1 
+2 # ! (k) + m V 
++m N 
+2 q (m N 
++ ! (k) - m V 
+) 2 + 4g 2 # 2 (k) (n k 
++ 1) , 
+n = 0, 1, 2, , 
+where n k 
+is the number of #-particles for the mode with k. So, F b (k) is spanned by {|n k i} 1 n k =0 
+. As we 
+saw in (1.25), m N 
++ ! (k) - m V 
+becomes a shift of a frequency from the resonance, so 
+q (m N 
++ ! (k) - m V 
+) 2 + 4g 2 # 2 (k) (n k 
++ 1) in (3.2) is equal to a general quantized Rabi flopping 
+frequency [MS, WM], which leads us to the spontaneous emission of the photon with a single mode. The 
+eigenstate |# n k i for E n k 
+is in F 1 (n k 
++ 1). Therefore, for instance, we set #(k) # 1 now for the sake of 
+simplicity, and 
+g = 10 L , !(k) = 
+10- L , n k 
+= 10 4L- 2 or g = 1, !(k) = 
+10- 3L , n k 
+= 10 4L- 2 
+for sufficiently large L 2 N. Then, we obtain 
+E - 10 
+4L- 2 # -  g,(k) = - g 2 
+!(k) 
+with 
+E - 10 4L- 2 # - 0.09 10 3L 
+,g 2 
+!(k) # - 10 3L (3.2) 
+as L ! 1. This means that the eigenvalue with the same order 
+as- g 2 /!(k) is obtained as n k , |g| # 
+1 # !(k) or n k # 1 # !(k) for fixed g. Moreover, the eigenstate with such an eigenvalue belongs to the 
+sector, F 1 (10 4L- 2 + 1), and switches to another sector with larger number of #-particle as L !1. 
+4 Conclusion 
+Following the renormalizable field theory by Lee, Klln and Pauli, in order to avoid a ghost, m c , g c , and 
+# are restricted as we know from (1.14). On the other hand, m c g, and # are chosen so that g c can catch 
+g obs . For the large coupling, we cannot employ the perturbative way to get the renormalized constant 
+and renormalized coupling constant any longer. Even in the case |g| is not so large, if we have the case 
+with the infrared singularity condition (1.57), then the effective mass is different from m Vc 
+. Moreover, in 
+the case of B g,# 1, we have to consider not only Z ren 
+Vc 
+but also the renormalized constant for |# grd i to 
+argue whether |# grd i is a ghost or not. 
+13 
+The interaction Hamiltonian H I of the Lee model is given through the rotating wave approximation 
+(RWA) or the Weisskopf-Wigner approximation. If we can check that the mathematical results of (2.10
+)(2.12) are not realistic in physics, then we know the limit of the domain of B g,and d(g), i.e., the 
+coupling constants g and the condition of the ultraviolet cutoff function #(k) of the Lee model, so the 
+limit of RWA in a sense. But if we hope the results of (2.10)-(2.12) are realistic in physics, we have to 
+prove the same results independent of RWA, and to develop the renormalizable field theory so that it can 
+include the case such as B g,# 1. 
+Is the existence of |# grd i caused by the Rabi flopping? If it is correct, the phases may get harmonious 
+by revival with very small |k| after they are disordered by the Cummings collapse in the Rabi flopping. 
+Namely, are there any relation between superradiant ground state by Preparata and the Rabi flopping?</body>
+    <biblio>
+      <reference refID="p14x70.0y601.0">
+        <ref-marker>[Ar00]</ref-marker>
+        <reference-hlabeled>Arai A 2000</reference-hlabeled>
+        <journal>J. Math. Anal. Appl.</journal>
+        <volume>246</volume>
+        <pages>p189</pages>
+      </reference>
+      <reference refID="p14x70.0y581.0">
+        <ref-marker>[AH97]</ref-marker>
+        <title>Arai A and Hirokawa M 1997</title>
+        <journal>J. Funct. Anal.</journal>
+        <volume>151</volume>
+        <pages>p455</pages>
+      </reference>
+      <reference refID="p14x70.0y561.0">
+        <ref-marker>[AH00]</ref-marker>
+        <title>Arai A and Hirokawa M 2000</title>
+        <journal>Rev. Math. Phys.</journal>
+        <volume>12</volume>
+        <pages>p1085</pages>
+      </reference>
+      <reference refID="p14x70.0y541.0">
+        <ref-marker>[AH01]</ref-marker>
+        <title>Arai A and Hirokawa M 2001</title>
+        <journal>Rev. Math. Phys.</journal>
+        <volume>13</volume>
+        <pages>p513</pages>
+      </reference>
+      <reference refID="p14x70.0y521.0">
+        <ref-marker>[AE]</ref-marker>
+        <title>Avron J E and Elgart A `998</title>
+        <journal>Phys. Rev. A</journal>
+        <volume>58</volume>
+        <pages>p4300</pages>
+      </reference>
+      <reference refID="p14x70.0y501.0">
+        <ref-marker>[Bi98]</ref-marker>
+        <reference-hlabeled>Billionnet C 1998 Ann. Inst. Henri Poincar68</reference-hlabeled>
+        <note>p1</note>
+      </reference>
+      <reference refID="p14x70.0y481.0">
+        <ref-marker>[Bi01]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Billionnet</author-last>
+            <author-first>C</author-first>
+          </author>
+        </authors>
+        <date>2001 preprint</date>
+      </reference>
+      <reference refID="p14x70.0y461.0">
+        <ref-marker>[Di]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Dicke</author-last>
+            <author-first>R</author-first>
+            <author-middle>H</author-middle>
+          </author>
+        </authors>
+        <date>1954</date>
+        <journal>Phys. Rev.</journal>
+        <volume>93</volume>
+        <pages>p99</pages>
+      </reference>
+      <reference refID="p14x70.0y442.0">
+        <ref-marker>[DEH]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Dittrich</author-last>
+            <author-first>J,</author-first>
+          </author>
+        </authors>
+        <title>Exner P, and Hirokawa M 2000 preprint mp_</title>
+        <pages>arc 00-442.</pages>
+      </reference>
+      <reference refID="p14x70.0y422.0">
+        <ref-marker>[Dy]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Dyson</author-last>
+            <author-first>F.</author-first>
+            <author-middle>J.</author-middle>
+          </author>
+        </authors>
+        <date>1949</date>
+        <journal>Phys. Rev</journal>
+        <volume>75</volume>
+        <pages>p1736</pages>
+      </reference>
+      <reference refID="p14x70.0y402.0">
+        <ref-marker>[En]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Enz</author-last>
+            <author-first>C.</author-first>
+          </author>
+        </authors>
+        <title>P 1997</title>
+        <journal>Helv. Phys. Acta</journal>
+        <volume>70</volume>
+        <pages>p141</pages>
+      </reference>
+      <reference refID="p14x70.0y382.0">
+        <ref-marker>[G]</ref-marker>
+        <title>Grard C 2000</title>
+        <journal>Ann. Henri Poincar</journal>
+        <volume>1</volume>
+        <pages>p443</pages>
+      </reference>
+      <reference refID="p14x70.0y362.0">
+        <ref-marker>[GLL]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Griesemer</author-last>
+            <author-first>M,</author-first>
+          </author>
+          <author>
+            <author-last>Lieb</author-last>
+            <author-first>E</author-first>
+            <author-middle>H,</author-middle>
+          </author>
+        </authors>
+        <title>and Loss M 2000</title>
+        <note>to appear in Invent.</note>
+        <address>Math.</address>
+      </reference>
+      <reference refID="p14x70.0y342.0">
+        <ref-marker>[Hi]</ref-marker>
+        <title>Hirokawa M 2001</title>
+        <journal>Rev. Math. Phys.</journal>
+        <volume>13</volume>
+        <pages>p221</pages>
+      </reference>
+      <reference refID="p14x70.0y322.0">
+        <ref-marker>[HS]</ref-marker>
+        <title>Hiroshima F and Spohn H 2001 "Enhanced Binding Through Coupling to a Quantum Field"</title>
+        <note>(preprint)</note>
+      </reference>
+      <reference refID="p14x70.0y290.0">
+        <ref-marker>[HT]</ref-marker>
+        <title>Henly E M and Thirring W 1962 "Elementary Quantum Field Theory" McGraw-Hill</title>
+      </reference>
+      <reference refID="p14x70.0y270.0">
+        <ref-marker>[KP]</ref-marker>
+        <title>Klln G and Pauli W 1955</title>
+        <journal>Dan. Mat. Fys. Medd.</journal>
+        <volume>30</volume>
+        <pages>p3</pages>
+      </reference>
+      <reference refID="p14x70.0y250.0">
+        <ref-marker>[Le]</ref-marker>
+        <title>Lee T D 1954</title>
+        <journal>Phys. Rev.</journal>
+        <volume>95</volume>
+        <pages>p1329</pages>
+      </reference>
+      <reference refID="p14x70.0y230.0">
+        <ref-marker>[LL]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Lieb</author-last>
+            <author-first>E</author-first>
+          </author>
+        </authors>
+        <title>H and Loss M 1999 Confrence MoschFlato</title>
+        <date>1999 1</date>
+        <pages>p327</pages>
+      </reference>
+      <reference refID="p14x70.0y210.0">
+        <ref-marker>[LY]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Lieb</author-last>
+            <author-first>E</author-first>
+          </author>
+        </authors>
+        <title>H and Yamazaki K 1958</title>
+        <journal>Phys. Rev.</journal>
+        <volume>111</volume>
+        <pages>p728</pages>
+      </reference>
+      <reference refID="p14x70.0y191.0">
+        <ref-marker>[MS]</ref-marker>
+        <title>Meystre P and Sargent III M 1991 "Elements of Quantum Optics"</title>
+        <publisher>Springer-Verlag,</publisher>
+        <address>Berlin Heidelberg berg</address>
+      </reference>
+      <reference refID="p14x70.0y159.0">
+        <ref-marker>[Mi]</ref-marker>
+        <title>Milonni P 1994 The Quantum Vacuum: An Introduction to Quantum Electrodynamics</title>
+        <publisher>(Academic Press)</publisher>
+      </reference>
+      <reference refID="p14x70.0y127.0">
+        <ref-marker>[Pr90]</ref-marker>
+        <title>Preparata G Quantum Field Theory of Superradiance in Problems in Fundamental Modern Physics,</title>
+        <editor>(eds. R. Cherubini, P. Dalpiaz and B. Minetti,</editor>
+        <publisher>World Scientific,</publisher>
+        <address>Singapore,</address>
+        <date>1990)</date>
+      </reference>
+      <reference refID="p14x70.0y95.0">
+        <ref-marker>[Pr95]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Preparata</author-last>
+            <author-first>G</author-first>
+          </author>
+        </authors>
+        <date>1995</date>
+        <booktitle>QED Coherence in Matter,</booktitle>
+        <publisher>(World Scientific,</publisher>
+        <address>Singapore)</address>
+      </reference>
+      <reference refID="p15x70.0y763.0">
+        <ref-marker>[RS2]</ref-marker>
+        <title>Reed M and Simon B Method of Modern Mathematical Physics Vol.</title>
+        <booktitle>II,</booktitle>
+        <publisher>Academic Press,</publisher>
+        <address>New York,</address>
+        <date>1975</date>
+      </reference>
+      <reference refID="p15x70.0y731.0">
+        <ref-marker>[Sa]</ref-marker>
+        <title>Salam A 1951</title>
+        <journal>Phys. Rev</journal>
+        <volume>82</volume>
+        <pages>p216</pages>
+      </reference>
+      <reference refID="p15x70.0y712.0">
+        <ref-marker>[Sk]</ref-marker>
+        <title>Skibsted E 1998</title>
+        <journal>Rev. Math. Phys.</journal>
+        <volume>10</volume>
+        <pages>p989</pages>
+      </reference>
+      <reference refID="p15x70.0y692.0">
+        <ref-marker>[Ta]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Takahashi</author-last>
+            <author-first>Y</author-first>
+          </author>
+        </authors>
+        <date>1984</date>
+        <title>Quantum field theory I for condensed matter physicists (</title>
+        <conference>in Japanese),</conference>
+        <address>Baihukan, Tokyo.</address>
+      </reference>
+      <reference refID="p15x70.0y660.0">
+        <ref-marker>[WM]</ref-marker>
+        <institution>Walls D F and Milburn G J</institution>
+        <date>1994</date>
+        <booktitle>Quantum Optics,</booktitle>
+        <publisher>Springer-Verlag,</publisher>
+        <address>Berlin Heiderberg.</address>
+      </reference>
+      <reference refID="p15x70.0y640.0">
+        <ref-marker>[Wa]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Ward</author-last>
+            <author-first>J</author-first>
+            <author-middle>C</author-middle>
+          </author>
+        </authors>
+        <date>1951</date>
+        <journal>Phys. Rev</journal>
+        <volume>845</volume>
+        <pages>p897</pages>
+      </reference>
+      <reference refID="p15x70.0y620.0">
+        <ref-marker>[WW]</ref-marker>
+        <title>Weisskopf V F and Wigner E P 1930</title>
+        <journal>Z. Phys.</journal>
+        <volume>63</volume>
+        <pages>p54</pages>
+      </reference>
+    </biblio>
+  </content>
+  <CitationContexts />
+  <grants />
+</document>
+

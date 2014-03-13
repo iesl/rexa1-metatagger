@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+<page n="1">
+<line><tbox llx="133" lly="625" urx="490" ury="639" f="1"><![CDATA[Experiences with Legion on the Centurion Cluster ]]></tbox><tbox llx="480" lly="633" urx="491" ury="641" f="2"><![CDATA[\Lambda ]]></tbox></line>
+<line><tbox llx="222" lly="590" urx="299" ury="603" f="3"><![CDATA[Greg Lindahl ]]></tbox><tbox llx="328" lly="590" urx="419" ury="603" f="3"><![CDATA[Steve J. Chapin ]]></tbox></line>
+<line><tbox llx="189" lly="576" urx="300" ury="589" f="3"><![CDATA[Norman Beekwilder ]]></tbox><tbox llx="328" lly="576" urx="433" ury="589" f="3"><![CDATA[Andrew Grimshaw ]]></tbox></line>
+<line><tbox llx="257" lly="562" urx="366" ury="575" f="3"><![CDATA[The Legion Project ]]></tbox></line>
+<line><tbox llx="221" lly="548" urx="402" ury="561" f="3"><![CDATA[Department of Computer Science ]]></tbox></line>
+<line><tbox llx="251" lly="534" urx="371" ury="547" f="3"><![CDATA[University of Virginia ]]></tbox></line>
+<line><tbox llx="224" lly="520" urx="397" ury="533" f="3"><![CDATA[Charlottesville, VA 22903--2442 ]]></tbox></line>
+<line><tbox llx="182" lly="507" urx="437" ury="515" f="2"><![CDATA[flindahl,chapin,nfb5z,grimshawg@cs.virginia.edu ]]></tbox></line>
+<line><tbox llx="285" lly="482" urx="337" ury="495" f="3"><![CDATA[DRAFT ]]></tbox></line>
+<line><tbox llx="285" lly="430" urx="336" ury="441" f="4"><![CDATA[Abstract ]]></tbox></line>
+<line><tbox llx="133" lly="411" urx="505" ury="425" f="5"><![CDATA[The Legion Project spends most of its time building metacomputing environments ]]></tbox></line>
+<line><tbox llx="118" lly="399" urx="504" ury="413" f="5"><![CDATA[and applications, but we are also actively building a clustered system, which we have ]]></tbox></line>
+<line><tbox llx="118" lly="387" urx="505" ury="401" f="5"><![CDATA[named Centurion. Centurion is currently a cluster of 64 Alpha PCs, networked with low- ]]></tbox></line>
+<line><tbox llx="118" lly="375" urx="504" ury="389" f="5"><![CDATA[latency gigabit networking hardware from Myricom, joined by a dozen x86-architecture ]]></tbox></line>
+<line><tbox llx="118" lly="363" urx="505" ury="377" f="5"><![CDATA[PCs. We plan on doubling the size of the cluster in the near future. This shared-nothing, ]]></tbox></line>
+<line><tbox llx="118" lly="351" urx="504" ury="365" f="5"><![CDATA[heterogeneous environment is an ideal fit for the Legion metacomputing system, which ]]></tbox></line>
+<line><tbox llx="118" lly="339" urx="504" ury="353" f="5"><![CDATA[provides services such as naming, scheduling, heterogeneous communications, and par- ]]></tbox></line>
+<line><tbox llx="118" lly="327" urx="504" ury="341" f="5"><![CDATA[allel I/O. Centurion is roughly the size of ''small'' HPC systems in use today at super- ]]></tbox></line>
+<line><tbox llx="118" lly="316" urx="505" ury="329" f="5"><![CDATA[computing centers, giving us the opportunity to compare price and performance with ]]></tbox></line>
+<line><tbox llx="118" lly="304" urx="505" ury="317" f="5"><![CDATA[traditional systems, and investigate the hardware and software challenges of building ]]></tbox></line>
+<line><tbox llx="118" lly="292" urx="305" ury="305" f="5"><![CDATA[large clusters with commodity hardware. ]]></tbox></line>
+<line><tbox llx="133" lly="280" urx="505" ury="293" f="5"><![CDATA[This paper will cover our experiences with Centurion and Legion. We begin with an ]]></tbox></line>
+<line><tbox llx="118" lly="268" urx="505" ury="281" f="5"><![CDATA[overview of the Legion metacomputing system. We will then discuss the costs and hid- ]]></tbox></line>
+<line><tbox llx="118" lly="256" urx="505" ury="269" f="5"><![CDATA[den costs of assembling a cluster. We then describe the performance of Centurion, using ]]></tbox></line>
+<line><tbox llx="118" lly="244" urx="504" ury="257" f="5"><![CDATA[microbenchmarks of the communications system, standard parallel application bench- ]]></tbox></line>
+<line><tbox llx="118" lly="232" urx="505" ury="245" f="5"><![CDATA[marks, and user applications. User applications running on the system come from a ]]></tbox></line>
+<line><tbox llx="118" lly="220" urx="505" ury="233" f="5"><![CDATA[variety of scientific disciplines, and range from traditional MPI codes taken straight from ]]></tbox></line>
+<line><tbox llx="118" lly="208" urx="505" ury="221" f="5"><![CDATA[supercomputers to more novel applications using ''bag of tasks'' and macro-dataflow for- ]]></tbox></line>
+<line><tbox llx="118" lly="196" urx="505" ury="209" f="5"><![CDATA[malisms. Within this range of applications, we will discuss our successes and failures ]]></tbox></line>
+<line><tbox llx="118" lly="184" urx="504" ury="197" f="5"><![CDATA[with hiding network latency, load balancing, and most importantly, usability of the ]]></tbox></line>
+<line><tbox llx="118" lly="172" urx="439" ury="185" f="5"><![CDATA[system by researchers without extensive training in parallel computing. ]]></tbox></line>
+<line><tbox llx="108" lly="149" urx="385" ury="164" f="6"><![CDATA[Keywords: cluster computing, heterogeneous computing ]]></tbox></line>
+<line><tbox llx="103" lly="136" urx="109" ury="141" f="7"><![CDATA[\Lambda ]]></tbox><tbox llx="107" lly="130" urx="531" ury="142" f="8"><![CDATA[This work was funded in part by NSF grant CDA9724552, ONR grant N00014-98-1-0454, Northrup- ]]></tbox></line>
+<line><tbox llx="90" lly="119" urx="531" ury="131" f="8"><![CDATA[Grumman contract 9729373-00, and DOE contracts DEFG02-96ER25290, SANDIA #LD-9391, and ]]></tbox></line>
+<line><tbox llx="90" lly="108" urx="159" ury="120" f="8"><![CDATA[D45900016-3C. ]]></tbox></line>
+<line><tbox llx="304" lly="73" urx="320" ury="88" f="6"><![CDATA[1 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="531.00" ury="688.00"/></page>
+<page n="2">
+<line><tbox llx="90" lly="667" urx="222" ury="688" f="1"><![CDATA[1 Introduction ]]></tbox></line>
+<line><tbox llx="90" lly="644" urx="533" ury="658" f="2"><![CDATA[The coming of gigabit networking technology makes possible the construction of nationwide ]]></tbox></line>
+<line><tbox llx="90" lly="630" urx="533" ury="645" f="2"><![CDATA[virtual computers comprising workstations, high-performance supercomputers, and clusters ]]></tbox></line>
+<line><tbox llx="90" lly="617" urx="533" ury="631" f="2"><![CDATA[of machines. To realize the potential that the physical infrastructure provides, software ]]></tbox></line>
+<line><tbox llx="90" lly="603" urx="532" ury="618" f="2"><![CDATA[must be developed that is easy to use, supports large degrees of parallelism in applications ]]></tbox></line>
+<line><tbox llx="90" lly="590" urx="533" ury="604" f="2"><![CDATA[code, and manages the complexity of the underlying physical system for the user. The Le- ]]></tbox></line>
+<line><tbox llx="90" lly="576" urx="533" ury="591" f="2"><![CDATA[gion project at the University of Virginia is developing such software [5]. Legion addresses ]]></tbox></line>
+<line><tbox llx="90" lly="563" urx="533" ury="577" f="2"><![CDATA[issues such as parallelism, fault tolerance, security, autonomy, heterogeneity, resource man- ]]></tbox></line>
+<line><tbox llx="90" lly="549" urx="424" ury="564" f="2"><![CDATA[agement, and access transparency in a multi-language environment. ]]></tbox></line>
+<line><tbox llx="108" lly="536" urx="533" ury="550" f="2"><![CDATA[As part of this effort, we are building our own clustered system, called Centurion. ]]></tbox></line>
+<line><tbox llx="90" lly="522" urx="533" ury="536" f="2"><![CDATA[Centurion is currently composed of 64 Digital Equipment Corporation Alpha processors, ]]></tbox></line>
+<line><tbox llx="90" lly="509" urx="533" ury="523" f="2"><![CDATA[and will soon be expanded to be over 200 machines and 300 processors. These processors are ]]></tbox></line>
+<line><tbox llx="90" lly="495" urx="533" ury="509" f="2"><![CDATA[interconnected by both a high-speed, low-latency system-area network intended for heavy- ]]></tbox></line>
+<line><tbox llx="90" lly="481" urx="533" ury="496" f="2"><![CDATA[duty application communication (Myrinet), and a partially-switched 100 Mbps Ethernet ]]></tbox></line>
+<line><tbox llx="90" lly="468" urx="179" ury="482" f="2"><![CDATA[control network. ]]></tbox></line>
+<line><tbox llx="108" lly="454" urx="533" ury="469" f="2"><![CDATA[We have learned much in the process of constructing both the hardware and software for ]]></tbox></line>
+<line><tbox llx="90" lly="441" urx="533" ury="455" f="2"><![CDATA[this system. Our experiences range from basic hardware assembly through system software ]]></tbox></line>
+<line><tbox llx="90" lly="427" urx="533" ury="442" f="2"><![CDATA[configuration and run-time system development to application deployment. In this paper, ]]></tbox></line>
+<line><tbox llx="90" lly="414" urx="533" ury="428" f="2"><![CDATA[we will describe some of our experiences in each of these areas. In particular, the ultimate ]]></tbox></line>
+<line><tbox llx="90" lly="400" urx="533" ury="415" f="2"><![CDATA[yardstick for success is whether our system can successfully run scientific applications in a ]]></tbox></line>
+<line><tbox llx="90" lly="387" urx="204" ury="401" f="2"><![CDATA[cost-effective manner. ]]></tbox></line>
+<line><tbox llx="108" lly="373" urx="533" ury="387" f="2"><![CDATA[In the remainder of this paper, we will give overviews of the run-time system and ]]></tbox></line>
+<line><tbox llx="90" lly="359" urx="533" ury="374" f="2"><![CDATA[the hardware, describe our experiences with the hardware, discuss related work, provide ]]></tbox></line>
+<line><tbox llx="90" lly="346" urx="443" ury="360" f="2"><![CDATA[performance measurements, describe applications, and give conclusions. ]]></tbox></line>
+<line><tbox llx="90" lly="310" urx="287" ury="331" f="1"><![CDATA[2 The Software: Legion ]]></tbox></line>
+<line><tbox llx="90" lly="287" urx="533" ury="302" f="2"><![CDATA[Legion is an object-oriented distributed computing system. The Legion design encompasses ]]></tbox></line>
+<line><tbox llx="90" lly="274" urx="533" ury="288" f="2"><![CDATA[ten basic objectives: site autonomy, support for heterogeneity, extensibility, ease-of-use, par- ]]></tbox></line>
+<line><tbox llx="90" lly="260" urx="533" ury="275" f="2"><![CDATA[allel processing to achieve performance, fault tolerance, scalability, security, multi-language ]]></tbox></line>
+<line><tbox llx="90" lly="246" urx="533" ury="261" f="2"><![CDATA[support, and global naming. These objectives are described in greater depth in Grimshaw ]]></tbox></line>
+<line><tbox llx="90" lly="233" urx="533" ury="248" f="2"><![CDATA[et al. [5]. Many of the features supplied by Legion are superfluous in the environment under ]]></tbox></line>
+<line><tbox llx="90" lly="219" urx="533" ury="234" f="2"><![CDATA[discussion---support for heterogeneity, parallel processing, and ease-of-use are of primary ]]></tbox></line>
+<line><tbox llx="90" lly="206" urx="533" ury="220" f="2"><![CDATA[interest to us here. The other features are important in the context of connecting clusters ]]></tbox></line>
+<line><tbox llx="90" lly="192" urx="187" ury="207" f="2"><![CDATA[from remote sites. ]]></tbox></line>
+<line><tbox llx="108" lly="179" urx="533" ury="193" f="2"><![CDATA[Supporting heterogeneity requires Legion to accommodate vastly differing computing ]]></tbox></line>
+<line><tbox llx="90" lly="165" urx="533" ury="180" f="2"><![CDATA[capabilities among constituent machines, including differences in architectures, operating ]]></tbox></line>
+<line><tbox llx="90" lly="152" urx="532" ury="166" f="2"><![CDATA[systems, and installed software. Such support is important to run complex distributed ]]></tbox></line>
+<line><tbox llx="90" lly="138" urx="533" ury="153" f="2"><![CDATA[computations, such as a weather forecasting and visualization program---portions of the ]]></tbox></line>
+<line><tbox llx="90" lly="125" urx="533" ury="139" f="2"><![CDATA[computation may be best suited for vector supercomputers, message-passing architectures, ]]></tbox></line>
+<line><tbox llx="90" lly="111" urx="221" ury="126" f="2"><![CDATA[or graphics workstations. ]]></tbox></line>
+<line><tbox llx="304" lly="73" urx="320" ury="88" f="2"><![CDATA[2 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="688.00"/></page>
+<page n="3">
+<line><tbox llx="108" lly="668" urx="533" ury="683" f="1"><![CDATA[In the context of Centurion, Legion provides automatic binary management to ensure ]]></tbox></line>
+<line><tbox llx="90" lly="655" urx="533" ury="669" f="1"><![CDATA[that the same program can run on multiple architectures simultaneously. Legion's automatic ]]></tbox></line>
+<line><tbox llx="90" lly="641" urx="533" ury="656" f="1"><![CDATA[binary management is one of the ways it simplifies use of a distributed system. Other salient ]]></tbox></line>
+<line><tbox llx="90" lly="628" urx="533" ury="642" f="1"><![CDATA[features include a unified namespace to provide location-transparent execution and support ]]></tbox></line>
+<line><tbox llx="90" lly="614" urx="382" ury="629" f="1"><![CDATA[for automatic checkpointing, migration, and fault recovery. ]]></tbox></line>
+<line><tbox llx="108" lly="600" urx="533" ury="615" f="1"><![CDATA[Legion's programming model, the macro-dataflow model, supports both intra-object and ]]></tbox></line>
+<line><tbox llx="90" lly="587" urx="533" ury="602" f="1"><![CDATA[inter-object parallelism. The macro-dataflow model is based on dataflow graphs, where arcs ]]></tbox></line>
+<line><tbox llx="90" lly="574" urx="532" ury="588" f="1"><![CDATA[represent communication and nodes represent computation. The dataflow model is realized ]]></tbox></line>
+<line><tbox llx="90" lly="560" urx="533" ury="574" f="1"><![CDATA[in Legion because an object waits for all incoming data items and then automatically invokes ]]></tbox></line>
+<line><tbox llx="90" lly="546" urx="533" ury="561" f="1"><![CDATA[the requisite method in the dataflow graph. Results of the method invocation are passed ]]></tbox></line>
+<line><tbox llx="90" lly="533" urx="533" ury="547" f="1"><![CDATA[along the arcs in the macro-dataflow graph (which may imply returning results to the caller, ]]></tbox></line>
+<line><tbox llx="90" lly="519" urx="416" ury="534" f="1"><![CDATA[or passing them to one or more separate objects in Legion space). ]]></tbox></line>
+<line><tbox llx="108" lly="506" urx="533" ury="520" f="1"><![CDATA[Legion also support fault tolerance, which is a boon to cluster builders. Because objects ]]></tbox></line>
+<line><tbox llx="90" lly="492" urx="533" ury="507" f="1"><![CDATA[in Legion can be transparently migrated, failure of a single node does not negatively affect ]]></tbox></line>
+<line><tbox llx="90" lly="479" urx="533" ury="493" f="1"><![CDATA[the rest of the system. This graceful degradation at the software level is necessary in an ]]></tbox></line>
+<line><tbox llx="90" lly="465" urx="533" ury="480" f="1"><![CDATA[environment comprised of cheap, interchangeable hardware, and facilitates hot-swapping of ]]></tbox></line>
+<line><tbox llx="90" lly="451" urx="190" ury="466" f="1"><![CDATA[failed components. ]]></tbox></line>
+<line><tbox llx="90" lly="415" urx="320" ury="437" f="2"><![CDATA[3 The Hardware: Centurion ]]></tbox></line>
+<line><tbox llx="90" lly="392" urx="177" ury="408" f="3"><![CDATA[3.1 Phase I ]]></tbox></line>
+<line><tbox llx="90" lly="372" urx="533" ury="386" f="1"><![CDATA[The original 64 nodes of Centurion were funded by an NSF Major Research Infrastructure ]]></tbox></line>
+<line><tbox llx="90" lly="358" urx="533" ury="373" f="1"><![CDATA[grant. This grant recognized that computation is increasingly central to the conduct of ]]></tbox></line>
+<line><tbox llx="90" lly="345" urx="533" ury="359" f="1"><![CDATA[science and engineering, augmenting both theory and experimentation. The purpose of this ]]></tbox></line>
+<line><tbox llx="90" lly="331" urx="532" ury="346" f="1"><![CDATA[grant was to develop a platform for collaboration between computer scientists and discipline ]]></tbox></line>
+<line><tbox llx="90" lly="317" urx="372" ury="332" f="1"><![CDATA[scientists (biologists, material scientists, physicists, etc.). ]]></tbox></line>
+<line><tbox llx="108" lly="304" urx="533" ury="319" f="1"><![CDATA[The original suite of target applications included those from biochemistry, chemical ]]></tbox></line>
+<line><tbox llx="90" lly="291" urx="533" ury="305" f="1"><![CDATA[engineering, computer science, electrical engineering, engineering physics, environmental ]]></tbox></line>
+<line><tbox llx="90" lly="277" urx="533" ury="291" f="1"><![CDATA[science, and materials science. All of the applications shared a need for significantly more ]]></tbox></line>
+<line><tbox llx="90" lly="263" urx="533" ury="278" f="1"><![CDATA[computation power than had been available. Further, all of the applications were either ]]></tbox></line>
+<line><tbox llx="90" lly="250" urx="532" ury="264" f="1"><![CDATA[already parallelized or are being parallelized in collaboration with the computer science ]]></tbox></line>
+<line><tbox llx="90" lly="236" urx="174" ury="251" f="1"><![CDATA[team members. ]]></tbox></line>
+<line><tbox llx="108" lly="223" urx="533" ury="237" f="1"><![CDATA[Thus, we set out to build a 25 gigaflop multicomputer from commercial, off-the-shelf ]]></tbox></line>
+<line><tbox llx="90" lly="209" urx="533" ury="224" f="1"><![CDATA[(COTS) components, with the express purpose of supporting scientific computation. We ]]></tbox></line>
+<line><tbox llx="90" lly="196" urx="533" ury="210" f="1"><![CDATA[ended up constructing a 60+ peak gigaflop COTS machine. In the process, we faced many ]]></tbox></line>
+<line><tbox llx="90" lly="182" urx="387" ury="197" f="1"><![CDATA[tradeoffs and learned quite a bit about cluster construction. ]]></tbox></line>
+<line><tbox llx="90" lly="152" urx="246" ury="169" f="3"><![CDATA[3.2 Hardware tradeoffs ]]></tbox></line>
+<line><tbox llx="90" lly="132" urx="533" ury="147" f="1"><![CDATA[The usual problem of buying any system is to spend a fixed pot of money to buy the ]]></tbox></line>
+<line><tbox llx="90" lly="119" urx="533" ury="133" f="1"><![CDATA[fastest system for whatever problem one plans to run. Like most computer scientists, we ]]></tbox></line>
+<line><tbox llx="90" lly="105" urx="533" ury="120" f="1"><![CDATA[had a huge variety of problems in mind, so we used the SPEC95 cpu benchmarks to assess ]]></tbox></line>
+<line><tbox llx="304" lly="73" urx="320" ury="88" f="1"><![CDATA[3 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="683.00"/></page>
+<page n="4">
+<line><tbox llx="90" lly="668" urx="533" ury="683" f="1"><![CDATA[individual node performance. We were happy to consider any CPU, but there is no cost- ]]></tbox></line>
+<line><tbox llx="90" lly="655" urx="533" ury="669" f="1"><![CDATA[effective way to buy SPARC or MIPS chips, and we were ignorant about cheap Power PC ]]></tbox></line>
+<line><tbox llx="90" lly="641" urx="533" ury="656" f="1"><![CDATA[options. This left x86 and alpha as options. The next question revolved around the OS. We ]]></tbox></line>
+<line><tbox llx="90" lly="628" urx="533" ury="642" f="1"><![CDATA[knew how to cheaply administer Linux; however, Linux doesn't run the compilers usually ]]></tbox></line>
+<line><tbox llx="90" lly="614" urx="533" ury="629" f="1"><![CDATA[used to generate SPEC95 results. Using some benchmarking results for a few combinations ]]></tbox></line>
+<line><tbox llx="90" lly="600" urx="533" ury="615" f="1"><![CDATA[of hardware, Linux, and gcc/g77, we convinced ourselves that there was approximately a ]]></tbox></line>
+<line><tbox llx="90" lly="587" urx="533" ury="602" f="1"><![CDATA[10% to 20% performance loss on both the x86 and Alpha systems in question due to using ]]></tbox></line>
+<line><tbox llx="90" lly="574" urx="533" ury="588" f="1"><![CDATA[gcc/g77 verses the best commercial compiler, and that gcc/g77 (mainly egcs) was steadily ]]></tbox></line>
+<line><tbox llx="90" lly="560" urx="533" ury="574" f="1"><![CDATA[improving these results. So we felt confident in using SPEC95 with proprietary compilers to ]]></tbox></line>
+<line><tbox llx="90" lly="546" urx="533" ury="561" f="1"><![CDATA[compare hardware, with the expectation that the relative performance with gcc/g77 would ]]></tbox></line>
+<line><tbox llx="90" lly="533" urx="430" ury="547" f="1"><![CDATA[be the same, even if the absolute performance were somewhat worse. ]]></tbox></line>
+<line><tbox llx="108" lly="519" urx="533" ury="534" f="1"><![CDATA[At the time of our benchmarking, the SPEC95 integer and floating point benchmarks ]]></tbox></line>
+<line><tbox llx="90" lly="506" urx="533" ury="520" f="1"><![CDATA[for the most cost-effective Alpha-based system were roughly twice that of a single x86-based ]]></tbox></line>
+<line><tbox llx="90" lly="492" urx="533" ury="507" f="1"><![CDATA[system, and dual x86 systems were roughly the same cost as single-cpu Alpha systems. We ]]></tbox></line>
+<line><tbox llx="90" lly="479" urx="533" ury="493" f="1"><![CDATA[chose single-cpu Alpha systems. We return to the compiler question later in this paper. In ]]></tbox></line>
+<line><tbox llx="90" lly="465" urx="532" ury="480" f="1"><![CDATA[addition, we had 16 dual-processor Intel Pentium-Pro-based machines acquired piecemeal ]]></tbox></line>
+<line><tbox llx="90" lly="451" urx="201" ury="466" f="1"><![CDATA[from various sources. ]]></tbox><tbox llx="191" lly="458" urx="198" ury="464" f="2"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="108" lly="438" urx="533" ury="452" f="1"><![CDATA[We wanted to buy ``a lot'' of network bandwidth because we wanted to attack tradi- ]]></tbox></line>
+<line><tbox llx="90" lly="425" urx="533" ury="439" f="1"><![CDATA[tional supercomputing problems, which commonly require large bandwidth and low latency ]]></tbox></line>
+<line><tbox llx="90" lly="411" urx="533" ury="425" f="1"><![CDATA[communications. ATM was extremely expensive and not that much faster than 100 megabit ]]></tbox></line>
+<line><tbox llx="90" lly="397" urx="533" ury="412" f="1"><![CDATA[switched Ethernet. Gigabit Ethernet was incapable of connecting large numbers of nodes ]]></tbox></line>
+<line><tbox llx="90" lly="384" urx="533" ury="398" f="1"><![CDATA[at the time of our purchase. The only moderately expensive, high-bandwidth, low-latency ]]></tbox></line>
+<line><tbox llx="90" lly="370" urx="533" ury="385" f="1"><![CDATA[network available at that time was Myrinet. We paid approximately $3,000 per node for ]]></tbox></line>
+<line><tbox llx="90" lly="357" urx="533" ury="371" f="1"><![CDATA[the cpu, memory, and disk; Myrinet cost $1,700 per node for a low-latency network with ]]></tbox></line>
+<line><tbox llx="90" lly="343" urx="533" ury="358" f="1"><![CDATA[a bisection bandwidth of 32 gigabit/sec. for a 64 node system. While spending 40% of ]]></tbox></line>
+<line><tbox llx="90" lly="329" urx="533" ury="344" f="1"><![CDATA[our total money on networking may seem extravagant, we expect that networks with this ]]></tbox></line>
+<line><tbox llx="90" lly="316" urx="533" ury="331" f="1"><![CDATA[level of performance to be much cheaper next year, and we wanted to experiment with next ]]></tbox></line>
+<line><tbox llx="90" lly="302" urx="363" ury="317" f="1"><![CDATA[year's typical ratio of communications to computation. ]]></tbox></line>
+<line><tbox llx="108" lly="289" urx="533" ury="303" f="1"><![CDATA[In addition to this fast and expensive network, we also spent a small amount of money ]]></tbox></line>
+<line><tbox llx="90" lly="275" urx="533" ury="290" f="1"><![CDATA[per node for a ``minimal'' Ethernet network. The cheapest Ethernet topology that we could ]]></tbox></line>
+<line><tbox llx="90" lly="262" urx="533" ury="276" f="1"><![CDATA[think of consisted of a 16-port 100 megabit switch connecting 9 100 megabit hubs, each ]]></tbox></line>
+<line><tbox llx="90" lly="248" urx="533" ury="263" f="1"><![CDATA[with 7 systems. This cost approximately $110 per node, including cards and cables. In ]]></tbox></line>
+<line><tbox llx="90" lly="235" urx="423" ury="249" f="1"><![CDATA[contrast, a 64-port 100 megabit switch costs around $400 per node. ]]></tbox></line>
+<line><tbox llx="90" lly="205" urx="297" ury="221" f="3"><![CDATA[3.3 Experiences with Centurion ]]></tbox></line>
+<line><tbox llx="90" lly="185" urx="533" ury="200" f="1"><![CDATA[The first question most people ask when they consider buying a cluster of individual ma- ]]></tbox></line>
+<line><tbox llx="90" lly="171" urx="533" ury="186" f="1"><![CDATA[chines instead of a single, large machine, is ``aren't there a lot of hidden costs of ownership, ]]></tbox></line>
+<line><tbox llx="90" lly="158" urx="533" ury="172" f="1"><![CDATA[ranging from assembly to higher maintenance costs?'' These concerns are doubled when ]]></tbox></line>
+<line><tbox llx="90" lly="144" urx="533" ury="159" f="1"><![CDATA[the cluster in question runs Linux and is not assembled by a vendor. We have attempted ]]></tbox></line>
+<line><tbox llx="103" lly="131" urx="109" ury="136" f="4"><![CDATA[1 ]]></tbox><tbox llx="107" lly="125" urx="531" ury="137" f="5"><![CDATA[We refer to the collection as Stone Soup because of the similarity in our PC acquisition to the manner ]]></tbox></line>
+<line><tbox llx="90" lly="114" urx="399" ury="126" f="5"><![CDATA[in which the soldier accumulated soup ingredients in the popular folk tale. ]]></tbox></line>
+<line><tbox llx="304" lly="73" urx="320" ury="88" f="1"><![CDATA[4 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="683.00"/></page>
+<page n="5">
+<line><tbox llx="90" lly="668" urx="533" ury="683" f="1"><![CDATA[to assess these costs. Unfortunately (or fortunately?), our team includes a sysadmin who ]]></tbox></line>
+<line><tbox llx="90" lly="655" urx="533" ury="669" f="1"><![CDATA[has commercial experience administering hundreds of machines, which may not be typical ]]></tbox></line>
+<line><tbox llx="90" lly="641" urx="254" ury="656" f="1"><![CDATA[for most academic departments. ]]></tbox></line>
+<line><tbox llx="108" lly="628" urx="533" ury="642" f="1"><![CDATA[Initial physical assembly and installation of the OS via disk cloning took approximately ]]></tbox></line>
+<line><tbox llx="90" lly="614" urx="533" ury="629" f="1"><![CDATA[2 hours of semi-skilled labor per node; the cost of this labor is only a small fraction of ]]></tbox></line>
+<line><tbox llx="90" lly="600" urx="533" ury="615" f="1"><![CDATA[the cost of a node. We later had to re-install a different OS version from scratch; for that ]]></tbox></line>
+<line><tbox llx="90" lly="587" urx="533" ury="602" f="1"><![CDATA[we worked out a network install that took approximately 10 minutes of labor per node. ]]></tbox></line>
+<line><tbox llx="90" lly="574" urx="533" ury="588" f="1"><![CDATA[We administer the machines using RedHat ``packages'' and a few simple iterators which ]]></tbox></line>
+<line><tbox llx="90" lly="560" urx="533" ury="574" f="1"><![CDATA[copy files or perform commands on all nodes. We have not had the cluster for long enough ]]></tbox></line>
+<line><tbox llx="90" lly="546" urx="533" ury="561" f="1"><![CDATA[to assess long-term maintenance costs; we did lose 2 cpus and 1 disk (out of 64) to infant ]]></tbox></line>
+<line><tbox llx="90" lly="533" urx="533" ury="547" f="1"><![CDATA[mortality. We had prepared for this situation by ordering spare units which were kept ready ]]></tbox></line>
+<line><tbox llx="90" lly="519" urx="533" ury="534" f="1"><![CDATA[to be swapped in. Again, the Legion run-time environment facilitates this kind of hot-swap ]]></tbox></line>
+<line><tbox llx="90" lly="506" urx="215" ury="520" f="1"><![CDATA[repair at the node level. ]]></tbox></line>
+<line><tbox llx="108" lly="492" urx="533" ury="507" f="1"><![CDATA[We did suffer a bit because of our choice in operating systems. We chose Linux because ]]></tbox></line>
+<line><tbox llx="90" lly="479" urx="533" ury="493" f="1"><![CDATA[we desired a free Unix clone that ran on both Alphas (our new architecture) and Intel boxes ]]></tbox></line>
+<line><tbox llx="90" lly="465" urx="533" ury="480" f="1"><![CDATA[(our old architecture). Also, this helped us to remain compatible both with our research ]]></tbox></line>
+<line><tbox llx="90" lly="451" urx="533" ury="466" f="1"><![CDATA[partners at the Department of Energy National Labs, and with earlier cluster efforts. Red- ]]></tbox></line>
+<line><tbox llx="90" lly="438" urx="533" ury="452" f="1"><![CDATA[Hat 5.0/Alpha was shipped with broken C++ libraries, and RedHat was uninterested in ]]></tbox></line>
+<line><tbox llx="90" lly="425" urx="533" ury="439" f="1"><![CDATA[fixing it, so we downgraded to 4.2. Driver support for Alpha Linux takes a back-seat to x86 ]]></tbox></line>
+<line><tbox llx="90" lly="411" urx="533" ury="425" f="1"><![CDATA[drivers; we had to look around a bit to find out which driver versions actually worked with ]]></tbox></line>
+<line><tbox llx="90" lly="397" urx="533" ury="412" f="1"><![CDATA[Alpha Linux. We discovered that we could crash all 64 machines simultaneously with cer- ]]></tbox></line>
+<line><tbox llx="90" lly="384" urx="533" ury="398" f="1"><![CDATA[tain floating point exceptions; that was solved by installing a newer kernel version (2.0.33). ]]></tbox></line>
+<line><tbox llx="90" lly="370" urx="533" ury="385" f="1"><![CDATA[Myrinet's network software did not work correctly with a network this large; other large ]]></tbox></line>
+<line><tbox llx="90" lly="357" urx="533" ury="371" f="1"><![CDATA[Myrinet networks do not use the drivers supplied by Myricom. However, Myricom was able ]]></tbox></line>
+<line><tbox llx="90" lly="343" urx="233" ury="358" f="1"><![CDATA[to fix their driver in 2 days. ]]></tbox></line>
+<line><tbox llx="108" lly="329" urx="533" ury="344" f="1"><![CDATA[Thus, the operating system was a case of getting what we paid for, and we complicated ]]></tbox></line>
+<line><tbox llx="90" lly="316" urx="533" ury="331" f="1"><![CDATA[the matter by choosing the highest-performance architecture available, not the one for which ]]></tbox></line>
+<line><tbox llx="90" lly="302" urx="533" ury="317" f="1"><![CDATA[the OS had the best support. We knew this was the case when we made the decision to go ]]></tbox></line>
+<line><tbox llx="90" lly="289" urx="533" ury="303" f="1"><![CDATA[with Linux, and we are, overall, satisfied with the outcome. We are considering a move to ]]></tbox></line>
+<line><tbox llx="90" lly="275" urx="533" ury="290" f="1"><![CDATA[Digital Unix on the Alpha boxes, but this would bring its own set of challenges (compiler ]]></tbox></line>
+<line><tbox llx="90" lly="262" urx="489" ury="276" f="1"><![CDATA[support, OS incompatibility with our nodes and our research collaborators, etc.). ]]></tbox></line>
+<line><tbox llx="90" lly="232" urx="183" ury="248" f="2"><![CDATA[3.4 Phase II ]]></tbox></line>
+<line><tbox llx="90" lly="212" urx="533" ury="227" f="1"><![CDATA[For Phase I of Centurion, we purchased a homogeneous machine with relatively good (and ]]></tbox></line>
+<line><tbox llx="90" lly="198" urx="533" ury="213" f="1"><![CDATA[expensive) networking. For Phase II, which is funded by the Office of Naval Research ]]></tbox></line>
+<line><tbox llx="90" lly="185" urx="533" ury="200" f="1"><![CDATA[through the DURIP program, we want to experiment with scheduling heterogeneous pro- ]]></tbox></line>
+<line><tbox llx="90" lly="171" urx="533" ury="186" f="1"><![CDATA[cessors and networks, so we will be buying a large number of x86 and alpha processors, and ]]></tbox></line>
+<line><tbox llx="90" lly="158" urx="359" ury="172" f="1"><![CDATA[use a large 100 megabit Ethernet switch to link them. ]]></tbox></line>
+<line><tbox llx="108" lly="144" urx="533" ury="159" f="1"><![CDATA[The machine will then have several degrees of heterogeneity, including processor type, ]]></tbox></line>
+<line><tbox llx="90" lly="131" urx="533" ury="145" f="1"><![CDATA[memory per node, interconnection network, and possibly system software. The purpose of ]]></tbox></line>
+<line><tbox llx="90" lly="117" urx="533" ury="132" f="1"><![CDATA[the DURIP award is to study application performance and scheduling in a heterogeneous ]]></tbox></line>
+<line><tbox llx="90" lly="104" urx="533" ury="118" f="1"><![CDATA[environment, so that we can develop technology usable by the DoD to best run their com- ]]></tbox></line>
+<line><tbox llx="304" lly="73" urx="320" ury="88" f="1"><![CDATA[5 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="683.00"/></page>
+<page n="6">
+<line><tbox llx="90" lly="668" urx="533" ury="683" f="1"><![CDATA[plex applications. Phase II will provide us with a rich environment for operating systems ]]></tbox></line>
+<line><tbox llx="90" lly="655" urx="181" ury="669" f="1"><![CDATA[research, as well. ]]></tbox></line>
+<line><tbox llx="90" lly="619" urx="232" ury="640" f="2"><![CDATA[4 Related Work ]]></tbox></line>
+<line><tbox llx="90" lly="596" urx="532" ury="611" f="1"><![CDATA[There are three other projects which we believe are of primary importance when discussing ]]></tbox></line>
+<line><tbox llx="90" lly="582" urx="533" ury="597" f="1"><![CDATA[cluster work such as Centurion. First, the Beowulf project [7] at NASA is one of the best- ]]></tbox></line>
+<line><tbox llx="90" lly="569" urx="533" ury="584" f="1"><![CDATA[known ``pile of PC'' cluster projects. However, Beowulf systems aim for the lowest-price ]]></tbox></line>
+<line><tbox llx="90" lly="555" urx="533" ury="570" f="1"><![CDATA[point rather than the best price-performance tradeoff. This has advantages in that there is ]]></tbox></line>
+<line><tbox llx="90" lly="542" urx="533" ury="556" f="1"><![CDATA[less risk---free operating system support is better for Intel platforms than for others, and ]]></tbox></line>
+<line><tbox llx="90" lly="528" urx="533" ury="543" f="1"><![CDATA[well-understood technologies such as Ethernet provide no surprises in installation, configu- ]]></tbox></line>
+<line><tbox llx="90" lly="515" urx="168" ury="529" f="1"><![CDATA[ration, or use. ]]></tbox></line>
+<line><tbox llx="108" lly="501" urx="533" ury="516" f="1"><![CDATA[The Networks of Workstation (NOW) [1] project at UC Berkeley was focused more ]]></tbox></line>
+<line><tbox llx="90" lly="488" urx="533" ury="502" f="1"><![CDATA[on system-level research rather than supporting scientific computing applications. Sandia ]]></tbox></line>
+<line><tbox llx="90" lly="474" urx="533" ury="489" f="1"><![CDATA[National Labs has the Computational Plant project, which is constructing multicomputers ]]></tbox></line>
+<line><tbox llx="90" lly="461" urx="533" ury="475" f="1"><![CDATA[from DEC Alpha nodes. However, they have ported their custom OS (Puma) to the Alpha, ]]></tbox></line>
+<line><tbox llx="90" lly="447" urx="491" ury="462" f="1"><![CDATA[with the intent of providing ASCI Red-like system functionality on a COTS base. ]]></tbox></line>
+<line><tbox llx="108" lly="433" urx="533" ury="448" f="1"><![CDATA[In our case, we focused on scientific computing and high performance using commodity ]]></tbox></line>
+<line><tbox llx="90" lly="420" urx="533" ury="434" f="1"><![CDATA[components and OS software. Thus, we have made different choices than each of the projects ]]></tbox></line>
+<line><tbox llx="90" lly="406" urx="474" ury="421" f="1"><![CDATA[mentioned above, although Centurion shares some common ground with each. ]]></tbox></line>
+<line><tbox llx="90" lly="370" urx="369" ury="392" f="2"><![CDATA[5 System Component Performance ]]></tbox></line>
+<line><tbox llx="90" lly="348" urx="533" ury="362" f="1"><![CDATA[Before we examine application performance on our cluster, we will describe microbenchmark ]]></tbox></line>
+<line><tbox llx="90" lly="334" urx="533" ury="349" f="1"><![CDATA[performance measurements taken on components of the cluster, including the interconnec- ]]></tbox></line>
+<line><tbox llx="90" lly="321" urx="533" ury="335" f="1"><![CDATA[tion networks and the various processors. These microbenchmarks are important so that ]]></tbox></line>
+<line><tbox llx="90" lly="307" urx="415" ury="321" f="1"><![CDATA[we can properly set our expectations for application performance. ]]></tbox></line>
+<line><tbox llx="90" lly="277" urx="259" ury="293" f="3"><![CDATA[5.1 Myrinet performance ]]></tbox></line>
+<line><tbox llx="90" lly="257" urx="533" ury="272" f="1"><![CDATA[Myrinet offers 2 different interfaces to the system; the usual ``networking'' interface via ]]></tbox></line>
+<line><tbox llx="90" lly="244" urx="533" ury="258" f="1"><![CDATA[the kernel running protocols such as TCP and UDP, and a user-level interface similar to ]]></tbox></line>
+<line><tbox llx="90" lly="230" urx="533" ury="245" f="1"><![CDATA[U-Net [2] or the VIA standard [4]. Gigabit networking requires a low-overhead interface ]]></tbox></line>
+<line><tbox llx="90" lly="216" urx="533" ury="231" f="1"><![CDATA[in order to get gigabit performance; there have been many demonstrations of 700 to 900 ]]></tbox></line>
+<line><tbox llx="90" lly="203" urx="533" ury="218" f="1"><![CDATA[gigabit sustained transfers using Myrinet with various user-level interfaces. However, we ]]></tbox></line>
+<line><tbox llx="90" lly="189" urx="533" ury="204" f="1"><![CDATA[have yet to write an interface between the Legion networking code and a user-level Myrinet ]]></tbox></line>
+<line><tbox llx="90" lly="176" urx="533" ury="190" f="1"><![CDATA[interface, so we are still using the kernel interface. This interface gives us a raw performance ]]></tbox></line>
+<line><tbox llx="90" lly="162" urx="533" ury="177" f="1"><![CDATA[(measured by netperf) of 240 megabit/s for both TCP and UDP. This compares favorably ]]></tbox></line>
+<line><tbox llx="90" lly="149" urx="533" ury="163" f="1"><![CDATA[with the loopback result of 650 megabit/s and 850 megabit/s for TCP and UDP. TCP ]]></tbox></line>
+<line><tbox llx="90" lly="135" urx="388" ury="150" f="1"><![CDATA[latency was 390 usec, compared to 60 usec for the loopback. ]]></tbox></line>
+<line><tbox llx="108" lly="122" urx="533" ury="136" f="1"><![CDATA[As mentioned earlier our Myrinet setup has a theoretical bisection bandwidth of 32 ]]></tbox></line>
+<line><tbox llx="90" lly="108" urx="533" ury="123" f="1"><![CDATA[gigabits per second, and we were unable to produce a bottleneck in the network under any ]]></tbox></line>
+<line><tbox llx="304" lly="73" urx="320" ury="88" f="1"><![CDATA[6 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="683.00"/></page>
+<page n="7">
+<line><tbox llx="90" lly="668" urx="213" ury="683" f="1"><![CDATA[load we could generate. ]]></tbox></line>
+<line><tbox llx="90" lly="639" urx="263" ury="655" f="2"><![CDATA[5.2 Ethernet performance ]]></tbox></line>
+<line><tbox llx="90" lly="618" urx="533" ury="633" f="1"><![CDATA[The single-node netperf results are roughly 70 megabits for TCP and UDP. Ideally we ]]></tbox></line>
+<line><tbox llx="90" lly="605" urx="533" ury="620" f="1"><![CDATA[should be able to hit near 100 megabits, but the drivers are often unable to do that, and ]]></tbox></line>
+<line><tbox llx="90" lly="591" urx="533" ury="606" f="1"><![CDATA[our network is not quiet. TCP latency was 103 usec to a node on the local hub, and 130 ]]></tbox></line>
+<line><tbox llx="90" lly="578" urx="533" ury="592" f="1"><![CDATA[usec to a node on a remote hub. Note that the latency numbers are lower than Myrinet; we ]]></tbox></line>
+<line><tbox llx="90" lly="564" urx="532" ury="579" f="1"><![CDATA[attribute this to high overhead in the Myrinet kernel driver, because we know that user-level ]]></tbox></line>
+<line><tbox llx="90" lly="551" urx="365" ury="565" f="1"><![CDATA[Myrinet protocols can achieve sub-10 usec latencies [6]. ]]></tbox></line>
+<line><tbox llx="108" lly="537" urx="533" ury="552" f="1"><![CDATA[The performance of our cluster using the cheap semi-switched 100 megabit Ethernet ]]></tbox></line>
+<line><tbox llx="90" lly="524" urx="533" ury="538" f="1"><![CDATA[topology described earlier is hard to quantify. While an Ethernet segment with one sender ]]></tbox></line>
+<line><tbox llx="90" lly="510" urx="533" ury="525" f="1"><![CDATA[and one receiver can achieve full wire speed, our experience shows that segments with many ]]></tbox></line>
+<line><tbox llx="90" lly="497" urx="533" ury="511" f="1"><![CDATA[senders and receivers may only achieve 30% of the theoretical maximum, and latencies ]]></tbox></line>
+<line><tbox llx="90" lly="483" urx="533" ury="498" f="1"><![CDATA[become substantial. This is, essentially, similar performance to traditional Ethernet in terms ]]></tbox></line>
+<line><tbox llx="90" lly="469" urx="533" ury="484" f="1"><![CDATA[of relative saturation levels; given that the lowest branch of our cluster topology are based ]]></tbox></line>
+<line><tbox llx="90" lly="456" urx="533" ury="470" f="1"><![CDATA[on unswitched Ethernet, this is not at all surprising. The measured bisection bandwidth ]]></tbox></line>
+<line><tbox llx="90" lly="442" urx="533" ury="457" f="1"><![CDATA[(each system sending to a system on a different hub) is 400 megabit/s. The bisection ]]></tbox></line>
+<line><tbox llx="90" lly="429" urx="533" ury="443" f="1"><![CDATA[bandwidth of today's large 100 megabit switches ($400/node as opposed to $110/node) is ]]></tbox></line>
+<line><tbox llx="90" lly="415" urx="533" ury="430" f="1"><![CDATA[often bound by limited backplane bandwidth to a few gigabits; as you can see, this is far ]]></tbox></line>
+<line><tbox llx="90" lly="402" urx="348" ury="416" f="1"><![CDATA[better than our semi-switched (but cheap) network. ]]></tbox></line>
+<line><tbox llx="90" lly="372" urx="276" ury="388" f="2"><![CDATA[5.3 Stone soup performance ]]></tbox></line>
+<line><tbox llx="90" lly="352" urx="533" ury="366" f="1"><![CDATA[In addition to the 64 alphas we have been discussing thus far, we already owned 16 dual- ]]></tbox></line>
+<line><tbox llx="90" lly="338" urx="533" ury="353" f="1"><![CDATA[processor 200mhz Pentium Pro machines, all of which have Myrinet cards. These machines ]]></tbox></line>
+<line><tbox llx="90" lly="325" urx="533" ury="339" f="1"><![CDATA[are mostly used by our developers, but we do heterogeneous computations using Legion on ]]></tbox></line>
+<line><tbox llx="90" lly="311" urx="336" ury="326" f="1"><![CDATA[these machines and Centurion on a regular basis. ]]></tbox></line>
+<line><tbox llx="108" lly="298" urx="533" ury="312" f="1"><![CDATA[The issue of compilers is always a vexing one for Linux systems. For the x86, the ]]></tbox></line>
+<line><tbox llx="90" lly="284" urx="533" ury="299" f="1"><![CDATA[compilers from the Portland Group have published SPEC numbers that are slightly higher ]]></tbox></line>
+<line><tbox llx="90" lly="271" urx="533" ury="285" f="1"><![CDATA[(under Linux) than Intel's best fp results; our running of gcc-2.7.2 is 22% slower than Intel's ]]></tbox></line>
+<line><tbox llx="90" lly="257" urx="307" ury="272" f="1"><![CDATA[best result in integer, and 23% slower in fp ]]></tbox><tbox llx="297" lly="263" urx="305" ury="269" f="3"><![CDATA[2 ]]></tbox><tbox llx="302" lly="257" urx="533" ury="272" f="1"><![CDATA[. Intel has made optimized BLAS routines for ]]></tbox></line>
+<line><tbox llx="90" lly="244" urx="533" ury="258" f="1"><![CDATA[Linux available via public ftp as part of the ASCI Red project. We have a long-standing ]]></tbox></line>
+<line><tbox llx="90" lly="230" urx="533" ury="244" f="1"><![CDATA[relationship with Sandia's MPCRL (the people who do the OS support for ASCI Red), so ]]></tbox></line>
+<line><tbox llx="90" lly="216" urx="533" ury="231" f="1"><![CDATA[we expect to use these optimized routines in the future to maintain compatibility with work ]]></tbox></line>
+<line><tbox llx="90" lly="203" urx="176" ury="217" f="1"><![CDATA[at the MPCRL. ]]></tbox></line>
+<line><tbox llx="90" lly="173" urx="246" ury="190" f="2"><![CDATA[5.4 Alpha performance ]]></tbox></line>
+<line><tbox llx="90" lly="153" urx="533" ury="168" f="1"><![CDATA[The issue of compilers is doubly interesting on the alpha, because it was known that gcc ]]></tbox></line>
+<line><tbox llx="90" lly="139" urx="533" ury="154" f="1"><![CDATA[does a poor job of generating code for the alpha. However, our running of SPEC95fp ]]></tbox></line>
+<line><tbox llx="90" lly="126" urx="533" ury="140" f="1"><![CDATA[with gcc/egcs-1.0.1 showed that gcc was between 7% faster and 30% slower than Digital's ]]></tbox></line>
+<line><tbox llx="103" lly="112" urx="109" ury="117" f="4"><![CDATA[2 ]]></tbox><tbox llx="107" lly="106" urx="251" ury="118" f="5"><![CDATA[full details available upon request ]]></tbox></line>
+<line><tbox llx="304" lly="73" urx="320" ury="88" f="1"><![CDATA[7 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="683.00"/></page>
+<page n="8">
+<line><tbox llx="90" lly="668" urx="533" ury="683" f="1"><![CDATA[compiler. (This SPEC result is not formally publishable because SPEC has never bothered ]]></tbox></line>
+<line><tbox llx="90" lly="655" urx="533" ury="669" f="1"><![CDATA[to approve how we compiled `make', but we are happy to provide the details upon request.) ]]></tbox></line>
+<line><tbox llx="90" lly="641" urx="533" ury="656" f="1"><![CDATA[It is also possible to cross-compile with Digital's compiler on a Digital Unix machine and ]]></tbox></line>
+<line><tbox llx="90" lly="628" urx="374" ury="642" f="1"><![CDATA[run the resulting (statically-linked) binaries under Linux. ]]></tbox></line>
+<line><tbox llx="108" lly="614" urx="533" ury="629" f="1"><![CDATA[In addition to compiler quality, library quality is also an issue. As usual this is a work ]]></tbox></line>
+<line><tbox llx="90" lly="600" urx="533" ury="615" f="1"><![CDATA[in progress; good fundamental math library routines for the Alpha will be released in July ]]></tbox></line>
+<line><tbox llx="90" lly="587" urx="533" ury="602" f="1"><![CDATA[1998, and an optimized BLAS matrix-multiply routine written by a patent clerk in Japan ]]></tbox></line>
+<line><tbox llx="90" lly="574" urx="532" ury="588" f="1"><![CDATA[(K. Goto) is faster than Digital's BLAS routines, but not all BLAS routines are available ]]></tbox></line>
+<line><tbox llx="90" lly="560" urx="251" ury="574" f="1"><![CDATA[in optimized form under Linux. ]]></tbox></line>
+<line><tbox llx="90" lly="524" urx="222" ury="545" f="2"><![CDATA[6 Applications ]]></tbox></line>
+<line><tbox llx="90" lly="501" urx="533" ury="516" f="1"><![CDATA[To illustrate the use of Centurion to support scientific applications, we will describe our ]]></tbox></line>
+<line><tbox llx="90" lly="488" urx="533" ury="502" f="1"><![CDATA[experiences in porting four separate applications to the machine. We have selected these ]]></tbox></line>
+<line><tbox llx="90" lly="474" urx="533" ury="489" f="1"><![CDATA[programs as a representative sample of the application universe in which we work; the suite ]]></tbox></line>
+<line><tbox llx="90" lly="461" urx="533" ury="475" f="1"><![CDATA[represents a computational fluid dynamics code, generic parameter-space studies in Fortran, ]]></tbox></line>
+<line><tbox llx="90" lly="447" urx="533" ury="462" f="1"><![CDATA[a macro dataflow program for genomics, and a particle-in-cell code used in materials science. ]]></tbox></line>
+<line><tbox llx="90" lly="417" urx="318" ury="434" f="3"><![CDATA[6.1 Nameless Ocean Model (NOM) ]]></tbox></line>
+<line><tbox llx="90" lly="397" urx="533" ury="412" f="1"><![CDATA[As part of our participation in the Department of Defense High-Performance Computing ]]></tbox></line>
+<line><tbox llx="90" lly="384" urx="450" ury="398" f="1"><![CDATA[Modernization (HPCMOD) program, we have helped the NAVO MSRC ]]></tbox><tbox llx="440" lly="390" urx="448" ury="396" f="4"><![CDATA[3 ]]></tbox><tbox llx="449" lly="384" urx="533" ury="398" f="1"><![CDATA[conduct bench- ]]></tbox></line>
+<line><tbox llx="90" lly="370" urx="533" ury="385" f="1"><![CDATA[marks on various hardware. The ``Nameless Ocean Model'' is one program used for this ]]></tbox></line>
+<line><tbox llx="90" lly="357" urx="533" ury="371" f="1"><![CDATA[purpose. This program solves shallow-water equations; this sort of code is used today to ]]></tbox></line>
+<line><tbox llx="90" lly="343" urx="533" ury="357" f="1"><![CDATA[simulate shallow estuaries and in modeling of oceans and ice in the polar regions. It is a ]]></tbox></line>
+<line><tbox llx="90" lly="329" urx="533" ury="344" f="1"><![CDATA[Fortran program which uses a time-explicit finite difference technique, which can be thought ]]></tbox></line>
+<line><tbox llx="90" lly="316" urx="533" ury="330" f="1"><![CDATA[of as applying an expensive stencil operation repeatedly to all points on a grid. Computa- ]]></tbox></line>
+<line><tbox llx="90" lly="302" urx="533" ury="317" f="1"><![CDATA[tional fluid dynamics (CFD) programs are often thought to require such low latencies and ]]></tbox></line>
+<line><tbox llx="90" lly="289" urx="533" ury="303" f="1"><![CDATA[high bandwidth communications that they are not suitable for clusters of machines, but we ]]></tbox></line>
+<line><tbox llx="90" lly="275" urx="384" ury="290" f="1"><![CDATA[will show that this particular code runs well on our cluster. ]]></tbox></line>
+<line><tbox llx="108" lly="262" urx="533" ury="276" f="1"><![CDATA[The version of the code handed to us had already been parallelized for a homogeneous ]]></tbox></line>
+<line><tbox llx="90" lly="248" urx="533" ury="263" f="1"><![CDATA[machine, using MPI message-passing. It was parallelized in the traditional way, namely ]]></tbox></line>
+<line><tbox llx="90" lly="235" urx="533" ury="249" f="1"><![CDATA[the computational domain was decomposed in two dimensions into squares, and boundary ]]></tbox></line>
+<line><tbox llx="90" lly="221" urx="533" ury="236" f="1"><![CDATA[regions were exchanged between adjacent squares every timestep, as shown in figure 1. ]]></tbox></line>
+<line><tbox llx="90" lly="208" urx="533" ury="222" f="1"><![CDATA[Other CFD techniques such as implicit or spectral methods require more communications. ]]></tbox></line>
+<line><tbox llx="108" lly="194" urx="533" ury="208" f="1"><![CDATA[It turns out that this code runs quite well on our existing, homogeneous cluster. Using ]]></tbox></line>
+<line><tbox llx="90" lly="180" urx="533" ury="195" f="1"><![CDATA[our semi-switched 100 mbit networking, the code got 155 MFlops ``out of the box'' on 4 ]]></tbox></line>
+<line><tbox llx="90" lly="167" urx="533" ury="181" f="1"><![CDATA[cpus. After suitable cache-friendly optimizations, it got 476 Mflops on 4 cpus and 3700 ]]></tbox></line>
+<line><tbox llx="90" lly="153" urx="533" ury="168" f="1"><![CDATA[Mflops on 49 cpus. This code gets around 650 Mflops on a single Cray T90 cpu. More ]]></tbox></line>
+<line><tbox llx="90" lly="140" urx="533" ury="154" f="1"><![CDATA[interesting to us is a comparison to an SGI Origin 2000; we get about 70% of the O2k's ]]></tbox></line>
+<line><tbox llx="90" lly="126" urx="395" ury="141" f="1"><![CDATA[performance at 49 cpus, but our machine costs 1/10 as much. ]]></tbox></line>
+<line><tbox llx="103" lly="112" urx="109" ury="117" f="5"><![CDATA[3 ]]></tbox><tbox llx="107" lly="106" urx="364" ury="119" f="6"><![CDATA[Major Shared Resource Center--a DoD supercomputer center. ]]></tbox></line>
+<line><tbox llx="304" lly="73" urx="320" ury="88" f="1"><![CDATA[8 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="683.00"/></page>
+<page n="9">
+<line><tbox llx="162" lly="463" urx="204" ury="483" f="1"><![CDATA[Data ]]></tbox></line>
+<line><tbox llx="148" lly="482" urx="218" ury="502" f="1"><![CDATA[Boundary ]]></tbox></line>
+<line><tbox llx="125" lly="330" urx="228" ury="345" f="1"><![CDATA[Node Boundary ]]></tbox></line>
+<line><tbox llx="191" lly="247" urx="432" ury="261" f="1"><![CDATA[Figure 1: Nameless Ocean Model decomposition ]]></tbox></line>
+<line><tbox llx="304" lly="73" urx="320" ury="88" f="1"><![CDATA[9 ]]></tbox></line>
+<pbox llx="108.00" lly="73.00" urx="432.00" ury="683.00"/></page>
+<page n="10">
+<line><tbox llx="108" lly="668" urx="532" ury="683" f="1"><![CDATA[In the near future, we plan on building a generic tool which can work with the application ]]></tbox></line>
+<line><tbox llx="90" lly="655" urx="533" ury="669" f="1"><![CDATA[to statically allocate different-sized domains to processors of different speeds. In this way, ]]></tbox></line>
+<line><tbox llx="90" lly="641" urx="533" ury="656" f="1"><![CDATA[we will take advantage of Centurion Phase II, as well as our other existing infrastructure ]]></tbox></line>
+<line><tbox llx="90" lly="628" urx="219" ury="642" f="1"><![CDATA[such as the Stone Soups. ]]></tbox></line>
+<line><tbox llx="90" lly="598" urx="177" ury="614" f="2"><![CDATA[6.2 Flogger ]]></tbox></line>
+<line><tbox llx="90" lly="578" urx="533" ury="592" f="1"><![CDATA[As part of our exploration of ways to run generic, non-Legion-aware programs under Legion, ]]></tbox></line>
+<line><tbox llx="90" lly="564" urx="533" ury="579" f="1"><![CDATA[we have built an example tool which allows remote, transparent execution of serial programs ]]></tbox></line>
+<line><tbox llx="90" lly="551" urx="533" ury="565" f="1"><![CDATA[whose only interaction with the user is via disk files. One real-life class of applications which ]]></tbox></line>
+<line><tbox llx="90" lly="537" urx="533" ury="552" f="1"><![CDATA[benefit from this is scientific parameter-space searches. For example, we might want to run ]]></tbox></line>
+<line><tbox llx="90" lly="524" urx="533" ury="538" f="1"><![CDATA[several programs in sequence which compute the lift generated by a particular airplane ]]></tbox></line>
+<line><tbox llx="90" lly="510" urx="533" ury="525" f="1"><![CDATA[wing at various atmospheric pressures and angles of attack, and we have thousands of ]]></tbox></line>
+<line><tbox llx="90" lly="497" urx="533" ury="511" f="1"><![CDATA[combinations of pressures and angles and wing designs. Each run might take only a few ]]></tbox></line>
+<line><tbox llx="90" lly="483" urx="533" ury="498" f="1"><![CDATA[hours on a single cpu, but the total cpu time consumed could be many cpu-years. This sort ]]></tbox></line>
+<line><tbox llx="90" lly="469" urx="330" ury="484" f="1"><![CDATA[of problem is something we call a ''bag of tasks. ]]></tbox><tbox llx="319" lly="476" urx="327" ury="482" f="3"><![CDATA[4 ]]></tbox><tbox llx="324" lly="469" urx="340" ury="484" f="1"><![CDATA['' ]]></tbox></line>
+<line><tbox llx="108" lly="456" urx="533" ury="470" f="1"><![CDATA[Since our interests extend beyond cluster computing to metacomputing, the example ]]></tbox></line>
+<line><tbox llx="90" lly="442" urx="533" ury="457" f="1"><![CDATA[tool we built used existing Legion mechanisms to securely transport both the executable ]]></tbox></line>
+<line><tbox llx="90" lly="429" urx="533" ury="443" f="1"><![CDATA[program and data files to remote nodes and return the output files to the user. This is ]]></tbox></line>
+<line><tbox llx="90" lly="415" urx="533" ury="430" f="1"><![CDATA[overkill on a cluster, but is very useful when the resources used by a computation span ]]></tbox></line>
+<line><tbox llx="90" lly="402" urx="473" ury="416" f="1"><![CDATA[several administrative domains, which do not share NFS-mounted filesystems. ]]></tbox></line>
+<line><tbox llx="108" lly="388" urx="533" ury="403" f="1"><![CDATA[To date, we have used this example tool to run ''bag of tasks'' computations which ]]></tbox></line>
+<line><tbox llx="90" lly="375" urx="533" ury="389" f="1"><![CDATA[transparently used Centurion and machines (with a different architecture) at the San Diego ]]></tbox></line>
+<line><tbox llx="90" lly="361" urx="461" ury="376" f="1"><![CDATA[Supercomputer Center. The example tool consists of 163 lines of perl code. ]]></tbox></line>
+<line><tbox llx="90" lly="331" urx="183" ury="348" f="2"><![CDATA[6.3 Complib ]]></tbox></line>
+<line><tbox llx="90" lly="311" urx="533" ury="326" f="1"><![CDATA[An on-going research project which pre-dates the Legion effort is the Mentat Programming ]]></tbox></line>
+<line><tbox llx="90" lly="298" urx="533" ury="312" f="1"><![CDATA[Language, a C++ superset which supports coarse-grained parallel processing. Mentat al- ]]></tbox></line>
+<line><tbox llx="90" lly="284" urx="533" ury="299" f="1"><![CDATA[lows the programmer to declare instances of particular C++ classes to represent objects, ]]></tbox></line>
+<line><tbox llx="90" lly="271" urx="533" ury="285" f="1"><![CDATA[which execute in separate addresses spaces. The Mentat compiler and run-time system ]]></tbox></line>
+<line><tbox llx="90" lly="257" urx="533" ury="272" f="1"><![CDATA[then performs macro-dataflow on the inputs and results of method calls on these objects, ]]></tbox></line>
+<line><tbox llx="90" lly="244" urx="533" ury="258" f="1"><![CDATA[automatically building graphs of inter-related method calls and executing each method call ]]></tbox></line>
+<line><tbox llx="90" lly="230" urx="246" ury="244" f="1"><![CDATA[as its inputs become available. ]]></tbox></line>
+<line><tbox llx="108" lly="216" urx="533" ury="231" f="1"><![CDATA[We have used this language to construct an application for DNA and protein sequence ]]></tbox></line>
+<line><tbox llx="90" lly="203" urx="533" ury="217" f="1"><![CDATA[comparison, called Complib. Biologists determine the structure of new proteins by compar- ]]></tbox></line>
+<line><tbox llx="90" lly="189" urx="533" ury="204" f="1"><![CDATA[ing their sequences to a library of known proteins. This algorithm maps well to the notion ]]></tbox></line>
+<line><tbox llx="90" lly="176" urx="533" ury="190" f="1"><![CDATA[of macro-dataflow. The MPL code for the fundamental kernel of the program is shown in ]]></tbox></line>
+<line><tbox llx="90" lly="162" urx="533" ury="177" f="1"><![CDATA[figure 2. The match function computes an integer result which represents the degree of ]]></tbox></line>
+<line><tbox llx="90" lly="149" urx="533" ury="163" f="1"><![CDATA[similarity of the two genetic sequences (the test sequence and one from the library). This ]]></tbox></line>
+<line><tbox llx="90" lly="135" urx="533" ury="150" f="1"><![CDATA[function is stateless; thus, we know that all iterations of this loop could be performed in ]]></tbox></line>
+<line><tbox llx="103" lly="122" urx="109" ury="127" f="4"><![CDATA[4 ]]></tbox><tbox llx="107" lly="116" urx="531" ury="128" f="5"><![CDATA[The name implies that one just reaches into the bag and grabs the next task to be run; tasks are ]]></tbox></line>
+<line><tbox llx="90" lly="105" urx="362" ury="117" f="5"><![CDATA[completely independent, and order of execution is not important. ]]></tbox></line>
+<line><tbox llx="301" lly="73" urx="322" ury="88" f="1"><![CDATA[10 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="683.00"/></page>
+<page n="11">
+<line><tbox llx="108" lly="658" urx="256" ury="666" f="1"><![CDATA[mentat stateless compute; ]]></tbox></line>
+<line><tbox llx="108" lly="645" urx="210" ury="652" f="1"><![CDATA[mentat collector; ]]></tbox></line>
+<line><tbox llx="108" lly="617" urx="175" ury="625" f="1"><![CDATA[do i = 1, n ]]></tbox></line>
+<line><tbox llx="119" lly="604" urx="187" ury="612" f="1"><![CDATA[do j = 1, m ]]></tbox></line>
+<line><tbox llx="136" lly="590" urx="462" ury="598" f="1"><![CDATA[collector.result(compute.match(sequence(i),sequence(j))) ]]></tbox></line>
+<line><tbox llx="119" lly="577" urx="153" ury="585" f="1"><![CDATA[enddo ]]></tbox></line>
+<line><tbox llx="108" lly="563" urx="141" ury="571" f="1"><![CDATA[enddo ]]></tbox></line>
+<line><tbox llx="218" lly="515" urx="405" ury="530" f="2"><![CDATA[Figure 2: MPL program for Complib ]]></tbox></line>
+<line><tbox llx="244" lly="365" urx="308" ury="385" f="3"><![CDATA[Collector ]]></tbox></line>
+<line><tbox llx="258" lly="482" urx="299" ury="502" f="3"><![CDATA[Main ]]></tbox></line>
+<line><tbox llx="366" lly="437" urx="431" ury="457" f="3"><![CDATA[Compute ]]></tbox></line>
+<line><tbox llx="366" lly="419" urx="423" ury="439" f="3"><![CDATA[Objects ]]></tbox></line>
+<line><tbox llx="187" lly="323" urx="436" ury="338" f="2"><![CDATA[Figure 3: The Macro-Dataflow graph for Complib ]]></tbox></line>
+<line><tbox llx="90" lly="291" urx="533" ury="305" f="2"><![CDATA[parallel. The Mentat compiler is able to recognize this property in the Mentat program ]]></tbox></line>
+<line><tbox llx="90" lly="277" urx="533" ury="291" f="2"><![CDATA[shown in figure 2. From this code, the Mentat run-time system generates the graph shown ]]></tbox></line>
+<line><tbox llx="90" lly="263" urx="152" ury="278" f="2"><![CDATA[in figure 3. ]]></tbox></line>
+<line><tbox llx="108" lly="250" urx="533" ury="264" f="2"><![CDATA[The underlying Legion run-time system has the opportunity to decide the number of ]]></tbox></line>
+<line><tbox llx="90" lly="236" urx="533" ury="251" f="2"><![CDATA[``compute'' objects created to process this loop, and to use the Legion resource management ]]></tbox></line>
+<line><tbox llx="90" lly="223" urx="533" ury="237" f="2"><![CDATA[facilities for object placement. Once the worker objects are placed, we can load balance the ]]></tbox></line>
+<line><tbox llx="90" lly="209" urx="533" ury="224" f="2"><![CDATA[computation by directing method calls to the worker objects with the lightest load (smallest ]]></tbox></line>
+<line><tbox llx="90" lly="196" urx="259" ury="210" f="2"><![CDATA[number of outstanding requests). ]]></tbox></line>
+<line><tbox llx="90" lly="166" urx="253" ury="182" f="3"><![CDATA[6.4 Particle-in-cell Code ]]></tbox></line>
+<line><tbox llx="90" lly="146" urx="533" ury="160" f="2"><![CDATA[Another problem run on Centurion was a particle-in-cell code which is used to simulate ]]></tbox></line>
+<line><tbox llx="90" lly="132" urx="533" ury="147" f="2"><![CDATA[particle deposition onto a surface. In this simulation, the surface of interest is broken ]]></tbox></line>
+<line><tbox llx="90" lly="119" urx="533" ury="133" f="2"><![CDATA[down into small areas called cells. Each cell tracks the deposition of a number of particles ]]></tbox></line>
+<line><tbox llx="90" lly="105" urx="533" ury="120" f="2"><![CDATA[(hence the name). One application of this code is modeling the production of VLSI chips ]]></tbox></line>
+<line><tbox llx="301" lly="73" urx="322" ury="88" f="2"><![CDATA[11 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="683.00"/></page>
+<page n="12">
+<line><tbox llx="90" lly="668" urx="532" ury="683" f="1"><![CDATA[by ion deposition. We were presented with a serial version of this code, and parallelized ]]></tbox></line>
+<line><tbox llx="90" lly="655" urx="533" ury="669" f="1"><![CDATA[it in the obvious fashion, decomposing the spatial domain, having neighboring domains ]]></tbox></line>
+<line><tbox llx="90" lly="641" urx="533" ury="656" f="1"><![CDATA[exchange messages. Even though the amount of computation per particle was fairly small, ]]></tbox></line>
+<line><tbox llx="90" lly="628" urx="533" ury="642" f="1"><![CDATA[the number of particles needing to be exchanged was small enough that the code runs quite ]]></tbox></line>
+<line><tbox llx="90" lly="614" urx="360" ury="629" f="1"><![CDATA[well on our 100 mbit semi-switched Ethernet network. ]]></tbox></line>
+<line><tbox llx="108" lly="600" urx="533" ury="615" f="1"><![CDATA[As seen in figure 4, we observed super-linear speedup. We attribute this to a lack of ]]></tbox></line>
+<line><tbox llx="90" lly="587" urx="533" ury="602" f="1"><![CDATA[sufficient cache when only a few processors were used. The data represent a variety of spatial ]]></tbox></line>
+<line><tbox llx="90" lly="574" urx="291" ury="588" f="1"><![CDATA[decompositions; if the number of rows is ]]></tbox><tbox llx="284" lly="574" urx="300" ury="585" f="2"><![CDATA[? ]]></tbox><tbox llx="296" lly="574" urx="533" ury="588" f="1"><![CDATA[1, this indicates a 2-dimensional decomposition. ]]></tbox></line>
+<line><tbox llx="90" lly="560" urx="248" ury="574" f="1"><![CDATA[Full details are available in [3]. ]]></tbox></line>
+<line><tbox llx="90" lly="524" urx="282" ury="545" f="3"><![CDATA[7 Concluding Remarks ]]></tbox></line>
+<line><tbox llx="90" lly="501" urx="533" ury="516" f="1"><![CDATA[In this paper, we have described some of our experiences building the Centurion cluster, and ]]></tbox></line>
+<line><tbox llx="90" lly="488" urx="533" ury="502" f="1"><![CDATA[porting and tuning applications to our run-time system using the cluster. Our experiences in ]]></tbox></line>
+<line><tbox llx="90" lly="474" urx="533" ury="489" f="1"><![CDATA[building the cluster demonstrate that a high-performance multicomputer can be constructed ]]></tbox></line>
+<line><tbox llx="90" lly="461" urx="533" ury="475" f="1"><![CDATA[from inexpensive commodity parts. Our experience moving a range of applications to ]]></tbox></line>
+<line><tbox llx="90" lly="447" urx="533" ury="462" f="1"><![CDATA[Centurion leads us to conclude that such a platform is well-suited to many applications, ]]></tbox></line>
+<line><tbox llx="90" lly="433" urx="533" ury="448" f="1"><![CDATA[even some which have historically been regarded as impractical for distributed-memory ]]></tbox></line>
+<line><tbox llx="90" lly="420" urx="178" ury="434" f="1"><![CDATA[multicomputers. ]]></tbox></line>
+<line><tbox llx="108" lly="406" urx="533" ury="421" f="1"><![CDATA[In short, we have demonstrated that with proper care and feeding, a COTS cluster ]]></tbox></line>
+<line><tbox llx="90" lly="393" urx="533" ury="407" f="1"><![CDATA[can outperform dedicated supercomputers at a fraction of the cost. A system capable of ]]></tbox></line>
+<line><tbox llx="90" lly="379" urx="533" ury="394" f="1"><![CDATA[sustaining computation rates comparable to commercial supercomputers can be had for a ]]></tbox></line>
+<line><tbox llx="90" lly="366" urx="533" ury="380" f="1"><![CDATA[fraction of the cost, and Moore's law dictates that the price-performance ratio on these ]]></tbox></line>
+<line><tbox llx="90" lly="352" urx="475" ury="367" f="1"><![CDATA[machines will continue to grow faster than that for dedicated supercomputers. ]]></tbox></line>
+<line><tbox llx="90" lly="316" urx="185" ury="337" f="3"><![CDATA[References ]]></tbox></line>
+<line><tbox llx="90" lly="293" urx="533" ury="308" f="1"><![CDATA[[1] T. E. Anderson, D. E. Culler, D. A. Patterson, and the NOW Team. A case for networks ]]></tbox></line>
+<line><tbox llx="108" lly="280" urx="223" ury="294" f="1"><![CDATA[of workstations: Now. ]]></tbox><tbox llx="217" lly="280" urx="287" ury="293" f="4"><![CDATA[IEEE Micro, ]]></tbox><tbox llx="282" lly="280" urx="364" ury="294" f="1"><![CDATA[February 1995. ]]></tbox></line>
+<line><tbox llx="90" lly="257" urx="533" ury="272" f="1"><![CDATA[[2] A. Basu, V. Buch, W. Vogels, and T. von Eicken. U-net: A user-level network interface ]]></tbox></line>
+<line><tbox llx="108" lly="244" urx="318" ury="258" f="1"><![CDATA[for parallel and distributed computing. In ]]></tbox><tbox llx="311" lly="244" urx="531" ury="257" f="4"><![CDATA[Proceedings of the 15th ACM Symposium on ]]></tbox></line>
+<line><tbox llx="108" lly="231" urx="300" ury="244" f="4"><![CDATA[Operating Systems Principles (SOSP), ]]></tbox><tbox llx="294" lly="230" urx="401" ury="245" f="1"><![CDATA[December 3--6 1995. ]]></tbox></line>
+<line><tbox llx="90" lly="208" urx="533" ury="222" f="1"><![CDATA[[3] N. Beekwilder and A. Grimshaw. Parallelization of an axially symmetric steady flow ]]></tbox></line>
+<line><tbox llx="108" lly="194" urx="533" ury="209" f="1"><![CDATA[program. Technical Report CS-98-10, Department of Computer Science, University of ]]></tbox></line>
+<line><tbox llx="108" lly="181" urx="213" ury="195" f="1"><![CDATA[Virginia, May 1998. ]]></tbox></line>
+<line><tbox llx="90" lly="158" urx="139" ury="173" f="1"><![CDATA[[4] Intel ]]></tbox><tbox llx="156" lly="158" urx="533" ury="173" f="1"><![CDATA[Corporation. The virtual interface architecture. ]]></tbox></line>
+<line><tbox llx="108" lly="145" urx="417" ury="159" f="1"><![CDATA[http://www.intel.com/procs/SERVERS/isv/vi/vi2/index.htm. ]]></tbox></line>
+<line><tbox llx="90" lly="122" urx="533" ury="137" f="1"><![CDATA[[5] A. S. Grimshaw, Wm. A. Wulf, and the Legion Team. The legion vision of a worldwide ]]></tbox></line>
+<line><tbox llx="108" lly="108" urx="201" ury="123" f="1"><![CDATA[virtual computer. ]]></tbox><tbox llx="196" lly="109" urx="348" ury="122" f="4"><![CDATA[Communications of the ACM, ]]></tbox><tbox llx="342" lly="108" urx="451" ury="123" f="1"><![CDATA[40(1), January 1997. ]]></tbox></line>
+<line><tbox llx="301" lly="73" urx="322" ury="88" f="1"><![CDATA[12 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="695.00"/></page>
+<page n="13">
+<line><tbox llx="282" lly="679" urx="345" ury="695" f="1"><![CDATA[Speed Up ]]></tbox></line>
+<line><tbox llx="130" lly="444" urx="143" ury="456" f="2"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="125" lly="473" urx="143" ury="486" f="2"><![CDATA[10 ]]></tbox></line>
+<line><tbox llx="125" lly="503" urx="143" ury="515" f="2"><![CDATA[20 ]]></tbox></line>
+<line><tbox llx="125" lly="532" urx="143" ury="545" f="2"><![CDATA[30 ]]></tbox></line>
+<line><tbox llx="125" lly="561" urx="143" ury="573" f="2"><![CDATA[40 ]]></tbox></line>
+<line><tbox llx="125" lly="590" urx="143" ury="603" f="2"><![CDATA[50 ]]></tbox></line>
+<line><tbox llx="125" lly="620" urx="143" ury="632" f="2"><![CDATA[60 ]]></tbox></line>
+<line><tbox llx="125" lly="649" urx="143" ury="662" f="2"><![CDATA[70 ]]></tbox></line>
+<line><tbox llx="139" lly="432" urx="451" ury="445" f="2"><![CDATA[0 10 20 30 40 50 60 ]]></tbox></line>
+<line><tbox llx="267" lly="418" urx="321" ury="431" f="3"><![CDATA[Processors ]]></tbox></line>
+<line><tbox llx="118" lly="538" urx="119" ury="563" f="4"><![CDATA[Speed ]]></tbox></line>
+<line><tbox llx="480" lly="578" urx="511" ury="590" f="2"><![CDATA[Linear ]]></tbox></line>
+<line><tbox llx="480" lly="565" urx="512" ury="578" f="2"><![CDATA[1 Row ]]></tbox></line>
+<line><tbox llx="480" lly="552" urx="517" ury="565" f="2"><![CDATA[2 Rows ]]></tbox></line>
+<line><tbox llx="480" lly="540" urx="517" ury="552" f="2"><![CDATA[3 Rows ]]></tbox></line>
+<line><tbox llx="480" lly="527" urx="517" ury="540" f="2"><![CDATA[4 Rows ]]></tbox></line>
+<line><tbox llx="480" lly="515" urx="521" ury="527" f="2"><![CDATA[100 Mbit ]]></tbox></line>
+<line><tbox llx="182" lly="86" urx="441" ury="100" f="1"><![CDATA[Figure 4: Measured speedup for particle-in-cell code ]]></tbox></line>
+<line><tbox llx="301" lly="73" urx="322" ury="88" f="1"><![CDATA[13 ]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="521.00" ury="695.00"/></page>
+<page n="14">
+<line><tbox llx="90" lly="668" urx="533" ury="683" f="1"><![CDATA[[6] S. Pakin, V. Karamcheti, and A. Chien. Fast messages: Efficient, portable communica- ]]></tbox></line>
+<line><tbox llx="108" lly="655" urx="310" ury="669" f="1"><![CDATA[tion for workstation clusters and MPPs. ]]></tbox><tbox llx="304" lly="655" urx="407" ury="668" f="2"><![CDATA[IEEE Concurrency, ]]></tbox><tbox llx="401" lly="655" urx="517" ury="669" f="1"><![CDATA[5(2), April-June 1997. ]]></tbox></line>
+<line><tbox llx="90" lly="632" urx="533" ury="647" f="1"><![CDATA[[7] T. Sterling. Low cost (m2cots) cluster system design and development (derived from ]]></tbox></line>
+<line><tbox llx="108" lly="619" urx="475" ury="633" f="1"><![CDATA[the beowulf experience). http://www.cacr.caltech.edu/ tron/presenta.htm. ]]></tbox></line>
+<line><tbox llx="301" lly="73" urx="322" ury="88" f="1"><![CDATA[14]]></tbox></line>
+<pbox llx="90.00" lly="73.00" urx="533.00" ury="683.00"/></page>
+<fonts>
+<font name="Unknown" h="13.54" n="1"/>
+<font name="Unknown" h="11.81" n="2"/>
+<font name="Helvetica-Bold" h="11.75" n="3"/>
+<font name="Helvetica-Bold" h="0.00" n="4"/>
+<font name="Unknown" h="11.23" n="5"/>
+<font name="Unknown" h="11.23" n="6"/>
+<font name="Unknown" h="4.61" n="7"/>
+<font name="Unknown" h="11.23" n="8"/>
+</fonts>
+</document>

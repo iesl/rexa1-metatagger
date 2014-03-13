@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+<page n="1">
+<line><tbox llx="121" lly="706" urx="497" ury="731" f="1"><![CDATA[Threshold Selection for Correlation-Based ]]></tbox></line>
+<line><tbox llx="207" lly="684" urx="411" ury="709" f="1"><![CDATA[Watermark Detection ]]></tbox></line>
+<line><tbox llx="182" lly="656" urx="426" ury="670" f="2"><![CDATA[A. Piva, M. Barni, F. Bartolini, V. Cappellini ]]></tbox></line>
+<line><tbox llx="164" lly="629" urx="443" ury="641" f="3"><![CDATA[Dipartimento di Ingegneria Elettronica, Universit`a di Firenze, ]]></tbox></line>
+<line><tbox llx="146" lly="614" urx="462" ury="627" f="3"><![CDATA[via S. Marta 3, 50139, Firenze, Italy --- e-mail piva@cosimo.die.unifi.it ]]></tbox></line>
+<line><tbox llx="200" lly="601" urx="408" ury="614" f="3"><![CDATA[Phone +39 55 4796380 -- Fax: +39 55 494569 ]]></tbox></line>
+<line><tbox llx="72" lly="556" urx="147" ury="573" f="4"><![CDATA[Abstract ]]></tbox></line>
+<line><tbox llx="72" lly="531" urx="304" ury="545" f="5"><![CDATA[In this paper, the problem of how a decision ]]></tbox></line>
+<line><tbox llx="72" lly="517" urx="305" ury="532" f="5"><![CDATA[threshold for a correlation-based watermark ]]></tbox></line>
+<line><tbox llx="72" lly="504" urx="304" ury="518" f="5"><![CDATA[detection algorithm can be properly chosen is ]]></tbox></line>
+<line><tbox llx="72" lly="490" urx="304" ury="504" f="5"><![CDATA[addressed; it is demonstrated that, if a water- ]]></tbox></line>
+<line><tbox llx="72" lly="476" urx="304" ury="491" f="5"><![CDATA[marked image is attacked through signal pro- ]]></tbox></line>
+<line><tbox llx="72" lly="463" urx="304" ury="477" f="5"><![CDATA[cessing techniques, the statistic of the correla- ]]></tbox></line>
+<line><tbox llx="72" lly="449" urx="304" ury="464" f="5"><![CDATA[tion values changes, resulting in an higher false ]]></tbox></line>
+<line><tbox llx="72" lly="436" urx="304" ury="450" f="5"><![CDATA[negative error probability than was expected. ]]></tbox></line>
+<line><tbox llx="72" lly="422" urx="305" ury="437" f="5"><![CDATA[To cope with this effect, a new threshold based ]]></tbox></line>
+<line><tbox llx="72" lly="409" urx="304" ury="423" f="5"><![CDATA[on a fixed constraint on the maximum probabil- ]]></tbox></line>
+<line><tbox llx="72" lly="395" urx="304" ury="410" f="5"><![CDATA[ity of false positive errors is proposed. Results ]]></tbox></line>
+<line><tbox llx="72" lly="382" urx="304" ury="396" f="5"><![CDATA[confirm the robustness of the decoder against ]]></tbox></line>
+<line><tbox llx="72" lly="368" urx="198" ury="383" f="5"><![CDATA[various kinds of attacks. ]]></tbox></line>
+<line><tbox llx="72" lly="328" urx="198" ury="345" f="4"><![CDATA[1 Introduction ]]></tbox></line>
+<line><tbox llx="72" lly="303" urx="304" ury="317" f="5"><![CDATA[Digital watermarking represents an effective so- ]]></tbox></line>
+<line><tbox llx="72" lly="289" urx="304" ury="303" f="5"><![CDATA[lution to the increasing demand for copyright ]]></tbox></line>
+<line><tbox llx="72" lly="275" urx="305" ury="290" f="5"><![CDATA[protection mechanisms. A codemark is indis- ]]></tbox></line>
+<line><tbox llx="72" lly="262" urx="304" ury="276" f="5"><![CDATA[solubly embedded into the image to be pro- ]]></tbox></line>
+<line><tbox llx="72" lly="248" urx="304" ury="263" f="5"><![CDATA[tected, to allow the identification of its creator, ]]></tbox></line>
+<line><tbox llx="72" lly="235" urx="304" ury="249" f="5"><![CDATA[owner, authorized author, and so on. Several ]]></tbox></line>
+<line><tbox llx="72" lly="221" urx="305" ury="236" f="5"><![CDATA[systems have been proposed which hide some ]]></tbox></line>
+<line><tbox llx="72" lly="208" urx="304" ury="222" f="5"><![CDATA[information in the spatial domain [5, 7] or in a ]]></tbox></line>
+<line><tbox llx="72" lly="194" urx="304" ury="209" f="5"><![CDATA[transformed domain of the image [1, 3, 4, 6, 8], ]]></tbox></line>
+<line><tbox llx="72" lly="181" urx="304" ury="195" f="5"><![CDATA[trying to fulfill the contrasting requirements of ]]></tbox></line>
+<line><tbox llx="72" lly="167" urx="305" ury="182" f="5"><![CDATA[robustness and unobtrusiveness. In this paper, ]]></tbox></line>
+<line><tbox llx="72" lly="154" urx="304" ury="168" f="5"><![CDATA[the problem of how a decision threshold for a ]]></tbox></line>
+<line><tbox llx="72" lly="140" urx="305" ury="154" f="5"><![CDATA[correlation-based watermark detection system ]]></tbox></line>
+<line><tbox llx="72" lly="126" urx="305" ury="141" f="5"><![CDATA[[1] can be selected, is discussed; the threshold ]]></tbox></line>
+<line><tbox llx="72" lly="113" urx="304" ury="127" f="5"><![CDATA[is chosen according to a fixed constraint on the ]]></tbox></line>
+<line><tbox llx="72" lly="99" urx="304" ury="114" f="5"><![CDATA[maximum probability of false positive errors in ]]></tbox></line>
+<line><tbox llx="72" lly="86" urx="184" ury="100" f="5"><![CDATA[watermark detection. ]]></tbox></line>
+<line><tbox llx="304" lly="543" urx="523" ury="558" f="5"><![CDATA[Here, the watermark consists of a set of ]]></tbox><tbox llx="519" lly="544" urx="534" ury="556" f="6"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="304" lly="530" urx="456" ury="544" f="5"><![CDATA[normally distributed samples ]]></tbox><tbox llx="450" lly="530" urx="472" ury="544" f="7"><![CDATA[fx ]]></tbox><tbox llx="462" lly="529" urx="472" ury="538" f="8"><![CDATA[1 ]]></tbox><tbox llx="467" lly="530" urx="486" ury="542" f="6"><![CDATA[; x ]]></tbox><tbox llx="478" lly="529" urx="488" ury="538" f="8"><![CDATA[2 ]]></tbox><tbox llx="483" lly="530" urx="523" ury="542" f="6"><![CDATA[; : : : ; x ]]></tbox><tbox llx="515" lly="529" urx="526" ury="539" f="9"><![CDATA[n ]]></tbox><tbox llx="521" lly="530" urx="536" ury="544" f="7"><![CDATA[g ]]></tbox></line>
+<line><tbox llx="304" lly="516" urx="509" ury="530" f="5"><![CDATA[which are used to modify a selected set ]]></tbox><tbox llx="504" lly="517" urx="518" ury="529" f="6"><![CDATA[V ]]></tbox><tbox llx="517" lly="516" urx="536" ury="530" f="5"><![CDATA[of ]]></tbox></line>
+<line><tbox llx="304" lly="503" urx="536" ury="517" f="5"><![CDATA[full-frame DCT coefficients. In particular, the ]]></tbox></line>
+<line><tbox llx="304" lly="489" urx="513" ury="503" f="5"><![CDATA[coefficients from the (k + 1)th to the (k + ]]></tbox><tbox llx="505" lly="490" urx="534" ury="502" f="6"><![CDATA[n)th ]]></tbox></line>
+<line><tbox llx="304" lly="476" urx="536" ury="490" f="5"><![CDATA[in the zig-zag ordering of the DCT spectrum ]]></tbox></line>
+<line><tbox llx="304" lly="462" urx="536" ury="476" f="5"><![CDATA[are selected and modified, according to the fol- ]]></tbox></line>
+<line><tbox llx="304" lly="448" urx="370" ury="463" f="5"><![CDATA[lowing rule: ]]></tbox></line>
+<line><tbox llx="366" lly="424" urx="379" ury="436" f="6"><![CDATA[v ]]></tbox><tbox llx="371" lly="423" urx="390" ury="432" f="9"><![CDATA[X;i ]]></tbox><tbox llx="391" lly="423" urx="410" ury="437" f="5"><![CDATA[= ]]></tbox><tbox llx="406" lly="424" urx="419" ury="436" f="6"><![CDATA[v ]]></tbox><tbox llx="411" lly="423" urx="420" ury="432" f="9"><![CDATA[i ]]></tbox><tbox llx="417" lly="423" urx="436" ury="437" f="5"><![CDATA[+ ]]></tbox><tbox llx="428" lly="424" urx="451" ury="436" f="6"><![CDATA[ffjv ]]></tbox><tbox llx="443" lly="423" urx="452" ury="432" f="9"><![CDATA[i ]]></tbox><tbox llx="447" lly="423" urx="466" ury="437" f="7"><![CDATA[jx ]]></tbox><tbox llx="456" lly="423" urx="465" ury="432" f="9"><![CDATA[i ]]></tbox><tbox llx="459" lly="424" urx="471" ury="436" f="6"><![CDATA[; ]]></tbox><tbox llx="512" lly="423" urx="536" ury="437" f="5"><![CDATA[(1) ]]></tbox></line>
+<line><tbox llx="304" lly="398" urx="342" ury="412" f="5"><![CDATA[where ]]></tbox><tbox llx="338" lly="398" urx="352" ury="410" f="6"><![CDATA[v ]]></tbox><tbox llx="343" lly="397" urx="352" ury="407" f="9"><![CDATA[i ]]></tbox><tbox llx="353" lly="398" urx="520" ury="412" f="5"><![CDATA[is the original DCT coefficient, ]]></tbox><tbox llx="516" lly="398" urx="531" ury="410" f="6"><![CDATA[x ]]></tbox><tbox llx="523" lly="397" urx="531" ury="407" f="9"><![CDATA[i ]]></tbox></line>
+<line><tbox llx="304" lly="384" urx="427" ury="398" f="5"><![CDATA[the watermark sample, ]]></tbox><tbox llx="422" lly="385" urx="436" ury="397" f="6"><![CDATA[v ]]></tbox><tbox llx="428" lly="384" urx="446" ury="393" f="9"><![CDATA[X;i ]]></tbox><tbox llx="446" lly="384" urx="536" ury="398" f="5"><![CDATA[the modified co- ]]></tbox></line>
+<line><tbox llx="304" lly="371" urx="381" ury="385" f="5"><![CDATA[efficients, and ]]></tbox><tbox llx="375" lly="371" urx="390" ury="383" f="6"><![CDATA[ff ]]></tbox><tbox llx="386" lly="371" urx="536" ury="385" f="5"><![CDATA[is a properly chosen parame- ]]></tbox></line>
+<line><tbox llx="304" lly="357" urx="536" ury="371" f="5"><![CDATA[ter tuning the watermark energy: the higher ]]></tbox></line>
+<line><tbox llx="304" lly="344" urx="330" ury="358" f="5"><![CDATA[the ]]></tbox><tbox llx="324" lly="344" urx="343" ury="356" f="6"><![CDATA[ff, ]]></tbox><tbox llx="340" lly="344" urx="536" ury="358" f="5"><![CDATA[the more robust and the more visible ]]></tbox></line>
+<line><tbox llx="304" lly="330" urx="536" ury="344" f="5"><![CDATA[the watermark. By denoting the component ]]></tbox></line>
+<line><tbox llx="304" lly="316" urx="501" ury="331" f="5"><![CDATA[by component multiplication of vectors ]]></tbox><tbox llx="495" lly="317" urx="512" ury="329" f="6"><![CDATA[X ]]></tbox><tbox llx="508" lly="316" urx="536" ury="331" f="5"><![CDATA[and ]]></tbox></line>
+<line><tbox llx="304" lly="303" urx="319" ury="315" f="6"><![CDATA[V ]]></tbox><tbox llx="317" lly="303" urx="339" ury="317" f="5"><![CDATA[by ]]></tbox><tbox llx="333" lly="303" urx="357" ury="315" f="6"><![CDATA[XV ]]></tbox><tbox llx="351" lly="303" urx="536" ury="317" f="5"><![CDATA[, equation 1 can be put in the more ]]></tbox></line>
+<line><tbox llx="304" lly="289" urx="380" ury="304" f="5"><![CDATA[compact form ]]></tbox><tbox llx="374" lly="288" urx="395" ury="302" f="6"><![CDATA[VX ]]></tbox><tbox llx="391" lly="289" urx="410" ury="304" f="5"><![CDATA[= ]]></tbox><tbox llx="403" lly="290" urx="417" ury="302" f="6"><![CDATA[V ]]></tbox><tbox llx="414" lly="289" urx="433" ury="304" f="5"><![CDATA[+ ]]></tbox><tbox llx="425" lly="290" urx="459" ury="302" f="6"><![CDATA[ffXjV ]]></tbox><tbox llx="453" lly="289" urx="469" ury="303" f="7"><![CDATA[j. ]]></tbox></line>
+<line><tbox llx="315" lly="275" urx="536" ury="290" f="5"><![CDATA[During detection, the correlation between ]]></tbox></line>
+<line><tbox llx="304" lly="262" urx="536" ury="276" f="5"><![CDATA[the marked and possibly corrupted coefficients ]]></tbox></line>
+<line><tbox llx="304" lly="249" urx="319" ury="261" f="6"><![CDATA[V ]]></tbox><tbox llx="313" lly="254" urx="321" ury="263" f="10"><![CDATA[0 ]]></tbox><tbox llx="320" lly="248" urx="536" ury="263" f="5"><![CDATA[and the watermark itself is computed and ]]></tbox></line>
+<line><tbox llx="304" lly="235" urx="536" ury="249" f="5"><![CDATA[used as a measure of the presence of a given ]]></tbox></line>
+<line><tbox llx="304" lly="221" urx="339" ury="236" f="5"><![CDATA[mark ]]></tbox><tbox llx="333" lly="222" urx="354" ury="234" f="6"><![CDATA[X. ]]></tbox><tbox llx="352" lly="221" urx="501" ury="236" f="5"><![CDATA[More precisely, given a mark ]]></tbox><tbox llx="495" lly="222" urx="512" ury="234" f="6"><![CDATA[X ]]></tbox><tbox llx="508" lly="221" urx="536" ury="236" f="5"><![CDATA[and ]]></tbox></line>
+<line><tbox llx="304" lly="208" urx="536" ury="222" f="5"><![CDATA[a set of possibly corrupted and watermarked ]]></tbox></line>
+<line><tbox llx="304" lly="194" urx="395" ury="209" f="5"><![CDATA[DCT coefficients ]]></tbox><tbox llx="390" lly="195" urx="405" ury="207" f="6"><![CDATA[V ]]></tbox><tbox llx="399" lly="199" urx="407" ury="208" f="10"><![CDATA[0 ]]></tbox><tbox llx="402" lly="194" urx="491" ury="209" f="5"><![CDATA[, the correlation ]]></tbox><tbox llx="486" lly="195" urx="525" ury="207" f="6"><![CDATA[ae(X; V ]]></tbox><tbox llx="519" lly="199" urx="527" ury="208" f="10"><![CDATA[0 ]]></tbox><tbox llx="522" lly="194" urx="536" ury="209" f="5"><![CDATA[) ]]></tbox></line>
+<line><tbox llx="304" lly="181" urx="353" ury="195" f="5"><![CDATA[between ]]></tbox><tbox llx="346" lly="181" urx="363" ury="193" f="6"><![CDATA[X ]]></tbox><tbox llx="360" lly="181" urx="388" ury="195" f="5"><![CDATA[and ]]></tbox><tbox llx="381" lly="181" urx="396" ury="193" f="6"><![CDATA[V ]]></tbox><tbox llx="390" lly="186" urx="398" ury="195" f="10"><![CDATA[0 ]]></tbox><tbox llx="393" lly="181" urx="457" ury="195" f="5"><![CDATA[, defined as ]]></tbox></line>
+<line><tbox llx="325" lly="148" urx="363" ury="160" f="6"><![CDATA[ae(X; V ]]></tbox><tbox llx="358" lly="153" urx="366" ury="162" f="10"><![CDATA[0 ]]></tbox><tbox llx="360" lly="148" urx="390" ury="162" f="5"><![CDATA[) = ]]></tbox><tbox llx="388" lly="155" urx="405" ury="167" f="6"><![CDATA[X ]]></tbox><tbox llx="400" lly="155" urx="413" ury="169" f="7"><![CDATA[\Delta ]]></tbox><tbox llx="405" lly="155" urx="420" ury="167" f="6"><![CDATA[V ]]></tbox><tbox llx="414" lly="160" urx="422" ury="169" f="10"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="399" lly="141" urx="414" ury="153" f="6"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="425" lly="148" urx="454" ury="169" f="5"><![CDATA[= 1 ]]></tbox></line>
+<line><tbox llx="438" lly="141" urx="452" ury="153" f="6"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="456" lly="162" urx="467" ury="172" f="9"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="451" lly="157" urx="481" ury="176" f="11"><![CDATA[X ]]></tbox></line>
+<line><tbox llx="452" lly="136" urx="471" ury="145" f="9"><![CDATA[i=1 ]]></tbox></line>
+<line><tbox llx="468" lly="148" urx="483" ury="160" f="6"><![CDATA[x ]]></tbox><tbox llx="475" lly="147" urx="483" ury="156" f="9"><![CDATA[i ]]></tbox><tbox llx="478" lly="148" urx="491" ury="160" f="6"><![CDATA[v ]]></tbox><tbox llx="484" lly="153" urx="492" ury="162" f="10"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="483" lly="146" urx="492" ury="155" f="9"><![CDATA[i ]]></tbox><tbox llx="487" lly="148" urx="498" ury="160" f="6"><![CDATA[; ]]></tbox><tbox llx="512" lly="148" urx="536" ury="162" f="5"><![CDATA[(2) ]]></tbox></line>
+<line><tbox llx="304" lly="113" urx="536" ury="127" f="5"><![CDATA[can be used to determine whether a given mark ]]></tbox></line>
+<line><tbox llx="304" lly="99" urx="536" ury="114" f="5"><![CDATA[is present or not, by simply comparing it to a ]]></tbox></line>
+<line><tbox llx="304" lly="86" urx="415" ury="100" f="5"><![CDATA[predefined threshold. ]]></tbox></line>
+<pbox llx="72.00" lly="86.00" urx="536.00" ury="758.00"/></page>
+<page n="2">
+<line><tbox llx="72" lly="740" urx="307" ury="758" f="1"><![CDATA[2 Statistical analysis for ]]></tbox></line>
+<line><tbox llx="97" lly="722" urx="241" ury="740" f="1"><![CDATA[threshold selection ]]></tbox></line>
+<line><tbox llx="72" lly="698" urx="304" ury="713" f="2"><![CDATA[It is important for a correct behaviour of ]]></tbox></line>
+<line><tbox llx="72" lly="685" urx="305" ury="699" f="2"><![CDATA[the watermark detection system, to properly ]]></tbox></line>
+<line><tbox llx="72" lly="671" urx="304" ury="686" f="2"><![CDATA[choose the decision threshold. Let us consider ]]></tbox></line>
+<line><tbox llx="72" lly="658" urx="304" ury="672" f="2"><![CDATA[a scenario in which the decoder is presented ]]></tbox></line>
+<line><tbox llx="72" lly="644" urx="304" ury="659" f="2"><![CDATA[a grey level image and it is asked to decide ]]></tbox></line>
+<line><tbox llx="72" lly="631" urx="191" ury="645" f="2"><![CDATA[whether a given mark ]]></tbox><tbox llx="185" lly="631" urx="202" ury="643" f="3"><![CDATA[X ]]></tbox><tbox llx="200" lly="631" urx="304" ury="645" f="2"><![CDATA[is embedded in the ]]></tbox></line>
+<line><tbox llx="72" lly="617" urx="304" ury="632" f="2"><![CDATA[image. Only one of the following situations is ]]></tbox></line>
+<line><tbox llx="72" lly="604" urx="123" ury="618" f="2"><![CDATA[possible: ]]></tbox></line>
+<line><tbox llx="93" lly="579" urx="131" ury="593" f="2"><![CDATA[Hp.A: ]]></tbox><tbox llx="133" lly="579" urx="147" ury="591" f="3"><![CDATA[V ]]></tbox><tbox llx="142" lly="584" urx="150" ury="593" f="4"><![CDATA[0 ]]></tbox><tbox llx="148" lly="579" urx="166" ury="593" f="2"><![CDATA[= ]]></tbox><tbox llx="159" lly="579" urx="174" ury="591" f="3"><![CDATA[V ]]></tbox></line>
+<line><tbox llx="133" lly="565" urx="281" ury="580" f="2"><![CDATA[i.e. the image is not marked; ]]></tbox></line>
+<line><tbox llx="93" lly="552" urx="131" ury="566" f="2"><![CDATA[Hp.B: ]]></tbox><tbox llx="133" lly="552" urx="147" ury="564" f="3"><![CDATA[V ]]></tbox><tbox llx="142" lly="557" urx="150" ury="566" f="4"><![CDATA[0 ]]></tbox><tbox llx="148" lly="552" urx="166" ury="566" f="2"><![CDATA[= ]]></tbox><tbox llx="159" lly="552" urx="174" ury="564" f="3"><![CDATA[V ]]></tbox><tbox llx="170" lly="552" urx="189" ury="566" f="2"><![CDATA[+ ]]></tbox><tbox llx="181" lly="552" urx="203" ury="564" f="3"><![CDATA[ffY ]]></tbox><tbox llx="197" lly="552" urx="222" ury="566" f="5"><![CDATA[jV j ]]></tbox></line>
+<line><tbox llx="133" lly="538" urx="196" ury="553" f="2"><![CDATA[i.e. a mark ]]></tbox><tbox llx="189" lly="539" urx="204" ury="551" f="3"><![CDATA[Y ]]></tbox><tbox llx="201" lly="538" urx="219" ury="552" f="5"><![CDATA[6= ]]></tbox><tbox llx="212" lly="539" urx="230" ury="551" f="3"><![CDATA[X ]]></tbox><tbox llx="226" lly="538" urx="284" ury="553" f="2"><![CDATA[is present; ]]></tbox></line>
+<line><tbox llx="93" lly="525" urx="131" ury="539" f="2"><![CDATA[Hp.C: ]]></tbox><tbox llx="133" lly="525" urx="147" ury="537" f="3"><![CDATA[V ]]></tbox><tbox llx="142" lly="530" urx="150" ury="539" f="4"><![CDATA[0 ]]></tbox><tbox llx="148" lly="525" urx="166" ury="539" f="2"><![CDATA[= ]]></tbox><tbox llx="159" lly="525" urx="174" ury="537" f="3"><![CDATA[V ]]></tbox><tbox llx="170" lly="525" urx="189" ury="539" f="2"><![CDATA[+ ]]></tbox><tbox llx="181" lly="525" urx="216" ury="537" f="3"><![CDATA[ffXjV ]]></tbox><tbox llx="210" lly="525" urx="223" ury="539" f="5"><![CDATA[j ]]></tbox></line>
+<line><tbox llx="133" lly="511" urx="205" ury="525" f="2"><![CDATA[i.e. the mark ]]></tbox><tbox llx="199" lly="512" urx="216" ury="524" f="3"><![CDATA[X ]]></tbox><tbox llx="212" lly="511" urx="271" ury="525" f="2"><![CDATA[is present. ]]></tbox></line>
+<line><tbox llx="72" lly="471" urx="304" ury="486" f="2"><![CDATA[For the present application, i. e. to decide ]]></tbox></line>
+<line><tbox llx="72" lly="458" urx="167" ury="472" f="2"><![CDATA[whether the mark ]]></tbox><tbox llx="159" lly="458" urx="177" ury="470" f="3"><![CDATA[X ]]></tbox><tbox llx="172" lly="458" urx="304" ury="472" f="2"><![CDATA[has been embedded in the ]]></tbox></line>
+<line><tbox llx="72" lly="444" urx="201" ury="459" f="2"><![CDATA[image or not, hypothesis ]]></tbox><tbox llx="195" lly="445" urx="211" ury="457" f="3"><![CDATA[A ]]></tbox><tbox llx="207" lly="444" urx="235" ury="459" f="2"><![CDATA[and ]]></tbox><tbox llx="229" lly="445" urx="245" ury="457" f="3"><![CDATA[B ]]></tbox><tbox llx="242" lly="444" urx="304" ury="459" f="2"><![CDATA[are equiva- ]]></tbox></line>
+<line><tbox llx="72" lly="431" urx="248" ury="445" f="2"><![CDATA[lent, and can be grouped together: ]]></tbox></line>
+<line><tbox llx="81" lly="406" urx="126" ury="420" f="2"><![CDATA[Hp.0 = ]]></tbox><tbox llx="128" lly="406" urx="209" ury="420" f="2"><![CDATA[Hp.A or Hp.B: ]]></tbox></line>
+<line><tbox llx="128" lly="392" urx="279" ury="407" f="2"><![CDATA[the image is not marked with ]]></tbox><tbox llx="273" lly="393" urx="294" ury="405" f="3"><![CDATA[X; ]]></tbox></line>
+<line><tbox llx="81" lly="379" urx="126" ury="393" f="2"><![CDATA[Hp.1 = ]]></tbox><tbox llx="128" lly="379" urx="167" ury="393" f="2"><![CDATA[Hp.C: ]]></tbox></line>
+<line><tbox llx="128" lly="365" urx="260" ury="380" f="2"><![CDATA[the image is marked with ]]></tbox><tbox llx="253" lly="366" urx="274" ury="378" f="3"><![CDATA[X. ]]></tbox></line>
+<line><tbox llx="83" lly="325" urx="209" ury="340" f="2"><![CDATA[To discriminate between ]]></tbox><tbox llx="202" lly="326" urx="234" ury="338" f="3"><![CDATA[Hp:0 ]]></tbox><tbox llx="228" lly="325" urx="256" ury="340" f="2"><![CDATA[and ]]></tbox><tbox llx="249" lly="326" urx="284" ury="338" f="3"><![CDATA[Hp:1, ]]></tbox><tbox llx="279" lly="325" urx="304" ury="340" f="2"><![CDATA[the ]]></tbox></line>
+<line><tbox llx="72" lly="312" urx="171" ury="326" f="2"><![CDATA[decoder computes ]]></tbox><tbox llx="167" lly="312" urx="205" ury="324" f="3"><![CDATA[ae(X; V ]]></tbox><tbox llx="199" lly="317" urx="207" ury="326" f="4"><![CDATA[0 ]]></tbox><tbox llx="202" lly="312" urx="304" ury="326" f="2"><![CDATA[) and compares it ]]></tbox></line>
+<line><tbox llx="72" lly="298" urx="163" ury="313" f="2"><![CDATA[with a threshold ]]></tbox><tbox llx="157" lly="299" urx="171" ury="311" f="3"><![CDATA[T ]]></tbox><tbox llx="163" lly="298" urx="174" ury="307" f="6"><![CDATA[ae ]]></tbox><tbox llx="168" lly="298" urx="193" ury="313" f="2"><![CDATA[, if ]]></tbox><tbox llx="187" lly="299" urx="225" ury="311" f="3"><![CDATA[ae(X; V ]]></tbox><tbox llx="220" lly="304" urx="228" ury="313" f="4"><![CDATA[0 ]]></tbox><tbox llx="222" lly="298" urx="304" ury="313" f="2"><![CDATA[) is lower than ]]></tbox></line>
+<line><tbox llx="72" lly="285" urx="87" ury="297" f="3"><![CDATA[T ]]></tbox><tbox llx="79" lly="284" urx="89" ury="294" f="6"><![CDATA[ae ]]></tbox><tbox llx="88" lly="285" urx="304" ury="299" f="2"><![CDATA[then the decoder decides the image is not ]]></tbox></line>
+<line><tbox llx="72" lly="271" urx="144" ury="286" f="2"><![CDATA[marked with ]]></tbox><tbox llx="138" lly="272" urx="159" ury="284" f="3"><![CDATA[X, ]]></tbox><tbox llx="156" lly="271" urx="216" ury="286" f="2"><![CDATA[whereas if ]]></tbox><tbox llx="210" lly="272" urx="249" ury="284" f="3"><![CDATA[ae(X; V ]]></tbox><tbox llx="243" lly="277" urx="251" ury="286" f="4"><![CDATA[0 ]]></tbox><tbox llx="246" lly="271" urx="304" ury="286" f="2"><![CDATA[) is above ]]></tbox></line>
+<line><tbox llx="72" lly="258" urx="304" ury="272" f="2"><![CDATA[the threshold, the decoder assumes the image ]]></tbox></line>
+<line><tbox llx="72" lly="244" urx="155" ury="259" f="2"><![CDATA[is marked with ]]></tbox><tbox llx="149" lly="245" urx="170" ury="257" f="3"><![CDATA[X. ]]></tbox><tbox llx="169" lly="244" urx="304" ury="259" f="2"><![CDATA[To determine the value of ]]></tbox></line>
+<line><tbox llx="72" lly="231" urx="87" ury="243" f="3"><![CDATA[T ]]></tbox><tbox llx="79" lly="230" urx="89" ury="240" f="6"><![CDATA[ae ]]></tbox><tbox llx="84" lly="231" urx="304" ury="245" f="2"><![CDATA[, the decoder error probability can be taken ]]></tbox></line>
+<line><tbox llx="72" lly="217" urx="249" ury="231" f="2"><![CDATA[into account. The error probability ]]></tbox><tbox llx="243" lly="218" urx="258" ury="230" f="3"><![CDATA[P ]]></tbox><tbox llx="250" lly="217" urx="260" ury="226" f="6"><![CDATA[e ]]></tbox><tbox llx="254" lly="217" urx="304" ury="231" f="2"><![CDATA[, i.e. the ]]></tbox></line>
+<line><tbox llx="72" lly="203" urx="304" ury="218" f="2"><![CDATA[probability of deciding for the wrong hypothe- ]]></tbox></line>
+<line><tbox llx="72" lly="190" urx="187" ury="204" f="2"><![CDATA[sis, can be written as: ]]></tbox></line>
+<line><tbox llx="108" lly="166" urx="123" ury="178" f="3"><![CDATA[P ]]></tbox><tbox llx="115" lly="165" urx="125" ury="174" f="6"><![CDATA[e ]]></tbox><tbox llx="122" lly="165" urx="141" ury="179" f="2"><![CDATA[= ]]></tbox><tbox llx="134" lly="166" urx="149" ury="178" f="3"><![CDATA[P ]]></tbox><tbox llx="142" lly="165" urx="197" ury="179" f="2"><![CDATA[(0j1)P (1) ]]></tbox><tbox llx="190" lly="165" urx="208" ury="179" f="2"><![CDATA[+ ]]></tbox><tbox llx="201" lly="166" urx="216" ury="178" f="3"><![CDATA[P ]]></tbox><tbox llx="209" lly="165" urx="267" ury="179" f="2"><![CDATA[(1j0)P (0); ]]></tbox><tbox llx="280" lly="165" urx="304" ury="179" f="2"><![CDATA[(3) ]]></tbox></line>
+<line><tbox llx="72" lly="140" urx="111" ury="154" f="2"><![CDATA[where ]]></tbox><tbox llx="105" lly="141" urx="120" ury="153" f="3"><![CDATA[P ]]></tbox><tbox llx="113" lly="140" urx="304" ury="154" f="2"><![CDATA[(0j1) is the probability of missing the ]]></tbox></line>
+<line><tbox llx="72" lly="126" urx="305" ury="141" f="2"><![CDATA[presence of the mark (false negative), and ]]></tbox></line>
+<line><tbox llx="72" lly="114" urx="88" ury="126" f="3"><![CDATA[P ]]></tbox><tbox llx="81" lly="113" urx="304" ury="127" f="2"><![CDATA[(1j0) the probability of revealing the presence ]]></tbox></line>
+<line><tbox llx="72" lly="99" urx="91" ury="114" f="2"><![CDATA[of ]]></tbox><tbox llx="84" lly="100" urx="102" ury="112" f="3"><![CDATA[X ]]></tbox><tbox llx="97" lly="99" urx="133" ury="114" f="2"><![CDATA[when ]]></tbox><tbox llx="125" lly="100" urx="143" ury="112" f="3"><![CDATA[X ]]></tbox><tbox llx="138" lly="99" urx="305" ury="114" f="2"><![CDATA[is not actually present (false pos- ]]></tbox></line>
+<line><tbox llx="72" lly="86" urx="110" ury="100" f="2"><![CDATA[itive), ]]></tbox><tbox llx="105" lly="86" urx="120" ury="98" f="3"><![CDATA[P ]]></tbox><tbox llx="114" lly="86" urx="160" ury="100" f="2"><![CDATA[(0) and ]]></tbox><tbox llx="154" lly="86" urx="169" ury="98" f="3"><![CDATA[P ]]></tbox><tbox llx="162" lly="86" urx="206" ury="100" f="2"><![CDATA[(1) the ]]></tbox><tbox llx="200" lly="87" urx="245" ury="98" f="7"><![CDATA[a priori ]]></tbox><tbox llx="242" lly="86" urx="304" ury="100" f="2"><![CDATA[probability ]]></tbox></line>
+<line><tbox llx="304" lly="741" urx="323" ury="755" f="2"><![CDATA[of ]]></tbox><tbox llx="316" lly="742" urx="348" ury="754" f="3"><![CDATA[Hp:0 ]]></tbox><tbox llx="343" lly="741" urx="371" ury="755" f="2"><![CDATA[and ]]></tbox><tbox llx="364" lly="742" urx="399" ury="754" f="3"><![CDATA[Hp:1. ]]></tbox><tbox llx="395" lly="741" urx="489" ury="755" f="2"><![CDATA[By assuming that ]]></tbox><tbox llx="481" lly="742" urx="513" ury="754" f="3"><![CDATA[Hp:0 ]]></tbox><tbox llx="508" lly="741" urx="536" ury="755" f="2"><![CDATA[and ]]></tbox></line>
+<line><tbox llx="304" lly="728" urx="336" ury="740" f="3"><![CDATA[Hp:1 ]]></tbox><tbox llx="332" lly="728" urx="536" ury="742" f="2"><![CDATA[are equiprobable, and by taking into ac- ]]></tbox></line>
+<line><tbox llx="304" lly="714" urx="536" ury="728" f="2"><![CDATA[count the particular decoding strategy, eq.(3) ]]></tbox></line>
+<line><tbox llx="304" lly="700" urx="426" ury="715" f="2"><![CDATA[can be put in the form: ]]></tbox></line>
+<line><tbox llx="321" lly="673" urx="336" ury="685" f="3"><![CDATA[P ]]></tbox><tbox llx="328" lly="672" urx="338" ury="681" f="6"><![CDATA[e ]]></tbox><tbox llx="336" lly="672" urx="364" ury="694" f="2"><![CDATA[= 1 ]]></tbox></line>
+<line><tbox llx="348" lly="665" urx="364" ury="679" f="2"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="355" lly="683" urx="375" ury="703" f="8"><![CDATA[h ]]></tbox></line>
+<line><tbox llx="360" lly="673" urx="375" ury="685" f="3"><![CDATA[P ]]></tbox><tbox llx="369" lly="672" urx="389" ury="687" f="2"><![CDATA[(ae ]]></tbox><tbox llx="381" lly="673" urx="408" ury="685" f="3"><![CDATA[! T ]]></tbox><tbox llx="399" lly="672" urx="410" ury="681" f="6"><![CDATA[ae ]]></tbox><tbox llx="404" lly="673" urx="427" ury="687" f="5"><![CDATA[j1) ]]></tbox><tbox llx="419" lly="672" urx="438" ury="687" f="2"><![CDATA[+ ]]></tbox><tbox llx="430" lly="673" urx="445" ury="685" f="3"><![CDATA[P ]]></tbox><tbox llx="439" lly="672" urx="459" ury="687" f="2"><![CDATA[(ae ]]></tbox><tbox llx="452" lly="673" urx="478" ury="685" f="3"><![CDATA[? T ]]></tbox><tbox llx="470" lly="672" urx="480" ury="681" f="6"><![CDATA[ae ]]></tbox><tbox llx="474" lly="673" urx="497" ury="687" f="5"><![CDATA[j0) ]]></tbox></line>
+<line><tbox llx="487" lly="683" urx="507" ury="703" f="8"><![CDATA[i ]]></tbox></line>
+<line><tbox llx="492" lly="673" urx="503" ury="685" f="3"><![CDATA[: ]]></tbox><tbox llx="512" lly="672" urx="536" ury="687" f="2"><![CDATA[(4) ]]></tbox></line>
+<line><tbox llx="304" lly="645" urx="342" ury="660" f="2"><![CDATA[where ]]></tbox><tbox llx="336" lly="646" urx="350" ury="658" f="3"><![CDATA[ae ]]></tbox><tbox llx="344" lly="645" urx="363" ury="660" f="2"><![CDATA[= ]]></tbox><tbox llx="356" lly="646" urx="394" ury="658" f="3"><![CDATA[ae(X; V ]]></tbox><tbox llx="389" lly="651" urx="397" ury="660" f="4"><![CDATA[0 ]]></tbox><tbox llx="392" lly="645" urx="409" ury="660" f="2"><![CDATA[). ]]></tbox></line>
+<line><tbox llx="315" lly="632" urx="496" ury="646" f="2"><![CDATA[To go on with the computation of ]]></tbox><tbox llx="491" lly="632" urx="506" ury="644" f="3"><![CDATA[P ]]></tbox><tbox llx="498" lly="631" urx="508" ury="641" f="6"><![CDATA[e ]]></tbox><tbox llx="502" lly="632" urx="536" ury="646" f="2"><![CDATA[, the ]]></tbox></line>
+<line><tbox llx="304" lly="618" urx="366" ury="633" f="2"><![CDATA[statistic of ]]></tbox><tbox llx="360" lly="619" urx="399" ury="631" f="3"><![CDATA[ae(X; V ]]></tbox><tbox llx="393" lly="624" urx="401" ury="632" f="4"><![CDATA[0 ]]></tbox><tbox llx="396" lly="618" urx="536" ury="633" f="2"><![CDATA[) must be considered. Let ]]></tbox></line>
+<line><tbox llx="304" lly="605" urx="536" ury="619" f="2"><![CDATA[us note first that by invoking the central limit ]]></tbox></line>
+<line><tbox llx="304" lly="591" urx="356" ury="605" f="2"><![CDATA[theorem, ]]></tbox><tbox llx="349" lly="592" urx="363" ury="604" f="3"><![CDATA[ae ]]></tbox><tbox llx="358" lly="591" urx="536" ury="605" f="2"><![CDATA[can be assumed to be normally dis- ]]></tbox></line>
+<line><tbox llx="304" lly="578" urx="536" ury="592" f="2"><![CDATA[tributed. It is possible to demonstrate [1] that, ]]></tbox></line>
+<line><tbox llx="304" lly="564" urx="339" ury="578" f="2"><![CDATA[when ]]></tbox><tbox llx="333" lly="565" urx="348" ury="577" f="3"><![CDATA[ff ]]></tbox><tbox llx="340" lly="569" urx="350" ury="578" f="9"><![CDATA[2 ]]></tbox><tbox llx="348" lly="564" urx="368" ury="578" f="5"><![CDATA[ø ]]></tbox><tbox llx="361" lly="564" urx="444" ury="578" f="2"><![CDATA[1, if hypothesis ]]></tbox><tbox llx="437" lly="565" urx="469" ury="577" f="3"><![CDATA[Hp:0 ]]></tbox><tbox llx="465" lly="564" urx="500" ury="578" f="2"><![CDATA[holds ]]></tbox></line>
+<line><tbox llx="389" lly="541" urx="404" ury="553" f="3"><![CDATA[¯ ]]></tbox><tbox llx="396" lly="539" urx="427" ury="549" f="6"><![CDATA[aejHp:0 ]]></tbox><tbox llx="424" lly="540" urx="451" ury="554" f="2"><![CDATA[= 0 ]]></tbox><tbox llx="512" lly="540" urx="536" ury="554" f="2"><![CDATA[(5) ]]></tbox></line>
+<line><tbox llx="304" lly="516" urx="332" ury="531" f="2"><![CDATA[and ]]></tbox></line>
+<line><tbox llx="362" lly="488" urx="376" ury="500" f="3"><![CDATA[oe ]]></tbox><tbox llx="369" lly="493" urx="378" ury="502" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="368" lly="485" urx="399" ury="494" f="6"><![CDATA[aejHp:0 ]]></tbox><tbox llx="400" lly="487" urx="446" ury="501" f="2"><![CDATA[= (1 + ]]></tbox><tbox llx="439" lly="488" urx="454" ury="500" f="3"><![CDATA[ff ]]></tbox><tbox llx="446" lly="493" urx="455" ury="502" f="9"><![CDATA[2 ]]></tbox><tbox llx="450" lly="487" urx="465" ury="501" f="2"><![CDATA[) ]]></tbox><tbox llx="456" lly="495" urx="470" ury="507" f="3"><![CDATA[oe ]]></tbox><tbox llx="462" lly="499" urx="472" ury="508" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="462" lly="493" urx="472" ury="502" f="6"><![CDATA[v ]]></tbox></line>
+<line><tbox llx="458" lly="480" urx="473" ury="492" f="3"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="512" lly="487" urx="536" ury="501" f="2"><![CDATA[(6) ]]></tbox></line>
+<line><tbox llx="304" lly="461" urx="396" ury="475" f="2"><![CDATA[and if hypothesis ]]></tbox><tbox llx="389" lly="461" urx="421" ury="473" f="3"><![CDATA[Hp:1 ]]></tbox><tbox llx="417" lly="461" urx="488" ury="475" f="2"><![CDATA[holds, we set ]]></tbox></line>
+<line><tbox llx="378" lly="437" urx="393" ury="449" f="3"><![CDATA[¯ ]]></tbox><tbox llx="385" lly="436" urx="416" ury="445" f="6"><![CDATA[aejHp:1 ]]></tbox><tbox llx="414" lly="437" urx="432" ury="451" f="2"><![CDATA[= ]]></tbox><tbox llx="425" lly="437" urx="450" ury="449" f="3"><![CDATA[ff ¯ ]]></tbox><tbox llx="442" lly="436" urx="457" ury="445" f="4"><![CDATA[jvj ]]></tbox><tbox llx="512" lly="437" urx="536" ury="451" f="2"><![CDATA[(7) ]]></tbox></line>
+<line><tbox llx="304" lly="413" urx="332" ury="427" f="2"><![CDATA[and ]]></tbox></line>
+<line><tbox llx="338" lly="381" urx="352" ury="393" f="3"><![CDATA[oe ]]></tbox><tbox llx="344" lly="386" urx="354" ury="395" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="344" lly="378" urx="375" ury="387" f="6"><![CDATA[aejHp:1 ]]></tbox><tbox llx="376" lly="380" urx="437" ury="395" f="2"><![CDATA[= (1 + 2ff ]]></tbox><tbox llx="427" lly="386" urx="436" ury="395" f="9"><![CDATA[2 ]]></tbox><tbox llx="431" lly="380" urx="446" ury="395" f="2"><![CDATA[) ]]></tbox><tbox llx="437" lly="388" urx="451" ury="400" f="3"><![CDATA[oe ]]></tbox><tbox llx="443" lly="392" urx="453" ury="401" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="443" lly="386" urx="453" ury="395" f="6"><![CDATA[v ]]></tbox></line>
+<line><tbox llx="439" lly="373" urx="454" ury="385" f="3"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="452" lly="380" urx="471" ury="395" f="2"><![CDATA[+ ]]></tbox><tbox llx="463" lly="381" urx="478" ury="393" f="3"><![CDATA[ff ]]></tbox><tbox llx="470" lly="386" urx="480" ury="395" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="476" lly="391" urx="490" ury="403" f="3"><![CDATA[oe ]]></tbox><tbox llx="482" lly="396" urx="492" ury="404" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="482" lly="388" urx="497" ury="397" f="4"><![CDATA[jvj ]]></tbox></line>
+<line><tbox llx="480" lly="373" urx="495" ury="385" f="3"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="512" lly="380" urx="536" ury="395" f="2"><![CDATA[(8) ]]></tbox></line>
+<line><tbox llx="304" lly="354" urx="342" ury="368" f="2"><![CDATA[where ]]></tbox></line>
+<line><tbox llx="371" lly="325" urx="386" ury="337" f="3"><![CDATA[¯ ]]></tbox><tbox llx="378" lly="323" urx="392" ury="332" f="4"><![CDATA[jvj ]]></tbox><tbox llx="390" lly="324" urx="419" ury="346" f="2"><![CDATA[= 1 ]]></tbox></line>
+<line><tbox llx="403" lly="317" urx="418" ury="329" f="3"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="418" lly="339" urx="429" ury="348" f="6"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="412" lly="333" urx="443" ury="353" f="8"><![CDATA[X ]]></tbox></line>
+<line><tbox llx="413" lly="312" urx="433" ury="322" f="6"><![CDATA[i=1 ]]></tbox></line>
+<line><tbox llx="430" lly="325" urx="458" ury="337" f="3"><![CDATA[E[jv ]]></tbox><tbox llx="450" lly="324" urx="459" ury="333" f="6"><![CDATA[i ]]></tbox><tbox llx="453" lly="324" urx="469" ury="338" f="5"><![CDATA[j] ]]></tbox><tbox llx="512" lly="324" urx="536" ury="339" f="2"><![CDATA[(9) ]]></tbox></line>
+<line><tbox llx="304" lly="291" urx="430" ury="305" f="2"><![CDATA[is the average value of ]]></tbox><tbox llx="426" lly="292" urx="441" ury="304" f="3"><![CDATA[¯ ]]></tbox><tbox llx="432" lly="290" urx="444" ury="299" f="4"><![CDATA[jv ]]></tbox><tbox llx="439" lly="289" urx="447" ury="297" f="10"><![CDATA[i ]]></tbox><tbox llx="442" lly="290" urx="450" ury="299" f="4"><![CDATA[j ]]></tbox><tbox llx="451" lly="291" urx="536" ury="305" f="2"><![CDATA[over the set of ]]></tbox></line>
+<line><tbox llx="304" lly="278" urx="429" ury="292" f="2"><![CDATA[marked coefficients, and ]]></tbox></line>
+<line><tbox llx="375" lly="247" urx="390" ury="259" f="3"><![CDATA[oe ]]></tbox><tbox llx="382" lly="250" urx="392" ury="259" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="382" lly="244" urx="392" ury="254" f="6"><![CDATA[v ]]></tbox><tbox llx="390" lly="246" urx="419" ury="268" f="2"><![CDATA[= 1 ]]></tbox></line>
+<line><tbox llx="402" lly="239" urx="417" ury="251" f="3"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="417" lly="261" urx="429" ury="270" f="6"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="412" lly="255" urx="443" ury="275" f="8"><![CDATA[X ]]></tbox></line>
+<line><tbox llx="413" lly="234" urx="433" ury="243" f="6"><![CDATA[i=1 ]]></tbox></line>
+<line><tbox llx="430" lly="247" urx="455" ury="259" f="3"><![CDATA[E[v ]]></tbox><tbox llx="447" lly="252" urx="457" ury="261" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="447" lly="244" urx="456" ury="254" f="6"><![CDATA[i ]]></tbox><tbox llx="452" lly="246" urx="536" ury="260" f="2"><![CDATA[] (10) ]]></tbox></line>
+<line><tbox llx="304" lly="211" urx="432" ury="226" f="2"><![CDATA[is the average value of ]]></tbox><tbox llx="429" lly="212" urx="443" ury="224" f="3"><![CDATA[oe ]]></tbox><tbox llx="435" lly="217" urx="445" ury="226" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="435" lly="210" urx="445" ury="219" f="6"><![CDATA[v ]]></tbox><tbox llx="439" lly="209" urx="447" ury="217" f="10"><![CDATA[i ]]></tbox></line>
+<line><tbox llx="449" lly="211" urx="536" ury="226" f="2"><![CDATA[over the set of ]]></tbox></line>
+<line><tbox llx="304" lly="198" urx="420" ury="212" f="2"><![CDATA[marked coefficients. If ]]></tbox><tbox llx="413" lly="198" urx="429" ury="210" f="3"><![CDATA[ff ]]></tbox><tbox llx="420" lly="203" urx="430" ury="212" f="9"><![CDATA[2 ]]></tbox><tbox llx="428" lly="198" urx="449" ury="212" f="5"><![CDATA[ø ]]></tbox><tbox llx="442" lly="198" urx="528" ury="212" f="2"><![CDATA[1, we can write: ]]></tbox></line>
+<line><tbox llx="327" lly="167" urx="341" ury="179" f="3"><![CDATA[oe ]]></tbox><tbox llx="333" lly="172" urx="343" ury="181" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="333" lly="165" urx="364" ury="174" f="6"><![CDATA[aejHp:0 ]]></tbox><tbox llx="365" lly="166" urx="384" ury="181" f="5"><![CDATA[' ]]></tbox><tbox llx="380" lly="167" urx="395" ury="179" f="3"><![CDATA[oe ]]></tbox><tbox llx="387" lly="172" urx="397" ury="181" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="387" lly="165" urx="418" ury="174" f="6"><![CDATA[aejHp:1 ]]></tbox><tbox llx="419" lly="166" urx="437" ury="181" f="5"><![CDATA[' ]]></tbox><tbox llx="435" lly="174" urx="450" ury="186" f="3"><![CDATA[oe ]]></tbox><tbox llx="442" lly="178" urx="452" ury="187" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="442" lly="172" urx="452" ury="182" f="6"><![CDATA[v ]]></tbox></line>
+<line><tbox llx="438" lly="160" urx="453" ury="172" f="3"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="455" lly="167" urx="471" ury="179" f="11"><![CDATA[, ]]></tbox><tbox llx="470" lly="167" urx="484" ury="179" f="3"><![CDATA[oe ]]></tbox><tbox llx="476" lly="172" urx="486" ury="181" f="9"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="476" lly="165" urx="486" ury="174" f="6"><![CDATA[ae ]]></tbox><tbox llx="481" lly="167" urx="492" ury="179" f="3"><![CDATA[: ]]></tbox><tbox llx="507" lly="166" urx="536" ury="181" f="2"><![CDATA[(11) ]]></tbox></line>
+<line><tbox llx="304" lly="140" urx="408" ury="154" f="2"><![CDATA[In fig.1 the pdf's of ]]></tbox><tbox llx="402" lly="141" urx="416" ury="153" f="3"><![CDATA[ae ]]></tbox><tbox llx="412" lly="140" urx="536" ury="154" f="2"><![CDATA[under hypotheses 0 and ]]></tbox></line>
+<line><tbox llx="304" lly="126" urx="536" ury="141" f="2"><![CDATA[1 are shown. In order to minimize the error ]]></tbox></line>
+<line><tbox llx="304" lly="113" urx="430" ury="127" f="2"><![CDATA[probability, a threshold ]]></tbox><tbox llx="425" lly="114" urx="440" ury="126" f="3"><![CDATA[T ]]></tbox><tbox llx="431" lly="113" urx="442" ury="122" f="6"><![CDATA[ae ]]></tbox><tbox llx="442" lly="113" urx="536" ury="127" f="2"><![CDATA[has to be chosen ]]></tbox></line>
+<line><tbox llx="304" lly="99" urx="359" ury="114" f="2"><![CDATA[such that ]]></tbox><tbox llx="353" lly="100" urx="368" ury="112" f="3"><![CDATA[P ]]></tbox><tbox llx="361" lly="99" urx="405" ury="114" f="2"><![CDATA[(0j1) + ]]></tbox><tbox llx="397" lly="100" urx="412" ury="112" f="3"><![CDATA[P ]]></tbox><tbox llx="406" lly="99" urx="536" ury="114" f="2"><![CDATA[(1j0) is minimum. Under ]]></tbox></line>
+<line><tbox llx="304" lly="86" urx="378" ury="100" f="2"><![CDATA[the condition ]]></tbox><tbox llx="371" lly="86" urx="386" ury="98" f="3"><![CDATA[ff ]]></tbox><tbox llx="382" lly="86" urx="403" ury="100" f="5"><![CDATA[ø ]]></tbox><tbox llx="396" lly="86" urx="415" ury="100" f="2"><![CDATA[1, ]]></tbox><tbox llx="408" lly="86" urx="423" ury="98" f="3"><![CDATA[P ]]></tbox><tbox llx="417" lly="86" urx="461" ury="100" f="2"><![CDATA[(0j1) = ]]></tbox><tbox llx="455" lly="86" urx="470" ury="98" f="3"><![CDATA[P ]]></tbox><tbox llx="463" lly="86" urx="536" ury="100" f="2"><![CDATA[(1j0), so that ]]></tbox></line>
+<pbox llx="72.00" lly="86.00" urx="536.00" ury="758.00"/></page>
+<page n="3">
+<line><tbox llx="72" lly="614" urx="195" ury="629" f="1"><![CDATA[Figure 1: The pdf's of ]]></tbox><tbox llx="190" lly="615" urx="203" ury="627" f="2"><![CDATA[ae ]]></tbox><tbox llx="200" lly="614" urx="304" ury="629" f="1"><![CDATA[under hypotheses 0 ]]></tbox></line>
+<line><tbox llx="72" lly="601" urx="248" ury="615" f="1"><![CDATA[and 1. Attacks are not considered. ]]></tbox></line>
+<line><tbox llx="72" lly="463" urx="195" ury="478" f="1"><![CDATA[Figure 2: The pdf's of ]]></tbox><tbox llx="190" lly="464" urx="203" ury="476" f="2"><![CDATA[ae ]]></tbox><tbox llx="200" lly="463" urx="304" ury="478" f="1"><![CDATA[under hypotheses 0 ]]></tbox></line>
+<line><tbox llx="72" lly="450" urx="251" ury="464" f="1"><![CDATA[and 1. Attacks are now considered. ]]></tbox></line>
+<line><tbox llx="72" lly="420" urx="304" ury="434" f="1"><![CDATA[the optimum threshold is midway between zero ]]></tbox></line>
+<line><tbox llx="72" lly="406" urx="100" ury="420" f="1"><![CDATA[and ]]></tbox><tbox llx="94" lly="407" urx="108" ury="419" f="2"><![CDATA[¯ ]]></tbox><tbox llx="100" lly="405" urx="132" ury="414" f="3"><![CDATA[aejHp:1 ]]></tbox><tbox llx="126" lly="406" urx="174" ury="420" f="1"><![CDATA[, that is ]]></tbox></line>
+<line><tbox llx="158" lly="379" urx="172" ury="391" f="2"><![CDATA[T ]]></tbox><tbox llx="164" lly="378" urx="174" ury="388" f="3"><![CDATA[ae ]]></tbox><tbox llx="172" lly="379" urx="191" ury="393" f="1"><![CDATA[= ]]></tbox><tbox llx="185" lly="387" urx="200" ury="399" f="2"><![CDATA[ff ]]></tbox></line>
+<line><tbox llx="186" lly="371" urx="201" ury="386" f="1"><![CDATA[2 ]]></tbox><tbox llx="193" lly="379" urx="208" ury="391" f="2"><![CDATA[¯ ]]></tbox><tbox llx="199" lly="378" urx="214" ury="387" f="4"><![CDATA[jvj ]]></tbox><tbox llx="275" lly="379" urx="304" ury="393" f="1"><![CDATA[(12) ]]></tbox></line>
+<line><tbox llx="83" lly="353" urx="304" ury="367" f="1"><![CDATA[For the above analysis to be successfully ap- ]]></tbox></line>
+<line><tbox llx="72" lly="339" urx="304" ury="354" f="1"><![CDATA[plied to practical situations, two considerations ]]></tbox></line>
+<line><tbox llx="72" lly="326" urx="304" ury="340" f="1"><![CDATA[are in order. On the basis of statistical analysis ]]></tbox></line>
+<line><tbox llx="72" lly="312" urx="183" ury="327" f="1"><![CDATA[[2], we have assumed ]]></tbox><tbox llx="176" lly="313" urx="191" ury="325" f="2"><![CDATA[¯ ]]></tbox><tbox llx="183" lly="311" urx="197" ury="320" f="4"><![CDATA[jvj ]]></tbox><tbox llx="195" lly="312" urx="304" ury="327" f="1"><![CDATA[= 0:7; however, if an ]]></tbox></line>
+<line><tbox llx="72" lly="299" urx="304" ury="313" f="1"><![CDATA[image is attacked this value can be consider- ]]></tbox></line>
+<line><tbox llx="72" lly="285" urx="304" ury="300" f="1"><![CDATA[ably different so that an error is likely to occur ]]></tbox></line>
+<line><tbox llx="72" lly="272" urx="161" ury="286" f="1"><![CDATA[when comparing ]]></tbox><tbox llx="153" lly="272" urx="192" ury="284" f="2"><![CDATA[ae(X; V ]]></tbox><tbox llx="186" lly="277" urx="194" ury="286" f="4"><![CDATA[0 ]]></tbox><tbox llx="189" lly="272" urx="228" ury="286" f="1"><![CDATA[) with ]]></tbox><tbox llx="221" lly="272" urx="235" ury="284" f="2"><![CDATA[T ]]></tbox><tbox llx="227" lly="271" urx="238" ury="281" f="3"><![CDATA[ae ]]></tbox><tbox llx="232" lly="272" urx="304" ury="286" f="1"><![CDATA[. In practical ]]></tbox></line>
+<line><tbox llx="72" lly="258" urx="304" ury="272" f="1"><![CDATA[applications, then, it is better for the decoder ]]></tbox></line>
+<line><tbox llx="72" lly="245" urx="167" ury="259" f="1"><![CDATA[to use a threshold ]]></tbox><tbox llx="160" lly="245" urx="174" ury="257" f="2"><![CDATA[T ]]></tbox><tbox llx="166" lly="244" urx="176" ury="253" f="3"><![CDATA[ae ]]></tbox><tbox llx="174" lly="245" urx="304" ury="259" f="1"><![CDATA[which is estimated on the ]]></tbox></line>
+<line><tbox llx="72" lly="231" urx="225" ury="245" f="1"><![CDATA[marked image, i.e. we assume ]]></tbox></line>
+<line><tbox llx="144" lly="200" urx="159" ury="212" f="2"><![CDATA[¯ ]]></tbox><tbox llx="150" lly="199" urx="165" ury="208" f="4"><![CDATA[jvj ]]></tbox><tbox llx="167" lly="200" urx="185" ury="214" f="6"><![CDATA[' ]]></tbox><tbox llx="183" lly="207" urx="199" ury="222" f="1"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="183" lly="193" urx="198" ury="205" f="2"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="198" lly="215" urx="209" ury="224" f="3"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="192" lly="209" urx="223" ury="229" f="7"><![CDATA[X ]]></tbox></line>
+<line><tbox llx="194" lly="188" urx="213" ury="197" f="3"><![CDATA[i=1 ]]></tbox></line>
+<line><tbox llx="208" lly="200" urx="227" ury="214" f="6"><![CDATA[jv ]]></tbox><tbox llx="217" lly="206" urx="225" ury="215" f="4"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="217" lly="198" urx="225" ury="208" f="3"><![CDATA[i ]]></tbox><tbox llx="220" lly="200" urx="233" ury="214" f="6"><![CDATA[j ]]></tbox><tbox llx="275" lly="200" urx="304" ury="214" f="1"><![CDATA[(13) ]]></tbox></line>
+<line><tbox llx="83" lly="167" urx="304" ury="182" f="1"><![CDATA[The second consideration concerns the choice ]]></tbox></line>
+<line><tbox llx="72" lly="154" urx="91" ury="168" f="1"><![CDATA[of ]]></tbox><tbox llx="88" lly="154" urx="103" ury="166" f="2"><![CDATA[T ]]></tbox><tbox llx="95" lly="153" urx="105" ury="162" f="3"><![CDATA[ae ]]></tbox><tbox llx="107" lly="154" urx="305" ury="168" f="1"><![CDATA[when the image has been corrupted ]]></tbox></line>
+<line><tbox llx="72" lly="140" urx="305" ury="154" f="1"><![CDATA[by intentional or unintentional attacks. In ]]></tbox></line>
+<line><tbox llx="72" lly="126" urx="304" ury="141" f="1"><![CDATA[such a case, the analysis carried out so far ]]></tbox></line>
+<line><tbox llx="72" lly="113" urx="304" ury="127" f="1"><![CDATA[is no longer valid, since both the mean value ]]></tbox></line>
+<line><tbox llx="72" lly="99" urx="179" ury="114" f="1"><![CDATA[and the variance of ]]></tbox><tbox llx="174" lly="100" urx="213" ury="112" f="2"><![CDATA[ae(X; V ]]></tbox><tbox llx="207" lly="105" urx="215" ury="114" f="4"><![CDATA[0 ]]></tbox><tbox llx="210" lly="99" urx="304" ury="114" f="1"><![CDATA[) may be altered ]]></tbox></line>
+<line><tbox llx="72" lly="86" urx="305" ury="100" f="1"><![CDATA[because of attacks. In general, it can be ]]></tbox></line>
+<line><tbox llx="304" lly="741" urx="498" ury="755" f="1"><![CDATA[stated that in presence of attacks the ]]></tbox><tbox llx="492" lly="742" urx="506" ury="754" f="2"><![CDATA[oe ]]></tbox><tbox llx="498" lly="740" urx="526" ury="749" f="3"><![CDATA[ae(X;V ]]></tbox><tbox llx="522" lly="740" urx="531" ury="749" f="5"><![CDATA[) ]]></tbox></line>
+<line><tbox llx="304" lly="728" urx="332" ury="742" f="1"><![CDATA[and ]]></tbox><tbox llx="326" lly="728" urx="340" ury="740" f="2"><![CDATA[oe ]]></tbox><tbox llx="332" lly="726" urx="360" ury="736" f="3"><![CDATA[ae(X;V ]]></tbox><tbox llx="354" lly="725" urx="363" ury="734" f="8"><![CDATA[Y ]]></tbox><tbox llx="360" lly="727" urx="369" ury="736" f="5"><![CDATA[) ]]></tbox><tbox llx="368" lly="728" urx="536" ury="742" f="1"><![CDATA[should remain approximately the ]]></tbox></line>
+<line><tbox llx="304" lly="714" urx="382" ury="728" f="1"><![CDATA[same, whereas ]]></tbox><tbox llx="375" lly="715" urx="389" ury="727" f="2"><![CDATA[oe ]]></tbox><tbox llx="381" lly="713" urx="409" ury="722" f="3"><![CDATA[ae(X;V ]]></tbox><tbox llx="403" lly="712" urx="414" ury="720" f="8"><![CDATA[X ]]></tbox><tbox llx="410" lly="713" urx="419" ury="722" f="5"><![CDATA[) ]]></tbox><tbox llx="417" lly="714" urx="536" ury="728" f="1"><![CDATA[is likely to increase sig- ]]></tbox></line>
+<line><tbox llx="304" lly="700" urx="536" ury="715" f="1"><![CDATA[nificantly. Therefore, we can say that because ]]></tbox></line>
+<line><tbox llx="304" lly="687" urx="536" ury="701" f="1"><![CDATA[of attacks, two gaussians are still present, but ]]></tbox></line>
+<line><tbox llx="304" lly="673" urx="405" ury="688" f="1"><![CDATA[the one centered in ]]></tbox><tbox llx="399" lly="674" urx="413" ury="686" f="2"><![CDATA[¯ ]]></tbox><tbox llx="405" lly="672" urx="420" ury="681" f="4"><![CDATA[jvj ]]></tbox><tbox llx="418" lly="673" urx="536" ury="688" f="1"><![CDATA[has now a significantly ]]></tbox></line>
+<line><tbox llx="304" lly="660" urx="487" ury="674" f="1"><![CDATA[larger variance. This suggested that ]]></tbox><tbox llx="480" lly="660" urx="495" ury="672" f="2"><![CDATA[T ]]></tbox><tbox llx="486" lly="659" urx="497" ury="669" f="3"><![CDATA[ae ]]></tbox><tbox llx="495" lly="660" urx="536" ury="674" f="1"><![CDATA[should ]]></tbox></line>
+<line><tbox llx="304" lly="646" urx="536" ury="661" f="1"><![CDATA[be set closer to zero, instead of midway be- ]]></tbox></line>
+<line><tbox llx="304" lly="633" urx="387" ury="647" f="1"><![CDATA[tween zero and ]]></tbox><tbox llx="381" lly="633" urx="396" ury="645" f="2"><![CDATA[¯ ]]></tbox><tbox llx="388" lly="632" urx="403" ury="641" f="4"><![CDATA[jvj ]]></tbox><tbox llx="402" lly="633" urx="501" ury="647" f="1"><![CDATA[(see fig.2), so that ]]></tbox><tbox llx="495" lly="633" urx="509" ury="645" f="2"><![CDATA[T ]]></tbox><tbox llx="501" lly="632" urx="511" ury="642" f="3"><![CDATA[ae ]]></tbox><tbox llx="510" lly="633" urx="536" ury="647" f="1"><![CDATA[has ]]></tbox></line>
+<line><tbox llx="304" lly="619" urx="391" ury="633" f="1"><![CDATA[been fixed [1] to ]]></tbox></line>
+<line><tbox llx="389" lly="591" urx="404" ury="603" f="2"><![CDATA[T ]]></tbox><tbox llx="396" lly="590" urx="406" ury="600" f="3"><![CDATA[ae ]]></tbox><tbox llx="404" lly="591" urx="422" ury="605" f="1"><![CDATA[= ]]></tbox><tbox llx="416" lly="599" urx="432" ury="611" f="2"><![CDATA[ff ]]></tbox></line>
+<line><tbox llx="417" lly="583" urx="433" ury="598" f="1"><![CDATA[3 ]]></tbox><tbox llx="425" lly="591" urx="439" ury="603" f="2"><![CDATA[¯ ]]></tbox><tbox llx="431" lly="590" urx="446" ury="599" f="4"><![CDATA[jvj ]]></tbox><tbox llx="507" lly="591" urx="536" ury="605" f="1"><![CDATA[(14) ]]></tbox></line>
+<line><tbox llx="304" lly="553" urx="524" ury="570" f="9"><![CDATA[3 A new threshold selection ]]></tbox></line>
+<line><tbox llx="304" lly="528" urx="536" ury="542" f="1"><![CDATA[However, experimental results have shown that ]]></tbox></line>
+<line><tbox llx="304" lly="515" urx="536" ury="529" f="1"><![CDATA[when the watermarked image is attacked the ]]></tbox></line>
+<line><tbox llx="304" lly="501" urx="536" ury="515" f="1"><![CDATA[proposed threshold leads to a higher watermark ]]></tbox></line>
+<line><tbox llx="304" lly="488" urx="536" ury="502" f="1"><![CDATA[missing rate than was expected. In particu- ]]></tbox></line>
+<line><tbox llx="304" lly="474" urx="536" ury="488" f="1"><![CDATA[lar, the probability of missing an embedded wa- ]]></tbox></line>
+<line><tbox llx="304" lly="460" urx="536" ury="475" f="1"><![CDATA[termark results to be considerably higher than ]]></tbox></line>
+<line><tbox llx="304" lly="447" urx="536" ury="461" f="1"><![CDATA[the probability of false positive detection, i.e. ]]></tbox></line>
+<line><tbox llx="304" lly="433" urx="536" ury="448" f="1"><![CDATA[the probability to detect a watermark which ]]></tbox></line>
+<line><tbox llx="304" lly="420" urx="536" ury="434" f="1"><![CDATA[is not really present in the image. This can ]]></tbox></line>
+<line><tbox llx="304" lly="406" urx="536" ury="421" f="1"><![CDATA[be explained by the fact that under attacks ]]></tbox></line>
+<line><tbox llx="304" lly="393" urx="429" ury="407" f="1"><![CDATA[it usually happens that ]]></tbox><tbox llx="424" lly="393" urx="439" ury="405" f="2"><![CDATA[¯ ]]></tbox><tbox llx="431" lly="392" urx="462" ury="401" f="3"><![CDATA[aejHp:1 ]]></tbox><tbox llx="461" lly="393" urx="501" ury="405" f="2"><![CDATA[! ff ¯ ]]></tbox><tbox llx="493" lly="392" urx="508" ury="401" f="4"><![CDATA[jvj ]]></tbox><tbox llx="508" lly="393" urx="536" ury="407" f="1"><![CDATA[(see ]]></tbox></line>
+<line><tbox llx="304" lly="379" urx="536" ury="393" f="1"><![CDATA[fig.3). To solve this problem, a different ap- ]]></tbox></line>
+<line><tbox llx="304" lly="365" urx="536" ury="380" f="1"><![CDATA[proach for threshold selection has been found. ]]></tbox></line>
+<line><tbox llx="304" lly="352" urx="536" ury="366" f="1"><![CDATA[In this case, instead of trying to minimize the ]]></tbox></line>
+<line><tbox llx="304" lly="338" urx="394" ury="353" f="1"><![CDATA[error probability ]]></tbox><tbox llx="388" lly="339" urx="403" ury="351" f="2"><![CDATA[P ]]></tbox><tbox llx="395" lly="338" urx="405" ury="347" f="3"><![CDATA[e ]]></tbox><tbox llx="400" lly="338" urx="536" ury="353" f="1"><![CDATA[, it is chosen to fix a con- ]]></tbox></line>
+<line><tbox llx="304" lly="325" urx="536" ury="339" f="1"><![CDATA[strain on the maximum false positive probabil- ]]></tbox></line>
+<line><tbox llx="304" lly="311" urx="351" ury="326" f="1"><![CDATA[ity (e.g. ]]></tbox></line>
+<line><tbox llx="0" lly="-289" urx="357" ury="326" f="1"><![CDATA[10\Gamma ]]></tbox><tbox llx="364" lly="317" urx="374" ury="326" f="5"><![CDATA[6 ]]></tbox><tbox llx="369" lly="311" urx="536" ury="326" f="1"><![CDATA[), so that the threshold is moved ]]></tbox></line>
+<line><tbox llx="304" lly="298" urx="536" ury="312" f="1"><![CDATA[leftmost (see again fig.3). In particular, given ]]></tbox></line>
+<line><tbox llx="304" lly="284" urx="319" ury="296" f="2"><![CDATA[P ]]></tbox><tbox llx="311" lly="282" urx="321" ury="292" f="3"><![CDATA[f ]]></tbox><tbox llx="324" lly="283" urx="343" ury="297" f="1"><![CDATA[= ]]></tbox><tbox llx="341" lly="284" urx="356" ury="296" f="2"><![CDATA[P ]]></tbox><tbox llx="349" lly="283" urx="369" ury="297" f="1"><![CDATA[(ae ]]></tbox><tbox llx="363" lly="284" urx="390" ury="296" f="2"><![CDATA[? T ]]></tbox><tbox llx="381" lly="283" urx="392" ury="292" f="3"><![CDATA[ae ]]></tbox><tbox llx="386" lly="283" urx="409" ury="297" f="6"><![CDATA[j0) ]]></tbox><tbox llx="403" lly="283" urx="422" ury="297" f="1"><![CDATA[= ]]></tbox><tbox llx="416" lly="289" urx="426" ury="298" f="5"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="416" lly="281" urx="426" ury="290" f="5"><![CDATA[2 ]]></tbox><tbox llx="422" lly="284" urx="456" ury="296" f="2"><![CDATA[erfc( ]]></tbox><tbox llx="455" lly="290" urx="466" ury="299" f="3"><![CDATA[T ]]></tbox><tbox llx="460" lly="289" urx="469" ury="297" f="8"><![CDATA[ae ]]></tbox></line>
+<line><tbox llx="449" lly="284" urx="468" ury="298" f="6"><![CDATA[p ]]></tbox></line>
+<line><tbox llx="458" lly="279" urx="472" ury="288" f="5"><![CDATA[2oe ]]></tbox><tbox llx="467" lly="282" urx="473" ury="287" f="10"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="467" lly="277" urx="476" ury="285" f="8"><![CDATA[ae ]]></tbox></line>
+<line><tbox llx="472" lly="283" urx="503" ury="297" f="1"><![CDATA[) = ]]></tbox></line>
+<line><tbox llx="0" lly="-443" urx="511" ury="297" f="1"><![CDATA[10\Gamma ]]></tbox><tbox llx="518" lly="288" urx="528" ury="297" f="5"><![CDATA[6 ]]></tbox><tbox llx="523" lly="283" urx="536" ury="297" f="1"><![CDATA[, ]]></tbox></line>
+<line><tbox llx="304" lly="265" urx="447" ury="280" f="1"><![CDATA[the following relation holds: ]]></tbox></line>
+<line><tbox llx="392" lly="243" urx="406" ury="255" f="2"><![CDATA[T ]]></tbox><tbox llx="398" lly="242" urx="408" ury="251" f="3"><![CDATA[ae ]]></tbox></line>
+<line><tbox llx="383" lly="234" urx="409" ury="254" f="7"><![CDATA[q ]]></tbox></line>
+<line><tbox llx="394" lly="223" urx="416" ury="238" f="1"><![CDATA[2oe ]]></tbox><tbox llx="406" lly="228" urx="416" ury="237" f="5"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="406" lly="222" urx="416" ury="231" f="3"><![CDATA[ae ]]></tbox></line>
+<line><tbox llx="434" lly="235" urx="536" ury="249" f="1"><![CDATA[3:3 (15) ]]></tbox></line>
+<line><tbox llx="315" lly="194" urx="536" ury="209" f="1"><![CDATA[in such a way that a new threshold is ob- ]]></tbox></line>
+<line><tbox llx="304" lly="181" urx="347" ury="195" f="1"><![CDATA[tained: ]]></tbox></line>
+<line><tbox llx="318" lly="145" urx="333" ury="157" f="2"><![CDATA[T ]]></tbox><tbox llx="325" lly="144" urx="335" ury="153" f="3"><![CDATA[ae ]]></tbox><tbox llx="333" lly="144" urx="368" ury="159" f="1"><![CDATA[= 3:3 ]]></tbox></line>
+<line><tbox llx="358" lly="156" urx="384" ury="176" f="7"><![CDATA[q ]]></tbox></line>
+<line><tbox llx="369" lly="144" urx="391" ury="159" f="1"><![CDATA[2oe ]]></tbox><tbox llx="381" lly="144" urx="391" ury="153" f="3"><![CDATA[ae ]]></tbox><tbox llx="386" lly="149" urx="395" ury="158" f="5"><![CDATA[2 ]]></tbox><tbox llx="393" lly="144" urx="429" ury="159" f="1"><![CDATA[= 3:3 ]]></tbox></line>
+<line><tbox llx="419" lly="165" urx="444" ury="185" f="7"><![CDATA[s ]]></tbox></line>
+<line><tbox llx="431" lly="152" urx="467" ury="166" f="1"><![CDATA[2(1 + ]]></tbox><tbox llx="459" lly="152" urx="474" ury="164" f="2"><![CDATA[ff ]]></tbox><tbox llx="466" lly="156" urx="476" ury="165" f="5"><![CDATA[2 ]]></tbox><tbox llx="471" lly="152" urx="492" ury="166" f="1"><![CDATA[)oe ]]></tbox><tbox llx="482" lly="151" urx="492" ury="160" f="3"><![CDATA[v ]]></tbox><tbox llx="486" lly="156" urx="496" ury="165" f="5"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="458" lly="137" urx="473" ury="149" f="2"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="507" lly="144" urx="536" ury="159" f="1"><![CDATA[(16) ]]></tbox></line>
+<line><tbox llx="304" lly="113" urx="536" ury="127" f="1"><![CDATA[Once again, the threshold can be evaluated di- ]]></tbox></line>
+<line><tbox llx="304" lly="99" urx="536" ury="114" f="1"><![CDATA[rectly on the watermarked and possibly cor- ]]></tbox></line>
+<line><tbox llx="304" lly="86" urx="467" ury="100" f="1"><![CDATA[rupted image: the value (1 + ]]></tbox><tbox llx="461" lly="86" urx="476" ury="98" f="2"><![CDATA[ff ]]></tbox><tbox llx="468" lly="91" urx="477" ury="100" f="5"><![CDATA[2 ]]></tbox><tbox llx="472" lly="86" urx="493" ury="100" f="1"><![CDATA[)oe ]]></tbox><tbox llx="483" lly="85" urx="493" ury="95" f="3"><![CDATA[v ]]></tbox><tbox llx="488" lly="90" urx="498" ury="99" f="5"><![CDATA[2 ]]></tbox><tbox llx="499" lly="86" urx="536" ury="100" f="1"><![CDATA[corre- ]]></tbox></line>
+<pbox llx="0.00" lly="-443.00" urx="536.00" ury="755.00"/></page>
+<page n="4">
+<line><tbox llx="72" lly="741" urx="169" ury="755" f="1"><![CDATA[sponds, in fact, to ]]></tbox><tbox llx="162" lly="742" urx="177" ury="754" f="2"><![CDATA[oe ]]></tbox><tbox llx="168" lly="740" urx="179" ury="750" f="3"><![CDATA[v ]]></tbox><tbox llx="173" lly="744" urx="176" ury="748" f="4"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="176" lly="746" urx="186" ury="754" f="5"><![CDATA[2 ]]></tbox><tbox llx="184" lly="741" urx="272" ury="755" f="1"><![CDATA[so that we have: ]]></tbox></line>
+<line><tbox llx="145" lly="704" urx="159" ury="716" f="2"><![CDATA[T ]]></tbox><tbox llx="151" lly="703" urx="162" ury="713" f="3"><![CDATA[ae ]]></tbox><tbox llx="159" lly="704" urx="195" ury="718" f="1"><![CDATA[= 3:3 ]]></tbox></line>
+<line><tbox llx="184" lly="724" urx="210" ury="744" f="6"><![CDATA[s ]]></tbox></line>
+<line><tbox llx="197" lly="711" urx="219" ury="725" f="1"><![CDATA[2oe ]]></tbox><tbox llx="208" lly="711" urx="218" ury="720" f="3"><![CDATA[v ]]></tbox><tbox llx="213" lly="714" urx="216" ury="718" f="4"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="216" lly="716" urx="226" ury="724" f="5"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="205" lly="697" urx="220" ury="709" f="2"><![CDATA[n ]]></tbox></line>
+<line><tbox llx="275" lly="704" urx="304" ury="718" f="1"><![CDATA[(17) ]]></tbox></line>
+<line><tbox llx="72" lly="537" urx="305" ury="552" f="1"><![CDATA[Figure 3: The new choice for the threshold, ]]></tbox></line>
+<line><tbox llx="72" lly="524" urx="305" ury="538" f="1"><![CDATA[based on a constrain on the maximum false pos- ]]></tbox></line>
+<line><tbox llx="72" lly="510" urx="161" ury="524" f="1"><![CDATA[itive probability. ]]></tbox></line>
+<line><tbox llx="72" lly="467" urx="256" ury="485" f="7"><![CDATA[4 Experimental results ]]></tbox></line>
+<line><tbox llx="72" lly="443" urx="304" ury="458" f="1"><![CDATA[In the following, experimental results will ]]></tbox></line>
+<line><tbox llx="72" lly="430" urx="305" ury="444" f="1"><![CDATA[be shown proving that the new threshold ]]></tbox></line>
+<line><tbox llx="72" lly="416" urx="305" ury="431" f="1"><![CDATA[choice improves the characteristics of robust- ]]></tbox></line>
+<line><tbox llx="72" lly="403" urx="304" ury="417" f="1"><![CDATA[ness against attacks of the proposed water- ]]></tbox></line>
+<line><tbox llx="72" lly="389" urx="305" ury="404" f="1"><![CDATA[marking system, and confirming the aforemen- ]]></tbox></line>
+<line><tbox llx="72" lly="376" urx="305" ury="390" f="1"><![CDATA[tioned analysis. In particular, the thresholds ]]></tbox></line>
+<line><tbox llx="72" lly="358" urx="87" ury="370" f="2"><![CDATA[T ]]></tbox><tbox llx="79" lly="357" urx="89" ury="366" f="3"><![CDATA[ae ]]></tbox><tbox llx="88" lly="357" urx="107" ury="371" f="1"><![CDATA[= ]]></tbox><tbox llx="102" lly="363" urx="113" ury="372" f="3"><![CDATA[ff ]]></tbox></line>
+<line><tbox llx="103" lly="355" urx="112" ury="364" f="5"><![CDATA[3 ]]></tbox><tbox llx="109" lly="358" urx="123" ury="370" f="2"><![CDATA[¯ ]]></tbox><tbox llx="115" lly="356" urx="127" ury="365" f="8"><![CDATA[jv ]]></tbox><tbox llx="122" lly="360" urx="125" ury="363" f="4"><![CDATA[0 ]]></tbox><tbox llx="125" lly="356" urx="133" ury="365" f="8"><![CDATA[j ]]></tbox><tbox llx="132" lly="357" urx="160" ury="371" f="1"><![CDATA[and ]]></tbox><tbox llx="154" lly="358" urx="168" ury="370" f="2"><![CDATA[T ]]></tbox><tbox llx="162" lly="362" urx="170" ury="371" f="8"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="160" lly="356" urx="171" ury="365" f="3"><![CDATA[ae ]]></tbox><tbox llx="169" lly="357" urx="206" ury="371" f="1"><![CDATA[= 3:3 ]]></tbox></line>
+<line><tbox llx="196" lly="370" urx="222" ury="390" f="6"><![CDATA[q ]]></tbox></line>
+<line><tbox llx="208" lly="364" urx="223" ury="373" f="5"><![CDATA[2oe ]]></tbox><tbox llx="217" lly="362" urx="226" ury="370" f="9"><![CDATA[v ]]></tbox><tbox llx="221" lly="365" urx="225" ury="368" f="4"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="225" lly="367" urx="231" ury="373" f="10"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="216" lly="354" urx="227" ury="364" f="3"><![CDATA[n ]]></tbox><tbox llx="234" lly="357" urx="304" ury="371" f="1"><![CDATA[will be com- ]]></tbox></line>
+<line><tbox llx="72" lly="344" urx="305" ury="358" f="1"><![CDATA[pared, highlighting the improvement of perfor- ]]></tbox></line>
+<line><tbox llx="72" lly="330" urx="304" ury="344" f="1"><![CDATA[mance of the system with respect to the correct ]]></tbox></line>
+<line><tbox llx="72" lly="316" urx="220" ury="331" f="1"><![CDATA[detection of the watermark. ]]></tbox><tbox llx="228" lly="316" urx="305" ury="331" f="1"><![CDATA[The standard ]]></tbox></line>
+<line><tbox llx="103" lly="88" urx="274" ury="102" f="1"><![CDATA[Figure 4: Original image `Lenna'. ]]></tbox></line>
+<line><tbox llx="304" lly="536" urx="536" ury="550" f="1"><![CDATA[Figure 5: Watermarked image `Lenna' with pa- ]]></tbox></line>
+<line><tbox llx="304" lly="522" urx="351" ury="537" f="1"><![CDATA[rameter ]]></tbox><tbox llx="345" lly="523" urx="385" ury="535" f="2"><![CDATA[ff=0.2, ]]></tbox><tbox llx="381" lly="522" urx="502" ury="537" f="1"><![CDATA[k=16000 and n=16000. ]]></tbox></line>
+<line><tbox llx="304" lly="482" urx="536" ury="497" f="1"><![CDATA[image ''Lenna'' in Figure 4 was signed with pa- ]]></tbox></line>
+<line><tbox llx="304" lly="469" urx="351" ury="483" f="1"><![CDATA[rameter ]]></tbox><tbox llx="345" lly="469" urx="360" ury="481" f="2"><![CDATA[ff ]]></tbox><tbox llx="355" lly="469" urx="536" ury="483" f="1"><![CDATA[= 0.2, with a watermarking random ]]></tbox></line>
+<line><tbox llx="304" lly="455" urx="400" ury="470" f="1"><![CDATA[sequence of length ]]></tbox><tbox llx="393" lly="456" urx="408" ury="468" f="2"><![CDATA[n ]]></tbox><tbox llx="403" lly="455" urx="536" ury="470" f="1"><![CDATA[= 16000, and skipping the ]]></tbox></line>
+<line><tbox llx="304" lly="442" urx="333" ury="456" f="1"><![CDATA[first ]]></tbox><tbox llx="327" lly="442" urx="341" ury="454" f="2"><![CDATA[k ]]></tbox><tbox llx="336" lly="442" urx="536" ury="456" f="1"><![CDATA[= 16000 coefficients in the zig-zag scan, ]]></tbox></line>
+<line><tbox llx="304" lly="428" urx="536" ury="442" f="1"><![CDATA[to obtain a watermarked copy shown in Fig- ]]></tbox></line>
+<line><tbox llx="304" lly="414" urx="536" ury="429" f="1"><![CDATA[ure 5. The detector was applied to this copy: ]]></tbox></line>
+<line><tbox llx="304" lly="401" urx="520" ury="415" f="1"><![CDATA[as shown in Figure 6, the new threshold ]]></tbox><tbox llx="515" lly="402" urx="529" ury="414" f="2"><![CDATA[T ]]></tbox><tbox llx="523" lly="406" urx="531" ury="415" f="8"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="521" lly="399" urx="531" ury="409" f="3"><![CDATA[ae ]]></tbox></line>
+<line><tbox llx="304" lly="387" urx="466" ury="402" f="1"><![CDATA[is lower than the old threshold ]]></tbox><tbox llx="460" lly="388" urx="475" ury="400" f="2"><![CDATA[T ]]></tbox><tbox llx="467" lly="387" urx="477" ury="396" f="3"><![CDATA[ae ]]></tbox><tbox llx="472" lly="387" urx="536" ury="402" f="1"><![CDATA[, but much ]]></tbox></line>
+<line><tbox llx="304" lly="374" urx="536" ury="388" f="1"><![CDATA[higher again with respect to the responses to ]]></tbox></line>
+<line><tbox llx="304" lly="360" urx="536" ury="375" f="1"><![CDATA[the other watermarks, so that no false positive ]]></tbox></line>
+<line><tbox llx="304" lly="347" urx="483" ury="361" f="1"><![CDATA[watermark detection could happen. ]]></tbox></line>
+<line><tbox llx="315" lly="330" urx="536" ury="344" f="1"><![CDATA[To verify the effectiveness of the new thresh- ]]></tbox></line>
+<line><tbox llx="304" lly="316" urx="536" ury="331" f="1"><![CDATA[old in the watermark detection of attacked im- ]]></tbox></line>
+<line><tbox llx="304" lly="303" urx="536" ury="317" f="1"><![CDATA[ages, some modifications of ''Lenna'' were car- ]]></tbox></line>
+<line><tbox llx="304" lly="289" urx="536" ury="303" f="1"><![CDATA[ried out: first, a JPEG compression with qual- ]]></tbox></line>
+<line><tbox llx="304" lly="275" urx="536" ury="290" f="1"><![CDATA[ity factor of 5% was applied; the results of ]]></tbox></line>
+<line><tbox llx="304" lly="262" urx="536" ury="276" f="1"><![CDATA[the decoder are shown in Figure 7: the new ]]></tbox></line>
+<line><tbox llx="304" lly="248" urx="359" ury="263" f="1"><![CDATA[threshold ]]></tbox><tbox llx="351" lly="249" urx="366" ury="261" f="2"><![CDATA[T ]]></tbox><tbox llx="359" lly="254" urx="367" ury="263" f="8"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="358" lly="247" urx="368" ury="256" f="3"><![CDATA[ae ]]></tbox><tbox llx="366" lly="248" urx="536" ury="263" f="1"><![CDATA[is lower than the correct response, ]]></tbox></line>
+<line><tbox llx="304" lly="235" urx="443" ury="249" f="1"><![CDATA[whereas the old threshold ]]></tbox><tbox llx="439" lly="236" urx="453" ury="247" f="2"><![CDATA[T ]]></tbox><tbox llx="445" lly="234" urx="456" ury="244" f="3"><![CDATA[ae ]]></tbox><tbox llx="456" lly="235" urx="536" ury="249" f="1"><![CDATA[is higher than ]]></tbox></line>
+<line><tbox llx="304" lly="221" urx="451" ury="236" f="1"><![CDATA[the response, so that using ]]></tbox><tbox llx="446" lly="222" urx="461" ury="234" f="2"><![CDATA[T ]]></tbox><tbox llx="453" lly="221" urx="463" ury="230" f="3"><![CDATA[ae ]]></tbox><tbox llx="463" lly="221" urx="536" ury="236" f="1"><![CDATA[a missed de- ]]></tbox></line>
+<line><tbox llx="304" lly="208" urx="536" ury="222" f="1"><![CDATA[tection would occur. Then, the sequence of ]]></tbox></line>
+<line><tbox llx="304" lly="194" urx="536" ury="209" f="1"><![CDATA[JPEG compression with quality factor of 15%, ]]></tbox></line>
+<line><tbox llx="304" lly="181" urx="536" ury="195" f="1"><![CDATA[despeckle filtering, and dithering to only 4 grey ]]></tbox></line>
+<line><tbox llx="304" lly="167" urx="536" ury="182" f="1"><![CDATA[levels, was applied, obtaining the image in Fig- ]]></tbox></line>
+<line><tbox llx="304" lly="154" urx="521" ury="168" f="1"><![CDATA[ure 8. Once again, by using the threshold ]]></tbox><tbox llx="515" lly="154" urx="529" ury="166" f="2"><![CDATA[T ]]></tbox><tbox llx="523" lly="159" urx="531" ury="168" f="8"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="521" lly="152" urx="531" ury="162" f="3"><![CDATA[ae ]]></tbox></line>
+<line><tbox llx="304" lly="140" urx="536" ury="154" f="1"><![CDATA[the embedded watermark is correctly detected, ]]></tbox></line>
+<line><tbox llx="304" lly="126" urx="399" ury="141" f="1"><![CDATA[whereas by using ]]></tbox><tbox llx="393" lly="127" urx="408" ury="139" f="2"><![CDATA[T ]]></tbox><tbox llx="400" lly="126" urx="410" ury="135" f="3"><![CDATA[ae ]]></tbox><tbox llx="410" lly="126" urx="536" ury="141" f="1"><![CDATA[it would be missed (see ]]></tbox></line>
+<line><tbox llx="304" lly="113" urx="536" ury="127" f="1"><![CDATA[Figure 9). Similar results were obtained also ]]></tbox></line>
+<line><tbox llx="304" lly="99" urx="536" ury="114" f="1"><![CDATA[carrying out other attacks, like median and low ]]></tbox></line>
+<line><tbox llx="304" lly="86" urx="482" ury="100" f="1"><![CDATA[pass filtering, sharpening, blurring. ]]></tbox></line>
+<pbox llx="72.00" lly="86.00" urx="536.00" ury="755.00"/></page>
+<page n="5">
+<line><tbox llx="174" lly="616" urx="201" ury="628" f="1"><![CDATA[-0.01 ]]></tbox></line>
+<line><tbox llx="187" lly="637" urx="201" ury="650" f="1"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="177" lly="658" urx="201" ury="671" f="1"><![CDATA[0.01 ]]></tbox></line>
+<line><tbox llx="177" lly="680" urx="201" ury="693" f="1"><![CDATA[0.02 ]]></tbox></line>
+<line><tbox llx="177" lly="701" urx="201" ury="714" f="1"><![CDATA[0.03 ]]></tbox></line>
+<line><tbox llx="177" lly="722" urx="201" ury="735" f="1"><![CDATA[0.04 ]]></tbox></line>
+<line><tbox llx="177" lly="744" urx="201" ury="757" f="1"><![CDATA[0.05 ]]></tbox></line>
+<line><tbox llx="194" lly="606" urx="455" ury="619" f="1"><![CDATA[0 100 200 300 400 500 600 700 800 900 1000 ]]></tbox></line>
+<line><tbox llx="159" lly="650" urx="160" ury="680" f="2"><![CDATA[Detector ]]></tbox></line>
+<line><tbox llx="159" lly="682" urx="160" ury="715" f="2"><![CDATA[Response ]]></tbox></line>
+<line><tbox llx="295" lly="597" urx="346" ury="610" f="3"><![CDATA[Watermarks ]]></tbox></line>
+<line><tbox llx="329" lly="686" urx="348" ury="700" f="4"><![CDATA[Tr ]]></tbox></line>
+<line><tbox llx="269" lly="659" urx="288" ury="673" f="4"><![CDATA[T' ]]></tbox><tbox llx="275" lly="659" urx="285" ury="668" f="5"><![CDATA[r ]]></tbox></line>
+<line><tbox llx="72" lly="572" urx="536" ury="586" f="1"><![CDATA[Figure 6: Detector response of the watermaked image in Figure 5 to 1000 randomly generated ]]></tbox></line>
+<line><tbox llx="72" lly="558" urx="536" ury="573" f="1"><![CDATA[watermarks. Only watermark number 100 matches that embedded. As shown, the new threshold ]]></tbox></line>
+<line><tbox llx="72" lly="545" urx="87" ury="557" f="2"><![CDATA[T ]]></tbox><tbox llx="80" lly="550" urx="88" ury="559" f="3"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="79" lly="543" urx="89" ury="553" f="4"><![CDATA[ae ]]></tbox><tbox llx="87" lly="545" urx="243" ury="559" f="1"><![CDATA[is lower than the old threshold ]]></tbox><tbox llx="236" lly="545" urx="251" ury="557" f="2"><![CDATA[T ]]></tbox><tbox llx="242" lly="544" urx="253" ury="554" f="4"><![CDATA[ae ]]></tbox><tbox llx="247" lly="545" urx="536" ury="559" f="1"><![CDATA[, but still much higher with respect to the responses of the ]]></tbox></line>
+<line><tbox llx="72" lly="531" urx="170" ury="546" f="1"><![CDATA[other watermarks. ]]></tbox></line>
+<line><tbox llx="162" lly="377" urx="190" ury="390" f="5"><![CDATA[-0.01 ]]></tbox></line>
+<line><tbox llx="158" lly="400" urx="190" ury="413" f="5"><![CDATA[-0.005 ]]></tbox></line>
+<line><tbox llx="176" lly="421" urx="190" ury="435" f="5"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="161" lly="444" urx="190" ury="457" f="5"><![CDATA[0.005 ]]></tbox></line>
+<line><tbox llx="165" lly="467" urx="190" ury="480" f="5"><![CDATA[0.01 ]]></tbox></line>
+<line><tbox llx="161" lly="488" urx="190" ury="502" f="5"><![CDATA[0.015 ]]></tbox></line>
+<line><tbox llx="165" lly="511" urx="190" ury="524" f="5"><![CDATA[0.02 ]]></tbox></line>
+<line><tbox llx="183" lly="367" urx="455" ury="381" f="5"><![CDATA[0 100 200 300 400 500 600 700 800 900 1000 ]]></tbox></line>
+<line><tbox llx="289" lly="358" urx="342" ury="371" f="5"><![CDATA[Watermarks ]]></tbox></line>
+<line><tbox llx="159" lly="414" urx="160" ury="445" f="6"><![CDATA[Detector ]]></tbox></line>
+<line><tbox llx="159" lly="447" urx="160" ury="482" f="6"><![CDATA[Response ]]></tbox><tbox llx="268" lly="473" urx="287" ury="487" f="7"><![CDATA[T' ]]></tbox><tbox llx="274" lly="472" urx="285" ury="481" f="8"><![CDATA[r ]]></tbox></line>
+<line><tbox llx="294" lly="495" urx="314" ury="510" f="7"><![CDATA[Tr ]]></tbox></line>
+<line><tbox llx="72" lly="333" urx="536" ury="347" f="1"><![CDATA[Figure 7: Detector response of the watermaked image in Figure 5 after a JPEG compression ]]></tbox></line>
+<line><tbox llx="72" lly="319" urx="205" ury="333" f="1"><![CDATA[with quality factor of 5%. ]]></tbox></line>
+<line><tbox llx="72" lly="285" urx="193" ury="302" f="5"><![CDATA[5 Conclusions ]]></tbox></line>
+<line><tbox llx="72" lly="248" urx="304" ury="263" f="1"><![CDATA[In this paper, the problem of how a decision ]]></tbox></line>
+<line><tbox llx="72" lly="235" urx="305" ury="249" f="1"><![CDATA[threshold for a correlation-based watermark ]]></tbox></line>
+<line><tbox llx="72" lly="221" urx="304" ury="236" f="1"><![CDATA[detection algorithm can be properly chosen is ]]></tbox></line>
+<line><tbox llx="72" lly="208" urx="304" ury="222" f="1"><![CDATA[addressed; to determine whether a given water- ]]></tbox></line>
+<line><tbox llx="72" lly="194" urx="264" ury="209" f="1"><![CDATA[mark is present or not, the correlation ]]></tbox><tbox llx="257" lly="195" urx="296" ury="207" f="2"><![CDATA[ae(X; V ]]></tbox><tbox llx="290" lly="194" urx="304" ury="209" f="1"><![CDATA[) ]]></tbox></line>
+<line><tbox llx="72" lly="181" urx="194" ury="195" f="1"><![CDATA[between the watermark ]]></tbox><tbox llx="186" lly="181" urx="204" ury="193" f="2"><![CDATA[X ]]></tbox><tbox llx="200" lly="181" urx="304" ury="195" f="1"><![CDATA[and a set of selected ]]></tbox></line>
+<line><tbox llx="72" lly="167" urx="304" ury="182" f="1"><![CDATA[DCT coefficients is computed, and compared to ]]></tbox></line>
+<line><tbox llx="72" lly="154" urx="136" ury="168" f="1"><![CDATA[a threshold ]]></tbox><tbox llx="129" lly="154" urx="143" ury="166" f="2"><![CDATA[T ]]></tbox><tbox llx="135" lly="153" urx="145" ury="162" f="4"><![CDATA[ae ]]></tbox><tbox llx="140" lly="154" urx="304" ury="168" f="1"><![CDATA[. It has been demonstrated that, ]]></tbox></line>
+<line><tbox llx="72" lly="140" urx="304" ury="154" f="1"><![CDATA[if a watermarked image is attacked through sig- ]]></tbox></line>
+<line><tbox llx="72" lly="126" urx="304" ury="141" f="1"><![CDATA[nal processing techniques, the statistic of the ]]></tbox></line>
+<line><tbox llx="72" lly="113" urx="304" ury="127" f="1"><![CDATA[correlation changes, resulting in an higher false ]]></tbox></line>
+<line><tbox llx="72" lly="99" urx="304" ury="114" f="1"><![CDATA[negative error probability than was expected. ]]></tbox></line>
+<line><tbox llx="72" lly="86" urx="305" ury="100" f="1"><![CDATA[To cope with this effect, a new threshold based ]]></tbox></line>
+<line><tbox llx="304" lly="286" urx="536" ury="300" f="1"><![CDATA[on a fixed constraint on the maximum probabil- ]]></tbox></line>
+<line><tbox llx="304" lly="272" urx="536" ury="287" f="1"><![CDATA[ity of false positive errors is proposed. Results ]]></tbox></line>
+<line><tbox llx="304" lly="259" urx="536" ury="273" f="1"><![CDATA[confirm the robustness of the decoder against ]]></tbox></line>
+<line><tbox llx="304" lly="245" urx="370" ury="260" f="1"><![CDATA[the attacks. ]]></tbox></line>
+<line><tbox llx="304" lly="165" urx="443" ury="183" f="5"><![CDATA[Acknowledgments ]]></tbox></line>
+<line><tbox llx="304" lly="126" urx="536" ury="141" f="1"><![CDATA[This work was partially supported by the ``Pro- ]]></tbox></line>
+<line><tbox llx="304" lly="113" urx="536" ury="127" f="1"><![CDATA[getto Finalizzato Beni Culturali'' (Finalized ]]></tbox></line>
+<line><tbox llx="304" lly="99" urx="536" ury="114" f="1"><![CDATA[Project for Cultural Heritage) of the Italian ]]></tbox></line>
+<line><tbox llx="304" lly="86" urx="480" ury="100" f="1"><![CDATA[National Research Council (CNR). ]]></tbox></line>
+<pbox llx="72.00" lly="86.00" urx="536.00" ury="757.00"/></page>
+<page n="6">
+<line><tbox llx="162" lly="610" urx="190" ury="623" f="1"><![CDATA[-0.01 ]]></tbox></line>
+<line><tbox llx="158" lly="632" urx="190" ury="645" f="1"><![CDATA[-0.005 ]]></tbox></line>
+<line><tbox llx="176" lly="654" urx="190" ury="667" f="1"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="161" lly="677" urx="190" ury="690" f="1"><![CDATA[0.005 ]]></tbox></line>
+<line><tbox llx="165" lly="699" urx="190" ury="712" f="1"><![CDATA[0.01 ]]></tbox></line>
+<line><tbox llx="161" lly="721" urx="190" ury="734" f="1"><![CDATA[0.015 ]]></tbox></line>
+<line><tbox llx="165" lly="744" urx="190" ury="757" f="1"><![CDATA[0.02 ]]></tbox></line>
+<line><tbox llx="183" lly="600" urx="455" ury="613" f="1"><![CDATA[0 100 200 300 400 500 600 700 800 900 1000 ]]></tbox></line>
+<line><tbox llx="289" lly="590" urx="342" ury="604" f="1"><![CDATA[Watermarks ]]></tbox></line>
+<line><tbox llx="159" lly="646" urx="160" ury="678" f="2"><![CDATA[Detector ]]></tbox></line>
+<line><tbox llx="159" lly="679" urx="160" ury="714" f="2"><![CDATA[Response ]]></tbox></line>
+<line><tbox llx="240" lly="734" urx="260" ury="750" f="3"><![CDATA[Tr ]]></tbox></line>
+<line><tbox llx="271" lly="697" urx="291" ury="712" f="3"><![CDATA[T' ]]></tbox><tbox llx="277" lly="697" urx="288" ury="706" f="4"><![CDATA[r ]]></tbox></line>
+<line><tbox llx="72" lly="565" urx="536" ury="580" f="1"><![CDATA[Figure 9: Detector response of the watermaked image in Figure 5 after JPEG compression of ]]></tbox></line>
+<line><tbox llx="72" lly="552" urx="414" ury="566" f="1"><![CDATA[15%, despeckle filtering and dithering with reduction to 4 grey levels. ]]></tbox></line>
+<line><tbox llx="72" lly="313" urx="304" ury="328" f="1"><![CDATA[Figure 8: Watermarked image `Lenna' after ]]></tbox></line>
+<line><tbox llx="72" lly="300" urx="304" ury="314" f="1"><![CDATA[JPEG compression of 15%, despeckle filtering ]]></tbox></line>
+<line><tbox llx="72" lly="286" urx="299" ury="301" f="1"><![CDATA[and dithering with reduction to 4 grey levels. ]]></tbox></line>
+<line><tbox llx="72" lly="250" urx="160" ury="267" f="2"><![CDATA[References ]]></tbox></line>
+<line><tbox llx="78" lly="223" urx="304" ury="237" f="1"><![CDATA[[1] M. Barni, F. Bartolini, V. Cappellini, A. ]]></tbox></line>
+<line><tbox llx="95" lly="209" urx="305" ury="224" f="1"><![CDATA[Piva, ''A DCT-domain system for robust ]]></tbox></line>
+<line><tbox llx="95" lly="196" urx="212" ury="210" f="1"><![CDATA[image watermarking'', ]]></tbox><tbox llx="208" lly="196" urx="302" ury="208" f="3"><![CDATA[Signal Processing, ]]></tbox></line>
+<line><tbox llx="95" lly="182" urx="279" ury="197" f="1"><![CDATA[vol.66, no.3, pp. 357--372, May 1998. ]]></tbox></line>
+<line><tbox llx="78" lly="154" urx="304" ury="168" f="1"><![CDATA[[2] M. Barni, F. Bartolini, A. Piva and F. ]]></tbox></line>
+<line><tbox llx="95" lly="140" urx="304" ury="154" f="1"><![CDATA[Rigacci, ''Statistical Modelling of Full ]]></tbox></line>
+<line><tbox llx="95" lly="126" urx="304" ury="141" f="1"><![CDATA[Frame DCT Coefficients'', to appear in ]]></tbox></line>
+<line><tbox llx="95" lly="114" urx="302" ury="125" f="3"><![CDATA[Proc. European Signal Processing Con- ]]></tbox></line>
+<line><tbox llx="95" lly="100" urx="210" ury="112" f="3"><![CDATA[ference EUSIPCO 98, ]]></tbox><tbox llx="208" lly="99" urx="305" ury="114" f="1"><![CDATA[Island of Rhodes, ]]></tbox></line>
+<line><tbox llx="95" lly="86" urx="249" ury="100" f="1"><![CDATA[Greece, September 8-11, 1998. ]]></tbox></line>
+<line><tbox llx="310" lly="519" urx="536" ury="533" f="1"><![CDATA[[3] A. Bors and I. Pitas, ''Image watermark- ]]></tbox></line>
+<line><tbox llx="327" lly="505" urx="508" ury="520" f="1"><![CDATA[ing using DCT domain constraints,'' ]]></tbox><tbox llx="501" lly="506" urx="534" ury="517" f="3"><![CDATA[Proc. ]]></tbox></line>
+<line><tbox llx="327" lly="492" urx="534" ury="504" f="3"><![CDATA[ICIP'96, Int. Conf. on Image Processing, ]]></tbox></line>
+<line><tbox llx="327" lly="478" urx="536" ury="492" f="1"><![CDATA[vol.III, pp.231--234, Lausanne, September ]]></tbox></line>
+<line><tbox llx="327" lly="465" urx="361" ury="479" f="1"><![CDATA[1996. ]]></tbox></line>
+<line><tbox llx="310" lly="443" urx="536" ury="457" f="1"><![CDATA[[4] I.J. Cox, J. Kilian, T. Leighton and T. ]]></tbox></line>
+<line><tbox llx="327" lly="429" urx="536" ury="444" f="1"><![CDATA[Shamoon, ''Secure spread spectrum wa- ]]></tbox></line>
+<line><tbox llx="327" lly="416" urx="472" ury="430" f="1"><![CDATA[termarking for multimedia,'' ]]></tbox><tbox llx="465" lly="416" urx="534" ury="428" f="3"><![CDATA[IEEE Trans. ]]></tbox></line>
+<line><tbox llx="327" lly="403" urx="420" ury="414" f="3"><![CDATA[Image Processing, ]]></tbox><tbox llx="417" lly="402" urx="536" ury="416" f="1"><![CDATA[vol.6, no.12, pp. 1673-- ]]></tbox></line>
+<line><tbox llx="327" lly="389" urx="441" ury="403" f="1"><![CDATA[1687, December 1997. ]]></tbox></line>
+<line><tbox llx="310" lly="367" urx="536" ury="381" f="1"><![CDATA[[5] I. Pitas, ''A method for signature cast- ]]></tbox></line>
+<line><tbox llx="327" lly="353" urx="443" ury="368" f="1"><![CDATA[ing on digital images,'' ]]></tbox><tbox llx="436" lly="354" urx="534" ury="365" f="3"><![CDATA[Proc. ICIP'96, Int. ]]></tbox></line>
+<line><tbox llx="327" lly="340" urx="473" ury="352" f="3"><![CDATA[Conf. on Image Processing, ]]></tbox><tbox llx="472" lly="340" urx="536" ury="354" f="1"><![CDATA[vol.III, pp. ]]></tbox></line>
+<line><tbox llx="327" lly="326" urx="512" ury="340" f="1"><![CDATA[215--218, Lausanne, September 1996. ]]></tbox></line>
+<line><tbox llx="310" lly="304" urx="375" ury="321" f="1"><![CDATA[[6] J.J.K. ' ]]></tbox></line>
+<line><tbox llx="358" lly="304" urx="536" ury="319" f="1"><![CDATA[O Ruanaidh, F.M. Boland and W.J. ]]></tbox></line>
+<line><tbox llx="327" lly="291" urx="536" ury="305" f="1"><![CDATA[Dowling, ''Phase watermarking of digital ]]></tbox></line>
+<line><tbox llx="327" lly="277" urx="377" ury="291" f="1"><![CDATA[images,'' ]]></tbox><tbox llx="370" lly="278" urx="534" ury="289" f="3"><![CDATA[Proc. ICIP'96, Int. Conf. on Im- ]]></tbox></line>
+<line><tbox llx="327" lly="264" urx="407" ury="276" f="3"><![CDATA[age Processing, ]]></tbox><tbox llx="403" lly="263" urx="536" ury="278" f="1"><![CDATA[vol.III, pp. 239--242, Lau- ]]></tbox></line>
+<line><tbox llx="327" lly="250" urx="449" ury="264" f="1"><![CDATA[sanne, September 1996. ]]></tbox></line>
+<line><tbox llx="310" lly="228" urx="536" ury="242" f="1"><![CDATA[[7] R. Wolfgang and E.J. Delp ''A watermark ]]></tbox></line>
+<line><tbox llx="327" lly="215" urx="433" ury="229" f="1"><![CDATA[for digital images,'' ]]></tbox><tbox llx="429" lly="215" urx="534" ury="227" f="3"><![CDATA[Proc. ICIP'96, Int. ]]></tbox></line>
+<line><tbox llx="327" lly="202" urx="470" ury="213" f="3"><![CDATA[Conf. on Image Processing, ]]></tbox><tbox llx="468" lly="201" urx="536" ury="215" f="1"><![CDATA[vol. III, pp. ]]></tbox></line>
+<line><tbox llx="327" lly="188" urx="512" ury="202" f="1"><![CDATA[219--222, Lausanne, September 1996. ]]></tbox></line>
+<line><tbox llx="310" lly="166" urx="536" ury="180" f="1"><![CDATA[[8] J. Zhao and E. Koch, ''Embedding robust ]]></tbox></line>
+<line><tbox llx="327" lly="152" urx="536" ury="167" f="1"><![CDATA[labels into images for copyright protec- ]]></tbox></line>
+<line><tbox llx="327" lly="139" urx="364" ury="153" f="1"><![CDATA[tion,'' ]]></tbox><tbox llx="358" lly="139" urx="534" ury="151" f="3"><![CDATA[Proc. of the Int. Congress on Intel- ]]></tbox></line>
+<line><tbox llx="327" lly="126" urx="534" ury="137" f="3"><![CDATA[lectual Property Rights for Specialized In- ]]></tbox></line>
+<line><tbox llx="327" lly="112" urx="534" ury="124" f="3"><![CDATA[formation, Knowledge and New Technolo- ]]></tbox></line>
+<line><tbox llx="327" lly="99" urx="355" ury="110" f="3"><![CDATA[gies, ]]></tbox><tbox llx="351" lly="98" urx="526" ury="112" f="1"><![CDATA[pp. 242-251, Vienna, August 1995.]]></tbox></line>
+<pbox llx="72.00" lly="86.00" urx="536.00" ury="757.00"/></page>
+<fonts>
+<font name="Unknown" h="13.39" n="1"/>
+<font name="Unknown" h="16.13" n="2"/>
+<font name="Unknown" h="10.66" n="3"/>
+<font name="Symbol" h="8.40" n="4"/>
+<font name="Unknown" h="16.13" n="5"/>
+<font name="Times-Roman" h="0.00" n="6"/>
+<font name="Times-Roman" h="13.35" n="7"/>
+<font name="Symbol" h="8.40" n="8"/>
+<font name="Unknown" h="7.20" n="9"/>
+<font name="Unknown" h="4.32" n="10"/>
+<font name="Unknown" h="10.37" n="11"/>
+</fonts>
+</document>

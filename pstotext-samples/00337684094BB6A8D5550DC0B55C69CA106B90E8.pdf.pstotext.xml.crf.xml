@@ -1,0 +1,2069 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <content>
+    <headers headerID="p1x132.0y710.0">
+      <title>The Capacitated m-Ring-Star Problem</title>
+      <authors>
+        <author>
+          <author-first>R.</author-first>
+          <author-last>Baldacci</author-last>
+        </author>
+        and
+        <author>
+          <author-first>M.</author-first>
+          <author-last>Dell</author-last>
+        </author>
+      </authors>
+      <note>'Amico 1</note>
+      <institution>DISMI, University of Modena and Reggio Emilia</institution>
+      <address>V.le Allegri 13, 42100 Reggio Emilia, Italy</address>
+      <authors>
+        <author>
+          <author-first>J.</author-first>
+          <author-middle>Salazar</author-middle>
+          <author-last>Gonzlez</author-last>
+        </author>
+      </authors>
+      <institution>DEIOC, Facultad de Matemticas,</institution>
+      <address>Universidad de La Laguna 38271 La Laguna, Tenerife, Spain</address>
+      <date>June 2004, Revised version August 2005</date>
+      <abstract>Abstract The Capacitated m-Ring-Star Problem (CmRSP) is the problem of designing a set of rings that pass through a central depot and through some transition points and/or customers, and then assigning each non-visited customer to a visited point or customer. The number of customers visited and assigned to a ring is bounded by an upper limit: the capacity of the ring. The objective is to minimize the total routing cost plus assignment costs. The problem has practical applications in the design of urban optical telecommunication networks. This paper presents and discusses two integer programming formulations for the CmRSP. Valid inequalities are proposed to strengthen the linear programming relaxation, and are used as cutting planes in a branchand-cut approach. The procedure is implemented and tested on a large family of instances, including real-world instances, and the good performance of the proposed approach is demonstrated.</abstract>
+      <keyword>Subject classifications: Networks/graphs: optical network design. Programming, integer, cutting plane: Branch-and-cut algorithm. Area of review : Telecommunications and Networking.</keyword>
+    </headers>
+    <body>1 Introduction 
+New technology in telecommunications leads to challenging network-design 
+problems. The recent literature shows several good examples (see Gourdin, Labband 
+Yaman [11]). 
+In this paper we present a new problem, named the Capacitated m-Ring-Star 
+Problem (CmRSP), which consists of designing a set of cycles (rings), each one of 
+1 Corresponding author: Mauro Dell'Amico, University of Modena and Reggio Emilia,viale 
+A. Allegri, 13, 42100 Reggio Emilia, Italy, Tel. +39-0522-522-228, Fax +39-0522-522-230, e-mail 
+dellamico@unimore.it. 
+1 
+which includes the telephone exchange (central depot), a certain number of 
+customers, and other possible points called transition points that could be used to save 
+routing costs. The ring topology is chosen in many fiber optic communication 
+networks since it makes it possible to prevent the loss of connection due to a single edge 
+or even a single node failure. Indeed, let us suppose that a customer i is currently 
+communicating with other customers using the ring portion that goes clockwise from 
+the telephone exchange to i. If an edge of this ring portion fails, then it is possible 
+to re-route the information to/from i by using the counter-clockwise portion of the 
+ring, which has been not affected by failures. 
+Using up-to-date technologies, each ring is actually implemented by means of 
+a single cable that contains a bundle of optical fibers (100 fibers in the real-world 
+application that inspired this work). Each customer receives two fibers: the first 
+one is used for clockwise communication and the second one for counter-clockwise 
+communication. In an urban environment the cable is inserted in pipes laid under the 
+streets. It is not so rare that the pipe and the cable are inadvertently broken during 
+street works. If the network does not restore communication some users remain 
+disconnected until the cable is repaired. This risky situation is not acceptable for 
+business customers that need to communicate without any interruption. The ring 
+topology is therefore used to guarantee continuous communication service to the 
+customers. 
+The total cost of the optical network depends on several elements, for example the 
+fibers, the devices needed for communication and restoration, and so on. However, 
+the main cost is due to the excavations needed to lay down the pipes. Therefore, 
+the telecommunication companies try to reduce such costs as much as possible. 
+Suppose that all customers but one are located on a "perfect" circle and that this 
+one customer is outside the circle. If the distance between this customer and the 
+circle is small (typically under 200 meters) then the network can be implemented 
+with a single ring plus a single edge that starts from the ring and goes directly to 
+the outside customer. This means that the cable arrives to the intersection of the 
+circle with the edge, then goes to the customer using the edge, returns to the circle 
+using the same edge, and finally continues along the circle. On the edge the cable is 
+inserted into a single pipe, thus reducing the excavation costs. If this pipe is broken 
+the single customer is disconnected from the network. However due to the short 
+length of the edge, this possible failure (and the corresponding loss of service) is 
+considered by the company to be less expensive than the excavation. The network 
+topology is thus made up of a set of rings, each containing the telephone exchange, 
+2 
+a certain number of customers, and some transition points, plus a number of short 
+edges that go from the rings to single customers. Thus the name ring-star structure. 
+The rings must be node-disjoint to ensure that a node failure will only affect one 
+ring. 
+In addition, the total number of customers on a ring or connected to a ring is 
+limited by the number of fibers in a cable. One hundred fibers can serve 50 customers 
+at most, so typically we are required to design rings with 40-45 customers. This 
+consideration justifies the study of the capacitated version of the problem, where m 
+ring-star structures at most must be designed. 
+Telecommunications companies have an obvious interest in the analysis of and 
+solution to this problem, regardless of other aspects of the telecommunications 
+context (different demand among customers, total length of the connections, etc.). Our 
+study was motivated by this interest. 
+The remainder of this paper is organized as follows. Section 2 gives a formal 
+description of the CmRSP and lists a collection of other works on closely related 
+problems. In Section 3, two mathematical formulations of the problem are presented. 
+The computation of lower bounds for the CmRSP and the description of valid 
+inequalities are provided in Section 4. The corresponding separation procedures are 
+described in Section 5, while the overall branch-and-cut algorithm is outlined in 
+Section 6. The last section of the paper gives the computational results on two sets 
+of test problems. The first problem set is composed of randomly generated instances 
+while the second one is composed of real-world instances. Some instances with up 
+to 100 customers and 5 rings have been optimally solved in less than 2 hours on a 
+personal computer. 
+2 Problem description 
+This section presents a formal definition of the CmRSP as an optimization problem 
+in Graph Theory. We use a mixed graph in which transition points and the central 
+depot are associated with nodes, while the links between the nodes are weighted 
+edges or arcs. The CmRSP is the problem of designing: (i) a set of m node-disjoint 
+simple cycles (rings) that pass through the central depot and through some other 
+nodes; (ii) a set of direct connections from each non-visited customer to a node 
+visited by a ring. The total number of customer nodes visited by or connected to a 
+ring is bounded by an upper limit Q, the capacity of the ring. The objective is to 
+minimize the cost of the rings plus the costs of the customer connections. 
+3 
+0 
+# 
+n+1 
+fiff 
+1 
+fiff 
+2 
+fiff 
+ 
+4 
+fiff 
+5 
+fiff 
+ 7 
+fiff 
+8 
+fiff 
+ 
+10 
+fiff 
+11 
+fiff 
+12 
+fiff 
+13 
+fiff 
+14 
+fiff 
+15 
+ ! 
+16 
+"# 
+17 
+$% 
+18 
+&amp;' 
+19 
+() 
+20 
+*+ 
+21 
+
+,22 
+./ 
+23 
+01 
+24 
+23 
+25 
+4 
+Depot 
+56 
+Customers 
+78 
+Transition points 
+Figure 1: Example of feasible CmRSP solution 
+More precisely, the CmRSP is as follows. Consider a mixed graph G = (V, E[A), 
+where V = {0, n + 1} [ V 0 is the node set, E = {{i, j} : i, j 2 V, i 6= j} is the edge 
+set, and A is the arc set. Node set V 0 is partitioned into two subsets: U containing a 
+node for each customer and W containing a node for each transit point (also named 
+Steiner node). Node 0 represents the depot and node n + 1 is a copy of node 0 
+that we introduce to simplify the presentation. (In the following we continue to call 
+"ring" a path from 0 to n + 1.) For each customer i 2 U , let C i # V 0 be the subset 
+of nodes to which customer i can be connected. We will assume that i 2 C i for 
+all customers i 2 U and that a customer will be connected to itself when it is on a 
+ring. Set A represents the possible connections between customers and nodes, i.e., 
+A = {(i, j) : i 2 U, j 2 C i }. Set E is the set of possible ring edges. Each edge 
+e = {i, j} 2 E is associated with a non-negative routing cost c e = c ij , while each 
+arc (i, j) 2 A is associated with a non-negative connection cost d ij (with d ii = 0 
+for all i 2 U ). Given a subset E 0 # E, V (E 0 ) denotes the set of nodes incident to 
+at least one edge in E 0 . A ring R is a pair (E 0 , A 0 ) where E 0 # E is a simple path 
+from node 0 to node n + 1, and A 0 # A are connections between users of U \ V (E 0 ) 
+and nodes of V (E 0 ). We say that a customer i is assigned to a ring R if it is either 
+visited by the simple path (i.e. i 2 V (E 0 )) or it is connected to a node of the ring 
+(i.e., a node j exists such that (i, j) 2 A 0 ). The ring is feasible if the number of 
+4 
+customers assigned to it does not exceed Q. The cost of R is the sum of the routing 
+costs of the edges in E 0 plus the sum of the connection costs of the arcs in A 0 . The 
+number m of rings in the network is known and given as an input parameter. (A 
+trivial assumption is that mQ } |U |.) 
+The aim of CmRSP is to design m rings so that each customer is assigned to 
+exactly one ring, each transition point is visited at most once and the sum of the 
+ring costs is minimized. 
+Figure 1 shows an example of a feasible CmRSP solution where n = 25, m = 3, 
+|U | = 12, |W |=13 and Q = 6. In the figure, the transition points are represented 
+by circles while the customers by triangles. The telephone exchange location (i.e., 
+the depot) is represented by two black squares. The continuous lines represent the 
+routing edges (belonging to set E) and the dashed lines represent the connection 
+arcs (belonging to set A). 
+The problem is NP-hard in the strong sense since the Travelling Salesman 
+Problem (TSP) is the special case in which W = ;, Q = |U |, m = 1 and the connection 
+costs are very high compared to the routing costs. To the best of our knowledge, 
+the CmRSP has never been studied before, but studies on a number of related 
+location-routing problems have been published in the literature. 
+Beasley and Nascimento [7] defined the Vehicle Routing Allocation Problem 
+(VRAP). This problem is a generalization of the CmRSP where, in addition, the 
+customers might not receive service provided a penalty is paid in the objective 
+function. 
+Several authors have considered scenarios where, instead of a cycle, a structure 
+such as a path or a tree must be identified and the nodes not on this structure must 
+be assigned to the structure. A classification of these problems can be found in 
+Labb, Laporte and Rodrguez Martn [13]. References to other problems 
+considering telecommunications and location-allocation aspects can be found in Labbet al. 
+[14, 15]. In [14] the Ring Star Problem is introduced, which consists of designing a 
+simple cycle with the objective of minimizing the sum of two costs: a routing cost 
+proportional to the length of the cycle, and the assignment cost of each node not 
+on the cycle to its closest node on the cycle. A related problem considered in [15] 
+is the Median Cycle Problem, consisting of finding a simple cycle that minimize the 
+routing cost, subject to an upper bound on the total assignment cost of the non- 
+visited nodes. In [14, 15] integer linear programming models for the two problems 
+are presented and strengthened by the introduction of non-trivial valid 
+inequalities. Branch-and-cut algorithms are implemented and tested on random instances 
+5 
+involving up to 300 nodes. 
+Lee, Chiu and Sanchez [16] considered another single-vehicle problem related 
+to CmRSP, the Steiner Ring Star Problem. It consists of finding a minimum cost 
+cycle using only non-customer nodes and such that each customer is connected to 
+exactly one node on the cycle. This problem arises in Digital Data Service network 
+design, where the aim is to connect terminals to concentrators by point-to-point 
+links (leading to a star topology) and to interconnect the concentrators through 
+a ring structure. The authors developed a branch-and-cut algorithm that solved 
+instances with |U | 6 50, |W | 6 90 and |U | + |W | 6 100. Xu, Chiu and Glover 
+[24] proposed a tabu search algorithm for this problem and tested it on randomly 
+generated instances with |U | 6 300 and |W | 6 300. 
+3 Mathematical formulations 
+Two mathematical formulations for the CmRSP are presented in this section. The 
+first one is based on a two-index formulation, while the second one is based on a 
+two-commodity flow formulation. 
+For S # V define #(S) = {{i, j} 2 E : i 2 S, j / 
+2 S}. If S = {i}, we simply write 
+#(i) instead of #({i}). In addition, for S # V , U(S) denotes the set of customers in 
+node set S (i.e., U(S) = S \ U ). 
+3.1 A two-index formulation 
+This section presents a mathematical programming formulation inspired by models 
+for standard routing problems (see, e.g., Toth and Vigo [23]). 
+For each edge e 2 E, let x e be a binary variable taking value 1 if and only if e 
+belongs to a ring forming the solution. Henceforth, if e connects the two nodes i 
+and j then {i, j} and e will be used interchangeably to denote the same edge. For 
+each arc (i, j) 2 A, let z ij be a binary variable which is equal to 1 if and only if 
+customer i is assigned to node j. In the following, in order to simplify the notation, 
+we will extend some summations to pairs (i, j) 62 A assuming that in these cases 
+these additional terms are equal to zero. If a customer i is visited by a ring, then 
+it is assigned to itself, i.e., z ii = 1. Moreover, for each j 2 W , let w j be a binary 
+variable which is equal to 1 if and only if Steiner node j is on a ring. 
+6 
+The CmRSP can be formulated as the following integer program: 
+(F 1) min X e2E 
+c e x e + X 
+(i,j)2A 
+d ij z ij (1) 
+s.t. X 
+e2#(0) 
+x e = m (2) 
+X 
+e2#(n+1) 
+x e = m (3) 
+X 
+e2#(i) 
+x e = 2z ii , 8i 2 U (4) 
+X 
+e2#(i) 
+x e = 2w i , 8i 2 W (5) 
+X 
+j2V 0 
+z ij = 1, 8i 2 U (6) 
+X 
+e2#(S) 
+x e } 2 
+Q X i2U 
+X j2S 
+z ij , 8S # V 0 : S 6= ; (7) 
+x e 2 {0, 1}, 8e 2 E (8) 
+z ij 2 {0, 1}, 8(i, j) 2 A (9) 
+w i 2 {0, 1}, 8i 2 W. (10) 
+Constraints (2) and (3) state that m rings must leave node 0 and must enter node 
+n + 1. Constraints (4) and (5) are the degree constraints imposing that the degree 
+of each node i 2 V 0 is 2 if it belongs to a ring. Because of (4) and (5), one of the 
+two equations (2) and (3) is redundant and therefore it could be removed, but we 
+leave both of them in order to simplify the presentation. Constraints (6) state that 
+a customer i 2 U is either on a ring (z ii = 1) or is assigned to a node on a ring 
+(z ij = 1 for some j 2 C i ). For the last observation note that if i is assigned to j then 
+constraint (7) on S = {j} implies that x(#(j)) } 0, and therefore j is a node on a 
+ring. Inequalities (7) are the fractional ring capacity constraints. These constraints, 
+within the integrality of x and z variables, impose that, for a given subset S of 
+nodes, at least l P i2U P j2S z ij /Q m rings are needed to visit the customers assigned 
+to nodes in S. Constraints (7) are similar to the fractional capacity inequalities 
+of the Capacitated Vehicle Routing Problem (CVRP) (see e.g. Naddef and Rinaldi 
+[20]) where the demand q j of a customer j in CVRP is substituted by 
+P i2U z ij . 
+However there is a strong difference between the two problems since in CVRP the 
+right-hand-side of these inequalities is a constant. More specifically, let Q be the 
+7 
+vehicle capacity for CVRP. The fractional capacity inequalities are 
+X 
+e2#(S) 
+x e } 2 
+Q X j2S 
+q j 8S # V 0 : S 6= ;. (11) 
+For a given set S we know that an even number of solution edges enter S and that 
+the right-hand side of (11) is a constant, hence one can write a stronger inequality, 
+namely the rounded capacity constraint, as follows: 
+X 
+e2#(S) 
+x e } 2 # P j2S q j 
+Q 
+# 8S # V 0 : S 6= ;. (12) 
+Analogously we can derive for CmRSP the rounded version of the fractional ring 
+capacity inequality 
+X 
+e2#(S) 
+x e } 2 # P i2U P j2S z ij 
+Q 
+# 8S # V 0 : S 6= ;. (13) 
+Unfortunately these inequalities are nonlinear. Still, Section 4 presents some linear 
+approximations to lift the right-hand side of these inequalities, and to strengthen 
+the linear relaxation. 
+Note that a feasible solution of (1)--(10) may contain zero-cost subtours composed 
+of Steiner nodes only. Nevertheless, one can easily remove them without losing the 
+CmRSP requirements. Alternatively, the following constraints avoid such a subtour 
+by imposing a connection with the depot: 
+X 
+e2#(S) 
+x e } 2w k , 8S # W and 8k 2 S. (14) 
+Formulation (1)--(10) can be extended to model the VRAP. Let w i , for each 
+i 2 U , be a new variable taking value 1 if customer i is served and 0 otherwise. We 
+only need to replace the right-hand side of (6) with w i and to add to the objective 
+function the term 
+P i2U p i w i , where p i is the penalty of not serving customer i. 
+This extension is not further discussed in this paper since it digresses from the real 
+problem motivating the work, but we think it may be a good basis for developing 
+an algorithm for VRAP. 
+8 
+0 
+# 
+n+1 
+fiff 
+5 
+fiff 
+6 
+fiff 
+12 
+fiff 
+3 
+fiff 
+ 
+17 
+fiff 
+24 
+fiff 
+22 
+5 
+3 
+2 
+1 
+0 
+6 
+5 
+4 
+3 
+1 
+# 
+Depot 
+fiff 
+Customers 
+fiff 
+Steiner nodes 
+Figure 2: Flow paths for the ring of five customers of Figure 1 
+3.2 A two-commodity flow formulation 
+In this section we present another integer programming formulation of the CmRSP 
+based on a two-commodity flow formulation. This kind of model was first 
+introduced by Finke, Claus and Gunn [9] for TSP. Lucena [19] used the two-commodity 
+approach for the TSP to derive a new formulation of the CVRP and a lower bound 
+based on its LP-relaxation. Recently, Baldacci, Hadjiconstantinou and Mingozzi 
+[5, 6] used the two-commodity approach to design branch-and-cut algorithms for 
+the TSP with deliveries and collections (TSPDC) and for the CVRP, capable of 
+solving to optimality large problems involving up to 200 nodes for TSPDC and up 
+to 135 customers for CVRP, respectively. Gouveia [12] introduced and studied a 
+one-commodity flow formulation for the unit demand VRP based on the Gavish and 
+Graves [10] formulation for TSP. Our aim is to extend these results to CmRSP and 
+to asses for the first time the effectiveness of the two formulations when used within 
+the same branch-and-cut approach. 
+The two-commodity formulation of CmRSP uses a graph model that associates 
+each edge {i, j} 2 E with two opposite arcs and with two corresponding flow 
+variables y ij and y ji . The two arcs have the same cost c {i,j} . We impose that in a 
+feasible CmRSP solution the total flow on any edge of a ring is exactly Q. Variables 
+y identify each ring through two flow paths. On the first path going from node 0 
+to node n + 1, flow y ij represents the number of users to be served by the ring after 
+9 
+visiting node i. On the opposite path going from node n + 1 to node 0, variable y ij 
+represents the potential number of customers that could be served in the forward 
+path from 0 to j. Thus, the total flow outgoing from node 0 is |U |, while the flow 
+emanating from node n + 1 is mQ. Each node on a ring having a number, say, # of 
+customers assigned, absorbs # units of the flow coming from node 0, and # units of 
+the flow coming from node n + 1. Figure 2 shows the five customers ring in Figure 
+1 and the two flow paths (0, 22, 24, 17, 11, n + 1) and (n + 1, 11, 17, 24, 22, 0). 
+The two-commodity mathematical formulation of the CmRSP is as follows: 
+(F 2) min 
+1 
+Q X 
+{i,j}2E 
+c ij (y ij + y ji ) + X 
+(i,j)2A 
+d ij z ij (15) 
+s.t. X 
+j2V 0 
+y 0j = |U | (16) 
+X 
+j2V 0 
+y n+1,j = mQ (17) 
+X 
+j2V 0 
+y j,n+1 = 0 (18) 
+X 
+j2V 0 
+y j0 = 
+mQ- |U | (19) 
+X i2V 
+(y ji + y ij ) = 2Qz jj , 8j 2 U (20) 
+X i2V 
+(y ji + y ij ) = 2Qw j , 8j 2 W (21) 
+X 
+j2V 0 
+z ij = 1, 8i 2 U (22) 
+X i2V 
+(y 
+ij- y ji ) = 2 X i2U 
+z ij , 8j 2 V 0 (23) 
+y ij + y ji 2 {0, Q}, 8{i, j} 2 E (24) 
+y ij } 0, 8i, j 2 V (25) 
+z ij 2 {0, 1}, 8(i, j) 2 A (26) 
+w j 2 {0, 1}, 8j 2 W. (27) 
+Equation (16) imposes that the outflow at the source node 0 is equal to the total 
+number of customers, while equation (17) imposes that the outflow at source node 
+n+1 is equal to the total capacity of the m rings. Equation (18) indicates that no 
+flow enters node n + 1 while equation (19) imposes that the flow entering node 0 is 
+equal to the residual capacity of the rings. Since we require that Q flow units go 
+10 
+through each edge on a ring, then for each node of the ring the total flow going in 
+and out from the node must be 2Q. This is imposed by equations (20) and (21). 
+Equations (22) ensure that each customer is assigned to a node. Equations (23) are 
+the flow conservation constraints that take into account that each customer absorbs 
+one flow unit from node 0 and one from node n + 1. Constraints (24) impose the 
+binary requirement that an edge e = {i, j} 2 E must be visited or not by a ring, 
+thus explaining the objective function (15). 
+Let LP-F1 and LP-F2 be the linear programming relaxation of formulations F1 
+and F2 (with constraints (24) substituted by y ij + y ji 6 Q for all {i, j} 2 E), 
+respectively. 
+Theorem 1 Given any feasible solution (z # , w # , y # ) of LP-F2 there exists a vector 
+x # such that (x # , z # , w # ) is a feasible solution of LP-F1. Conversely, given any 
+feasible solution (x # , z # , w # ) of LP-F1 there exists a vector y # such that (z # , w # , y # ) 
+is a feasible solution of LP-F2. The two corresponding solutions have the same 
+objective function value. 
+Proof. Given a solution (z # , w # , y # ) of LP-F2 the vector x # ij = (y # 
+ij + y # ji )/Q is such 
+that (x # , z # , w # ) is a solution of LP-F1. Indeed, adding equations (16) and (19) we 
+obtain equation (2), while adding (17) and (18) we have (3). Equations (4) and (5) 
+immediately follow from (20) and (21), while fractional ring capacity constraints (7) 
+can be derived from (23) as follows: Given a node subset S we start by adding (23) 
+for all j 2 S, thus obtaining 
+X j2S 
+X 
+i2V \S 
+(y 
+ij- y ji ) = 2 X j2S 
+X i2U 
+z ij . 
+Observing that y ij + y ji } y 
+ij- y ji and recalling that variables y ij and y ji are 
+associated with the same edge {i, j} the above equation leads to 
+X j2S 
+X 
+i2V \S 
+(y ij + y ji ) } 2 X j2S 
+X i2U 
+z ij , 
+and (7) immediately follows. 
+On the other hand, given a solution vector (x # , z # , w # ) of LP-F1, it is possible 
+to obtain a solution of LP-F2 by preserving z # and w # , and by computing an 
+appropriate flow y # as follows. Let G # = (V # , E # ) be the support graph associated 
+with the solution (x # , z # , w # ), i.e., V # = {0, n + 1} [ b 
+V # where 
+b 
+V # = {i 2 U : z # 
+ii } 
+0} [ {j 2 W : w # j } 0} and E # = {{i, j} 2 E : x # 
+{i,j} } 0}. We associate each edge 
+11 
+{i, j} with a capacity Qx # 
+{i,j} and each node j with a flow request P i2U z # ij } 0. 
+We look for a min-cost flow, say y 1 , emanating from source 0 and satisfying all 
+capacity constraints and flow requests. The existence of this flow is guaranteed by 
+(7) and by the min-cut/max-flow theorem. We now define y 2 by setting for each 
+edge {i, j} the "slack" y 2 
+ji = Qx # 
+{i,j} - y 1 
+ij . Introducing an overall flow y # = y 1 + y 2 
+we immediately have y # ij + y # ji 6 Q, 8{i, j} 2 E. Given any node j 2 V 0 we can 
+write 
+P i2V (y # 
+ij- y # ji ) = 2 
+P i2V (y 1 
+ij- y 1 
+ji ). Due to the flow conservation for y 1 the 
+right-hand side of this equation is equal to 2 
+P i2U z # ij , so (23) holds. The flow y 1 
+satisfies (16) by construction, so (19) immediately descends by definition of y 2 . 
+Finally, observe that no flow y 1 enters node n+1 in an optimal min-cost flow solution; 
+indeed, n+ 1 is merely a copy of node 0 and any flow on a path from 0 to n+ 1 can 
+be simply eliminated without affecting the flow requirements at the sink nodes. 
+The equality of the two objective function values immediately follows by the 
+construction of x # and y # . # 
+A similar result was obtained by Gouveia [12] for the unit demand VRP (
+using a one-commodity flow formulation) and by Baldacci, Hadjiconstantinou and 
+Mingozzi [6] for CVRP. Letchford and Salazar [18] proved the equivalence between 
+one-commodity and two-commodity formulations for CVRP. 
+Corollary 1 Models F1 and F2 represent the same solutions of CmRSP. 
+Proof. The thesis immediately follows from the above Theorem 1, the identity 
+Qx {i,j} = y ij + y ji , and the integrality constraints (8) and (24). # 
+As a consequence of Theorem 1 the use of either formulation LP-F1 or 
+formulation LP-F2 does not provide any advantages (in terms of lower bound quality) in a 
+linear programming-based algorithm. However, as the two models differ in terms of 
+number of variables and constraints, the computational performances may be 
+different. In particular LP-F1, has 2|U | + |W | + 2 equalities plus an exponential number 
+of constraints (7), while LP-F2 has only 3|U | + 2|W | + 4 equalities, but |E| more 
+variables than LP-F1. In the rest of the paper we will investigate the behaviour of 
+branch-and-cut algorithms based on the two models. 
+12 
+4 Improving the linear programming relaxations 
+A number of valid inequalities can be used to improve the quality of the lower 
+bounds obtained from formulations LP-F1 and LP-F2. Note that, due to the one- 
+to-one correspondence between the solution spaces of the two LP relaxations (see 
+Theorem 1), any valid inequality for LP-F1 has an immediate counterpart inequality 
+in LP-F2. Unfortunately, there is no simple algebraic transformation for the reverse 
+direction. 
+4.1 Strengthening the fractional ring capacity constraints 
+When a set S # V 0 has assigned to it fewer than Q customers the right-hand side 
+of (7) is less than 2, and this inequality is not able to impose that at least one ring 
+must enter S (i.e., two edges in #(S) must be used). We can improve LP-F1 by 
+adding the following connectivity inequalities: 
+X 
+e2#(S) 
+x e } 2 X j2S 
+z uj , 8S # V 0 and 8u 2 U(S). (28) 
+If we try to extend these inequalities to set S not containing a customer u we do not 
+obtain an improved cut, but another way of writing the same constraints. Indeed, 
+defining S 0 = S \ {u} and using equations (4) we can write 
+X 
+e2#(S) 
+x e = X 
+e2#(S 0 ) 
+x e + 2z 
+uu- 2 X j2S 0 
+x {uj} and z uu = X j2S 
+z 
+uj- X j2S 0 
+z uj , 
+so substituting in (28) we obtain 
+X 
+e2#(S 0 ) 
+x e } 2   X j2S 0 
+z uj + X j2S 0 
+x {uj} 
+! , 8S 0 # V 0 and 8u 2 U \ U(S 0 ). (29) 
+Note that when binary variables are considered, only one of the two summations on 
+the right-hand side can take a value greater than zero. This right-hand side 
+highlights the fact that at least two edges must enter a subset S 0 when some customer 
+is assigned to S 0 or when an edge from S 0 to an external customer is selected. 
+Extending this reasoning we can improve inequalities (7), thus obtaining the following 
+13 
+ring multistar inequalities: 
+X 
+e2#(S) 
+x e } 2 
+Q 
+0 @ X i2U 
+X j2S 
+z ij + X 
+i2U\U(S) 
+X j2S 
+x {i,j} 
+1 A , 8S # V 0 . (30) 
+The validity of (30) is based on the observation that the rings serving a subset S 
+must have enough capacity to serve the customers assigned to S and the customers 
+outside S which are directly connected to nodes inside S by some edges. These 
+new inequalities are similar to the multistar inequalities for the CVRP (see, e.g., 
+Letchford, Eglese and Lysgaard [17]). 
+A remark on inequalities (28) is that they turn out to be 
+x {i,j} + z ij 6 ( z jj if j 2 U 
+w j if j 2 W 
+i 2 U, j 2 V 0 , i 6= j, (31) 
+whenever S = {i, j}. If we extend these inequalities to i 2 W (remember that we 
+assume z ij = 0 when i 62 U) we obtain the classical inequalities 
+x {i,j} 6 z jj , j 2 U ; x {i,j} 6 w j , j 2 W, (32) 
+well known to be valid for location-allocation problems (see [14]). 
+As mentioned at the end of Section 3.1, in CmRSP the rounded versions of the 
+fractional ring capacity inequalities (7) are nonlinear. We now present some methods 
+for obtaining a linear approximation of these rounded inequalities. 
+A first technique exploits the fact that in some cases the subset C i of the nodes 
+to which a customer i can be connected is completely contained in S. Thus, the 
+following C i -ring capacity inequalities are valid for CmRSP: 
+X 
+e2#(S) 
+x e } 2 # |{i 2 U : C i # S}| 
+Q 
+# , 8S # V 0 : S \ U 6= ;. (33) 
+These inequalities are dominated by the connectivity inequalities (28) when |S| = 1. 
+A second technique to obtain linear inequalities is based on the following lemma. 
+Lemma 1 Let #, # and # be three non-negative integer values with # } # and 
+mod(#, #) 6= 0. Then 
+# # - # 
+# 
+# } # # 
+# 
+# - # 
+mod(#, #) 
+. (34) 
+Proof. Let I = #b#/#c, then # = I + mod(#, #), and we can rewrite inequality 
+14 
+(34) as 
+I 
+# 
++ # mod(#, 
+#)- # 
+# 
+# } I 
+# 
++ # mod(#, #) 
+# 
+# - # 
+mod(#, #) 
+, 
+from which we obtain 
+# mod(#, #) - # 
+# 
+# } 
+1# 
+mod(#, #) 
+. (35) 
+We have to consider three cases: 
+(i) # = mod(#, #). Both sides of (35) are zero so the inequality holds; 
+(ii) # &lt; mod(#, #). Then d(mod(#, #) - #)/#e = 1 and #/mod(#, #) &lt; 1, hence 
+(35) holds; 
+(iii) # } mod(#, #). Then (mod(#, #) - #)/# } (mod(#, #) - #)/mod(#, #) as 
+mod(#, #) - # &lt; 0 and # } mod(#, #), so inequality (35) holds and thus also 
+the thesis. # 
+The summation on the right-hand side of (13) can be rewritten as 
+|U | - X i2U 
+X 
+j2V 0 \S 
+z ij or as |U(S)
+|0 @ X 
+i2U(S) 
+X 
+j2V 0 \S 
+z 
+ij- X 
+i2U(V \S) 
+X j2S 
+z ij 
+1 A . 
+Using these identities, we can derive the following special cases of the rounded ring 
+capacity inequality (13) by disregarding the non-negative term 
+P i2U(V \S) P j2S z ij : 
+X 
+e2#(S) 
+x e } 2 
+2 6 6 6 
+(|U | - X i2U 
+X 
+j2V 0 \S 
+z ij )/Q 
+3 7 7 7 
+and X 
+e2#(S) 
+x e } 2 
+2 6 6 6 
+(|U(S)| - X 
+i2U(S) 
+X 
+j2V 0 \S 
+z ij )/Q 
+3 7 7 7 
+. 
+Using Lemma 1 we obtain the rounded ring capacity inequality I, 
+X 
+e2#(S) 
+x e } 2   # |U | 
+Q 
+# - P i2U P j2V 0 \S z ij 
+mod(|U |, Q) 
+! , (36) 
+and the rounded ring capacity inequality II, 
+X 
+e2#(S) 
+x e } 2   # |U(S)| 
+Q 
+# - P i2U(S) P j2V 0 \S z ij 
+mod(|U(S)|, Q) 
+! . (37) 
+15 
+Note that there is no dominance between inequalities (36) and (37) as shown by the 
+following examples. Consider a CmRSP instance with |U | = 6, m = 2 and Q = 4. 
+First select a set S containing three of the six customers customers and such that all 
+the six customers are assigned to nodes of S. The right-hand side of inequality (36) 
+becomes 2(d6/4e - 0) = 4, while the right-hand side of (37) has value 2(d3/4e - 0) = 
+2 and (36) is stronger than (37). Now consider a set S containing five customers all 
+associated to nodes of S. The last customer is associated to a node in V 0 \ S. The 
+right-hand side of (36) takes value 2(d6/4e - 1/2) = 3, while the right-hand side of 
+(37) becomes 2(d5/4e - 0) = 4 and the second inequality is stronger than the first 
+one. Moreover, note that the fractional ring capacity constraints are dominated by 
+(36), for the first example, and by both (36) and (37) for the second one. 
+Other valid inequalities for CVRP can also be adapted to CmRSP. For 
+example, the star inequalities can be extended as discussed by Naddef and Rinaldi [20]. 
+Indeed, let us consider a customer u and subsets W 1 , . . . , Wm of V 0 such that 
+W i \ W j = {u}, 1 6 i &lt; j 6 m, 
+|U(W i )| 6 Q, 1 6 i 6 m, 
+|U(W i [ W j )| } Q, 1 6 i &lt; j 6 m. 
+Thus, all the customers in each subset W i can be served by one ring, but the 
+customers in two subsets cannot be served by one ring. The following inequality 
+therefore is valid: m 
+X k=1 
+X 
+i2W k 
+X 
+j2V \W k 
+(x {i,j} + 2z ij ) } 4m - 2. (38) 
+This inequality holds because 
+P i2W k P j2V \W k 
+(x {i,j} +2z ij ) } 2 for all k, and at most 
+one of these inequalities can be tight while the others are 
+P i2W k P j2V \W k 
+(x {i,j} + 
+2z ij ) } 4. 
+4.2 Flow inequalities 
+In order to introduce some valid inequalities to strengthen formulation LP-F2, we 
+need to highlight some characteristics of the structure of a feasible solution of 
+formulation (15)--(27). 
+Given a feasible solution of (15)--(27), if an edge {i, j} 2 E is used (i.e. y ij +y ji } 
+0), with j 2 V 0 and 
+P u2U z uj } 0, then arc (i, j) carries a strictly positive flow. 
+16 
+This immediately yields the following valid inequalities, called flow inequalities: 
+y ij } (y ij + y ji )/Q, i 2 V 0 , j 2 U, i 6= j. (39) 
+Using the results of Gouveia [12] and Baldacci, Hadjiconstantinou and Mingozzi 
+[6] we can obtain the following theorem that we present without proof for sake of 
+brevity. 
+Theorem 2 For any feasible solution (z # , w # , y # ) of LP-F2 strengthened with the 
+flow inequalities (39) there exists a vector x # such that (x # , z # , w # ) is a feasible 
+solution for LP-F1 strengthened with the ring multistar inequalities (30), and the 
+two solutions have the same value. 
+5 Separation of violated inequalities 
+In this section we describe the procedures used to find violated constraints from the 
+different families of inequalities described in Section 4. Given an optimal solution 
+(x # , z # , w # ) for LP-F1, let G # = (V # , E # ) be the corresponding support graph already 
+introduced in the proof of Theorem 1, i.e., V # = {0, n + 1} [ b 
+V # where 
+b 
+V # = {i 2 
+U : z # ii } 0} [ {j 2 W : w # j } 0} and E # = {{i, j} 2 E : x # 
+{i,j} } 0}. 
+5.1 Exact separation algorithms 
+We describe here some polynomial algorithms for the exact solution of the separation 
+problem for inequalities (7), (28), (30) and (36). 
+Capacity inequalities 
+The same technique can be used to separate the fractional ring capacity inequalities 
+(7) and the rounded ring capacity inequalities I (36) (for the rounded inequalities 
+II, instead, we adopted an heuristic separation method). Indeed, both inequalities 
+have the form 
+X 
+e2#(S) 
+x e + # X i2U 
+X 
+j2V 0 \S 
+z ij } #, (40) 
+where # = 2/Q, # = 2|U |/Q for inequalities (7) and # = 2/mod(U, Q), # = 
+2 d|U |/Qe for inequalities (36). 
+Given # and #, the most violated constraint (40) can be found by computing 
+a minimum s-t cut on an undirected capacitated graph G = (V , E) with V = 
+17 
+(V # \V 0 ) [{s, t}. Source node s represents the shrinking of nodes 0 and n+1 while 
+t is an additional sink node. The edge set is E = {{i, j} 2 E # : i, j 2 V 0 } [ {{s, j} : 
+{0, j} or {j, n + 1} 2 E # } [ {{j, t} : j 2 V # \ V 0 }. Every edge {s, j} is associated 
+to a capacity x # 
+{0,j} + x # 
+{j,n+1} , while a capacity # 
+P i2U z # ij is assigned to each edge 
+{j, t}. The remaining edges are associated to capacities {x # 
+{i,j} }. 
+Let (S, V \ S) be the minimum s-t cut of G and assume that t 2 S. One can 
+see that if the cut capacity is strictly smaller than # then node set S = S \ {t} 
+defines the most violated inequality (40). No violated inequality exists if the cut 
+has a capacity greater than or equal to #. 
+Connectivity inequalities 
+Given a customer u 2 U we can rewrite the connectivity inequalities (28) as 
+X 
+e2#(S) 
+x e + 2 X 
+j2V 0 \S 
+z uj } 2, 8S 2 V 0 : u 2 S. (41) 
+The separation of inequalities (41) uses an undirected graph G = (V , E) similar to 
+the one introduced above to separate the capacity inequalities, but without node t 
+and having node u as sink. The edge capacities are the same as above for all edges 
+except for edges (j, u), which have value x # 
+{u,j} + 2z # uj . Given a minimum s-u cut 
+(S, V \ S) with u 2 S, then node set S defines the most violated inequality if the 
+cut capacity is strictly smaller than 2. 
+Multistar inequalities 
+Inequalities (30) can be rewritten as 
+X 
+i2(V \S)\U 
+X j2S 
+x {i,j} + X 
+i2U\U(S) 
+X j2S 
+(
+12 
+Q 
+)x {i,j} } 2 
+Q X i2U 
+X j2S 
+z ij , 8S # V 0 , 
+and can be separated using a directed capacitated graph obtained from graph G by 
+inserting a pair of arcs (i, j)-(j, i) instead of each edge {i, j} 2 E. The capacities of 
+arcs (s, j) and (j, t), with j 2 V # \V 0 are the same as those in graph G (i.e arc (s, j) 
+has capacity x # 
+{0,j} + x # 
+{j,n+1} and arc (j, t) capacity (2/Q) P i2U z # ij ). The remaining 
+arcs have capacity 
+(1- 2/Q)x # 
+{i,j} , if i 2 U , otherwise x # 
+{i,j} . Given a minimum s-t 
+cut (S, V \ S) in G, with t 2 S if the cut capacity is strictly smaller than 2|U |/Q, 
+then S = S \ {t} identifies the most violated ring multistar inequality. 
+18 
+5.2 Heuristic separation algorithms 
+In this section we describe the heuristic procedure we adopted to separate the C i - 
+ring capacity inequalities (33) and the rounded ring capacity inequalities II (37). 
+The procedure is a Multistart Local Search (MLS) approach that resembles some 
+features of the algorithms described by Araque et al. [1] and by Augerat et al. [2]. 
+MLS is an iterative method that, at each iteration, generates a starting point and 
+evolves it through a Local Search procedure. We start by generating a set S of 
+10(n- 1) subsets of V 0 as follows: For the C i -ring capacity inequalities the first |U | 
+sets of S are obtained by inserting in each set, for i = 1, . . . , |U |, the nodes in C i . 
+The remaining sets are generated by first computing a random number r drawn from 
+a uniform distribution in [1, . . . , n - 1], and then by randomly selecting r different 
+nodes of V 0 , again using a uniform distribution. For the rounded ring capacity 
+inequalities II all the sets are randomly generated as above. Each set S 2 S is 
+then iteratively expanded by adding one node at each iteration until S = V 0 . For a 
+given set S, let f(S) denote the difference between the left-hand side and the right- 
+hand side value of the considered inequality (i.e., the inequality can be rewritten 
+as f(S) } 0). Each set S is expanded by choosing the node i 2 V 0 \ S such that 
+f(S [ {i}) is minimized. 
+6 Branch-and-cut algorithms 
+In this section we describe branch-and-cut algorithms for the exact solution of 
+CmRSP based on the two-index formulation F1 (1)--(10) and the two-commodity 
+flow formulation F2 (1)--(10), respectively, and the inequalities described in Section 
+4 through the separation procedures given in Section 5. The algorithms have been 
+built within the CPLEX 8.1 framework by using the CPLEX callback functions (see 
+[8]). Through these functions the programmer can almost completely customize the 
+general approach embedded into CPLEX. For example, one can choose the next node 
+to explore in the enumeration tree, choose the branching variable or define a 
+problem dependent branching scheme, separate and add his own cutting planes, apply 
+his own heuristic methods, and so on. Below, the most important implementation 
+issues are discussed. 
+19 
+6.1 Separation strategy 
+The lower bound at each node of the enumeration tree is computed by solving 
+either LP-F1 or LP-F2, strengthened with the cutting planes described in Section 4. 
+Whenever the two-index formulation F1 is used, the initial linear program contains 
+all constraints except the fractional capacity constraints (7). The algorithm based 
+on the two-commodity formulation F2 starts with the full LP relaxation. 
+We conducted several preliminary experiments to identify a good separation 
+strategy. As a result of our experimentation we decided to use the following 
+inequalities: (i) connectivity inequalities (28); (ii) multistar inequalities (30); (iii) ring 
+capacity inequalities I (36); (iv) rounded ring capacity inequality II (37). Whenever 
+a set S was generated, we checked the associated C i -ring capacity inequality (33) 
+for violation. In addition, we disabled the separation of all the cuts embedded into 
+CPLEX, since their use increases the overall running time of the algorithms but 
+does not improve the final solution quality. 
+For a given LP solution we first identified (as far as possible) violated inequalities 
+of the four above families, then we considered them for strengthening the current LP 
+according to the procedure described below. We also tested several other strategies, 
+including separating and adding to the LP one family at a time, but obtained worse 
+average performances. 
+At each node of the enumeration tree, families (i)-(iii) were separated through 
+the exact procedures described in Section 5.1. The subsets of nodes corresponding to 
+violated inequalities were checked for possible violation of the last family. Moreover, 
+we applied the heuristic procedure of Section 5.2 to identify other violated rounded 
+ring capacity inequalities II. Note that this procedure identifies at most one cut for 
+each of the first three families, but it can find many violated inequalities of family 
+(iv). In order to speed up the computation a small subset of these inequalities was 
+selected and added to the current LP. To this end we constructed and solved an 
+auxiliary problem consisting of the LP of the current node strengthened with all the 
+cuts of family (iv) (and none of the other families). The problem is solved starting 
+from the basis of the current LP. Then we added to the current LP only the tight 
+cuts of the auxiliary problem. Other more efficient techniques to manage the cuts 
+added to the LP (dealing with a cut-pool) were not considered because the CPLEX 
+framework does not provided any callback function that makes it possible to remove 
+a cut from the current subproblem. The standard CPLEX "user-cut pool" can be 
+defined only at the root node and the user has no control over the utilization of this 
+pool. We found it computationally convenient to fill the CPLEX user-cut pool with 
+20 
+inequalities (31) and (32). 
+Once new cuts had been added to the LP, the improved LP relaxation was solved. 
+The procedure was iterated until one of the following conditions held: (a) no violated 
+inequality could be generated; (b) the lower bound had not been improved in the 
+last 7 iterations; (c) the lower bound was greater or equal to the current upper 
+bound. 
+When model F2 was used, all flow inequalities (39) were added to the CPLEX 
+user-cut pool, so that we did not need to separate the multistar inequalities as a 
+consequence of Theorem 2. 
+6.2 Branching and node selection strategy 
+We investigated two branching strategies: the CPLEX strong branching and a mixed 
+branching based both on variables and cutsets. 
+Let (x # , z # , w # ) be the optimal solution of the current LP relaxation. The mixed 
+branching is as follows. We define a set of candidates (variables and cutsets, see 
+below) for branching, each one having two descending nodes. For each candidate 
+we solve the two corresponding subproblems. If one of the two can be fathomed, 
+then the candidate is immediately chosen for branching. Otherwise we associate to 
+each candidate the minimum increase of the objective function when moving from 
+the current node to one of the two descending nodes. Among all candidates, the one 
+having maximum increase is chosen for branching. 
+The set of candidates is identified as follows. The variables are chosen by selecting 
+at most one fractional variable from each set x, z and w with value as close as possible 
+to 0.5 (ties are broken by maximum coefficient in the objective function). The idea 
+used to identify the custsets is the same used for the C i -ring capacity inequalities. 
+Given a set S # V 0 with S \ U 6= ; let 
+f(S) = X 
+e2#(S) 
+x e - 2 # |{i 2 U : C i # S}| 
+Q 
+# . 
+The heuristic procedure of Section 5.2 can be applied to look for sets such that 
+0 &lt; f(S) &lt; 2. For each of these sets, the branching consists of adding to the LP 
+either the constraint f(S) = 0 or f(S) } 2. Exactly two of the identified sets are 
+chosen as candidates: 
+. set S 1 such that P e2#(S 1 ) x # e is as close as possible to 3; 
+21 
+. and set S 2 6= S 1 such that f(S 2 ) is as close as possible to 1. 
+The two branching strategies can be applied to the two-index formulation LP-F1, 
+whereas the CPLEX strong branching applied to LP-F2 cannot guarantee that 
+constraints (24) (i.e. y ij + y ji 2 {0, Q}) are satisfied. On the contrary, the mixed 
+strategy works on x variables computed as x {i,j} = (y ij + y ji )/Q and it branches by 
+adding constraints on y, thus imposing that (24) hold. In the computational results 
+of Section 7 the two branching strategies are compared when applied to model F1, 
+while only the mixed branching is used for model F2. 
+In order to choose a node-selection rule we first performed some preliminary 
+experiments with different rules and, based on these results, we decided to adopt 
+the lowest first strategy for all the computations of Section 7. 
+6.3 Heuristic algorithms 
+We used two heuristic algorithms to speed up the convergence of the branch-and-cut 
+algorithm. 
+The first heuristic (called initial heuristic) was applied only at the root node 
+and consisted of the algorithm proposed by Baldacci and Dell'Amico in [4] for the 
+solution of the more general multi-depot CmRSP. 
+The second heuristic, hereafter called primal, uses the information of the 
+fractional LP solution to construct a CmRSP solution and it is applied at the first 
+NODEHEU nodes of the enumeration tree. Given the z # variables of a fractional 
+LP solution the primal heuristic starts by defining a customer preassignment to 
+nodes of V 0 through procedure P reassignment(z # , #, S, q) of Figure 3 that returns: 
+(a) the node #(i) at which each customer i 2 U is assigned; (b) the set S # V 0 of 
+the nodes having some customers assigned; and (c) the number q(j) of customers 
+assigned at each node j 2 S. The algorithm heuristically solves a CVRP defined by 
+the set of customers in S, by the demand requests q and by m vehicles each one 
+having capacity Q, then constructs the corresponding CmRSP solution and re-optimize 
+it as in phase (iii) of the initial heuristic. The CVRP instances defined by the primal 
+heuristic were heuristically solved using the same heuristic algorithm used in phase 
+(i) of the initial heuristic. 
+22 
+Procedure P reassignment(z # , #, S, q) 
+Input: variables z # ; 
+Output: assignments #, set S of nodes with customers assigned and weights q; 
+comment: initialization 
+for each i 2 U do #(i) 
+:=- 1; 
+U := U ; comment: customers to be assigned 
+N := V 0 ; comment: nodes at which a customer can be assigned 
+S := ;; comment: nodes used for assignment 
+comment: customer preassignment 
+while U 6= ; do 
+Randomly uniformly select a customer i 2 U ; U := U \ {i}; 
+#(i) = argmax{z # 
+ij : j 2 C i \ N}; S := S [ {#(i)}; 
+if #(i) 6= i then N := N \ {i}; 
+endwhile 
+for each j 2 S do q j := |{i 2 U : #(i) = j}|; 
+Figure 3: The preassignment procedure 
+7 Computational results 
+This section presents computational results for the branch-and-cut algorithms 
+described in Section 6. The algorithms were coded in Microsoft Visual C++, using 
+the CPLEX 8.1 framework. We remind the reader that the internal CPLEX cut 
+generation was disabled. The framework was therefore used only to manage the 
+enumeration tree. The experiments were performed on a Pentium 4 at 2.2 GHz 
+personal computer equipped with 1Gb of RAM and running under Windows XP. 
+Each execution of our algorithm for solving an instance was given with a time limit 
+of 7200 seconds. We considered both random and real life instances. 
+7.1 Random instances 
+We generated two classes of random test problems (A and B) having the same 
+topology of the underlying graph, but with different cost structure. For each of 
+the two classes and for each value of n 2 {26, 51, 76, 101} we generated 12 CmRSP 
+instances using the three TSPLIB instances (Reinelt [22]) called eil51, eil76 and 
+eil101, respectively. The instances with n = 26 consisted of the first 26 nodes of 
+eil51, while for the other values of n we took all the nodes of the corresponding 
+problems. The first node was selected as depot, the next b#(n - 1)c with # 2 
+23 
+{0.25, 0.50, 0.75, 1.00} as customers, and the last ones as Steiner nodes. We tested 
+instances with m 2 {3, 4, 5} and a value of Q that implies an utilization of the 
+rings close to 90%. More precisely, we computed Q = d|U |/(0.9m)e. Note that this 
+corresponds to a realistic ring utilization for the real life applications and, according 
+to the CVRP literature, determines difficult instances. We considered an instance 
+for each triple (n, #, m), apart from in those having less than three customers per 
+ring. We obtained 9 test problems for n = 26 and 12 for n } 51. 
+The routing and connection costs were generated as follows. 
+Class A: Routing and assignment cost of a pair of nodes i, j are equal to the 
+Euclidean distance e ij , computed according to the TSPLIB standard (i.e., 
+c ij = d ij = e ij ); 
+Class B: For each pair of nodes i, j the routing cost is c ij = d#e ij e, while the 
+assignment cost is d ij = 
+d(10- #)e ij e, where # is an integer in [6-9]. This 
+class simulates a practical case in which one requires a higher communication 
+quality on the rings and thus has an higher cost. 
+We considered instances with # = 7. For both classes C i was defined by computing 
+the average assignment cost AC = 
+P (i,j)2A d ij /|A| and setting C i = {j : d ij 6 
+0.2 AC} 
+Note that the set of routing costs of all generated instances satisfied the triangle 
+inequality, therefore any optimal CmRSP solution could not use a Steiner node 
+without assigning it a customer, hence inequalities (14) were not necessary. 
+In Tables 1 and 2 we compare the effectiveness of three branch-and-cut 
+algorithms. The first one uses the two-commodity formulation F2 and the mixed 
+branching scheme, the second uses the two-index formulation F1 and again the 
+mixed branching, while the last one uses formulation F1 and the CPLEX strong 
+branching. We remind the reader that the CPLEX strong branching strategy 
+cannot be used when formulation F2 is adopted (see Section 6.2). For each class a row 
+of the corresponding table reports the results obtained with the instances having 
+the same number of nodes. The meaning of the values in the columns are detailed 
+in the following. When we do not give a different explanation, the averages were 
+computed with respect to the instances optimally solved. 
+n : number of nodes of the instances; 
+#opt : number of instances solved to optimality out of the total number of 
+instances; 
+24 
+Table 1: Comparison using Class A instances 
+Two-commodity formulation, mixed branching strategy 
+n #opt %LB t LB %g nodes cuts t avg t max 
+26 9/9 99.83 0.3 0.00 1.7 71.1 1.2 5.6 
+51 9/12 99.59 5.4 1.48 78.8 179.6 437.8 3687.5 
+76 3/12 97.96 24.7 2.80 30.3 168.7 195.0 435.3 
+101 4/12 99.10 113.9 2.32 85.8 285.5 3138.2 6718.4 
+25/45 99.40 23.2 2.41 46.3 156.2 683.6 
+Two-index formulation, mixed branching strategy 
+26 9/9 99.98 0.3 0.00 0.1 129.3 0.7 3.6 
+51 11/12 99.35 4.2 1.38 85.8 165.1 82.0 424.5 
+76 7/12 98.08 31.8 3.13 245.9 328.4 1602.1 6915.7 
+101 5/12 99.01 76.9 2.10 90.2 368.2 1213.2 3998.4 
+32/45 99.20 20.5 2.44 97.4 222.5 568.4 
+Two-index formulation, strong branching strategy 
+26 9/9 99.98 0.3 0.00 0.1 129.3 0.7 3.8 
+51 12/12 99.11 4.8 0.00 322.9 166.6 570.6 6334.2 
+76 8/12 98.06 35.1 3.12 311.0 329.8 813.1 3221.3 
+101 6/12 99.01 77.2 1.53 213.0 353.8 1510.8 6690.1 
+35/45 99.08 22.9 2.17 218.3 226.4 640.6 
+%LB : percentage average ratio of the lower bound at the root node over the 
+optimal solution value; 
+t LB : average running time, in seconds, for the computation of the lower bound 
+at the root node; 
+%g : average percentage gap between the best upper bound and the best lower 
+bound value, computed over the instances not solved to optimality; 
+nodes : average number of nodes in the enumeration tree; 
+cuts : average number of cuts generated; 
+t avg : average overall running time of the branch-and-cut algorithm, in seconds. 
+t max : maximum overall running time of the branch-and-cut algorithm, in 
+seconds. 
+25 
+Table 2: Comparison using Class B instances 
+Two-commodity formulation, mixed branching strategy 
+n #opt %LB t LB %g nodes cuts t avg t max 
+26 9/9 99.86 0.5 0.00 1.3 90.8 0.9 2.8 
+51 10/12 99.30 7.5 2.26 112.2 194.8 568.4 2925.9 
+76 3/12 97.67 21.1 4.57 148.0 202.3 903.9 2506.4 
+101 3/12 99.17 99.3 4.52 37.3 251.7 2224.1 6344.7 
+25/45 99.29 17.6 4.32 67.6 165.1 603.1 
+Two-index formulation, mixed branching strategy 
+26 9/9 100.00 0.4 0.00 0.0 94.7 0.4 0.8 
+51 12/12 98.96 6.6 0.00 124.2 205.4 379.1 2588.7 
+76 3/12 97.02 13.0 3.96 50.0 224.7 88.3 127.2 
+101 3/12 98.79 58.9 3.39 40.7 397.7 641.4 1802.6 
+27/45 99.07 11.0 3.68 65.3 192.0 249.7 
+Two-index formulation, strong branching strategy 
+26 9/9 100.00 0.4 0.00 0.0 94.7 0.4 0.8 
+51 12/12 98.96 6.6 0.00 229.3 205.4 613.1 6470.7 
+76 4/12 97.12 17.5 4.20 203.8 260.3 529.5 1897.6 
+101 3/12 98.79 59.0 2.90 48.7 397.7 334.0 862.4 
+28/45 99.01 11.8 3.51 132.6 198.3 374.3 
+The last row of each block (of five rows) summarizes the data in the previous four 
+rows by reporting the total number of instances solved to optimality and the average 
+over all instances solved to optimality. 
+Looking at Tables 1-2 one can see that using the same branching strategy the 
+algorithm based on the two-index formulation F1 is able to solve to proven optimality 
+more instances than the algorithm using the two commodity formulation F2 (in 
+detail, 7 more instances are solved for Class A and 2 for Class B). When the two 
+algorithms solve the same problems the running time is smaller if formulation F1 is 
+used. The lower bound values at the root node are comparable, which is congruent 
+with Theorem 1, but formulation F1 generally determines smaller computing times. 
+Also the average gap between the best solution value and the best lower bound, 
+computed when the time limit occurs, is larger if formulation F2 is adopted. 
+The third sub-table in Tables 1-2 reports on the performance of the branch-and- 
+cut algorithm using the CPLEX strong branching strategy. This algorithm solves 4 
+more instances than the algorithm implementing the mixed branching strategy. The 
+26 
+Table 3: Number of cuts generated at the root node 
+Two-index formulation Two-commodity formulation 
+Class n conc multistar roundI roundII conc roundI roundII 
+26 2.9 4.6 2.3 119.6 2.6 1.0 67.6 
+A 51 8.0 7.3 3.5 147.8 6.6 1.8 171.2 
+76 21.3 19.4 10.5 278.6 11.3 4.7 152.7 
+101 22.8 19.8 11.5 299.7 19.5 6.0 260.0 
+12.3 11.5 6.2 196.5 7.8 2.5 145.9 
+26 4.0 5.7 2.2 82.8 3.1 1.1 86.6 
+B 51 13.8 10.3 3.8 177.5 9.8 2.3 182.7 
+76 18.5 17.3 10.3 214.3 14.0 3.0 185.3 
+101 28.0 27.7 13.0 329.0 20.7 7.7 223.3 
+12.8 11.7 5.2 168.5 9.2 2.6 153.3 
+computational times are usually shorter but for some instances the mixed strategy 
+explores fewer nodes than the strong branching strategy (e.g. the instance of Class 
+B with n = 51, |U | = 50 and m = 5 is solved with a tree of 1647 nodes and 6470 
+second of running time by the strong branching algorithm and with 556 nodes and 
+2588 seconds by the mixed branching algorithm). In general we observed that the 
+running time spent by the strong branching for a node is shorter (almost one half) 
+than the time spent by the mixed strategy. This is also due to the fact that the 
+CPLEX function is " ...faster because it takes advantage of direct access to internal 
+ILOG CPLEX data structures" (see the CPXstrongbranch description in [8]). 
+One can further observe that the instances of Class B are more difficult, on 
+average, than those of Class A. The lower and the upper bounds have worse quality, 
+thus the total computing time is longer and fewer instances are solved to optimality. 
+The solutions of Class B instances have smaller rings (hence a larger number of 
+connections), but use more Steiner nodes than the solutions of Class A instances 
+(see also the detailed reports of Tables 5-6). 
+In Table 3 we report the average number of cuts generated at the root node when 
+formulation LP-F1 or LP-F2 is used. Columns labeled conc report the number of 
+connectivity cuts (28) added to the LP, column labeled multistar the number of ring 
+multistar inequalities (30) and columns labeled roundI and roundII the number of 
+rounded ring capacity inequality I (36) and II (37), respectively (remember that 
+formulation LP-F2 does not need the multistar inequalities because of Theorem 2). 
+The cuts added by formulation LP-F2 are, on average, fewer than those added when 
+27 
+using formulation LP-F1. The experiments we performed confirm the theoretical 
+equivalence of the two formulations, but prove that, for CmRSP, the branch-and- 
+cut algorithm using formulation F1 has better computational performances than 
+that using LP-F2. 
+The performance of the two heuristic algorithms of Section 6.3 are reported in 
+Table 4. The first two columns refer to the initial heuristic, while the second and 
+third pair of columns refer to the primal heuristic applied to the fractional solution 
+obtained from LP-F1 and LP-F2, respectively. In each row, for each class, we report 
+the results obtained with the instances having the same number of nodes. Columns 
+labeled %z give the average ratio between the value of the corresponding upper 
+bound and the optimal solution value. Columns labeled t report the running time, 
+in seconds, necessary to compute the bounds. The average performances of the 
+Initial UB and of the Primal UB applied with the two-index formulation are very 
+similar and quite close to the optimum (the average errors are less than 0.7%). 
+The Primal UB applied with the two-commodity formulation is even better. The 
+maximum absolute error, computed on the instances solved to optimality, is again 
+similar for the two heuristics: it is 4.02% for both algorithms when Class A instances 
+are considered, and it is 3.55% and 3.31% for Initial and Primal, respectively, for 
+Class B instances (see also Tables 5-6). However, the two heuristic algorithms 
+exhibit a sort of `complementarity', in the sense that in many cases when one of the 
+two does not perform well, the other gives better results, and vice versa (see e.g. 
+instance A40-n101-m03, where Initial is faster than Primal, and instance A13-n51- 
+m03, where Primal is faster than Initial). It follows that no algorithm outperforms 
+the other. The computational time of Primal is longer than that of Initial, but 
+always under two minutes, on average. Therefore, in a branch-and-cut-algorithm, it 
+is convenient to apply both heuristic approaches. 
+Tables 5 and 6 report the details of our experiments relative to the branch and 
+cut algorithm with formulation F1 and CPLEX branching strategy. The columns 
+report the following information (omitting obvious notation): 
+Name : name of the instance in the format Cxx-nxxx-mxx, where in field Cxx, 
+the first character identifies the class and xx the instance number; in field 
+nxxx, xxx gives the number of nodes; in field mxx, xx is the number of 
+rings; 
+z # : optimal solution value or best solution found; 
+n c , n s : number of customers and Steiner nodes in the rings, respectively; 
+28 
+Table 4: Upper bound values at the root node 
+Initial UB Primal UB 
+Two-index Two-commodity 
+Class n %z t %z t %z t 
+26 100.27 1.0 100.27 0.3 100.51 0.5 
+A 51 100.69 4.3 100.39 5.7 100.19 5.8 
+76 100.55 9.6 100.72 37.2 100.20 25.0 
+101 101.40 26.9 101.83 82.6 100.66 117.6 
+100.67 8.6 100.68 24.7 100.38 24.1 
+26 100.31 1.2 100.00 0.4 100.00 0.6 
+B 51 101.16 4.5 101.34 7.5 101.18 8.1 
+76 100.33 2.9 100.07 18.1 100.42 21.5 
+101 100.42 2.2 100.55 59.3 100.49 99.7 
+100.69 3.0 100.64 12.3 100.58 18.0 
+%UB I : percentage ratio between the initial heuristic value and the optimal 
+solution value, when available, otherwise the best lower bound; 
+%UB P : percentage ratio between the primal heuristic value at the root node 
+and the optimal solution value, when available, otherwise the best lower 
+bound; 
+%LB : percentage ratio between the lower bound at the root node and z # ; 
+t 0 : running time, in seconds, for the computation of the root lower bound; 
+%g : percentage gap between z # and the best lower bound L, i.e. (z 
+#- L)/L. 
+The value is reported only if the instance is not solved to optimality; 
+t tot : overall running time of the branch-and-cut algorithm, in seconds. 
+The last two rows of each table report the average values computed over all 
+instances and the average values computed over all instances solved to optimality, 
+respectively. In addition, the first field of the last row gives the number of instances 
+solved to optimality over the total number of instances of the class. 
+We note that the difficulty of the instances increases with the number of nodes 
+in the graph and, when the size of the graph is fixed, with the number of customers. 
+The difficulty also strongly depends on the number of rings, i.e. the same instance is 
+much more difficult to solve optimally if more rings are required. This behavior has 
+29 
+Table 5: Class A, two-index formulation with strong branching 
+Name |U | Q z # n c n s %UB I %UBP %LB t 0 %g nodes cuts t tot 
+A01-n026-m03 12 5 242 12 0 100.00 100.00 100.00 0.1 0.00 0 98 0.1 
+A02-n026-m04 12 4 261 12 0 100.00 100.00 100.00 0.0 0.00 0 202 0.0 
+A03-n026-m05 12 3 292 12 0 100.00 100.00 100.00 0.0 0.00 0 136 0.0 
+A04-n026-m03 18 7 301 18 0 100.00 100.00 100.00 0.5 0.00 0 113 0.5 
+A05-n026-m04 18 5 339 18 0 100.00 100.00 100.00 0.3 0.00 0 141 0.3 
+A06-n026-m05 18 4 375 18 0 100.00 100.00 100.00 0.7 0.00 0 154 0.7 
+A07-n026-m03 25 10 325 24 0 102.46 102.46 99.85 0.4 0.00 1 36 3.8 
+A08-n026-m04 25 7 362 25 0 100.00 100.00 100.00 0.3 0.00 0 64 0.3 
+A09-n026-m05 25 6 382 25 0 100.00 100.00 100.00 0.2 0.00 0 220 0.2 
+A10-n051-m03 12 5 242 12 0 100.00 100.00 100.00 0.2 0.00 0 219 0.2 
+A11-n051-m04 12 4 261 12 0 100.00 100.00 100.00 0.4 0.00 0 230 0.4 
+A12-n051-m05 12 3 286 11 1 100.00 100.00 100.00 0.1 0.00 0 62 0.1 
+A13-n051-m03 25 10 322 22 2 102.80 100.00 100.00 2.1 0.00 0 89 2.1 
+A14-n051-m04 25 7 360 24 1 100.00 100.00 100.00 2.1 0.00 0 286 2.1 
+A15-n051-m05 25 6 379 23 2 100.00 100.00 100.00 2.3 0.00 0 152 2.3 
+A16-n051-m03 37 14 373 33 1 100.00 100.00 100.00 8.4 0.00 1 138 8.4 
+A17-n051-m04 37 11 405 34 1 100.74 100.74 99.01 4.9 0.00 26 110 41.7 
+A18-n051-m05 37 9 432 32 2 102.08 100.69 97.81 9.1 0.00 91 205 52.2 
+A19-n051-m03 50 19 458 45 0 100.22 102.40 98.11 7.6 0.00 464 99 182.8 
+A20-n051-m04 50 14 490 46 0 102.24 100.61 97.95 9.5 0.00 390 227 220.4 
+A21-n051-m05 50 12 520 43 0 100.19 100.19 96.44 10.3 0.00 2903 182 6334.2 
+A22-n076-m03 18 7 330 17 1 100.00 100.00 97.28 16.2 0.00 32 287 48.3 
+A23-n076-m04 18 5 385 17 1 100.00 100.00 98.55 18.2 0.00 11 291 30.6 
+A24-n076-m05 18 4 448 16 2 100.00 100.00 97.48 18.1 0.00 26 299 63.7 
+A25-n076-m03 37 14 402 34 1 101.24 101.74 98.18 22.2 0.00 196 284 567.7 
+A26-n076-m04 37 11 460 34 1 103.97 103.75 94.45 73.2 3.52 546 554 7200.0 
+A27-n076-m05 37 9 479 36 0 100.00 101.04 98.03 76.0 0.00 104 649 509.3 
+A28-n076-m03 56 21 471 51 0 100.85 101.49 98.22 39.8 0.00 760 340 1584.4 
+A29-n076-m04 56 16 523 54 0 102.88 103.07 95.56 57.9 2.88 1046 423 7200.0 
+A30-n076-m05 56 13 545 50 0 101.28 101.28 97.87 58.1 0.00 815 339 3221.3 
+A31-n076-m03 75 28 564 66 0 101.06 100.18 98.85 32.0 0.00 544 149 479.5 
+A32-n076-m04 75 21 606 70 0 103.50 105.35 97.11 49.6 1.66 1818 293 7200.0 
+A33-n076-m05 75 17 654 67 0 105.24 104.44 94.74 63.0 4.44 1180 330 7200.0 
+A34-n101-m03 25 10 363 23 2 100.00 100.00 100.00 8.7 0.00 0 402 8.7 
+A35-n101-m04 25 7 415 23 2 100.00 100.00 99.03 47.0 0.00 10 365 91.8 
+A36-n101-m05 25 6 448 23 2 100.00 100.00 97.69 121.7 0.00 95 516 680.4 
+A37-n101-m03 50 19 500 45 3 101.14 100.74 98.36 204.2 0.54 571 493 7200.0 
+A38-n101-m04 50 14 532 47 2 101.20 101.39 98.11 233.4 1.20 644 604 7200.0 
+A39-n101-m05 50 12 568 48 0 103.06 102.52 96.65 234.2 2.52 296 646 7200.0 
+A40-n101-m03 75 28 595 66 3 101.68 104.54 98.98 78.0 0.00 895 282 6690.1 
+A41-n101-m04 75 21 625 65 5 101.93 102.91 97.91 111.8 1.29 727 360 7200.0 
+A42-n101-m05 75 17 662 65 5 102.73 103.04 96.94 284.7 2.58 499 577 7200.0 
+A43-n101-m03 100 38 646 84 0 104.02 104.02 99.26 59.8 0.00 38 126 283.0 
+A44-n101-m04 100 28 680 87 0 104.30 104.59 98.04 101.6 1.03 1181 202 7200.0 
+A45-n101-m05 100 23 700 89 0 102.71 102.43 99.07 147.9 0.00 240 432 1310.8 
+35/45 101.19 101.24 98.57 49.3 2.17 358.9 275.7 2098.3 
+100.67 100.68 99.08 22.9 218.3 226.4 640.6 
+30 
+Table 6: Class B, two-index formulation with strong branching 
+Name |U | Q z # n c n s %UB I %UBP %LB t 0 %g nodes cuts t tot 
+B01-n026-m03 12 5 1684 11 1 100.00 100.00 100.00 0.1 0.00 0 101 0.1 
+B02-n026-m04 12 4 1827 12 0 100.00 100.00 100.00 0.1 0.00 0 30 0.1 
+B03-n026-m05 12 3 2041 11 1 100.00 100.00 100.00 0.0 0.00 0 136 0.0 
+B04-n026-m03 18 7 2104 17 1 100.00 100.00 100.00 0.5 0.00 0 76 0.5 
+B05-n026-m04 18 5 2370 17 1 100.00 100.00 100.00 0.5 0.00 0 146 0.5 
+B06-n026-m05 18 4 2615 17 1 100.00 100.00 100.00 0.7 0.00 0 117 0.7 
+B07-n026-m03 25 10 2251 24 0 102.80 100.00 100.00 0.4 0.00 0 52 0.4 
+B08-n026-m04 25 7 2510 24 0 100.00 100.00 100.00 0.5 0.00 0 85 0.5 
+B09-n026-m05 25 6 2674 25 0 100.00 100.00 100.00 0.8 0.00 0 109 0.8 
+B10-n051-m03 12 5 1681 10 2 100.00 100.00 100.00 0.8 0.00 0 48 0.8 
+B11-n051-m04 12 4 1821 10 2 100.00 100.00 100.00 1.5 0.00 0 55 1.5 
+B12-n051-m05 12 3 1972 9 3 100.00 100.00 100.00 0.3 0.00 0 235 0.3 
+B13-n051-m03 25 10 2176 21 3 100.00 100.00 100.00 1.1 0.00 0 71 1.1 
+B14-n051-m04 25 7 2470 22 3 100.24 101.01 99.57 5.6 0.00 2 202 7.2 
+B15-n051-m05 25 6 2579 21 4 100.66 100.00 100.00 4.1 0.00 0 154 4.1 
+B16-n051-m03 37 14 2490 29 2 100.68 104.38 99.49 8.3 0.00 8 274 17.9 
+B17-n051-m04 37 11 2721 29 2 101.87 103.31 98.10 8.4 0.00 84 245 74.9 
+B18-n051-m05 37 9 2908 32 2 101.03 101.00 96.92 8.7 0.00 200 308 145.0 
+B19-n051-m03 50 19 3015 39 0 102.65 101.86 98.54 14.4 0.00 435 302 296.7 
+B20-n051-m04 50 14 3260 39 0 103.22 101.17 97.58 11.6 0.00 375 298 336.6 
+B21-n051-m05 50 12 3404 38 0 103.55 103.29 97.35 14.2 0.00 1647 273 6470.7 
+B22-n076-m03 18 7 2253 14 4 100.31 100.27 96.00 13.2 0.00 103 204 105.5 
+B23-n076-m04 18 5 2620 14 3 100.19 100.00 97.88 10.9 0.00 21 237 29.5 
+B24-n076-m05 18 4 3059 13 5 100.00 100.00 97.17 14.6 0.00 57 233 85.3 
+B25-n076-m03 37 14 2720 28 6 100.81 100.00 97.44 31.3 0.00 634 367 1897.6 
+B26-n076-m04 37 11 3138 25 8 107.02 105.74 92.56 49.3 5.74 555 426 7200.0 
+B27-n076-m05 37 9 3311 32 3 104.09 104.87 94.81 85.0 3.22 522 687 7200.0 
+B28-n076-m03 56 21 3088 37 4 103.21 104.34 96.28 62.0 2.41 1388 416 7200.0 
+B29-n076-m04 56 16 3447 40 1 105.14 106.63 93.63 81.8 5.14 575 524 7200.0 
+B30-n076-m05 56 13 3648 43 1 103.66 105.11 95.21 76.1 3.55 484 452 7200.0 
+B31-n076-m03 75 28 3740 53 0 104.88 105.82 95.53 48.7 3.60 1510 414 7200.0 
+B32-n076-m04 75 21 4026 53 0 105.45 106.15 93.98 77.0 4.64 776 382 7200.0 
+B33-n076-m05 75 17 4288 53 0 109.08 105.29 93.76 65.2 5.29 528 440 7200.0 
+B34-n101-m03 25 10 2434 17 7 100.12 100.21 99.85 21.3 0.00 1 300 24.2 
+B35-n101-m04 25 7 2782 17 7 100.00 101.33 98.79 68.0 0.00 9 448 115.4 
+B36-n101-m05 25 6 3009 15 9 101.13 100.10 97.73 87.6 0.00 136 445 862.4 
+B37-n101-m03 50 19 3332 37 7 103.45 102.93 97.58 122.8 1.26 418 521 7200.0 
+B38-n101-m04 50 14 3533 35 8 102.18 101.98 98.40 245.4 0.48 575 689 7200.0 
+B39-n101-m05 50 12 3872 38 7 104.80 104.59 94.89 254.4 4.59 266 695 7200.0 
+B40-n101-m03 75 28 3923 51 8 102.16 101.85 96.76 90.9 1.85 702 378 7200.0 
+B41-n101-m04 75 21 4125 56 7 104.14 104.44 96.53 143.1 2.52 494 436 7200.0 
+B42-n101-m05 75 17 4458 57 5 105.65 104.99 94.33 226.8 4.99 258 685 7200.0 
+B43-n101-m03 100 38 4110 67 0 104.65 101.71 98.10 150.9 0.61 1020 379 7200.0 
+B44-n101-m04 100 28 4506 67 0 107.78 108.37 93.64 205.5 5.97 533 430 7200.0 
+B45-n101-m05 100 23 4632 71 0 104.70 103.98 95.45 160.8 3.82 452 464 7200.0 
+28/45 102.25 102.15 97.64 55.0 3.51 328.2 310.4 2952.9 
+100.69 100.64 99.01 11.8 132.6 198.3 374.3 
+31 
+been also observed by other authors solving CVRP instances with a branch-and-cut 
+method: the difficulty increases when more routes are required (see e.g. Augerat et 
+al. [3], Ralphs et al. [21]). 
+7.2 Real-world instances 
+The best branch-and-cut algorithm identified through the experiments conducted on 
+random instances (the algorithm based on the two-index formulation and using the 
+CPLEX strong branching strategy) were used to attack some real-world instances 
+motivating this paper. We considered the problem of designing an optical network 
+for the town of Reggio Emilia, whose urban map consists of a network having 4078 
+nodes and 11068 arcs. The data of the instances was provided by a major Italian 
+telecommunication company that is involved in the process of providing medium- 
+sized Italian towns like Reggio Emilia with optical networks. The first goal of the 
+company is to serve its top-business clients through a wide-band reliable 
+communication network. In particular, in Reggio Emilia the company has 131 top clients, 
+spread over the entire urban area, and two main telephone exchanges (i.e. two 
+depots in our model). For historical reasons and operative habits of the company, 
+there is a pre-assignment of the customers to one of the two depots. Hence the 
+problem can be decomposed into two independent CmRSP instances. On the other 
+hand, one can observe that better global solutions could be obtained by considering 
+all customers and all depots at the same time if one could relax the pre-assignment 
+(as discussed in [4]). 
+Based on the experience with random instances we know that the size of the two 
+real-world instances is very large. In particular, the total number of nodes (about 
+2 thousand) is 20 times larger than the maximum size we can hopefully solve. For 
+this reason we decided to reduce the number of Steiner nodes as follows: For each 
+customer i the set C i consists of all nodes having distance from i not larger than 
+200 meters (as required by the technological constraints). Among the nodes of each 
+set C i we selected the subset C i # C i of the nodes having a distance of at least 
+70 meters from node i and we picked at most two nodes of C i . The first one was 
+randomly selected, while the second one was chosen as the one which maximizes 
+the distance from the already selected node. We thus obtained a first graph with 
+137 nodes, 66 of which are customers, and a second graph with 129 nodes and 65 
+customers. We derived three instances from each graph by allowing 35, 40 or 45 
+customers per ring (note that each of the instances required exactly two rings). 
+32 
+Table 7: Real-world instances: two-index formulation with strong branching 
+Name |U | Q z # n c n s %UB I %UBP %LB t 0 %g nodes cuts t tot 
+R01-n137-m02 66 35 61963 49 14 101.37 101.70 96.25 29.9 1.31 210 306 7200.0 
+R02-n137-m02 66 40 61102 53 12 102.19 101.68 99.60 58.6 0.00 197 389 3706.6 
+R03-n137-m02 66 45 60917 53 11 103.72 102.55 99.88 41.5 0.00 7 347 253.6 
+R04-n129-m02 65 35 49686 50 7 101.49 101.44 97.83 155.5 1.44 444 667 7200.0 
+R05-n129-m02 65 40 48484 49 8 102.53 102.99 99.69 125.9 0.00 10 551 257.9 
+R06-n129-m02 65 45 48484 49 8 102.53 102.99 99.69 95.9 0.00 10 507 257.9 
+4/6 102.31 102.23 98.82 84.6 1.38 146.3 461.2 3146.0 
+102.74 102.55 99.72 80.5 56.0 448.5 1119.0 
+Routing and connection costs were assumed to be equal to the length of the shortest 
+path between nodes i and j (hence we implicitly suppose that no preexistent pipe 
+could be used, as currently happens in Reggio Emilia). 
+Table 7 reports the results obtained by the branch-and-cut algorithm on these 
+datasets. The notation used in the table is the same as in Tables 5 and 6. The name 
+of the instances uses the same convention introduced for classes A and B, but the 
+first letter is `R'. The first three rows are relative to the graph with 137 nodes, the 
+remaining rows refer to the graph with 129 nodes. 
+The branch-and-cut algorithm was able to solve to optimality 4 out of 6 instances 
+within reasonable computing times: about 4 minutes for 3 instances and one hour 
+for the more time-consuming. The lower bound at the root node (see column labeled 
+%LB) was very tight, always within 0.4% for the instances solved to optimality. For 
+the two instances not solved within 2 hours of computing time the gap between the 
+upper and the lower bound was at most 1.44%. 
+Figure 4 reports the optimal solutions of instances R02-n137-m02 and R05-n129- 
+m02. We drew the streets of the urban area in grey lines and the rings and 
+connections in bold lines. In addition, we represented the customers with a circle and the 
+telephone exchanges with a black square. The transit points are not represented in 
+the figure. Note that sometimes there are some long single black lines (segment), 
+as in the South-East quarter of the figure. In most of these cases the length of 
+these segments is longer than 200 meters. This implies that the customer has been 
+reached by the ring using a street and the ring continues going back along the same 
+street. In order to have a safe ring topology the company implements this part of 
+the network making two excavations along the street, one on one side and the other 
+on the opposite side. The probability that both cables are broken is thus very small. 
+33 
+8 Conclusions 
+This paper has introduced a routing problem named Capacitated m-Ring-Star 
+Problem arising in the design of an optical network for the city of Reggio Emilia, Italy. 
+We have proposed two integer programming formulations whose linear relaxations 
+have been compared. These linear relaxations were strengthened with new valid 
+inequalities for which separation procedures have been described in this paper. All 
+our finding have been used to develop branch-and-cut algorithms. These 
+implementations solved to optimality different instances from our real-world instances, some 
+serving 137 customers and others serving 129 customers. The implementations were 
+also tested on random instances to better evaluate the limits of the algorithms, and 
+in a sense we can conclude that the new approaches can find optimal solutions on 
+some difficult instances with up to 100 customers. 
+Part of the results in this paper can be used to solve the Vehicle Routing 
+Allocation Problem introduced by Beasley and Nascimiento [7]. 
+Acknowledgements 
+We thank "Ministero dell'Istruzione, dell'Universite della Ricerca" (MIUR, Italy), 
+"Consiglio Nazionale delle Ricerche" (CNR, Italy) and "Ministerio de Ciencia y 
+Tecnologa" (MCYT, Spain) for the support given to this project. 
+34 
+# 
+# # 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+fiff 
+# 
+# 
+### 
+# 
+# 
+# 
+### # 
+# 
+# 
+# 
+# 
+# 
+  
+! 
+" 
+# 
+$ 
+% 
+&amp; 
+' 
+( 
+) 
+* 
++-,/. 
+0 
+1 
+2 
+3 
+4 
+5 
+6 
+7 
+8 
+9 
+: 
+;=&lt; } 
+? 
+@ 
+A 
+B 
+C 
+D 
+E 
+F 
+G 
+H 
+I 
+J 
+K 
+L 
+M 
+N 
+O P 
+Q 
+R 
+S 
+T UWV 
+X 
+Y 
+Z\[ 
+] 
+^ 
+_a` 
+b 
+c 
+d 
+e 
+f 
+g 
+h 
+i 
+j 
+k 
+l m 
+n 
+o 
+p 
+q 
+r 
+s 
+t 
+u 
+v 
+w 
+x 
+y 
+z 
+{ 
+| 
+} 
+         
+35</body>
+    <biblio>
+      <reference refID="p36x91.0y685.0">
+        <ref-marker>[1]</ref-marker>
+        <authors>
+          <author>
+            <author-first>J.</author-first>
+            <author-middle>R.</author-middle>
+            <author-last>Araque,</author-last>
+          </author>
+          <author>
+            <author-first>G.</author-first>
+            <author-last>Kudva,</author-last>
+          </author>
+          <author>
+            <author-first>T.</author-first>
+            <author-middle>L.</author-middle>
+            <author-last>Morin,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>J.</author-first>
+            <author-middle>F.</author-middle>
+            <author-last>Pekny.</author-last>
+          </author>
+        </authors>
+        <title>A branch-and-cut algorithm for vehicle routing problems.</title>
+        <journal>Ann. Oper. Res.,</journal>
+        <volume>50:</volume>
+        <pages>37--59,</pages>
+        <date>1994.</date>
+      </reference>
+      <reference refID="p36x91.0y646.0">
+        <ref-marker>[2]</ref-marker>
+        <authors>
+          <author>
+            <author-first>P.</author-first>
+            <author-last>Augerat,</author-last>
+          </author>
+          <author>
+            <author-first>J.</author-first>
+            <author-middle>M.</author-middle>
+            <author-last>Belenguer,</author-last>
+          </author>
+          <author>
+            <author-first>E.</author-first>
+            <author-last>Benavent,</author-last>
+          </author>
+          <author>
+            <author-first>A.</author-first>
+            <author-last>Corbern,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>D.</author-first>
+            <author-last>Naddef.</author-last>
+          </author>
+        </authors>
+        <title>Separating capacity constraints in the cvrp using tabu search.</title>
+        <journal>European J. Oper. Res.,</journal>
+        <volume>106:</volume>
+        <pages>546--557,</pages>
+        <date>1988.</date>
+      </reference>
+      <reference refID="p36x91.0y593.0">
+        <ref-marker>[3]</ref-marker>
+        <authors>
+          <author>
+            <author-first>P.</author-first>
+            <author-last>Augerat,</author-last>
+          </author>
+          <author>
+            <author-first>J.</author-first>
+            <author-middle>M.</author-middle>
+            <author-last>Belenguer,</author-last>
+          </author>
+          <author>
+            <author-first>E.</author-first>
+            <author-last>Benavent,</author-last>
+          </author>
+          <author>
+            <author-first>A.</author-first>
+            <author-last>Corbern,</author-last>
+          </author>
+          <author>
+            <author-first>D.</author-first>
+            <author-last>Naddef,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>G.</author-first>
+            <author-middle />
+            <author-last>Rinaldi.</author-last>
+          </author>
+        </authors>
+        <title>Computational results with a branch and cut code for the capacitated vehicle roting problem.</title>
+        <tech>Technical Report RR 949-M,</tech>
+        <institution>UniversitJoseph Fourier,</institution>
+        <address>Grenoble, France,</address>
+        <date>1995.</date>
+      </reference>
+      <reference refID="p36x91.0y525.0">
+        <ref-marker>[4]</ref-marker>
+        <authors>
+          <author>
+            <author-first>R.</author-first>
+            <author-last>Baldacci</author-last>
+          </author>
+          and
+          <author>
+            <author-first>M.</author-first>
+            <author-last>Dell'Amico.</author-last>
+          </author>
+        </authors>
+        <title>Heuristic algorithms for the design of urban optical networks.</title>
+        <tech>Technical Report 63,</tech>
+        <institution>DISMI, University of Modena and Reggio Emilia,</institution>
+        <address>Italy,</address>
+        <date>2004.</date>
+      </reference>
+      <reference refID="p36x91.0y472.0">
+        <ref-marker>[5]</ref-marker>
+        <authors>
+          <author>
+            <author-first>R.</author-first>
+            <author-last>Baldacci,</author-last>
+          </author>
+          <author>
+            <author-first>E.</author-first>
+            <author-last>Hadjiconstantinou,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>A.</author-first>
+            <author-last>Mingozzi.</author-last>
+          </author>
+        </authors>
+        <title>An exact algorithm for the traveling salesman problem with deliveries and collections.</title>
+        <journal>Networks,</journal>
+        <volume>42:</volume>
+        <pages>26--41,</pages>
+        <date>2003.</date>
+      </reference>
+      <reference refID="p36x91.0y419.0">
+        <ref-marker>[6]</ref-marker>
+        <authors>
+          <author>
+            <author-first>R.</author-first>
+            <author-last>Baldacci,</author-last>
+          </author>
+          <author>
+            <author-first>E.</author-first>
+            <author-last>Hadjiconstantinou,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>A.</author-first>
+            <author-last>Mingozzi.</author-last>
+          </author>
+        </authors>
+        <title>An exact algorithm for the capacitated vehicle routing problem based on a two-commodity network flow formulation.</title>
+        <journal>Oper. Res.,</journal>
+        <volume>52:</volume>
+        <pages>723--738,</pages>
+        <date>2004.</date>
+      </reference>
+      <reference refID="p36x91.0y365.0">
+        <ref-marker>[7]</ref-marker>
+        <authors>
+          <author>
+            <author-first>J.</author-first>
+            <author-middle>E.</author-middle>
+            <author-last>Beasley</author-last>
+          </author>
+          and
+          <author>
+            <author-first>E.</author-first>
+            <author-middle>M.</author-middle>
+            <author-last>Nascimento.</author-last>
+          </author>
+        </authors>
+        <title>The vehicle routing-allocation problem: A unifying framework.</title>
+        <journal>Trabajos de OPerativa,</journal>
+        <volume>4:</volume>
+        <pages>65--86,</pages>
+        <date>1996.</date>
+      </reference>
+      <reference refID="p36x91.0y326.0">
+        <ref-marker>[8]</ref-marker>
+        <authors>
+          <author>
+            <author-first>ILOG</author-first>
+            <author-last>CPLEX.</author-last>
+          </author>
+        </authors>
+        <title>ILOG CPLEX 8.1 Advanced Reference Manual.</title>
+        <note>ILOG,</note>
+        <date>2003.</date>
+      </reference>
+      <reference refID="p36x91.0y302.0">
+        <ref-marker>[9]</ref-marker>
+        <authors>
+          <author>
+            <author-first>G.</author-first>
+            <author-last>Finke,</author-last>
+          </author>
+          <author>
+            <author-first>A.</author-first>
+            <author-last>Claus,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>E.</author-first>
+            <author-last>Gunn.</author-last>
+          </author>
+        </authors>
+        <title>A two-commodity network flow approach to the traveling salesman problem.</title>
+        <journal>Congressus Numernatium,</journal>
+        <volume>41:</volume>
+        <pages>167--178,</pages>
+        <date>1984.</date>
+      </reference>
+      <reference refID="p36x85.0y263.0">
+        <ref-marker>[10]</ref-marker>
+        <authors>
+          <author>
+            <author-first>B.</author-first>
+            <author-last>Gavish</author-last>
+          </author>
+          and
+          <author>
+            <author-first>S.</author-first>
+            <author-last>Graves.</author-last>
+          </author>
+        </authors>
+        <title>The traveling salesman problem and related problems.</title>
+        <tech>Technical report,</tech>
+        <institution>Graduate School of Manegement, University of Rochester,</institution>
+        <address>New York,</address>
+        <date>1979.</date>
+      </reference>
+      <reference refID="p36x85.0y210.0">
+        <ref-marker>[11]</ref-marker>
+        <authors>
+          <author>
+            <author-first>E.</author-first>
+            <author-last>Gourdin,</author-last>
+          </author>
+          <author>
+            <author-first>M.</author-first>
+            <author-last>Labb,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>H.</author-first>
+            <author-last>Yaman.</author-last>
+          </author>
+        </authors>
+        <title>Telecommunication and location.</title>
+        <editor>In Z. Drezner and H.W. Hamacher, editors,</editor>
+        <booktitle>Facility Location: Applications and Theory.</booktitle>
+        <publisher>Springer,</publisher>
+        <date>2002.</date>
+      </reference>
+      <reference refID="p36x85.0y157.0">
+        <ref-marker>[12]</ref-marker>
+        <authors>
+          <author>
+            <author-first>L.</author-first>
+            <author-last>Gouveia.</author-last>
+          </author>
+        </authors>
+        <title>A result on projection for the vehicle routing problem.</title>
+        <journal>European J. Oper. Res.,</journal>
+        <volume>85:</volume>
+        <pages>610--624,</pages>
+        <date>1995.</date>
+      </reference>
+      <reference refID="p36x85.0y118.0">
+        <ref-marker>[13]</ref-marker>
+        <authors>
+          <author>
+            <author-first>M.</author-first>
+            <author-last>Labb,</author-last>
+          </author>
+          <author>
+            <author-first>G.</author-first>
+            <author-last>Laporte,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>I.</author-first>
+            <author-last>Rodrguez</author-last>
+          </author>
+        </authors>
+        <title>Martn. Path, tree and cycle location.</title>
+        <editor>In T.G. Crainic and G. Laporte, editors,</editor>
+        <booktitle>Fleet Management and Logistics,</booktitle>
+        <pages>pages 187--204.</pages>
+        <publisher>Kluwer,</publisher>
+        <date>2002.</date>
+      </reference>
+      <reference refID="p37x85.0y711.0">
+        <ref-marker>[14]</ref-marker>
+        <authors>
+          <author>
+            <author-first>M.</author-first>
+            <author-last>Labb,</author-last>
+          </author>
+          <author>
+            <author-first>G.</author-first>
+            <author-last>Laporte,</author-last>
+          </author>
+          <author>
+            <author-first>I.</author-first>
+            <author-last>Rodr</author-last>
+          </author>
+        </authors>
+        <editor>guez Martn, and J.J. Salazar Gonzlez.</editor>
+        <title>The ring star problem: Polyhedral analysis and exact algorithm.</title>
+        <journal>Networks,</journal>
+        <volume>43:</volume>
+        <pages>177--189,</pages>
+        <date>2004.</date>
+      </reference>
+      <reference refID="p37x85.0y658.0">
+        <ref-marker>[15]</ref-marker>
+        <authors>
+          <author>
+            <author-first>M.</author-first>
+            <author-last>Labb,</author-last>
+          </author>
+          <author>
+            <author-first>G.</author-first>
+            <author-last>Laporte,</author-last>
+            <author-first>I.</author-first>
+          </author>
+        </authors>
+        <title>Rodrguez Martn,</title>
+        <authors>
+          and
+          <author>
+            <author-first>J.</author-first>
+            <author-middle>J.</author-middle>
+            <author-last>Salazar Gonzlez.</author-last>
+          </author>
+        </authors>
+        <title>Locating median cycles in networks.</title>
+        <journal>European J. Oper. Res.,</journal>
+        <volume>160:</volume>
+        <pages>457--470,</pages>
+        <date>2005.</date>
+      </reference>
+      <reference refID="p37x85.0y619.0">
+        <ref-marker>[16]</ref-marker>
+        <authors>
+          <author>
+            <author-first>Y.</author-first>
+            <author-last>Lee,</author-last>
+          </author>
+          <author>
+            <author-first>S.</author-first>
+            <author-middle>Y.</author-middle>
+            <author-last>Chiu,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>J.</author-first>
+            <author-last>Sanchez.</author-last>
+          </author>
+        </authors>
+        <title>A branch and cut algorithm for the steiner ring star problem.</title>
+        <journal>International Journal of Managament Science,</journal>
+        <volume>4:</volume>
+        <pages>21--34,</pages>
+        <date>1998.</date>
+      </reference>
+      <reference refID="p37x85.0y580.0">
+        <ref-marker>[17]</ref-marker>
+        <authors>
+          <author>
+            <author-first>A.</author-first>
+            <author-middle>N.</author-middle>
+            <author-last>Letchford,</author-last>
+          </author>
+          <author>
+            <author-first>R.</author-first>
+            <author-middle>W.</author-middle>
+            <author-last>Eglese,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>J.</author-first>
+            <author-last>Lysgaard.</author-last>
+          </author>
+        </authors>
+        <title>Multistars, partial multistars and the capacitated vehicle routing problem.</title>
+        <journal>Math. Program.,</journal>
+        <volume>94:</volume>
+        <pages>21--40,</pages>
+        <date>2002.</date>
+      </reference>
+      <reference refID="p37x85.0y542.0">
+        <ref-marker>[18]</ref-marker>
+        <authors>
+          <author>
+            <author-first>A.</author-first>
+            <author-middle>N.</author-middle>
+            <author-last>Letchford</author-last>
+          </author>
+          and
+          <author>
+            <author-first>J.</author-first>
+            <author-middle>J.</author-middle>
+            <author-last>Salazar Gonzlez.</author-last>
+          </author>
+        </authors>
+        <title>Projection results for vehicle routing.</title>
+        <journal>Math. Program.,</journal>
+        <volume>2005,</volume>
+        <note>to appear.</note>
+      </reference>
+      <reference refID="p37x85.0y503.0">
+        <ref-marker>[19]</ref-marker>
+        <authors>
+          <author>
+            <author-first>A.</author-first>
+            <author-last>Lucena.</author-last>
+          </author>
+        </authors>
+        <title>Exact solution approaches for the vehicle routing problem.</title>
+        <thesis>Ph.d. thesis,</thesis>
+        <institution>Department of Management Science,</institution>
+        <address>Imperial College, London,</address>
+        <date>1986.</date>
+      </reference>
+      <reference refID="p37x85.0y464.0">
+        <ref-marker>[20]</ref-marker>
+        <authors>
+          <author>
+            <author-first>D.</author-first>
+            <author-last>Naddef</author-last>
+          </author>
+          and
+          <author>
+            <author-first>G.</author-first>
+            <author-last>Rinaldi.</author-last>
+          </author>
+        </authors>
+        <title>Branch-and-cut algorithms for the capacitated vrp.</title>
+        <editor>In P. Toth and D. Vigo, editors,</editor>
+        <booktitle>The Vehicle Routing Problem,</booktitle>
+        <volume>volume 9,</volume>
+        <pages>pages 53--81.</pages>
+        <institution>SIAM Monographs on Discrete Mathematics and Applications,</institution>
+        <date>2002.</date>
+      </reference>
+      <reference refID="p37x85.0y410.0">
+        <ref-marker>[21]</ref-marker>
+        <authors>
+          <author>
+            <author-first>T.</author-first>
+            <author-middle>K.</author-middle>
+            <author-last>Ralphs,</author-last>
+          </author>
+          <author>
+            <author-first>L.</author-first>
+            <author-last>Kopman,</author-last>
+          </author>
+          <author>
+            <author-first>W.</author-first>
+            <author-middle>R.</author-middle>
+            <author-last>Pulleyblank,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>L.</author-first>
+            <author-middle>E.</author-middle>
+            <author-last>Trotter.</author-last>
+          </author>
+        </authors>
+        <title>On the capacitated vehicle routing problem.</title>
+        <tech>Technical report,</tech>
+        <date>2003.</date>
+      </reference>
+      <reference refID="p37x85.0y372.0">
+        <ref-marker>[22]</ref-marker>
+        <authors>
+          <author>
+            <author-first>G.</author-first>
+            <author-last>Reinelt.</author-last>
+          </author>
+        </authors>
+        <title>TSPLIB - a traveling salesman problem library.</title>
+        <journal>ORSA J. Comput.,</journal>
+        <volume>3:</volume>
+        <pages>376--384,</pages>
+        <date>1991.</date>
+      </reference>
+      <reference refID="p37x85.0y333.0">
+        <ref-marker>[23]</ref-marker>
+        <authors>
+          <author>
+            <author-first>P.</author-first>
+            <author-last>Toth</author-last>
+          </author>
+          and
+          <author>
+            <author-first>D.</author-first>
+            <author-last>Vigo.</author-last>
+          </author>
+        </authors>
+        <title>The Vehicle Routing Problem,</title>
+        <conference>volume 9. SIAM Monographs on Discrete Mathematics and Applications,</conference>
+        <date>2002.</date>
+      </reference>
+      <reference refID="p37x85.0y294.0">
+        <ref-marker>[24]</ref-marker>
+        <authors>
+          <author>
+            <author-first>J.</author-first>
+            <author-last>Xu,</author-last>
+          </author>
+          <author>
+            <author-first>S.</author-first>
+            <author-middle>Y.</author-middle>
+            <author-last>Chiu,</author-last>
+          </author>
+          and
+          <author>
+            <author-first>F.</author-first>
+            <author-last>Glover.</author-last>
+          </author>
+        </authors>
+        <title>Optimizing a ring--based private line telecommunication network using tabu search.</title>
+        <journal>Management Sci.,</journal>
+        <volume>45:</volume>
+        <pages>330--345,</pages>
+        <date>1999.</date>
+      </reference>
+    </biblio>
+  </content>
+  <CitationContexts />
+  <grants />
+</document>
+

@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+<page n="1">
+<line><tbox llx="101" lly="712" urx="502" ury="735" f="1"><![CDATA[Time-Varying Channel Tracking for Space-Time Block Coding ]]></tbox></line>
+<line><tbox llx="238" lly="688" urx="361" ury="703" f="2"><![CDATA[M. Enescu and V. Koivunen ]]></tbox></line>
+<line><tbox llx="241" lly="678" urx="357" ury="691" f="3"><![CDATA[Signal Processing Laboratory ]]></tbox></line>
+<line><tbox llx="232" lly="667" urx="366" ury="680" f="3"><![CDATA[Helsinki University of Technology ]]></tbox></line>
+<line><tbox llx="235" lly="655" urx="364" ury="668" f="3"><![CDATA[P.O. Box 3000, FIN-02015 HUT, ]]></tbox></line>
+<line><tbox llx="281" lly="643" urx="318" ury="656" f="3"><![CDATA[Finland ]]></tbox></line>
+<line><tbox llx="56" lly="617" urx="107" ury="631" f="4"><![CDATA[Abstract --- ]]></tbox><tbox llx="103" lly="617" urx="301" ury="631" f="5"><![CDATA[This paper addresses the problem of channel es- ]]></tbox></line>
+<line><tbox llx="44" lly="605" urx="260" ury="619" f="5"><![CDATA[timation and tracking for space-time block coding. ]]></tbox><tbox llx="259" lly="605" urx="301" ury="619" f="5"><![CDATA[Channel ]]></tbox></line>
+<line><tbox llx="44" lly="593" urx="302" ury="607" f="5"><![CDATA[tracking performance is investigated using several recursive al- ]]></tbox></line>
+<line><tbox llx="44" lly="581" urx="301" ury="595" f="5"><![CDATA[gorithms. In the simulations it is shown that different channel ]]></tbox></line>
+<line><tbox llx="44" lly="569" urx="302" ury="583" f="5"><![CDATA[tracking procedures can be used in several scenarios. As a perfor- ]]></tbox></line>
+<line><tbox llx="44" lly="557" urx="302" ury="571" f="5"><![CDATA[mance criterion the orthogonality property of the decoding ma- ]]></tbox></line>
+<line><tbox llx="44" lly="545" urx="301" ury="559" f="5"><![CDATA[trix is considered. A realistic channel model developed in COST ]]></tbox></line>
+<line><tbox llx="44" lly="533" urx="191" ury="547" f="5"><![CDATA[207 project is used in our examples. ]]></tbox></line>
+<line><tbox llx="129" lly="515" urx="215" ury="529" f="6"><![CDATA[I. INTRODUCTION ]]></tbox></line>
+<line><tbox llx="44" lly="502" urx="302" ury="515" f="8"><![CDATA[Time-varying multipath fading is a fundamental phenomenon which ]]></tbox></line>
+<line><tbox llx="44" lly="491" urx="301" ury="504" f="8"><![CDATA[makes the wireless transmission difficult. In most scattering envi- ]]></tbox></line>
+<line><tbox llx="44" lly="480" urx="302" ury="493" f="8"><![CDATA[ronments, antenna diversity is a practical technique for reducing the ]]></tbox></line>
+<line><tbox llx="44" lly="469" urx="301" ury="482" f="8"><![CDATA[effect of multipath fading [8]. Space-Time block coding (STBC) is a ]]></tbox></line>
+<line><tbox llx="44" lly="458" urx="302" ury="471" f="8"><![CDATA[simple transmit diversity technique which improves the signal quality ]]></tbox></line>
+<line><tbox llx="44" lly="447" urx="302" ury="461" f="8"><![CDATA[at the receiver by simple processing using two antennas at the trans- ]]></tbox></line>
+<line><tbox llx="44" lly="436" urx="302" ury="449" f="8"><![CDATA[mitter. This type of coding/decoding scheme introduced by Alamouti ]]></tbox></line>
+<line><tbox llx="44" lly="425" urx="302" ury="439" f="8"><![CDATA[[1], is based on channel estimates at the receiver in order to decode ]]></tbox></line>
+<line><tbox llx="44" lly="414" urx="142" ury="428" f="8"><![CDATA[the transmitted symbols. ]]></tbox></line>
+<line><tbox llx="56" lly="403" urx="301" ury="417" f="8"><![CDATA[The problem of channel tracking for STBC was also investigated ]]></tbox></line>
+<line><tbox llx="44" lly="392" urx="77" ury="406" f="8"><![CDATA[in [9]. ]]></tbox><tbox llx="72" lly="392" urx="302" ury="406" f="8"><![CDATA[This paper is motivated by investigating the performance of ]]></tbox></line>
+<line><tbox llx="44" lly="381" urx="248" ury="395" f="8"><![CDATA[several solutions for channel estimation and tracking. ]]></tbox><tbox llx="243" lly="381" urx="302" ury="395" f="8"><![CDATA[A class of re- ]]></tbox></line>
+<line><tbox llx="44" lly="370" urx="301" ury="384" f="8"><![CDATA[cursive algorithms (LMS, RLS, Kalman) and ST decoding are used to ]]></tbox></line>
+<line><tbox llx="44" lly="359" urx="302" ury="373" f="8"><![CDATA[acquire the channel and decode the information symbols with diver- ]]></tbox></line>
+<line><tbox llx="44" lly="349" urx="302" ury="362" f="8"><![CDATA[sity gains. A detailed description of how to link the symbol decoding ]]></tbox></line>
+<line><tbox llx="44" lly="337" urx="240" ury="351" f="8"><![CDATA[stage with channel tracking stage is also presented. ]]></tbox><tbox llx="234" lly="337" urx="302" ury="351" f="8"><![CDATA[Extensive simu- ]]></tbox></line>
+<line><tbox llx="44" lly="327" urx="302" ury="340" f="8"><![CDATA[lations show the performance of the tracking algorithms in scenarios ]]></tbox></line>
+<line><tbox llx="44" lly="316" urx="302" ury="329" f="8"><![CDATA[where time-varying channels were generated based on the channel ]]></tbox></line>
+<line><tbox llx="44" lly="305" urx="198" ury="318" f="8"><![CDATA[model derived in COST 207 project [3]. ]]></tbox></line>
+<line><tbox llx="56" lly="294" urx="230" ury="307" f="8"><![CDATA[The rest of the paper is organized as follows. ]]></tbox><tbox llx="225" lly="294" urx="302" ury="307" f="8"><![CDATA[In the next section ]]></tbox></line>
+<line><tbox llx="44" lly="283" urx="302" ury="296" f="8"><![CDATA[we present the system model and the coding/decoding technique. In ]]></tbox></line>
+<line><tbox llx="44" lly="272" urx="302" ury="285" f="8"><![CDATA[section three we give a description of the recursive algorithms used ]]></tbox></line>
+<line><tbox llx="44" lly="261" urx="302" ury="274" f="8"><![CDATA[for channel tracking and we present how to link the symbol decod- ]]></tbox></line>
+<line><tbox llx="44" lly="250" urx="301" ury="263" f="8"><![CDATA[ing stage with the channel estimation stage. Simulation results are ]]></tbox></line>
+<line><tbox llx="44" lly="239" urx="298" ury="252" f="8"><![CDATA[presented in section four. We conclude this paper with a discussion. ]]></tbox></line>
+<line><tbox llx="126" lly="220" urx="185" ury="235" f="9"><![CDATA[II. SYSTEM ]]></tbox><tbox llx="177" lly="221" urx="216" ury="233" f="10"><![CDATA[MODEL ]]></tbox></line>
+<line><tbox llx="44" lly="200" urx="96" ury="213" f="4"><![CDATA[A Coding ]]></tbox></line>
+<line><tbox llx="56" lly="185" urx="302" ury="198" f="11"><![CDATA[The coding scheme suggested by Alamouti works in the following ]]></tbox></line>
+<line><tbox llx="44" lly="174" urx="302" ury="187" f="11"><![CDATA[manner. The original symbol stream is divided in two separate sym- ]]></tbox></line>
+<line><tbox llx="44" lly="163" urx="302" ury="176" f="11"><![CDATA[bol streams which are then transmitted using two antennas such that ]]></tbox></line>
+<line><tbox llx="44" lly="152" urx="166" ury="165" f="11"><![CDATA[we receive the following signal ]]></tbox><tbox llx="161" lly="152" urx="175" ury="162" f="12"><![CDATA[y: ]]></tbox></line>
+<line><tbox llx="81" lly="133" urx="100" ury="144" f="12"><![CDATA[y2k ]]></tbox><tbox llx="104" lly="134" urx="117" ury="144" f="15"><![CDATA[= ]]></tbox><tbox llx="121" lly="133" urx="159" ury="144" f="12"><![CDATA[s2k h1;2k ]]></tbox><tbox llx="155" lly="134" urx="168" ury="144" f="15"><![CDATA[+ ]]></tbox><tbox llx="165" lly="134" urx="176" ury="144" f="12"><![CDATA[s ]]></tbox><tbox llx="169" lly="134" urx="209" ury="141" f="13"><![CDATA[2k+1h2;2k ]]></tbox><tbox llx="208" lly="134" urx="220" ury="144" f="15"><![CDATA[+ ]]></tbox><tbox llx="217" lly="134" urx="231" ury="144" f="12"><![CDATA[w ]]></tbox><tbox llx="224" lly="134" urx="235" ury="141" f="13"><![CDATA[2k ]]></tbox><tbox llx="281" lly="134" urx="301" ury="148" f="11"><![CDATA[(1) ]]></tbox></line>
+<line><tbox llx="72" lly="120" urx="84" ury="130" f="12"><![CDATA[y ]]></tbox><tbox llx="77" lly="120" urx="98" ury="127" f="13"><![CDATA[2k+1 ]]></tbox><tbox llx="104" lly="120" urx="117" ury="130" f="15"><![CDATA[= ]]></tbox><tbox llx="128" lly="120" urx="140" ury="130" f="12"><![CDATA[s ]]></tbox><tbox llx="133" lly="126" urx="140" ury="132" f="17"><![CDATA[# ]]></tbox></line>
+<line><tbox llx="133" lly="120" urx="154" ury="127" f="13"><![CDATA[2k+1 ]]></tbox><tbox llx="150" lly="120" urx="162" ury="130" f="12"><![CDATA[h ]]></tbox><tbox llx="156" lly="120" urx="182" ury="127" f="13"><![CDATA[1;2k+1 ]]></tbox><tbox llx="181" lly="120" urx="194" ury="130" f="15"><![CDATA[+ ]]></tbox><tbox llx="190" lly="120" urx="201" ury="130" f="12"><![CDATA[s ]]></tbox><tbox llx="195" lly="126" urx="202" ury="132" f="17"><![CDATA[# ]]></tbox></line>
+<line><tbox llx="195" lly="120" urx="206" ury="127" f="13"><![CDATA[2k ]]></tbox><tbox llx="203" lly="119" urx="238" ury="130" f="12"><![CDATA[h2;2k+1 ]]></tbox><tbox llx="233" lly="120" urx="246" ury="130" f="15"><![CDATA[+ ]]></tbox><tbox llx="243" lly="119" urx="273" ury="130" f="12"><![CDATA[w2k+1 ]]></tbox><tbox llx="281" lly="120" urx="301" ury="134" f="11"><![CDATA[(2) ]]></tbox></line>
+<line><tbox llx="382" lly="549" urx="383" ury="588" f="18"><![CDATA[ENCODER ]]></tbox></line>
+<line><tbox llx="374" lly="563" urx="375" ury="573" f="18"><![CDATA[ST ]]></tbox></line>
+<line><tbox llx="387" lly="587" urx="405" ury="604" f="19"><![CDATA[-s(2k+1) * ]]></tbox></line>
+<line><tbox llx="393" lly="553" urx="408" ury="571" f="19"><![CDATA[s(2k) * ]]></tbox></line>
+<line><tbox llx="476" lly="543" urx="488" ury="557" f="19"><![CDATA[h ]]></tbox><tbox llx="482" lly="541" urx="490" ury="551" f="20"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="473" lly="580" urx="485" ury="594" f="21"><![CDATA[h ]]></tbox><tbox llx="479" lly="577" urx="487" ury="588" f="22"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="332" lly="573" urx="364" ury="587" f="23"><![CDATA[s(2k+1) ]]></tbox></line>
+<line><tbox llx="312" lly="573" urx="337" ury="587" f="23"><![CDATA[s(2k) ]]></tbox></line>
+<line><tbox llx="420" lly="587" urx="445" ury="601" f="23"><![CDATA[s(2k) ]]></tbox></line>
+<line><tbox llx="415" lly="553" urx="447" ury="567" f="23"><![CDATA[s(2k+1) ]]></tbox></line>
+<line><tbox llx="526" lly="567" urx="547" ury="581" f="23"><![CDATA[y(k) ]]></tbox></line>
+<line><tbox llx="506" lly="610" urx="529" ury="624" f="23"><![CDATA[w(k) ]]></tbox></line>
+<line><tbox llx="356" lly="506" urx="506" ury="520" f="24"><![CDATA[Figure 1: ST transmission diagram ]]></tbox></line>
+<line><tbox llx="303" lly="474" urx="334" ury="487" f="25"><![CDATA[where ]]></tbox><tbox llx="329" lly="474" urx="341" ury="484" f="12"><![CDATA[h ]]></tbox><tbox llx="334" lly="474" urx="351" ury="481" f="13"><![CDATA[1;2k ]]></tbox><tbox llx="349" lly="474" urx="371" ury="487" f="25"><![CDATA[and ]]></tbox><tbox llx="366" lly="474" urx="378" ury="484" f="12"><![CDATA[h ]]></tbox><tbox llx="371" lly="474" urx="388" ury="481" f="13"><![CDATA[2;2k ]]></tbox><tbox llx="386" lly="474" urx="480" ury="487" f="25"><![CDATA[denote the channel taps ]]></tbox><tbox llx="474" lly="473" urx="490" ury="484" f="12"><![CDATA[h1 ]]></tbox><tbox llx="484" lly="474" urx="507" ury="487" f="25"><![CDATA[and ]]></tbox><tbox llx="501" lly="473" urx="517" ury="484" f="12"><![CDATA[h2 ]]></tbox><tbox llx="511" lly="474" urx="559" ury="487" f="25"><![CDATA[at moment ]]></tbox></line>
+<line><tbox llx="304" lly="463" urx="322" ury="473" f="15"><![CDATA[2k, ]]></tbox><tbox llx="319" lly="463" urx="330" ury="473" f="12"><![CDATA[s ]]></tbox><tbox llx="325" lly="463" urx="429" ury="476" f="25"><![CDATA[is the transmitted symbol, ]]></tbox><tbox llx="424" lly="463" urx="438" ury="473" f="12"><![CDATA[w ]]></tbox><tbox llx="432" lly="463" urx="560" ury="476" f="25"><![CDATA[is additive white Gaussian noise ]]></tbox></line>
+<line><tbox llx="303" lly="452" urx="361" ury="465" f="25"><![CDATA[(AWGN) and ]]></tbox><tbox llx="355" lly="454" urx="366" ury="461" f="16"><![CDATA[# ]]></tbox><tbox llx="360" lly="452" urx="560" ury="465" f="25"><![CDATA[denotes complex conjugate. The transmission model ]]></tbox></line>
+<line><tbox llx="303" lly="441" urx="560" ury="454" f="25"><![CDATA[using STBC is presented in Figure 1. After applying complex con- ]]></tbox></line>
+<line><tbox llx="303" lly="430" urx="480" ury="443" f="25"><![CDATA[jugation on the signal received at time index ]]></tbox><tbox llx="476" lly="430" urx="523" ury="440" f="15"><![CDATA[2k +1we ]]></tbox><tbox llx="519" lly="430" urx="560" ury="443" f="25"><![CDATA[have the ]]></tbox></line>
+<line><tbox llx="303" lly="419" urx="399" ury="432" f="25"><![CDATA[following vector model: ]]></tbox></line>
+<line><tbox llx="403" lly="400" urx="415" ury="409" f="26"><![CDATA[y ]]></tbox><tbox llx="412" lly="399" urx="424" ury="409" f="15"><![CDATA[= ]]></tbox><tbox llx="421" lly="401" urx="439" ury="409" f="16"><![CDATA[Hs ]]></tbox><tbox llx="435" lly="399" urx="458" ury="409" f="15"><![CDATA[+w ]]></tbox><tbox llx="539" lly="399" urx="559" ury="412" f="25"><![CDATA[(3) ]]></tbox></line>
+<line><tbox llx="303" lly="378" urx="374" ury="391" f="25"><![CDATA[where the vector ]]></tbox><tbox llx="369" lly="378" urx="381" ury="387" f="26"><![CDATA[y ]]></tbox><tbox llx="379" lly="378" urx="391" ury="388" f="15"><![CDATA[= ]]></tbox></line>
+<line><tbox llx="390" lly="365" urx="403" ury="389" f="27"><![CDATA[# ]]></tbox><tbox llx="394" lly="377" urx="424" ury="388" f="12"><![CDATA[y2k y ]]></tbox><tbox llx="418" lly="382" urx="425" ury="389" f="17"><![CDATA[# ]]></tbox></line>
+<line><tbox llx="417" lly="377" urx="438" ury="384" f="13"><![CDATA[2k+1 ]]></tbox><tbox llx="434" lly="365" urx="448" ury="389" f="27"><![CDATA[# ]]></tbox><tbox llx="438" lly="385" urx="447" ury="391" f="14"><![CDATA[T ]]></tbox></line>
+<line><tbox llx="446" lly="378" urx="560" ury="391" f="25"><![CDATA[contains the received signal, ]]></tbox></line>
+<line><tbox llx="303" lly="364" urx="348" ury="378" f="25"><![CDATA[the vector ]]></tbox><tbox llx="342" lly="365" urx="353" ury="374" f="26"><![CDATA[s ]]></tbox><tbox llx="349" lly="365" urx="371" ury="375" f="15"><![CDATA[=[s ]]></tbox><tbox llx="366" lly="364" urx="377" ury="371" f="13"><![CDATA[2k ]]></tbox><tbox llx="380" lly="364" urx="408" ury="375" f="12"><![CDATA[s2k+1 ]]></tbox><tbox llx="401" lly="365" urx="409" ury="375" f="15"><![CDATA[] ]]></tbox><tbox llx="404" lly="370" urx="413" ury="377" f="14"><![CDATA[T ]]></tbox><tbox llx="410" lly="364" urx="559" ury="378" f="25"><![CDATA[represents the transmitted information, ]]></tbox></line>
+<line><tbox llx="304" lly="352" urx="318" ury="361" f="26"><![CDATA[w ]]></tbox><tbox llx="315" lly="352" urx="327" ury="362" f="15"><![CDATA[= ]]></tbox></line>
+<line><tbox llx="325" lly="338" urx="338" ury="363" f="27"><![CDATA[# ]]></tbox><tbox llx="329" lly="352" urx="342" ury="362" f="12"><![CDATA[w ]]></tbox><tbox llx="336" lly="351" urx="347" ury="358" f="13"><![CDATA[2k ]]></tbox><tbox llx="349" lly="352" urx="363" ury="362" f="12"><![CDATA[w ]]></tbox><tbox llx="357" lly="356" urx="364" ury="363" f="17"><![CDATA[# ]]></tbox></line>
+<line><tbox llx="356" lly="351" urx="377" ury="357" f="13"><![CDATA[2k+1 ]]></tbox></line>
+<line><tbox llx="373" lly="338" urx="387" ury="363" f="27"><![CDATA[# ]]></tbox><tbox llx="377" lly="358" urx="387" ury="365" f="14"><![CDATA[T ]]></tbox><tbox llx="384" lly="351" urx="560" ury="365" f="25"><![CDATA[represents the additive Gaussian noise and the ]]></tbox></line>
+<line><tbox llx="303" lly="340" urx="366" ury="354" f="25"><![CDATA[channel matrix ]]></tbox><tbox llx="360" lly="343" urx="374" ury="350" f="16"><![CDATA[H ]]></tbox><tbox llx="369" lly="340" urx="511" ury="354" f="25"><![CDATA[can be written in the following form: ]]></tbox></line>
+<line><tbox llx="370" lly="316" urx="384" ury="324" f="16"><![CDATA[H ]]></tbox><tbox llx="381" lly="315" urx="393" ury="325" f="15"><![CDATA[= ]]></tbox><tbox llx="390" lly="307" urx="405" ury="332" f="27"><![CDATA[# ]]></tbox><tbox llx="405" lly="319" urx="473" ury="330" f="12"><![CDATA[h1;2k h2;2k ]]></tbox></line>
+<line><tbox llx="401" lly="309" urx="413" ury="319" f="12"><![CDATA[h ]]></tbox><tbox llx="406" lly="314" urx="413" ury="321" f="17"><![CDATA[# ]]></tbox></line>
+<line><tbox llx="406" lly="308" urx="433" ury="315" f="13"><![CDATA[2;2k+1 ]]></tbox><tbox llx="446" lly="309" urx="459" ury="319" f="12"><![CDATA[h ]]></tbox><tbox llx="452" lly="314" urx="459" ury="321" f="17"><![CDATA[# ]]></tbox></line>
+<line><tbox llx="452" lly="308" urx="479" ury="315" f="13"><![CDATA[1;2k+1 ]]></tbox></line>
+<line><tbox llx="480" lly="307" urx="494" ury="332" f="27"><![CDATA[# ]]></tbox><tbox llx="539" lly="314" urx="559" ury="328" f="25"><![CDATA[(4) ]]></tbox></line>
+<line><tbox llx="303" lly="275" urx="362" ury="289" f="4"><![CDATA[B Decoding ]]></tbox></line>
+<line><tbox llx="314" lly="260" urx="516" ury="273" f="25"><![CDATA[Based on the model (3) we start by forming the matrix ]]></tbox><tbox llx="510" lly="262" urx="523" ury="270" f="16"><![CDATA[H ]]></tbox><tbox llx="518" lly="260" urx="560" ury="273" f="25"><![CDATA[as shown ]]></tbox></line>
+<line><tbox llx="303" lly="249" urx="494" ury="262" f="25"><![CDATA[in (4). In order to estimate the transmitted symbols ]]></tbox><tbox llx="489" lly="250" urx="499" ury="259" f="26"><![CDATA[s ]]></tbox><tbox llx="493" lly="249" urx="560" ury="262" f="25"><![CDATA[we compute the ]]></tbox></line>
+<line><tbox llx="303" lly="238" urx="358" ury="251" f="25"><![CDATA[soft estimate ]]></tbox><tbox llx="352" lly="239" urx="363" ury="248" f="26"><![CDATA[z ]]></tbox><tbox llx="359" lly="238" urx="381" ury="248" f="15"><![CDATA[=[z ]]></tbox><tbox llx="376" lly="238" urx="387" ury="245" f="13"><![CDATA[2k ]]></tbox><tbox llx="390" lly="237" urx="418" ury="248" f="12"><![CDATA[z2k+1 ]]></tbox><tbox llx="412" lly="238" urx="420" ury="248" f="15"><![CDATA[] ]]></tbox><tbox llx="414" lly="243" urx="423" ury="250" f="14"><![CDATA[T ]]></tbox><tbox llx="421" lly="238" urx="469" ury="251" f="25"><![CDATA[as follows: ]]></tbox></line>
+<line><tbox llx="369" lly="205" urx="383" ury="230" f="27"><![CDATA[# ]]></tbox><tbox llx="384" lly="217" urx="403" ury="228" f="12"><![CDATA[z2k ]]></tbox></line>
+<line><tbox llx="379" lly="207" urx="390" ury="217" f="12"><![CDATA[z ]]></tbox><tbox llx="384" lly="206" urx="405" ury="213" f="13"><![CDATA[2k+1 ]]></tbox></line>
+<line><tbox llx="406" lly="205" urx="420" ury="230" f="27"><![CDATA[# ]]></tbox><tbox llx="414" lly="212" urx="426" ury="222" f="15"><![CDATA[= ]]></tbox><tbox llx="424" lly="214" urx="438" ury="221" f="16"><![CDATA[H ]]></tbox><tbox llx="431" lly="217" urx="442" ury="224" f="14"><![CDATA[H ]]></tbox><tbox llx="440" lly="205" urx="454" ury="230" f="27"><![CDATA[# ]]></tbox><tbox llx="455" lly="217" urx="474" ury="228" f="12"><![CDATA[y2k ]]></tbox></line>
+<line><tbox llx="450" lly="207" urx="462" ury="217" f="12"><![CDATA[y ]]></tbox><tbox llx="456" lly="211" urx="463" ury="218" f="17"><![CDATA[# ]]></tbox></line>
+<line><tbox llx="455" lly="205" urx="476" ury="212" f="13"><![CDATA[2k+1 ]]></tbox></line>
+<line><tbox llx="477" lly="205" urx="491" ury="230" f="27"><![CDATA[# ]]></tbox><tbox llx="484" lly="212" urx="493" ury="222" f="12"><![CDATA[: ]]></tbox><tbox llx="539" lly="212" urx="559" ury="225" f="25"><![CDATA[(5) ]]></tbox></line>
+<line><tbox llx="303" lly="186" urx="507" ury="199" f="25"><![CDATA[The independent estimation of the transmitted symbols ]]></tbox><tbox llx="501" lly="186" urx="511" ury="196" f="15"><![CDATA[^ ]]></tbox><tbox llx="501" lly="186" urx="512" ury="196" f="12"><![CDATA[s ]]></tbox><tbox llx="505" lly="186" urx="516" ury="193" f="13"><![CDATA[2k ]]></tbox><tbox llx="513" lly="186" urx="536" ury="199" f="25"><![CDATA[and ]]></tbox><tbox llx="530" lly="186" urx="540" ury="196" f="15"><![CDATA[^ ]]></tbox><tbox llx="530" lly="186" urx="541" ury="196" f="12"><![CDATA[s ]]></tbox><tbox llx="534" lly="186" urx="555" ury="193" f="13"><![CDATA[2k+1 ]]></tbox></line>
+<line><tbox llx="303" lly="175" urx="464" ury="188" f="25"><![CDATA[is possible due to the fact that the outputs ]]></tbox><tbox llx="459" lly="175" urx="470" ury="185" f="12"><![CDATA[z ]]></tbox><tbox llx="463" lly="175" urx="474" ury="182" f="13"><![CDATA[2k ]]></tbox><tbox llx="472" lly="175" urx="494" ury="188" f="25"><![CDATA[and ]]></tbox><tbox llx="489" lly="175" urx="500" ury="185" f="12"><![CDATA[z ]]></tbox><tbox llx="494" lly="175" urx="514" ury="182" f="13"><![CDATA[2k+1 ]]></tbox><tbox llx="512" lly="175" urx="559" ury="188" f="25"><![CDATA[are decou- ]]></tbox></line>
+<line><tbox llx="303" lly="164" urx="525" ury="177" f="25"><![CDATA[pled. This is due to the orthogonality property of the matrix ]]></tbox><tbox llx="519" lly="166" urx="535" ury="174" f="16"><![CDATA[H, ]]></tbox><tbox llx="529" lly="164" urx="560" ury="177" f="25"><![CDATA[hence ]]></tbox></line>
+<line><tbox llx="304" lly="155" urx="318" ury="163" f="16"><![CDATA[H ]]></tbox><tbox llx="312" lly="158" urx="323" ury="165" f="14"><![CDATA[H ]]></tbox><tbox llx="319" lly="155" urx="333" ury="163" f="16"><![CDATA[H ]]></tbox><tbox llx="327" lly="153" urx="427" ury="166" f="25"><![CDATA[is diagonal. The symbols ]]></tbox><tbox llx="421" lly="153" urx="434" ury="163" f="15"><![CDATA[[^s ]]></tbox><tbox llx="428" lly="153" urx="439" ury="160" f="13"><![CDATA[2k ]]></tbox><tbox llx="439" lly="153" urx="449" ury="163" f="15"><![CDATA[^ ]]></tbox><tbox llx="439" lly="152" urx="467" ury="163" f="12"><![CDATA[s2k+1 ]]></tbox><tbox llx="461" lly="153" urx="469" ury="163" f="15"><![CDATA[] ]]></tbox><tbox llx="463" lly="158" urx="472" ury="165" f="14"><![CDATA[T ]]></tbox><tbox llx="470" lly="153" urx="559" ury="166" f="25"><![CDATA[are estimated from the ]]></tbox></line>
+<line><tbox llx="303" lly="142" urx="335" ury="155" f="25"><![CDATA[vector ]]></tbox><tbox llx="329" lly="142" urx="341" ury="152" f="15"><![CDATA[[z ]]></tbox><tbox llx="336" lly="142" urx="347" ury="149" f="13"><![CDATA[2k ]]></tbox><tbox llx="350" lly="141" urx="378" ury="152" f="12"><![CDATA[z2k+1 ]]></tbox><tbox llx="371" lly="142" urx="379" ury="152" f="15"><![CDATA[] ]]></tbox><tbox llx="374" lly="147" urx="383" ury="154" f="14"><![CDATA[T ]]></tbox><tbox llx="381" lly="142" urx="560" ury="155" f="25"><![CDATA[using a decision device, actually this is the ML ]]></tbox></line>
+<line><tbox llx="303" lly="131" urx="471" ury="145" f="25"><![CDATA[receiver in the case of flat fading channels. ]]></tbox><tbox llx="466" lly="131" urx="560" ury="145" f="25"><![CDATA[The orthogonality con- ]]></tbox></line>
+<line><tbox llx="303" lly="120" urx="344" ury="134" f="25"><![CDATA[dition of ]]></tbox><tbox llx="339" lly="122" urx="353" ury="130" f="16"><![CDATA[H ]]></tbox><tbox llx="349" lly="120" urx="560" ury="134" f="25"><![CDATA[is the key property that must be preserved both at the ]]></tbox></line>
+<pbox llx="44.00" lly="119.00" urx="560.00" ury="743.00"/></page>
+<page n="2">
+<line><tbox llx="44" lly="730" urx="302" ury="743" f="1"><![CDATA[transmitter and receiver in order to achieve error free decoding. To ]]></tbox></line>
+<line><tbox llx="44" lly="719" urx="302" ury="732" f="1"><![CDATA[attain this goal, good estimates of the channel must be available at ]]></tbox></line>
+<line><tbox llx="44" lly="708" urx="294" ury="721" f="1"><![CDATA[the receiver. From now on the estimated channel taps at time index ]]></tbox><tbox llx="289" lly="708" urx="300" ury="718" f="2"><![CDATA[k ]]></tbox></line>
+<line><tbox llx="44" lly="695" urx="165" ury="708" f="1"><![CDATA[will be written in vector form: ]]></tbox><tbox llx="161" lly="697" urx="171" ury="707" f="3"><![CDATA[^ ]]></tbox></line>
+<line><tbox llx="160" lly="695" urx="172" ury="704" f="4"><![CDATA[h ]]></tbox><tbox llx="166" lly="694" urx="186" ury="701" f="5"><![CDATA[(kjk) ]]></tbox><tbox llx="186" lly="695" urx="199" ury="705" f="3"><![CDATA[= ]]></tbox></line>
+<line><tbox llx="197" lly="682" urx="210" ury="706" f="8"><![CDATA[# ]]></tbox><tbox llx="201" lly="697" urx="211" ury="707" f="3"><![CDATA[^ ]]></tbox><tbox llx="201" lly="695" urx="213" ury="705" f="2"><![CDATA[h ]]></tbox><tbox llx="207" lly="694" urx="232" ury="701" f="5"><![CDATA[1;(kjk) ]]></tbox></line>
+<line><tbox llx="235" lly="697" urx="245" ury="707" f="3"><![CDATA[^ ]]></tbox><tbox llx="235" lly="695" urx="247" ury="705" f="2"><![CDATA[h ]]></tbox><tbox llx="240" lly="694" urx="266" ury="701" f="5"><![CDATA[2;(kjk) ]]></tbox><tbox llx="263" lly="682" urx="276" ury="706" f="8"><![CDATA[# ]]></tbox><tbox llx="266" lly="702" urx="276" ury="709" f="6"><![CDATA[T ]]></tbox></line>
+<line><tbox llx="271" lly="695" urx="301" ury="708" f="1"><![CDATA[. The ]]></tbox></line>
+<line><tbox llx="44" lly="684" urx="237" ury="697" f="1"><![CDATA[decoding technique can be summarized as follows: ]]></tbox></line>
+<line><tbox llx="62" lly="667" urx="106" ury="680" f="1"><![CDATA[1. Predict ]]></tbox><tbox llx="101" lly="670" urx="111" ury="680" f="3"><![CDATA[^ ]]></tbox><tbox llx="101" lly="668" urx="113" ury="677" f="4"><![CDATA[h ]]></tbox><tbox llx="107" lly="667" urx="143" ury="674" f="5"><![CDATA[(2kj2k 2) ]]></tbox></line>
+<line><tbox llx="143" lly="670" urx="153" ury="680" f="3"><![CDATA[^ ]]></tbox></line>
+<line><tbox llx="142" lly="668" urx="154" ury="677" f="4"><![CDATA[h ]]></tbox><tbox llx="148" lly="667" urx="194" ury="674" f="5"><![CDATA[(2k+1j2k 1) ]]></tbox><tbox llx="190" lly="667" urx="200" ury="677" f="2"><![CDATA[: ]]></tbox></line>
+<line><tbox llx="62" lly="656" urx="139" ury="669" f="1"><![CDATA[2. Form the matrix ]]></tbox><tbox llx="133" lly="658" urx="147" ury="666" f="9"><![CDATA[H ]]></tbox><tbox llx="142" lly="656" urx="220" ury="669" f="1"><![CDATA[as described in (4). ]]></tbox></line>
+<line><tbox llx="62" lly="645" urx="108" ury="659" f="1"><![CDATA[3. Decode ]]></tbox><tbox llx="103" lly="645" urx="113" ury="655" f="3"><![CDATA[^ ]]></tbox><tbox llx="103" lly="645" urx="114" ury="655" f="2"><![CDATA[s ]]></tbox><tbox llx="107" lly="645" urx="118" ury="652" f="5"><![CDATA[2k ]]></tbox><tbox llx="116" lly="645" urx="138" ury="659" f="1"><![CDATA[and ]]></tbox><tbox llx="133" lly="645" urx="143" ury="655" f="3"><![CDATA[^ ]]></tbox><tbox llx="133" lly="645" urx="144" ury="655" f="2"><![CDATA[s ]]></tbox><tbox llx="137" lly="645" urx="158" ury="652" f="5"><![CDATA[2k+1 ]]></tbox><tbox llx="155" lly="645" urx="222" ury="659" f="1"><![CDATA[as shown in (5). ]]></tbox></line>
+<line><tbox llx="56" lly="630" urx="302" ury="643" f="1"><![CDATA[The prediction of the channels may not be accurate. In this ]]></tbox></line>
+<line><tbox llx="44" lly="619" urx="242" ury="632" f="1"><![CDATA[case one can use the previous filtered estimates ]]></tbox><tbox llx="239" lly="621" urx="249" ury="631" f="3"><![CDATA[^ ]]></tbox><tbox llx="239" lly="619" urx="251" ury="629" f="4"><![CDATA[h ]]></tbox><tbox llx="245" lly="618" urx="281" ury="625" f="5"><![CDATA[(2kj2k 2) ]]></tbox><tbox llx="286" lly="619" urx="298" ury="629" f="3"><![CDATA[= ]]></tbox></line>
+<line><tbox llx="47" lly="609" urx="57" ury="619" f="3"><![CDATA[^ ]]></tbox></line>
+<line><tbox llx="46" lly="607" urx="58" ury="616" f="4"><![CDATA[h ]]></tbox><tbox llx="52" lly="606" urx="98" ury="613" f="5"><![CDATA[(2k 2j2k 2) ]]></tbox><tbox llx="96" lly="606" urx="119" ury="620" f="1"><![CDATA[and ]]></tbox><tbox llx="114" lly="609" urx="124" ury="619" f="3"><![CDATA[^ ]]></tbox><tbox llx="114" lly="607" urx="126" ury="616" f="4"><![CDATA[h ]]></tbox><tbox llx="120" lly="606" urx="166" ury="613" f="5"><![CDATA[(2k+1j2k 1) ]]></tbox><tbox llx="166" lly="607" urx="188" ury="619" f="3"><![CDATA[= ^ ]]></tbox><tbox llx="178" lly="607" urx="189" ury="616" f="4"><![CDATA[h ]]></tbox><tbox llx="184" lly="606" urx="229" ury="613" f="5"><![CDATA[(2k 1j2k 1) ]]></tbox><tbox llx="224" lly="606" urx="301" ury="620" f="1"><![CDATA[). In time-varying ]]></tbox></line>
+<line><tbox llx="44" lly="595" urx="302" ury="609" f="1"><![CDATA[scenarios the candidates for channel tracking are recursive algorithms ]]></tbox></line>
+<line><tbox llx="44" lly="584" urx="157" ury="598" f="1"><![CDATA[such as LMS, RLS, Kalman. ]]></tbox></line>
+<line><tbox llx="113" lly="558" urx="184" ury="573" f="10"><![CDATA[III. CHANNEL ]]></tbox><tbox llx="176" lly="559" urx="229" ury="571" f="11"><![CDATA[TRACKING ]]></tbox></line>
+<line><tbox llx="44" lly="540" urx="302" ury="553" f="12"><![CDATA[We start this section by pointing out that at each even and odd time ]]></tbox></line>
+<line><tbox llx="44" lly="529" urx="302" ury="542" f="12"><![CDATA[indices we have to form the decoded information vector as follows: ]]></tbox></line>
+<line><tbox llx="44" lly="518" urx="79" ury="531" f="12"><![CDATA[at time ]]></tbox><tbox llx="74" lly="518" urx="89" ury="528" f="3"><![CDATA[2k ]]></tbox><tbox llx="85" lly="518" urx="125" ury="531" f="12"><![CDATA[we have ]]></tbox><tbox llx="120" lly="518" urx="130" ury="528" f="3"><![CDATA[^ ]]></tbox><tbox llx="120" lly="518" urx="130" ury="527" f="4"><![CDATA[s ]]></tbox><tbox llx="124" lly="523" urx="144" ury="529" f="6"><![CDATA[even ]]></tbox><tbox llx="144" lly="518" urx="167" ury="528" f="3"><![CDATA[= [^s ]]></tbox><tbox llx="162" lly="518" urx="173" ury="524" f="5"><![CDATA[2k ]]></tbox><tbox llx="176" lly="518" urx="186" ury="528" f="3"><![CDATA[^ ]]></tbox><tbox llx="176" lly="517" urx="204" ury="528" f="2"><![CDATA[s2k+1 ]]></tbox><tbox llx="197" lly="518" urx="205" ury="528" f="3"><![CDATA[] ]]></tbox><tbox llx="200" lly="523" urx="209" ury="529" f="6"><![CDATA[T ]]></tbox><tbox llx="207" lly="518" urx="258" ury="531" f="12"><![CDATA[and at time ]]></tbox><tbox llx="253" lly="518" urx="299" ury="528" f="3"><![CDATA[2k +1we ]]></tbox></line>
+<line><tbox llx="44" lly="507" urx="66" ury="520" f="12"><![CDATA[use ]]></tbox><tbox llx="60" lly="507" urx="70" ury="517" f="3"><![CDATA[^ ]]></tbox><tbox llx="61" lly="507" urx="71" ury="516" f="4"><![CDATA[s ]]></tbox><tbox llx="64" lly="512" urx="81" ury="518" f="6"><![CDATA[odd ]]></tbox><tbox llx="79" lly="507" urx="109" ury="517" f="3"><![CDATA[=[ ^ ]]></tbox><tbox llx="99" lly="507" urx="110" ury="517" f="2"><![CDATA[s ]]></tbox><tbox llx="104" lly="512" urx="111" ury="518" f="7"><![CDATA[# ]]></tbox></line>
+<line><tbox llx="104" lly="506" urx="124" ury="513" f="5"><![CDATA[2k+1 ]]></tbox><tbox llx="127" lly="507" urx="137" ury="517" f="3"><![CDATA[^ ]]></tbox><tbox llx="127" lly="507" urx="138" ury="517" f="2"><![CDATA[s ]]></tbox><tbox llx="131" lly="512" urx="138" ury="518" f="7"><![CDATA[# ]]></tbox></line>
+<line><tbox llx="131" lly="506" urx="142" ury="513" f="5"><![CDATA[2k ]]></tbox><tbox llx="139" lly="507" urx="147" ury="517" f="3"><![CDATA[] ]]></tbox><tbox llx="141" lly="512" urx="150" ury="518" f="6"><![CDATA[T ]]></tbox><tbox llx="146" lly="507" urx="301" ury="520" f="12"><![CDATA[. As mentioned before, the prediction of ]]></tbox></line>
+<line><tbox llx="44" lly="496" urx="302" ury="509" f="12"><![CDATA[the channel taps may not be possible. In such case we can use the ]]></tbox></line>
+<line><tbox llx="44" lly="485" urx="165" ury="498" f="12"><![CDATA[previous estimated values, i.e. ]]></tbox><tbox llx="162" lly="487" urx="172" ury="497" f="3"><![CDATA[^ ]]></tbox><tbox llx="162" lly="485" urx="174" ury="495" f="2"><![CDATA[h ]]></tbox><tbox llx="168" lly="484" urx="210" ury="491" f="5"><![CDATA[1;(2kj2k 2) ]]></tbox><tbox llx="211" lly="485" urx="233" ury="497" f="3"><![CDATA[= ^ ]]></tbox><tbox llx="223" lly="485" urx="235" ury="495" f="2"><![CDATA[h ]]></tbox><tbox llx="228" lly="484" urx="280" ury="491" f="5"><![CDATA[1;(2k 2j2k 2) ]]></tbox><tbox llx="278" lly="485" urx="301" ury="498" f="12"><![CDATA[and ]]></tbox></line>
+<line><tbox llx="46" lly="475" urx="56" ury="485" f="3"><![CDATA[^ ]]></tbox><tbox llx="46" lly="472" urx="58" ury="482" f="2"><![CDATA[h ]]></tbox><tbox llx="52" lly="472" urx="103" ury="479" f="5"><![CDATA[1;(2k+1j2k 1) ]]></tbox><tbox llx="103" lly="472" urx="124" ury="485" f="3"><![CDATA[= ^ ]]></tbox><tbox llx="114" lly="472" urx="126" ury="482" f="2"><![CDATA[h ]]></tbox><tbox llx="120" lly="472" urx="171" ury="479" f="5"><![CDATA[1;(2k 1j2k 1) ]]></tbox><tbox llx="166" lly="472" urx="301" ury="486" f="12"><![CDATA[. In the rest of the section we will ]]></tbox></line>
+<line><tbox llx="44" lly="461" urx="277" ury="475" f="12"><![CDATA[briefly present the update rules of LMS, RLS and Kalman [6]. ]]></tbox></line>
+<line><tbox llx="44" lly="437" urx="86" ury="450" f="13"><![CDATA[A LMS ]]></tbox></line>
+<line><tbox llx="56" lly="419" urx="302" ury="432" f="12"><![CDATA[Least Mean Squares algorithm has low complexity but does not ]]></tbox></line>
+<line><tbox llx="44" lly="408" urx="302" ury="421" f="12"><![CDATA[have good tracking capabilities and convergence slowly. However, it ]]></tbox></line>
+<line><tbox llx="44" lly="397" urx="302" ury="410" f="12"><![CDATA[can be used to track slow time-varying channels. The algorithm may ]]></tbox></line>
+<line><tbox llx="44" lly="386" urx="150" ury="399" f="12"><![CDATA[be summarized as follows: ]]></tbox></line>
+<line><tbox llx="62" lly="372" urx="101" ury="385" f="12"><![CDATA[for each ]]></tbox><tbox llx="95" lly="372" urx="107" ury="382" f="2"><![CDATA[k ]]></tbox><tbox llx="100" lly="372" urx="122" ury="385" f="12"><![CDATA[do: ]]></tbox></line>
+<line><tbox llx="72" lly="361" urx="213" ury="374" f="12"><![CDATA[use the estimated information vector ]]></tbox><tbox llx="207" lly="361" urx="217" ury="371" f="3"><![CDATA[^ ]]></tbox><tbox llx="207" lly="361" urx="218" ury="370" f="4"><![CDATA[s ]]></tbox><tbox llx="211" lly="366" urx="231" ury="372" f="6"><![CDATA[even ]]></tbox><tbox llx="228" lly="361" urx="245" ury="374" f="12"><![CDATA[or ]]></tbox><tbox llx="239" lly="361" urx="249" ury="371" f="3"><![CDATA[^ ]]></tbox><tbox llx="239" lly="361" urx="250" ury="370" f="4"><![CDATA[s ]]></tbox><tbox llx="243" lly="366" urx="260" ury="372" f="6"><![CDATA[odd ]]></tbox></line>
+<line><tbox llx="75" lly="350" urx="185" ury="363" f="12"><![CDATA[according to the time index. ]]></tbox></line>
+<line><tbox llx="74" lly="337" urx="89" ury="348" f="2"><![CDATA[ek ]]></tbox><tbox llx="85" lly="338" urx="98" ury="348" f="3"><![CDATA[= ]]></tbox><tbox llx="95" lly="337" urx="111" ury="348" f="2"><![CDATA[yk ]]></tbox><tbox llx="115" lly="338" urx="125" ury="348" f="3"><![CDATA[^ ]]></tbox><tbox llx="116" lly="339" urx="126" ury="348" f="4"><![CDATA[s ]]></tbox><tbox llx="120" lly="343" urx="129" ury="349" f="6"><![CDATA[T ]]></tbox></line>
+<line><tbox llx="120" lly="337" urx="128" ury="344" f="6"><![CDATA[k ]]></tbox></line>
+<line><tbox llx="126" lly="340" urx="136" ury="350" f="3"><![CDATA[^ ]]></tbox><tbox llx="126" lly="339" urx="138" ury="348" f="4"><![CDATA[h ]]></tbox><tbox llx="132" lly="337" urx="161" ury="344" f="5"><![CDATA[(kjk 1) ]]></tbox></line>
+<line><tbox llx="75" lly="328" urx="85" ury="338" f="3"><![CDATA[^ ]]></tbox></line>
+<line><tbox llx="74" lly="327" urx="86" ury="336" f="4"><![CDATA[h ]]></tbox><tbox llx="80" lly="326" urx="100" ury="332" f="5"><![CDATA[(kjk) ]]></tbox><tbox llx="99" lly="326" urx="120" ury="338" f="3"><![CDATA[= ^ ]]></tbox></line>
+<line><tbox llx="109" lly="327" urx="121" ury="336" f="4"><![CDATA[h ]]></tbox><tbox llx="115" lly="326" urx="130" ury="332" f="6"><![CDATA[kjk ]]></tbox><tbox llx="131" lly="326" urx="139" ury="332" f="5"><![CDATA[1 ]]></tbox><tbox llx="137" lly="326" urx="150" ury="336" f="3"><![CDATA[+ ]]></tbox><tbox llx="146" lly="326" urx="172" ury="336" f="2"><![CDATA[#ek^ ]]></tbox><tbox llx="161" lly="326" urx="175" ury="336" f="4"><![CDATA[sk ]]></tbox></line>
+<line><tbox llx="56" lly="313" urx="87" ury="327" f="12"><![CDATA[where ]]></tbox><tbox llx="82" lly="314" urx="94" ury="324" f="2"><![CDATA[# ]]></tbox><tbox llx="88" lly="313" urx="175" ury="327" f="12"><![CDATA[is the adaptation step. ]]></tbox></line>
+<line><tbox llx="44" lly="289" urx="84" ury="303" f="13"><![CDATA[B RLS ]]></tbox></line>
+<line><tbox llx="56" lly="271" urx="301" ury="284" f="12"><![CDATA[RLS has satisfactory tracking capabilities and higher complexity. ]]></tbox></line>
+<line><tbox llx="44" lly="260" urx="221" ury="273" f="12"><![CDATA[The algorithm may be summarized as follows: ]]></tbox></line>
+<line><tbox llx="62" lly="244" urx="101" ury="257" f="12"><![CDATA[for each ]]></tbox><tbox llx="95" lly="244" urx="107" ury="254" f="2"><![CDATA[k ]]></tbox><tbox llx="100" lly="244" urx="122" ury="257" f="12"><![CDATA[do: ]]></tbox></line>
+<line><tbox llx="72" lly="233" urx="213" ury="246" f="12"><![CDATA[use the estimated information vector ]]></tbox><tbox llx="207" lly="233" urx="217" ury="243" f="3"><![CDATA[^ ]]></tbox><tbox llx="207" lly="233" urx="218" ury="242" f="4"><![CDATA[s ]]></tbox><tbox llx="211" lly="238" urx="231" ury="244" f="6"><![CDATA[even ]]></tbox><tbox llx="228" lly="233" urx="245" ury="246" f="12"><![CDATA[or ]]></tbox><tbox llx="239" lly="233" urx="249" ury="243" f="3"><![CDATA[^ ]]></tbox><tbox llx="239" lly="233" urx="250" ury="242" f="4"><![CDATA[s ]]></tbox><tbox llx="243" lly="238" urx="260" ury="244" f="6"><![CDATA[odd ]]></tbox></line>
+<line><tbox llx="75" lly="222" urx="172" ury="235" f="12"><![CDATA[according to time index. ]]></tbox></line>
+<line><tbox llx="74" lly="209" urx="89" ury="220" f="2"><![CDATA[ek ]]></tbox><tbox llx="85" lly="210" urx="98" ury="220" f="3"><![CDATA[= ]]></tbox><tbox llx="95" lly="209" urx="111" ury="220" f="2"><![CDATA[yk ]]></tbox><tbox llx="115" lly="210" urx="125" ury="220" f="3"><![CDATA[^ ]]></tbox><tbox llx="116" lly="211" urx="126" ury="220" f="4"><![CDATA[s ]]></tbox><tbox llx="120" lly="215" urx="129" ury="222" f="6"><![CDATA[T ]]></tbox></line>
+<line><tbox llx="120" lly="209" urx="128" ury="216" f="6"><![CDATA[k ]]></tbox></line>
+<line><tbox llx="126" lly="213" urx="136" ury="223" f="3"><![CDATA[^ ]]></tbox><tbox llx="126" lly="211" urx="138" ury="220" f="4"><![CDATA[h ]]></tbox><tbox llx="132" lly="210" urx="161" ury="216" f="5"><![CDATA[(kjk 1) ]]></tbox></line>
+<line><tbox llx="74" lly="198" urx="90" ury="209" f="4"><![CDATA[kk ]]></tbox><tbox llx="87" lly="199" urx="99" ury="209" f="3"><![CDATA[= ]]></tbox><tbox llx="97" lly="199" urx="115" ury="209" f="2"><![CDATA[P^ ]]></tbox><tbox llx="104" lly="199" urx="114" ury="209" f="4"><![CDATA[s ]]></tbox><tbox llx="108" lly="204" urx="117" ury="210" f="6"><![CDATA[T ]]></tbox></line>
+<line><tbox llx="108" lly="198" urx="117" ury="205" f="6"><![CDATA[k ]]></tbox><tbox llx="114" lly="199" urx="144" ury="209" f="3"><![CDATA[(# + ^ ]]></tbox><tbox llx="134" lly="199" urx="144" ury="209" f="4"><![CDATA[s ]]></tbox><tbox llx="138" lly="204" urx="147" ury="210" f="6"><![CDATA[T ]]></tbox></line>
+<line><tbox llx="138" lly="198" urx="147" ury="205" f="6"><![CDATA[k ]]></tbox><tbox llx="144" lly="199" urx="162" ury="209" f="2"><![CDATA[P^ ]]></tbox><tbox llx="151" lly="198" urx="165" ury="209" f="4"><![CDATA[sk ]]></tbox><tbox llx="160" lly="199" urx="169" ury="209" f="3"><![CDATA[) ]]></tbox><tbox llx="170" lly="204" urx="177" ury="210" f="5"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="74" lly="188" urx="87" ury="198" f="2"><![CDATA[P ]]></tbox><tbox llx="84" lly="188" urx="108" ury="198" f="3"><![CDATA[=(P ]]></tbox><tbox llx="116" lly="188" urx="136" ury="197" f="4"><![CDATA[kk^ s ]]></tbox><tbox llx="130" lly="193" urx="139" ury="199" f="6"><![CDATA[T ]]></tbox></line>
+<line><tbox llx="130" lly="187" urx="138" ury="193" f="6"><![CDATA[k ]]></tbox><tbox llx="136" lly="188" urx="149" ury="198" f="2"><![CDATA[P ]]></tbox><tbox llx="143" lly="188" urx="162" ury="198" f="3"><![CDATA[)=# ]]></tbox></line>
+<line><tbox llx="75" lly="178" urx="85" ury="188" f="3"><![CDATA[^ ]]></tbox></line>
+<line><tbox llx="74" lly="176" urx="86" ury="185" f="4"><![CDATA[h ]]></tbox><tbox llx="80" lly="175" urx="100" ury="182" f="5"><![CDATA[(kjk) ]]></tbox><tbox llx="99" lly="176" urx="120" ury="188" f="3"><![CDATA[= ^ ]]></tbox></line>
+<line><tbox llx="109" lly="176" urx="121" ury="185" f="4"><![CDATA[h ]]></tbox><tbox llx="115" lly="175" urx="144" ury="182" f="5"><![CDATA[(kjk 1) ]]></tbox><tbox llx="143" lly="176" urx="156" ury="186" f="3"><![CDATA[+ ]]></tbox><tbox llx="152" lly="176" urx="179" ury="186" f="2"><![CDATA[ekP^ ]]></tbox><tbox llx="168" lly="175" urx="183" ury="185" f="4"><![CDATA[sk ]]></tbox></line>
+<line><tbox llx="56" lly="163" urx="87" ury="176" f="12"><![CDATA[where ]]></tbox><tbox llx="82" lly="163" urx="94" ury="173" f="2"><![CDATA[# ]]></tbox><tbox llx="88" lly="163" urx="179" ury="176" f="12"><![CDATA[is the forgetting factor. ]]></tbox></line>
+<line><tbox llx="44" lly="139" urx="98" ury="152" f="13"><![CDATA[C Kalman ]]></tbox></line>
+<line><tbox llx="56" lly="120" urx="232" ury="134" f="12"><![CDATA[The algorithm may be summarized as follows: ]]></tbox></line>
+<line><tbox llx="320" lly="732" urx="359" ury="745" f="12"><![CDATA[for each ]]></tbox><tbox llx="353" lly="732" urx="365" ury="742" f="2"><![CDATA[k ]]></tbox><tbox llx="359" lly="732" urx="380" ury="745" f="12"><![CDATA[do: ]]></tbox></line>
+<line><tbox llx="331" lly="720" urx="472" ury="734" f="12"><![CDATA[use the estimated information vector ]]></tbox><tbox llx="465" lly="721" urx="475" ury="731" f="3"><![CDATA[^ ]]></tbox><tbox llx="466" lly="721" urx="476" ury="730" f="4"><![CDATA[s ]]></tbox><tbox llx="469" lly="725" urx="490" ury="732" f="6"><![CDATA[even ]]></tbox><tbox llx="486" lly="720" urx="504" ury="734" f="12"><![CDATA[or ]]></tbox><tbox llx="497" lly="721" urx="507" ury="731" f="3"><![CDATA[^ ]]></tbox><tbox llx="498" lly="721" urx="508" ury="730" f="4"><![CDATA[s ]]></tbox><tbox llx="502" lly="725" urx="518" ury="732" f="6"><![CDATA[odd ]]></tbox></line>
+<line><tbox llx="334" lly="709" urx="430" ury="723" f="12"><![CDATA[according to time index. ]]></tbox></line>
+<line><tbox llx="333" lly="700" urx="343" ury="710" f="3"><![CDATA[^ ]]></tbox></line>
+<line><tbox llx="332" lly="698" urx="344" ury="707" f="4"><![CDATA[h ]]></tbox><tbox llx="339" lly="697" urx="368" ury="704" f="5"><![CDATA[(kjk 1) ]]></tbox><tbox llx="367" lly="698" urx="380" ury="708" f="3"><![CDATA[= ]]></tbox><tbox llx="377" lly="698" urx="390" ury="708" f="2"><![CDATA[A ]]></tbox><tbox llx="384" lly="700" urx="394" ury="710" f="3"><![CDATA[^ ]]></tbox><tbox llx="384" lly="698" urx="396" ury="707" f="4"><![CDATA[h ]]></tbox><tbox llx="390" lly="697" urx="428" ury="704" f="5"><![CDATA[(k 1jk 1) ]]></tbox></line>
+<line><tbox llx="332" lly="687" urx="345" ury="697" f="2"><![CDATA[P ]]></tbox><tbox llx="339" lly="686" urx="368" ury="693" f="5"><![CDATA[(kjk 1) ]]></tbox><tbox llx="367" lly="687" urx="380" ury="697" f="3"><![CDATA[= ]]></tbox><tbox llx="377" lly="687" urx="396" ury="697" f="2"><![CDATA[AP ]]></tbox><tbox llx="390" lly="686" urx="428" ury="693" f="5"><![CDATA[(k 1jk 1) ]]></tbox><tbox llx="425" lly="687" urx="439" ury="697" f="2"><![CDATA[A ]]></tbox><tbox llx="432" lly="691" urx="441" ury="698" f="6"><![CDATA[T ]]></tbox><tbox llx="440" lly="687" urx="462" ury="697" f="3"><![CDATA[+Q ]]></tbox></line>
+<line><tbox llx="332" lly="675" urx="348" ury="685" f="4"><![CDATA[kk ]]></tbox><tbox llx="345" lly="675" urx="358" ury="685" f="3"><![CDATA[= ]]></tbox><tbox llx="355" lly="675" urx="368" ury="685" f="2"><![CDATA[P ]]></tbox><tbox llx="361" lly="675" urx="390" ury="682" f="5"><![CDATA[(kjk 1) ]]></tbox><tbox llx="387" lly="676" urx="397" ury="686" f="3"><![CDATA[^ ]]></tbox><tbox llx="387" lly="675" urx="401" ury="685" f="4"><![CDATA[sk ]]></tbox><tbox llx="396" lly="675" urx="410" ury="685" f="3"><![CDATA[(# ]]></tbox><tbox llx="405" lly="680" urx="412" ury="687" f="5"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="404" lly="675" urx="414" ury="681" f="6"><![CDATA[w ]]></tbox><tbox llx="412" lly="675" urx="431" ury="686" f="3"><![CDATA[+ ^ ]]></tbox><tbox llx="422" lly="676" urx="432" ury="685" f="4"><![CDATA[s ]]></tbox><tbox llx="426" lly="680" urx="435" ury="687" f="6"><![CDATA[T ]]></tbox></line>
+<line><tbox llx="426" lly="674" urx="434" ury="681" f="6"><![CDATA[k ]]></tbox><tbox llx="432" lly="675" urx="444" ury="685" f="2"><![CDATA[P ]]></tbox><tbox llx="438" lly="675" urx="467" ury="682" f="5"><![CDATA[(kjk 1) ]]></tbox><tbox llx="463" lly="676" urx="473" ury="686" f="3"><![CDATA[^ ]]></tbox><tbox llx="464" lly="675" urx="478" ury="685" f="4"><![CDATA[sk ]]></tbox><tbox llx="472" lly="675" urx="481" ury="685" f="3"><![CDATA[) ]]></tbox><tbox llx="482" lly="680" urx="489" ury="687" f="5"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="332" lly="664" urx="344" ury="673" f="4"><![CDATA[h ]]></tbox><tbox llx="339" lly="663" urx="358" ury="670" f="5"><![CDATA[(kjk) ]]></tbox><tbox llx="357" lly="664" urx="378" ury="676" f="3"><![CDATA[= ^ ]]></tbox></line>
+<line><tbox llx="367" lly="664" urx="379" ury="673" f="4"><![CDATA[h ]]></tbox><tbox llx="373" lly="663" urx="403" ury="670" f="5"><![CDATA[(kjk 1) ]]></tbox><tbox llx="401" lly="664" urx="414" ury="674" f="3"><![CDATA[+ ]]></tbox><tbox llx="411" lly="663" urx="426" ury="673" f="4"><![CDATA[kk ]]></tbox></line>
+<line><tbox llx="422" lly="650" urx="435" ury="675" f="8"><![CDATA[# ]]></tbox><tbox llx="426" lly="662" urx="442" ury="674" f="2"><![CDATA[yk ]]></tbox><tbox llx="446" lly="664" urx="456" ury="674" f="3"><![CDATA[^ ]]></tbox><tbox llx="447" lly="664" urx="457" ury="673" f="4"><![CDATA[s ]]></tbox><tbox llx="451" lly="668" urx="460" ury="675" f="6"><![CDATA[T ]]></tbox></line>
+<line><tbox llx="451" lly="662" urx="459" ury="669" f="6"><![CDATA[k ]]></tbox></line>
+<line><tbox llx="457" lly="666" urx="467" ury="676" f="3"><![CDATA[^ ]]></tbox><tbox llx="457" lly="664" urx="469" ury="673" f="4"><![CDATA[h ]]></tbox><tbox llx="463" lly="663" urx="492" ury="670" f="5"><![CDATA[(kjk 1) ]]></tbox></line>
+<line><tbox llx="489" lly="650" urx="502" ury="675" f="8"><![CDATA[# ]]></tbox></line>
+<line><tbox llx="332" lly="652" urx="345" ury="662" f="2"><![CDATA[P ]]></tbox><tbox llx="339" lly="651" urx="358" ury="658" f="5"><![CDATA[(kjk) ]]></tbox><tbox llx="357" lly="652" urx="370" ury="662" f="3"><![CDATA[= ]]></tbox><tbox llx="367" lly="652" urx="380" ury="662" f="2"><![CDATA[P ]]></tbox><tbox llx="373" lly="651" urx="403" ury="658" f="5"><![CDATA[(kjk 1) ]]></tbox><tbox llx="411" lly="652" urx="431" ury="661" f="4"><![CDATA[kk^ s ]]></tbox><tbox llx="424" lly="657" urx="434" ury="663" f="6"><![CDATA[T ]]></tbox></line>
+<line><tbox llx="424" lly="651" urx="433" ury="658" f="6"><![CDATA[k ]]></tbox><tbox llx="431" lly="652" urx="443" ury="662" f="2"><![CDATA[P ]]></tbox><tbox llx="437" lly="651" urx="466" ury="658" f="5"><![CDATA[(kjk 1) ]]></tbox></line>
+<line><tbox llx="314" lly="638" urx="560" ury="651" f="12"><![CDATA[The practical implementation of the algorithm consists of putting ]]></tbox></line>
+<line><tbox llx="303" lly="627" urx="560" ury="640" f="12"><![CDATA[together the symbol detection stage with one of the tracking algo- ]]></tbox></line>
+<line><tbox llx="303" lly="616" urx="528" ury="629" f="12"><![CDATA[rithms presented earlier. The algorithms proceed as follows: ]]></tbox></line>
+<line><tbox llx="320" lly="603" urx="330" ury="611" f="9"><![CDATA[# ]]></tbox><tbox llx="328" lly="601" urx="472" ury="614" f="12"><![CDATA[Wait until two consecutive values of ]]></tbox><tbox llx="467" lly="601" urx="478" ury="611" f="2"><![CDATA[y ]]></tbox><tbox llx="471" lly="601" urx="483" ury="608" f="5"><![CDATA[2k ]]></tbox><tbox llx="481" lly="601" urx="503" ury="614" f="12"><![CDATA[and ]]></tbox><tbox llx="498" lly="601" urx="510" ury="611" f="2"><![CDATA[y ]]></tbox><tbox llx="503" lly="601" urx="524" ury="608" f="5"><![CDATA[2k+1 ]]></tbox><tbox llx="522" lly="601" urx="559" ury="614" f="12"><![CDATA[become ]]></tbox></line>
+<line><tbox llx="328" lly="590" urx="372" ury="603" f="12"><![CDATA[available. ]]></tbox></line>
+<line><tbox llx="320" lly="577" urx="330" ury="584" f="9"><![CDATA[# ]]></tbox><tbox llx="328" lly="575" urx="448" ury="588" f="12"><![CDATA[Decode the information vector ]]></tbox><tbox llx="442" lly="575" urx="453" ury="584" f="4"><![CDATA[s ]]></tbox><tbox llx="447" lly="575" urx="560" ury="588" f="12"><![CDATA[as described in the decoding ]]></tbox></line>
+<line><tbox llx="328" lly="564" urx="365" ury="577" f="12"><![CDATA[section. ]]></tbox></line>
+<line><tbox llx="320" lly="551" urx="330" ury="558" f="9"><![CDATA[# ]]></tbox><tbox llx="328" lly="549" urx="513" ury="562" f="12"><![CDATA[Use the decoded symbols to estimate the channel ]]></tbox><tbox llx="507" lly="551" urx="517" ury="561" f="3"><![CDATA[^ ]]></tbox></line>
+<line><tbox llx="506" lly="549" urx="518" ury="558" f="4"><![CDATA[h ]]></tbox><tbox llx="513" lly="548" urx="540" ury="555" f="5"><![CDATA[(2kj2k) ]]></tbox><tbox llx="537" lly="549" urx="559" ury="562" f="12"><![CDATA[and ]]></tbox></line>
+<line><tbox llx="330" lly="539" urx="340" ury="549" f="3"><![CDATA[^ ]]></tbox></line>
+<line><tbox llx="329" lly="537" urx="341" ury="546" f="4"><![CDATA[h ]]></tbox><tbox llx="335" lly="536" urx="381" ury="543" f="5"><![CDATA[(2k+1j2k+1) ]]></tbox><tbox llx="378" lly="536" urx="560" ury="550" f="12"><![CDATA[using one of the algorithms presented in sections ]]></tbox></line>
+<line><tbox llx="328" lly="525" urx="367" ury="539" f="12"><![CDATA[(A)-(C). ]]></tbox></line>
+<line><tbox llx="387" lly="500" urx="474" ury="514" f="14"><![CDATA[IV. SIMULATIONS ]]></tbox></line>
+<line><tbox llx="314" lly="484" urx="560" ury="498" f="16"><![CDATA[In this section simulation results are performed according to ETSI ]]></tbox></line>
+<line><tbox llx="303" lly="473" urx="560" ury="487" f="16"><![CDATA[[11] recommendations. Regarding the channels types to be used, the ]]></tbox></line>
+<line><tbox llx="303" lly="462" urx="440" ury="476" f="16"><![CDATA[following scenarios are suggested: ]]></tbox><tbox llx="436" lly="462" urx="491" ury="476" f="13"><![CDATA[1st scenario ]]></tbox><tbox llx="484" lly="462" urx="560" ury="476" f="16"><![CDATA[Indoor/Low range ]]></tbox></line>
+<line><tbox llx="303" lly="451" urx="560" ury="465" f="16"><![CDATA[outdoor where a Typical Urban (TU) can be used with a receiver ]]></tbox></line>
+<line><tbox llx="303" lly="441" urx="426" ury="454" f="16"><![CDATA[speed of 3 km/h, up to 10 km/h. ]]></tbox><tbox llx="419" lly="441" urx="476" ury="454" f="13"><![CDATA[2nd scenario ]]></tbox><tbox llx="468" lly="441" urx="560" ury="454" f="16"><![CDATA[is about urban environ- ]]></tbox></line>
+<line><tbox llx="303" lly="430" urx="560" ury="443" f="16"><![CDATA[ment characterized by TU at 50 km/h up to 150 km/h and suburban ]]></tbox></line>
+<line><tbox llx="303" lly="419" urx="528" ury="432" f="16"><![CDATA[outdoor where we use Hilly Terrain (HT) at 100 km/h. The ]]></tbox><tbox llx="521" lly="419" urx="561" ury="432" f="13"><![CDATA[3rd sce- ]]></tbox></line>
+<line><tbox llx="303" lly="408" urx="333" ury="421" f="13"><![CDATA[nario ]]></tbox><tbox llx="324" lly="408" urx="560" ury="421" f="16"><![CDATA[defines the Rural outdoor characterized by the Rural Area (RA) ]]></tbox></line>
+<line><tbox llx="303" lly="397" urx="560" ury="410" f="16"><![CDATA[type of channel with the receiver speed in the range 130-250 km/h ]]></tbox></line>
+<line><tbox llx="303" lly="386" urx="387" ury="399" f="16"><![CDATA[and HT at 100 km/h. ]]></tbox></line>
+<line><tbox llx="314" lly="375" urx="560" ury="388" f="16"><![CDATA[The channel impulse response used in simulations is a time- ]]></tbox></line>
+<line><tbox llx="303" lly="364" urx="560" ury="377" f="16"><![CDATA[selective fading channel, i.e. time-varying but frequency flat. It ]]></tbox></line>
+<line><tbox llx="303" lly="353" urx="444" ury="366" f="16"><![CDATA[is obtained as a superposition of ]]></tbox><tbox llx="441" lly="352" urx="459" ury="363" f="2"><![CDATA[Np ]]></tbox><tbox llx="461" lly="353" urx="496" ury="363" f="3"><![CDATA[= 100 ]]></tbox><tbox llx="495" lly="353" urx="559" ury="366" f="16"><![CDATA[paths and can ]]></tbox></line>
+<line><tbox llx="303" lly="342" urx="481" ury="355" f="16"><![CDATA[be described using the Gaussian distributed ]]></tbox><tbox llx="476" lly="342" urx="561" ury="355" f="13"><![CDATA[Wide-Sense Station- ]]></tbox></line>
+<line><tbox llx="303" lly="331" urx="438" ury="345" f="13"><![CDATA[ary with Uncorrelated Scattering ]]></tbox><tbox llx="432" lly="331" urx="521" ury="344" f="16"><![CDATA[(WSSUS) model [7]: ]]></tbox><tbox llx="519" lly="331" urx="531" ury="341" f="2"><![CDATA[h ]]></tbox><tbox llx="524" lly="331" urx="531" ury="338" f="6"><![CDATA[i ]]></tbox><tbox llx="527" lly="331" urx="557" ury="341" f="3"><![CDATA[(t) = ]]></tbox></line>
+<line><tbox llx="304" lly="319" urx="319" ury="329" f="3"><![CDATA[1= ]]></tbox></line>
+<line><tbox llx="313" lly="306" urx="332" ury="331" f="8"><![CDATA[p ]]></tbox><tbox llx="323" lly="318" urx="342" ury="329" f="2"><![CDATA[Np ]]></tbox></line>
+<line><tbox llx="337" lly="305" urx="356" ury="330" f="8"><![CDATA[P ]]></tbox><tbox llx="347" lly="324" urx="361" ury="331" f="6"><![CDATA[Np ]]></tbox></line>
+<line><tbox llx="347" lly="317" urx="365" ury="323" f="6"><![CDATA[p=1 ]]></tbox></line>
+<line><tbox llx="362" lly="319" urx="374" ury="329" f="2"><![CDATA[e ]]></tbox><tbox llx="366" lly="324" urx="390" ury="330" f="6"><![CDATA[j(2#f ]]></tbox><tbox llx="385" lly="323" urx="396" ury="328" f="17"><![CDATA[d;p ]]></tbox><tbox llx="395" lly="323" urx="415" ury="330" f="6"><![CDATA[t+#p ]]></tbox><tbox llx="411" lly="324" urx="418" ury="331" f="5"><![CDATA[) ]]></tbox></line>
+<line><tbox llx="414" lly="318" urx="437" ury="329" f="2"><![CDATA[hRF ]]></tbox><tbox llx="431" lly="319" urx="450" ury="329" f="3"><![CDATA[(t), ]]></tbox><tbox llx="448" lly="319" urx="479" ury="332" f="16"><![CDATA[where ]]></tbox><tbox llx="476" lly="319" urx="487" ury="329" f="2"><![CDATA[f ]]></tbox><tbox llx="480" lly="319" urx="495" ury="326" f="6"><![CDATA[d;p ]]></tbox><tbox llx="494" lly="319" urx="559" ury="332" f="16"><![CDATA[is the Doppler ]]></tbox></line>
+<line><tbox llx="303" lly="307" urx="338" ury="320" f="16"><![CDATA[spread, ]]></tbox><tbox llx="332" lly="306" urx="347" ury="317" f="2"><![CDATA[#p ]]></tbox><tbox llx="341" lly="307" urx="438" ury="320" f="16"><![CDATA[is the angular spread and ]]></tbox><tbox llx="431" lly="306" urx="453" ury="317" f="2"><![CDATA[hRF ]]></tbox><tbox llx="448" lly="307" urx="464" ury="317" f="3"><![CDATA[(t) ]]></tbox><tbox llx="459" lly="307" urx="560" ury="320" f="16"><![CDATA[is the impulse response of ]]></tbox></line>
+<line><tbox llx="303" lly="296" urx="560" ury="309" f="16"><![CDATA[the receive filter. This model is suitable for many channels of practi- ]]></tbox></line>
+<line><tbox llx="303" lly="285" urx="560" ury="298" f="16"><![CDATA[cal interest in mobile wireless communications [3]. For a more exten- ]]></tbox></line>
+<line><tbox llx="303" lly="274" urx="560" ury="287" f="16"><![CDATA[sive presentation of COST 207 we refer the reader to [10]. Linearized ]]></tbox></line>
+<line><tbox llx="303" lly="263" urx="499" ury="276" f="16"><![CDATA[GMSK modulation was used in our simulations [2]. ]]></tbox></line>
+<line><tbox llx="314" lly="252" urx="560" ury="265" f="16"><![CDATA[Alamouti's coding/decoding scheme is based on the orthogonal- ]]></tbox></line>
+<line><tbox llx="303" lly="241" urx="402" ury="254" f="16"><![CDATA[ity of the channel matrix ]]></tbox><tbox llx="397" lly="243" urx="413" ury="251" f="9"><![CDATA[H, ]]></tbox><tbox llx="408" lly="241" urx="428" ury="254" f="16"><![CDATA[i.e. ]]></tbox><tbox llx="424" lly="243" urx="438" ury="251" f="9"><![CDATA[H ]]></tbox><tbox llx="431" lly="246" urx="442" ury="252" f="6"><![CDATA[H ]]></tbox><tbox llx="439" lly="243" urx="453" ury="251" f="9"><![CDATA[H ]]></tbox><tbox llx="447" lly="241" urx="560" ury="254" f="16"><![CDATA[should be diagonal. At each ]]></tbox></line>
+<line><tbox llx="303" lly="230" urx="345" ury="243" f="16"><![CDATA[time step ]]></tbox><tbox llx="340" lly="230" urx="355" ury="240" f="3"><![CDATA[2k ]]></tbox><tbox llx="350" lly="230" urx="448" ury="243" f="16"><![CDATA[we compute the product ]]></tbox><tbox llx="442" lly="232" urx="455" ury="239" f="9"><![CDATA[P ]]></tbox><tbox llx="452" lly="230" urx="465" ury="240" f="3"><![CDATA[= ]]></tbox><tbox llx="463" lly="232" urx="477" ury="239" f="9"><![CDATA[H ]]></tbox><tbox llx="470" lly="235" urx="481" ury="242" f="6"><![CDATA[H ]]></tbox><tbox llx="477" lly="232" urx="493" ury="239" f="9"><![CDATA[H. ]]></tbox><tbox llx="489" lly="230" urx="559" ury="243" f="16"><![CDATA[The off-diagonal ]]></tbox></line>
+<line><tbox llx="303" lly="219" urx="376" ury="232" f="16"><![CDATA[complex terms of ]]></tbox><tbox llx="371" lly="221" urx="383" ury="229" f="9"><![CDATA[P ]]></tbox><tbox llx="379" lly="219" urx="560" ury="232" f="16"><![CDATA[are squared and added. Let us call the absolute ]]></tbox></line>
+<line><tbox llx="303" lly="208" urx="388" ury="221" f="16"><![CDATA[value of this sum the ]]></tbox><tbox llx="381" lly="208" urx="461" ury="222" f="13"><![CDATA[performance index. ]]></tbox><tbox llx="454" lly="208" urx="560" ury="221" f="16"><![CDATA[In the ideal case of perfect ]]></tbox></line>
+<line><tbox llx="303" lly="197" urx="560" ury="210" f="16"><![CDATA[channel estimation the performance index must be zero for any time ]]></tbox></line>
+<line><tbox llx="303" lly="186" urx="332" ury="199" f="16"><![CDATA[index ]]></tbox><tbox llx="326" lly="186" urx="344" ury="196" f="3"><![CDATA[2k. ]]></tbox><tbox llx="340" lly="186" urx="560" ury="199" f="16"><![CDATA[The most important goal of channel tracking is to preserve ]]></tbox></line>
+<line><tbox llx="303" lly="175" urx="418" ury="188" f="16"><![CDATA[the orthogonality property of ]]></tbox><tbox llx="413" lly="177" urx="429" ury="185" f="9"><![CDATA[H. ]]></tbox><tbox llx="426" lly="175" urx="560" ury="188" f="16"><![CDATA[However, complexity is an impor- ]]></tbox></line>
+<line><tbox llx="303" lly="164" urx="560" ury="177" f="16"><![CDATA[tant issue of future algorithms. In some scenarios suggested by ETSI ]]></tbox></line>
+<line><tbox llx="303" lly="153" urx="560" ury="167" f="16"><![CDATA[some other adaptive algorithms, such as RLS, may give satisfactory ]]></tbox></line>
+<line><tbox llx="303" lly="142" urx="360" ury="156" f="16"><![CDATA[performance. ]]></tbox></line>
+<line><tbox llx="314" lly="131" urx="560" ury="145" f="16"><![CDATA[In the first experiment we want to illustrate the channel tracking ]]></tbox></line>
+<line><tbox llx="303" lly="120" urx="560" ury="134" f="16"><![CDATA[capability. Figures (2) and (3) show the true channels (solid lines) ]]></tbox></line>
+<pbox llx="44.00" lly="120.00" urx="561.00" ury="745.00"/></page>
+<page n="3">
+<line><tbox llx="44" lly="730" urx="302" ury="743" f="1"><![CDATA[and their corresponding estimated values (dash lines) in the case of ]]></tbox></line>
+<line><tbox llx="44" lly="719" urx="302" ury="732" f="1"><![CDATA[HT for a receiver speed of 100 km/h. Only one of the two channels ]]></tbox></line>
+<line><tbox llx="44" lly="708" urx="302" ury="721" f="1"><![CDATA[is shown. Re-training sequences of 15 symbols were used after each ]]></tbox></line>
+<line><tbox llx="44" lly="697" urx="302" ury="710" f="1"><![CDATA[200 transmitted symbols in order to avoid divergence. The length ]]></tbox></line>
+<line><tbox llx="44" lly="686" urx="302" ury="699" f="1"><![CDATA[of the initial training sequence was of 20 symbols. We observe that ]]></tbox></line>
+<line><tbox llx="44" lly="675" urx="302" ury="688" f="1"><![CDATA[RLS gives good tracking results, LMS can find the channel but is ]]></tbox></line>
+<line><tbox llx="44" lly="664" urx="302" ury="677" f="1"><![CDATA[loosing the track. Kalman exhibits good tracking capability despite ]]></tbox></line>
+<line><tbox llx="44" lly="653" urx="301" ury="666" f="1"><![CDATA[the fact that it temporarily loosing the track of the imaginary part of ]]></tbox></line>
+<line><tbox llx="44" lly="642" urx="97" ury="655" f="1"><![CDATA[the channel. ]]></tbox></line>
+<line><tbox llx="56" lly="631" urx="301" ury="644" f="1"><![CDATA[In figure (4) a comparison of LMS, RLS, Kalman and Kalman ]]></tbox></line>
+<line><tbox llx="44" lly="620" urx="302" ury="633" f="1"><![CDATA[smoothing is performed varying the SNR. For a detailed implemen- ]]></tbox></line>
+<line><tbox llx="44" lly="609" urx="302" ury="622" f="1"><![CDATA[tation of Kalman smoothing to STBC channel tracking see [5]. Rural ]]></tbox></line>
+<line><tbox llx="44" lly="598" urx="302" ury="611" f="1"><![CDATA[Area type of channels with a receiver speed of 70 km/h were used and ]]></tbox></line>
+<line><tbox llx="44" lly="587" urx="302" ury="600" f="1"><![CDATA[the results were averaged over 100 realizations. This example fits in ]]></tbox></line>
+<line><tbox llx="44" lly="576" urx="302" ury="589" f="1"><![CDATA[the second scenario suggested by ETSI. We observe that Kalman and ]]></tbox></line>
+<line><tbox llx="44" lly="565" urx="302" ury="578" f="1"><![CDATA[Kalman smoothing give good results, however, RLS has similar per- ]]></tbox></line>
+<line><tbox llx="44" lly="554" urx="199" ury="567" f="1"><![CDATA[formance and can successfully be used. ]]></tbox><tbox llx="193" lly="554" urx="302" ury="567" f="1"><![CDATA[On the contrary, LMS fails ]]></tbox></line>
+<line><tbox llx="44" lly="543" urx="201" ury="556" f="1"><![CDATA[due to the time variations of the channel. ]]></tbox></line>
+<line><tbox llx="59" lly="484" urx="275" ury="491" f="2"><![CDATA[0 200 400 600 800 1000 1200 1400 1600 1800 2000 ]]></tbox></line>
+<line><tbox llx="56" lly="488" urx="63" ury="495" f="2"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="53" lly="501" urx="63" ury="508" f="2"><![CDATA[0.5 ]]></tbox></line>
+<line><tbox llx="56" lly="514" urx="63" ury="520" f="2"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="53" lly="526" urx="63" ury="533" f="2"><![CDATA[1.5 ]]></tbox></line>
+<line><tbox llx="50" lly="503" urx="51" ury="514" f="3"><![CDATA[Re(h ]]></tbox></line>
+<line><tbox llx="53" lly="513" urx="54" ury="516" f="4"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="50" lly="515" urx="51" ury="518" f="5"><![CDATA[) ]]></tbox></line>
+<line><tbox llx="59" lly="433" urx="275" ury="440" f="6"><![CDATA[0 200 400 600 800 1000 1200 1400 1600 1800 2000 ]]></tbox></line>
+<line><tbox llx="56" lly="437" urx="63" ury="444" f="6"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="53" lly="450" urx="63" ury="457" f="6"><![CDATA[0.5 ]]></tbox></line>
+<line><tbox llx="56" lly="462" urx="63" ury="469" f="6"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="53" lly="475" urx="63" ury="482" f="6"><![CDATA[1.5 ]]></tbox></line>
+<line><tbox llx="50" lly="452" urx="51" ury="463" f="7"><![CDATA[Re(h ]]></tbox></line>
+<line><tbox llx="53" lly="462" urx="54" ury="465" f="8"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="50" lly="464" urx="51" ury="467" f="9"><![CDATA[) ]]></tbox></line>
+<line><tbox llx="59" lly="382" urx="275" ury="389" f="10"><![CDATA[0 200 400 600 800 1000 1200 1400 1600 1800 2000 ]]></tbox></line>
+<line><tbox llx="56" lly="386" urx="63" ury="393" f="10"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="53" lly="405" urx="63" ury="412" f="10"><![CDATA[0.5 ]]></tbox></line>
+<line><tbox llx="56" lly="424" urx="63" ury="431" f="10"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="50" lly="401" urx="51" ury="412" f="11"><![CDATA[Re(h ]]></tbox></line>
+<line><tbox llx="53" lly="411" urx="54" ury="414" f="12"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="50" lly="413" urx="51" ury="416" f="13"><![CDATA[) ]]></tbox></line>
+<line><tbox llx="139" lly="377" urx="192" ury="385" f="14"><![CDATA[number of samples ]]></tbox></line>
+<line><tbox llx="247" lly="521" urx="264" ury="529" f="14"><![CDATA[LMS ]]></tbox></line>
+<line><tbox llx="248" lly="469" urx="264" ury="477" f="14"><![CDATA[RLS ]]></tbox></line>
+<line><tbox llx="243" lly="418" urx="267" ury="427" f="14"><![CDATA[Kalman ]]></tbox></line>
+<line><tbox llx="44" lly="352" urx="301" ury="367" f="15"><![CDATA[Figure 2: Hilly Terrain, 100 km/h, 20dB, solid line is real part ]]></tbox></line>
+<line><tbox llx="44" lly="340" urx="301" ury="355" f="15"><![CDATA[of the true channel, dash line is real part of the estimated chan- ]]></tbox></line>
+<line><tbox llx="44" lly="328" urx="191" ury="343" f="15"><![CDATA[nel using LMS, RLS and Kalman. ]]></tbox></line>
+<line><tbox llx="56" lly="302" urx="302" ury="316" f="16"><![CDATA[In the next example we want to emphasize the benefits of using the ]]></tbox></line>
+<line><tbox llx="44" lly="291" urx="220" ury="305" f="16"><![CDATA[smoothing technique in a demanding scenario ]]></tbox><tbox llx="212" lly="296" urx="221" ury="305" f="17"><![CDATA[1 ]]></tbox><tbox llx="215" lly="291" urx="301" ury="305" f="18"><![CDATA[. RA-type of channel ]]></tbox></line>
+<line><tbox llx="44" lly="280" urx="302" ury="294" f="18"><![CDATA[with a receiver speed of 200 km/h is used at SNR 8 dB. This sim- ]]></tbox></line>
+<line><tbox llx="44" lly="270" urx="301" ury="283" f="18"><![CDATA[ulation is in the third category suggested by ETSI. Four algorithms ]]></tbox></line>
+<line><tbox llx="44" lly="259" urx="302" ury="272" f="18"><![CDATA[are compared in channel estimation and tracking: regular Kalman, ]]></tbox></line>
+<line><tbox llx="44" lly="248" urx="301" ury="261" f="18"><![CDATA[Kalman smoothing, RLS and LMS. The performance index is calcu- ]]></tbox></line>
+<line><tbox llx="44" lly="237" urx="302" ury="250" f="18"><![CDATA[lated for every simulation and averaged over 100 realizations. The ]]></tbox></line>
+<line><tbox llx="44" lly="226" urx="302" ury="239" f="18"><![CDATA[boxplot of the averaged performance indices is depicted in Figure 5. ]]></tbox></line>
+<line><tbox llx="44" lly="215" urx="302" ury="228" f="18"><![CDATA[The box has lines at the lower quartile, median, and upper quartile ]]></tbox></line>
+<line><tbox llx="44" lly="204" urx="302" ury="217" f="18"><![CDATA[values. The lines extending from each end show the extent of the rest ]]></tbox></line>
+<line><tbox llx="44" lly="193" urx="229" ury="206" f="18"><![CDATA[of the results with outliers presented as crosses. ]]></tbox><tbox llx="224" lly="193" urx="301" ury="206" f="18"><![CDATA[It can be observed ]]></tbox></line>
+<line><tbox llx="44" lly="182" urx="302" ury="195" f="18"><![CDATA[that the smoothing technique has the most stable performance. As ]]></tbox></line>
+<line><tbox llx="44" lly="171" urx="302" ury="184" f="18"><![CDATA[can be shown from figure (5 simulations have been performed also ]]></tbox></line>
+<line><tbox llx="44" lly="160" urx="302" ury="173" f="18"><![CDATA[with LMS, however, it has a poor performance. A zoom of the box- ]]></tbox></line>
+<line><tbox llx="44" lly="149" urx="302" ury="162" f="18"><![CDATA[plot figure was made in order to put more emphasis on the first three ]]></tbox></line>
+<line><tbox llx="56" lly="133" urx="65" ury="143" f="19"><![CDATA[1 ]]></tbox><tbox llx="59" lly="130" urx="77" ury="142" f="20"><![CDATA[By ]]></tbox><tbox llx="71" lly="130" urx="146" ury="142" f="21"><![CDATA[demanding scenario ]]></tbox><tbox llx="140" lly="130" urx="302" ury="142" f="20"><![CDATA[we understand a receiver with high speed in a ]]></tbox></line>
+<line><tbox llx="45" lly="120" urx="162" ury="132" f="20"><![CDATA[difficult environment at low SNR. ]]></tbox></line>
+<line><tbox llx="316" lly="694" urx="533" ury="701" f="22"><![CDATA[0 200 400 600 800 1000 1200 1400 1600 1800 2000 ]]></tbox></line>
+<line><tbox llx="311" lly="697" urx="321" ury="704" f="22"><![CDATA[-4 ]]></tbox></line>
+<line><tbox llx="311" lly="707" urx="321" ury="714" f="22"><![CDATA[-2 ]]></tbox></line>
+<line><tbox llx="314" lly="716" urx="321" ury="723" f="22"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="314" lly="726" urx="321" ury="733" f="22"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="314" lly="736" urx="321" ury="743" f="22"><![CDATA[4 ]]></tbox></line>
+<line><tbox llx="309" lly="712" urx="310" ury="723" f="23"><![CDATA[Im(h ]]></tbox></line>
+<line><tbox llx="311" lly="722" urx="312" ury="725" f="24"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="309" lly="724" urx="310" ury="727" f="25"><![CDATA[) ]]></tbox></line>
+<line><tbox llx="316" lly="643" urx="533" ury="650" f="26"><![CDATA[0 200 400 600 800 1000 1200 1400 1600 1800 2000 ]]></tbox></line>
+<line><tbox llx="311" lly="646" urx="321" ury="653" f="22"><![CDATA[-4 ]]></tbox></line>
+<line><tbox llx="311" lly="656" urx="321" ury="663" f="22"><![CDATA[-2 ]]></tbox></line>
+<line><tbox llx="314" lly="665" urx="321" ury="672" f="26"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="314" lly="675" urx="321" ury="682" f="26"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="314" lly="685" urx="321" ury="692" f="26"><![CDATA[4 ]]></tbox></line>
+<line><tbox llx="309" lly="661" urx="310" ury="672" f="27"><![CDATA[Im(h ]]></tbox></line>
+<line><tbox llx="311" lly="671" urx="312" ury="674" f="28"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="309" lly="673" urx="310" ury="676" f="29"><![CDATA[) ]]></tbox></line>
+<line><tbox llx="316" lly="592" urx="533" ury="599" f="30"><![CDATA[0 200 400 600 800 1000 1200 1400 1600 1800 2000 ]]></tbox></line>
+<line><tbox llx="311" lly="595" urx="321" ury="602" f="22"><![CDATA[-4 ]]></tbox></line>
+<line><tbox llx="311" lly="605" urx="321" ury="612" f="22"><![CDATA[-2 ]]></tbox></line>
+<line><tbox llx="314" lly="614" urx="321" ury="621" f="30"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="314" lly="624" urx="321" ury="631" f="30"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="314" lly="634" urx="321" ury="641" f="30"><![CDATA[4 ]]></tbox></line>
+<line><tbox llx="309" lly="610" urx="310" ury="621" f="31"><![CDATA[Im(h ]]></tbox></line>
+<line><tbox llx="311" lly="620" urx="312" ury="623" f="32"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="309" lly="622" urx="310" ury="625" f="33"><![CDATA[) ]]></tbox></line>
+<line><tbox llx="397" lly="586" urx="449" ury="594" f="34"><![CDATA[number of samples ]]></tbox></line>
+<line><tbox llx="505" lly="730" urx="522" ury="738" f="34"><![CDATA[LMS ]]></tbox></line>
+<line><tbox llx="505" lly="679" urx="522" ury="687" f="34"><![CDATA[RLS ]]></tbox></line>
+<line><tbox llx="504" lly="627" urx="528" ury="635" f="34"><![CDATA[Kalman ]]></tbox></line>
+<line><tbox llx="302" lly="561" urx="559" ury="576" f="35"><![CDATA[Figure 3: Hilly Terrain, 100 km/h, 20dB, solid line is imagi- ]]></tbox></line>
+<line><tbox llx="302" lly="550" urx="559" ury="564" f="35"><![CDATA[nary part of the true channel, dash line is imaginary part of the ]]></tbox></line>
+<line><tbox llx="302" lly="538" urx="508" ury="552" f="35"><![CDATA[estimated channel using LMS, RLS and Kalman. ]]></tbox></line>
+<line><tbox llx="319" lly="362" urx="532" ury="369" f="36"><![CDATA[0 5 10 15 20 25 ]]></tbox></line>
+<line><tbox llx="311" lly="366" urx="320" ury="373" f="36"><![CDATA[10 ]]></tbox><tbox llx="316" lly="369" urx="322" ury="374" f="37"><![CDATA[-3 ]]></tbox></line>
+<line><tbox llx="311" lly="416" urx="320" ury="424" f="39"><![CDATA[10 ]]></tbox><tbox llx="316" lly="420" urx="322" ury="425" f="37"><![CDATA[-2 ]]></tbox></line>
+<line><tbox llx="311" lly="467" urx="320" ury="475" f="41"><![CDATA[10 ]]></tbox><tbox llx="316" lly="470" urx="322" ury="476" f="37"><![CDATA[-1 ]]></tbox></line>
+<line><tbox llx="311" lly="518" urx="320" ury="525" f="43"><![CDATA[10 ]]></tbox><tbox llx="316" lly="521" urx="320" ury="526" f="44"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="412" lly="356" urx="439" ury="365" f="46"><![CDATA[ ]]></tbox></line>
+<line><tbox llx="482" lly="513" urx="517" ury="520" f="47"><![CDATA[known channel ]]></tbox></line>
+<line><tbox llx="482" lly="508" urx="513" ury="515" f="47"><![CDATA[RLS tracking ]]></tbox></line>
+<line><tbox llx="482" lly="503" urx="520" ury="510" f="47"><![CDATA[Kalman tracking ]]></tbox></line>
+<line><tbox llx="482" lly="498" urx="525" ury="506" f="47"><![CDATA[Kalman smoothing ]]></tbox></line>
+<line><tbox llx="482" lly="493" urx="513" ury="501" f="47"><![CDATA[LMS tracking ]]></tbox></line>
+<line><tbox llx="302" lly="332" urx="559" ury="346" f="35"><![CDATA[Figure 4: Comparison of LMS, RLS, Kalman and Kalman ]]></tbox></line>
+<line><tbox llx="302" lly="320" urx="452" ury="334" f="35"><![CDATA[smoothing tracking, RA - 70 km/h. ]]></tbox></line>
+<line><tbox llx="303" lly="288" urx="353" ury="301" f="48"><![CDATA[algorithms. ]]></tbox></line>
+<line><tbox llx="314" lly="277" urx="560" ury="290" f="48"><![CDATA[In the next simulation we focus on the second ETSI scenario. ]]></tbox></line>
+<line><tbox llx="303" lly="266" urx="560" ury="279" f="48"><![CDATA[We use regular Kalman, smoothing Kalman and RLS and LMS. The ]]></tbox></line>
+<line><tbox llx="303" lly="255" urx="560" ury="268" f="48"><![CDATA[channel type is HT with a receiver speed of 100 km/h and SNR 8 ]]></tbox></line>
+<line><tbox llx="303" lly="244" urx="560" ury="257" f="48"><![CDATA[dB. The performance index is shown in Figure 6. We observe that ]]></tbox></line>
+<line><tbox llx="303" lly="233" urx="560" ury="246" f="48"><![CDATA[RLS has a satisfactory performance. Thus, it could be used in not ]]></tbox></line>
+<line><tbox llx="303" lly="222" urx="560" ury="235" f="48"><![CDATA[so demanding scenarios. As in the previous case LMS fails. Finally, ]]></tbox></line>
+<line><tbox llx="303" lly="211" urx="560" ury="224" f="48"><![CDATA[in the most easy scenario proposed by ETSI, a TU channel is used ]]></tbox></line>
+<line><tbox llx="303" lly="200" urx="560" ury="214" f="48"><![CDATA[with a receiver speed of 30 km/h and SNR 5 dB. The tracking algo- ]]></tbox></line>
+<line><tbox llx="303" lly="189" urx="560" ury="203" f="48"><![CDATA[rithms are regular Kalman, smoothing Kalman, LMS and RLS. The ]]></tbox></line>
+<line><tbox llx="303" lly="178" urx="458" ury="192" f="48"><![CDATA[performance index is shown in Figure 7. ]]></tbox></line>
+<line><tbox llx="392" lly="157" urx="468" ury="172" f="49"><![CDATA[V. DISCUSSION ]]></tbox></line>
+<line><tbox llx="303" lly="142" urx="560" ury="155" f="51"><![CDATA[In this paper several recursive algorithms have been applied for STBC ]]></tbox></line>
+<line><tbox llx="303" lly="131" urx="560" ury="145" f="51"><![CDATA[channel tracking. It has been shown by simulations that in not so de- ]]></tbox></line>
+<line><tbox llx="303" lly="120" urx="560" ury="134" f="51"><![CDATA[manding scenarios, good tracking performance can be achieved using ]]></tbox></line>
+<pbox llx="44.00" lly="120.00" urx="560.00" ury="743.00"/></page>
+<page n="4">
+<line><tbox llx="83" lly="578" urx="244" ury="585" f="1"><![CDATA[1 2 3 4 ]]></tbox></line>
+<line><tbox llx="59" lly="584" urx="66" ury="591" f="1"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="53" lly="598" urx="66" ury="606" f="1"><![CDATA[0.01 ]]></tbox></line>
+<line><tbox llx="53" lly="613" urx="66" ury="620" f="1"><![CDATA[0.02 ]]></tbox></line>
+<line><tbox llx="53" lly="627" urx="66" ury="635" f="1"><![CDATA[0.03 ]]></tbox></line>
+<line><tbox llx="53" lly="642" urx="66" ury="649" f="1"><![CDATA[0.04 ]]></tbox></line>
+<line><tbox llx="53" lly="657" urx="66" ury="664" f="1"><![CDATA[0.05 ]]></tbox></line>
+<line><tbox llx="53" lly="671" urx="66" ury="678" f="1"><![CDATA[0.06 ]]></tbox></line>
+<line><tbox llx="53" lly="686" urx="66" ury="693" f="1"><![CDATA[0.07 ]]></tbox></line>
+<line><tbox llx="53" lly="700" urx="66" ury="707" f="1"><![CDATA[0.08 ]]></tbox></line>
+<line><tbox llx="53" lly="715" urx="66" ury="722" f="1"><![CDATA[0.09 ]]></tbox></line>
+<line><tbox llx="55" lly="729" urx="66" ury="737" f="1"><![CDATA[0.1 ]]></tbox></line>
+<line><tbox llx="50" lly="638" urx="51" ury="668" f="2"><![CDATA[performance ]]></tbox></line>
+<line><tbox llx="50" lly="668" urx="51" ury="682" f="2"><![CDATA[index ]]></tbox></line>
+<line><tbox llx="145" lly="572" urx="194" ury="580" f="3"><![CDATA[algorithm number ]]></tbox></line>
+<line><tbox llx="114" lly="734" urx="127" ury="743" f="3"><![CDATA[RA ]]></tbox><tbox llx="123" lly="734" urx="132" ury="743" f="4"><![CDATA[- ]]></tbox><tbox llx="128" lly="734" urx="183" ury="743" f="3"><![CDATA[200 km/h, 8dB SNR ]]></tbox></line>
+<line><tbox llx="44" lly="547" urx="287" ury="562" f="5"><![CDATA[Figure 5: Performance index based on the orthogonality of ]]></tbox><tbox llx="280" lly="550" urx="298" ury="558" f="6"><![CDATA[H. ]]></tbox></line>
+<line><tbox llx="44" lly="535" urx="301" ury="550" f="5"><![CDATA[Algorithm numbers correspond (in order): Kalman, Kalman ]]></tbox></line>
+<line><tbox llx="44" lly="523" urx="148" ury="538" f="5"><![CDATA[smoothing, RLS, LMS. ]]></tbox></line>
+<line><tbox llx="83" lly="348" urx="249" ury="355" f="7"><![CDATA[1 2 3 4 ]]></tbox></line>
+<line><tbox llx="56" lly="365" urx="63" ury="372" f="7"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="56" lly="397" urx="63" ury="404" f="7"><![CDATA[5 ]]></tbox></line>
+<line><tbox llx="53" lly="429" urx="63" ury="436" f="7"><![CDATA[10 ]]></tbox></line>
+<line><tbox llx="53" lly="460" urx="63" ury="468" f="7"><![CDATA[15 ]]></tbox></line>
+<line><tbox llx="53" lly="492" urx="63" ury="499" f="7"><![CDATA[20 ]]></tbox></line>
+<line><tbox llx="60" lly="504" urx="73" ury="512" f="7"><![CDATA[x 10 ]]></tbox><tbox llx="69" lly="507" urx="75" ury="513" f="8"><![CDATA[-4 ]]></tbox></line>
+<line><tbox llx="51" lly="408" urx="52" ury="438" f="10"><![CDATA[performance ]]></tbox></line>
+<line><tbox llx="51" lly="438" urx="52" ury="451" f="10"><![CDATA[index ]]></tbox></line>
+<line><tbox llx="143" lly="342" urx="193" ury="351" f="11"><![CDATA[algorithm number ]]></tbox></line>
+<line><tbox llx="121" lly="504" urx="135" ury="513" f="11"><![CDATA[HT ]]></tbox><tbox llx="130" lly="504" urx="140" ury="513" f="12"><![CDATA[- ]]></tbox><tbox llx="135" lly="504" urx="193" ury="513" f="11"><![CDATA[100 km/h, 8 dB SNR ]]></tbox></line>
+<line><tbox llx="44" lly="318" urx="287" ury="332" f="5"><![CDATA[Figure 6: Performance index based on the orthogonality of ]]></tbox><tbox llx="280" lly="320" urx="298" ury="328" f="6"><![CDATA[H. ]]></tbox></line>
+<line><tbox llx="44" lly="306" urx="301" ury="320" f="5"><![CDATA[Algorithm numbers correspond (in order): Kalman, Kalman ]]></tbox></line>
+<line><tbox llx="44" lly="294" urx="148" ury="308" f="5"><![CDATA[smoothing, RLS, LMS. ]]></tbox></line>
+<line><tbox llx="44" lly="262" urx="302" ury="276" f="13"><![CDATA[LMS with relatively low computations. When one antenna is used at ]]></tbox></line>
+<line><tbox llx="44" lly="251" urx="302" ury="265" f="13"><![CDATA[the receiver complexity is not high even when using Kalman filter ]]></tbox></line>
+<line><tbox llx="44" lly="240" urx="302" ury="254" f="13"><![CDATA[since the operation that generates high complexity (computing the ]]></tbox></line>
+<line><tbox llx="44" lly="229" urx="302" ury="243" f="13"><![CDATA[inverse in the Kalman gain) is a scalar division. The complexity is ]]></tbox></line>
+<line><tbox llx="44" lly="218" urx="278" ury="232" f="13"><![CDATA[an issue when more than one antenna is used at the receiver. ]]></tbox><tbox llx="274" lly="218" urx="302" ury="232" f="13"><![CDATA[Then ]]></tbox></line>
+<line><tbox llx="44" lly="207" urx="302" ury="221" f="13"><![CDATA[we have to invert a matrix having the dimension proportional to the ]]></tbox></line>
+<line><tbox llx="44" lly="196" urx="302" ury="210" f="13"><![CDATA[number of receive antennas and complexity is increasing. Another ]]></tbox></line>
+<line><tbox llx="44" lly="186" urx="302" ury="199" f="13"><![CDATA[problem when using Kalman is that one needs to know noise statis- ]]></tbox></line>
+<line><tbox llx="44" lly="175" urx="302" ury="188" f="13"><![CDATA[tics needed (i.e. the measurement and noise covariances). In this ]]></tbox></line>
+<line><tbox llx="44" lly="164" urx="302" ury="177" f="13"><![CDATA[paper they have been assumed to be known, however, in real situa- ]]></tbox></line>
+<line><tbox llx="44" lly="153" urx="302" ury="166" f="13"><![CDATA[tions they have to be estimated from the data [4] if one expects near ]]></tbox></line>
+<line><tbox llx="44" lly="142" urx="131" ury="155" f="13"><![CDATA[optimal performance. ]]></tbox></line>
+<line><tbox llx="139" lly="120" urx="206" ury="135" f="14"><![CDATA[REFERENCES ]]></tbox></line>
+<line><tbox llx="347" lly="578" urx="508" ury="585" f="16"><![CDATA[1 2 3 4 ]]></tbox></line>
+<line><tbox llx="314" lly="588" urx="321" ury="596" f="16"><![CDATA[0 ]]></tbox></line>
+<line><tbox llx="311" lly="617" urx="325" ury="624" f="16"><![CDATA[0.01 ]]></tbox></line>
+<line><tbox llx="311" lly="646" urx="325" ury="653" f="16"><![CDATA[0.02 ]]></tbox></line>
+<line><tbox llx="311" lly="675" urx="325" ury="682" f="16"><![CDATA[0.03 ]]></tbox></line>
+<line><tbox llx="311" lly="703" urx="325" ury="711" f="16"><![CDATA[0.04 ]]></tbox></line>
+<line><tbox llx="309" lly="638" urx="310" ury="668" f="17"><![CDATA[performance ]]></tbox></line>
+<line><tbox llx="309" lly="668" urx="310" ury="682" f="17"><![CDATA[index ]]></tbox></line>
+<line><tbox llx="404" lly="572" urx="453" ury="580" f="18"><![CDATA[algorithm number ]]></tbox></line>
+<line><tbox llx="391" lly="734" urx="404" ury="743" f="18"><![CDATA[TU ]]></tbox><tbox llx="400" lly="734" urx="409" ury="743" f="19"><![CDATA[- ]]></tbox><tbox llx="405" lly="734" urx="458" ury="743" f="18"><![CDATA[30 km/h, 5 dB SNR ]]></tbox></line>
+<line><tbox llx="302" lly="547" urx="545" ury="562" f="20"><![CDATA[Figure 7: Performance index based on the orthogonality of ]]></tbox><tbox llx="539" lly="550" urx="556" ury="558" f="6"><![CDATA[H. ]]></tbox></line>
+<line><tbox llx="302" lly="535" urx="559" ury="550" f="20"><![CDATA[Algorithm numbers correspond (in order): Kalman, Kalman ]]></tbox></line>
+<line><tbox llx="302" lly="523" urx="406" ury="538" f="20"><![CDATA[smoothing, LMS, RLS. ]]></tbox></line>
+<line><tbox llx="303" lly="492" urx="560" ury="504" f="21"><![CDATA[[1] Alamouti, S. M., "A simple transmit diversity technique for wireless com- ]]></tbox></line>
+<line><tbox llx="317" lly="482" urx="560" ury="494" f="21"><![CDATA[munications", IEEE Journal on Selected Areas in Communications, vol. ]]></tbox></line>
+<line><tbox llx="317" lly="473" urx="426" ury="485" f="21"><![CDATA[16, no. 8, pp. 1451-1458, 1998. ]]></tbox></line>
+<line><tbox llx="303" lly="460" urx="559" ury="472" f="21"><![CDATA[[2] Z. Ding, G. Li,"Single-Channel Blind Equalization for GSM Cellular ]]></tbox></line>
+<line><tbox llx="317" lly="450" urx="559" ury="462" f="21"><![CDATA[Systems", IEEE J. Select. Areas. Commun., Vol. 16, 1493 - 1505, Oct. ]]></tbox></line>
+<line><tbox llx="317" lly="441" urx="344" ury="453" f="21"><![CDATA[1998. ]]></tbox></line>
+<line><tbox llx="303" lly="427" urx="560" ury="439" f="21"><![CDATA[[3] "Digital Land Mobile Radio Communications - COST 207", Commis- ]]></tbox></line>
+<line><tbox llx="317" lly="418" urx="560" ury="430" f="21"><![CDATA[sion of the European Communities, Office for Official Publications of the ]]></tbox></line>
+<line><tbox llx="317" lly="408" urx="548" ury="420" f="21"><![CDATA[European Communities, Luxembourg, Mar. 14, 1984 - Sept. 13, 1988 ]]></tbox></line>
+<line><tbox llx="303" lly="395" urx="559" ury="407" f="21"><![CDATA[[4] M. Enescu, M. Sirbu, V. Koivunen, "Adaptive Equalization of MIMO ]]></tbox></line>
+<line><tbox llx="317" lly="385" urx="543" ury="397" f="21"><![CDATA[time-varying channels", submitted to Signal Processing, May 2001. ]]></tbox></line>
+<line><tbox llx="303" lly="372" urx="559" ury="384" f="21"><![CDATA[[5] M. Enescu, V. Koivunen, "Kalman smoothing based channel estimation ]]></tbox></line>
+<line><tbox llx="317" lly="362" urx="559" ury="374" f="21"><![CDATA[for space-time block coding", submitted to EUSIPCO 2002, Toulouse, ]]></tbox></line>
+<line><tbox llx="317" lly="353" urx="349" ury="365" f="21"><![CDATA[France. ]]></tbox></line>
+<line><tbox llx="303" lly="340" urx="550" ury="352" f="21"><![CDATA[[6] S. Haykin, "Adaptive Filter Theory", 3rd edition, Prentice-Hall, 1996. ]]></tbox></line>
+<line><tbox llx="303" lly="326" urx="560" ury="338" f="21"><![CDATA[[7] P. Hoeher, "A Statistical Discrete-Time Model for the WSSUS Multipath ]]></tbox></line>
+<line><tbox llx="317" lly="317" urx="559" ury="329" f="21"><![CDATA[Channel", IEEE Trans. on Vehicular Technology, vol. 41, no. 4, 1992, ]]></tbox></line>
+<line><tbox llx="317" lly="307" urx="354" ury="319" f="21"><![CDATA[461-468. ]]></tbox></line>
+<line><tbox llx="303" lly="294" urx="559" ury="306" f="21"><![CDATA[[8] W. C. Jakes, Ed. "Microwave Mobile Communications", New York: Wi- ]]></tbox></line>
+<line><tbox llx="317" lly="284" urx="357" ury="296" f="21"><![CDATA[ley, 1974. ]]></tbox></line>
+<line><tbox llx="303" lly="271" urx="559" ury="283" f="21"><![CDATA[[9] Z. Liu, X. Ma and G. B. Giannakis, " Space-Time Coding and Kalman Fil- ]]></tbox></line>
+<line><tbox llx="317" lly="261" urx="560" ury="273" f="21"><![CDATA[tering for Diversity Transmissions through Time-Selective Fading Chan- ]]></tbox></line>
+<line><tbox llx="317" lly="252" urx="557" ury="264" f="21"><![CDATA[nels", Proc. of MILCOM Conf., Los Angeles, CA, Oct. pp. 22-25, 2000. ]]></tbox></line>
+<line><tbox llx="303" lly="238" urx="560" ury="250" f="21"><![CDATA[[10] Molisch, A.F., "Wideband wireless digital communications", Prentice ]]></tbox></line>
+<line><tbox llx="317" lly="229" urx="361" ury="241" f="21"><![CDATA[Hall, 2000. ]]></tbox></line>
+<line><tbox llx="303" lly="215" urx="560" ury="227" f="21"><![CDATA[[11] ETSI Normalization Committee, "Digital cellular telecommunications ]]></tbox></line>
+<line><tbox llx="317" lly="206" urx="559" ury="218" f="21"><![CDATA[system (Phase 2+); Enhanced Data rates for GSM Evolution (EDGE); ]]></tbox></line>
+<line><tbox llx="317" lly="197" urx="559" ury="209" f="21"><![CDATA[Project scheduling and open issues", Tech. Rep, 3GPP TR 50.059 version ]]></tbox></line>
+<line><tbox llx="317" lly="187" urx="429" ury="199" f="21"><![CDATA[4.0.0, 2001-04, downloadable at ]]></tbox><tbox llx="424" lly="187" urx="519" ury="197" f="22"><![CDATA[http://www.etsi.org]]></tbox></line>
+<pbox llx="44.00" lly="120.00" urx="560.00" ury="743.00"/></page>
+<fonts>
+<font name="Helvetica?" h="6.32" n="1"/>
+<font name="Helvetica?" h="0.00" n="2"/>
+<font name="Helvetica?" h="7.60" n="3"/>
+<font name="Helvetica??" h="7.60" n="4"/>
+<font name="Times-Roman?" h="13.73" n="5"/>
+<font name="T1?" h="7.32" n="6"/>
+<font name="Helvetica?" h="6.28" n="7"/>
+<font name="Helvetica??" h="4.19" n="8"/>
+<font name="Helvetica?" h="4.19" n="9"/>
+<font name="Helvetica?" h="0.00" n="10"/>
+<font name="Helvetica?" h="7.54" n="11"/>
+<font name="Helvetica??" h="7.54" n="12"/>
+<font name="Times-Roman?" h="12.37" n="13"/>
+<font name="Times-Roman?" h="13.73" n="14"/>
+<font name="Times-Roman?" h="10.99" n="15"/>
+<font name="Helvetica?" h="6.32" n="16"/>
+<font name="Helvetica?" h="0.00" n="17"/>
+<font name="Helvetica?" h="7.60" n="18"/>
+<font name="Helvetica??" h="7.60" n="19"/>
+<font name="Times-Roman?" h="13.73" n="20"/>
+<font name="Times-Roman?" h="10.99" n="21"/>
+<font name="CHMPOD+Courier?" h="8.41" n="22"/>
+<font name="Helvetica??" h="0.00" n="23"/>
+<font name="Helvetica??" h="0.00" n="24"/>
+<font name="Helvetica??" h="0.00" n="25"/>
+<font name="Helvetica??" h="5.92" n="26"/>
+<font name="Helvetica??" h="0.00" n="27"/>
+<font name="Helvetica??" h="0.00" n="28"/>
+<font name="Helvetica??" h="0.00" n="29"/>
+<font name="Helvetica??" h="5.92" n="30"/>
+<font name="Helvetica??" h="0.00" n="31"/>
+<font name="Helvetica??" h="0.00" n="32"/>
+<font name="Helvetica??" h="0.00" n="33"/>
+<font name="Helvetica??" h="7.11" n="34"/>
+<font name="Times-Roman?" h="13.73" n="35"/>
+<font name="Helvetica??" h="6.41" n="36"/>
+<font name="Helvetica?" h="4.27" n="37"/>
+<font name="Helvetica??" h="4.27" n="38"/>
+<font name="Helvetica??" h="6.41" n="39"/>
+<font name="Helvetica??" h="4.27" n="40"/>
+<font name="Helvetica??" h="6.41" n="41"/>
+<font name="Helvetica??" h="4.27" n="42"/>
+<font name="Helvetica??" h="6.41" n="43"/>
+<font name="Helvetica??" h="4.27" n="44"/>
+<font name="Helvetica??" h="7.69" n="45"/>
+<font name="Helvetica??" h="0.00" n="46"/>
+<font name="Helvetica??" h="6.41" n="47"/>
+<font name="Times-Roman?" h="12.37" n="48"/>
+<font name="Times-Roman?" h="13.73" n="49"/>
+<font name="Times-Roman?" h="10.99" n="50"/>
+<font name="Times-Roman?" h="12.37" n="51"/>
+</fonts>
+</document>

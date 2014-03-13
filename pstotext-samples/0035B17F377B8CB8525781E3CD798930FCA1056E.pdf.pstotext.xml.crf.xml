@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <content>
+    <headers headerID="p1x101.0y712.0">
+      <title>Time-Varying Channel Tracking for Space-Time Block Coding</title>
+      <authors>
+        <author>
+          <author-first>M.</author-first>
+          <author-last>Enescu</author-last>
+        </author>
+        and
+        <author>
+          <author-first>V.</author-first>
+          <author-last>Koivunen</author-last>
+        </author>
+      </authors>
+      <institution>Signal Processing Laboratory Helsinki University of Technology</institution>
+      <address>P.O. Box 3000, FIN-02015 HUT, Finland</address>
+      <abstract>Abstract --- This paper addresses the problem of channel estimation and tracking for space-time block coding. Channel tracking performance is investigated using several recursive algorithms. In the simulations it is shown that different channel tracking procedures can be used in several scenarios. As a performance criterion the orthogonality property of the decoding matrix is considered. A realistic channel model developed in COST 207 project is used in our examples.</abstract>
+    </headers>
+    <body>I. INTRODUCTION 
+Time-varying multipath fading is a fundamental phenomenon which 
+makes the wireless transmission difficult. In most scattering 
+environments, antenna diversity is a practical technique for reducing the 
+effect of multipath fading [8]. Space-Time block coding (STBC) is a 
+simple transmit diversity technique which improves the signal quality 
+at the receiver by simple processing using two antennas at the 
+transmitter. This type of coding/decoding scheme introduced by Alamouti 
+[1], is based on channel estimates at the receiver in order to decode 
+the transmitted symbols. 
+The problem of channel tracking for STBC was also investigated 
+in [9]. This paper is motivated by investigating the performance of 
+several solutions for channel estimation and tracking. A class of 
+recursive algorithms (LMS, RLS, Kalman) and ST decoding are used to 
+acquire the channel and decode the information symbols with 
+diversity gains. A detailed description of how to link the symbol decoding 
+stage with channel tracking stage is also presented. Extensive 
+simulations show the performance of the tracking algorithms in scenarios 
+where time-varying channels were generated based on the channel 
+model derived in COST 207 project [3]. 
+The rest of the paper is organized as follows. In the next section 
+we present the system model and the coding/decoding technique. In 
+section three we give a description of the recursive algorithms used 
+for channel tracking and we present how to link the symbol 
+decoding stage with the channel estimation stage. Simulation results are 
+presented in section four. We conclude this paper with a discussion. 
+II. SYSTEM MODEL 
+A Coding 
+The coding scheme suggested by Alamouti works in the following 
+manner. The original symbol stream is divided in two separate 
+symbol streams which are then transmitted using two antennas such that 
+we receive the following signal y: 
+y2k = s2k h1;2k + s 2k+1h2;2k + w 2k (1) 
+y 2k+1 = s # 
+2k+1 h 1;2k+1 + s # 
+2k h2;2k+1 + w2k+1 (2) 
+ENCODER 
+ST 
+-s(2k+1) * 
+s(2k) * 
+h 2 
+h 1 
+s(2k+1) 
+s(2k) 
+s(2k) 
+s(2k+1) 
+y(k) 
+w(k) 
+Figure 1: ST transmission diagram 
+where h 1;2k and h 2;2k denote the channel taps h1 and h2 at moment 
+2k, s is the transmitted symbol, w is additive white Gaussian noise 
+(AWGN) and # denotes complex conjugate. The transmission model 
+using STBC is presented in Figure 1. After applying complex 
+conjugation on the signal received at time index 2k +1we have the 
+following vector model: 
+y = Hs +w (3) 
+where the vector y = 
+# y2k y # 
+2k+1 # T 
+contains the received signal, 
+the vector s =[s 2k s2k+1 ] T represents the transmitted information, 
+w = 
+# w 2k w # 
+2k+1 
+# T represents the additive Gaussian noise and the 
+channel matrix H can be written in the following form: 
+H = # h1;2k h2;2k 
+h # 
+2;2k+1 h # 
+1;2k+1 
+# (4) 
+B Decoding 
+Based on the model (3) we start by forming the matrix H as shown 
+in (4). In order to estimate the transmitted symbols s we compute the 
+soft estimate z =[z 2k z2k+1 ] T as follows: 
+# z2k 
+z 2k+1 
+# = H H # y2k 
+y # 
+2k+1 
+# : (5) 
+The independent estimation of the transmitted symbols ^ s 2k and ^ s 2k+1 
+is possible due to the fact that the outputs z 2k and z 2k+1 are decou- 
+pled. This is due to the orthogonality property of the matrix H, hence 
+H H H is diagonal. The symbols [^s 2k ^ s2k+1 ] T are estimated from the 
+vector [z 2k z2k+1 ] T using a decision device, actually this is the ML 
+receiver in the case of flat fading channels. The orthogonality 
+condition of H is the key property that must be preserved both at the 
+transmitter and receiver in order to achieve error free decoding. To 
+attain this goal, good estimates of the channel must be available at 
+the receiver. From now on the estimated channel taps at time index k 
+will be written in vector form: ^ 
+h (kjk) = 
+# ^ h 1;(kjk) 
+^ h 2;(kjk) # T 
+. The 
+decoding technique can be summarized as follows: 
+1. Predict ^ h (2kj2k 2) 
+^ 
+h (2k+1j2k 1) : 
+2. Form the matrix H as described in (4). 
+3. Decode ^ s 2k and ^ s 2k+1 as shown in (5). 
+The prediction of the channels may not be accurate. In this 
+case one can use the previous filtered estimates ^ h (2kj2k 2) = 
+^ 
+h (2k 2j2k 2) and ^ h (2k+1j2k 1) = ^ h (2k 1j2k 1) ). In time-varying 
+scenarios the candidates for channel tracking are recursive algorithms 
+such as LMS, RLS, Kalman. 
+III. CHANNEL TRACKING 
+We start this section by pointing out that at each even and odd time 
+indices we have to form the decoded information vector as follows: 
+at time 2k we have ^ s even = [^s 2k ^ s2k+1 ] T and at time 2k +1we 
+use ^ s odd =[ ^ s # 
+2k+1 ^ s # 
+2k ] T . As mentioned before, the prediction of 
+the channel taps may not be possible. In such case we can use the 
+previous estimated values, i.e. ^ h 1;(2kj2k 2) = ^ h 1;(2k 2j2k 2) and 
+^ h 1;(2k+1j2k 1) = ^ h 1;(2k 1j2k 1) . In the rest of the section we will 
+briefly present the update rules of LMS, RLS and Kalman [6]. 
+A LMS 
+Least Mean Squares algorithm has low complexity but does not 
+have good tracking capabilities and convergence slowly. However, it 
+can be used to track slow time-varying channels. The algorithm may 
+be summarized as follows: 
+for each k do: 
+use the estimated information vector ^ s even or ^ s odd 
+according to the time index. 
+ek = yk ^ s T 
+k 
+^ h (kjk 1) 
+^ 
+h (kjk) = ^ 
+h kjk 1 + #ek^ sk 
+where # is the adaptation step. 
+B RLS 
+RLS has satisfactory tracking capabilities and higher complexity. 
+The algorithm may be summarized as follows: 
+for each k do: 
+use the estimated information vector ^ s even or ^ s odd 
+according to time index. 
+ek = yk ^ s T 
+k 
+^ h (kjk 1) 
+kk = P^ s T 
+k (# + ^ s T 
+k P^ sk ) 1 
+P =(P kk^ s T 
+k P )=# 
+^ 
+h (kjk) = ^ 
+h (kjk 1) + ekP^ sk 
+where # is the forgetting factor. 
+C Kalman 
+The algorithm may be summarized as follows: 
+for each k do: 
+use the estimated information vector ^ s even or ^ s odd 
+according to time index. 
+^ 
+h (kjk 1) = A ^ h (k 1jk 1) 
+P (kjk 1) = AP (k 1jk 1) A T +Q 
+kk = P (kjk 1) ^ sk (# 2 
+w + ^ s T 
+k P (kjk 1) ^ sk ) 1 
+h (kjk) = ^ 
+h (kjk 1) + kk 
+# yk ^ s T 
+k 
+^ h (kjk 1) 
+# 
+P (kjk) = P (kjk 1) kk^ s T 
+k P (kjk 1) 
+The practical implementation of the algorithm consists of putting 
+together the symbol detection stage with one of the tracking 
+algorithms presented earlier. The algorithms proceed as follows: 
+# Wait until two consecutive values of y 2k and y 2k+1 become 
+available. 
+# Decode the information vector s as described in the decoding 
+section. 
+# Use the decoded symbols to estimate the channel ^ 
+h (2kj2k) and 
+^ 
+h (2k+1j2k+1) using one of the algorithms presented in sections 
+(A)-(C). 
+IV. SIMULATIONS 
+In this section simulation results are performed according to ETSI 
+[11] recommendations. Regarding the channels types to be used, the 
+following scenarios are suggested: 1st scenario Indoor/Low range 
+outdoor where a Typical Urban (TU) can be used with a receiver 
+speed of 3 km/h, up to 10 km/h. 2nd scenario is about urban 
+environment characterized by TU at 50 km/h up to 150 km/h and suburban 
+outdoor where we use Hilly Terrain (HT) at 100 km/h. The 3rd 
+scenario defines the Rural outdoor characterized by the Rural Area (RA) 
+type of channel with the receiver speed in the range 130-250 km/h 
+and HT at 100 km/h. 
+The channel impulse response used in simulations is a time- 
+selective fading channel, i.e. time-varying but frequency flat. It 
+is obtained as a superposition of Np = 100 paths and can 
+be described using the Gaussian distributed Wide-Sense 
+Stationary with Uncorrelated Scattering (WSSUS) model [7]: h i (t) = 
+1= 
+p Np 
+P Np 
+p=1 
+e j(2#f d;p t+#p ) 
+hRF (t), where f d;p is the Doppler 
+spread, #p is the angular spread and hRF (t) is the impulse response of 
+the receive filter. This model is suitable for many channels of 
+practical interest in mobile wireless communications [3]. For a more 
+extensive presentation of COST 207 we refer the reader to [10]. Linearized 
+GMSK modulation was used in our simulations [2]. 
+Alamouti's coding/decoding scheme is based on the 
+orthogonality of the channel matrix H, i.e. H H H should be diagonal. At each 
+time step 2k we compute the product P = H H H. The off-diagonal 
+complex terms of P are squared and added. Let us call the absolute 
+value of this sum the performance index. In the ideal case of perfect 
+channel estimation the performance index must be zero for any time 
+index 2k. The most important goal of channel tracking is to preserve 
+the orthogonality property of H. However, complexity is an 
+important issue of future algorithms. In some scenarios suggested by ETSI 
+some other adaptive algorithms, such as RLS, may give satisfactory 
+performance. 
+In the first experiment we want to illustrate the channel tracking 
+capability. Figures (2) and (3) show the true channels (solid lines) 
+and their corresponding estimated values (dash lines) in the case of 
+HT for a receiver speed of 100 km/h. Only one of the two channels 
+is shown. Re-training sequences of 15 symbols were used after each 
+200 transmitted symbols in order to avoid divergence. The length 
+of the initial training sequence was of 20 symbols. We observe that 
+RLS gives good tracking results, LMS can find the channel but is 
+loosing the track. Kalman exhibits good tracking capability despite 
+the fact that it temporarily loosing the track of the imaginary part of 
+the channel. 
+In figure (4) a comparison of LMS, RLS, Kalman and Kalman 
+smoothing is performed varying the SNR. For a detailed 
+implementation of Kalman smoothing to STBC channel tracking see [5]. Rural 
+Area type of channels with a receiver speed of 70 km/h were used and 
+the results were averaged over 100 realizations. This example fits in 
+the second scenario suggested by ETSI. We observe that Kalman and 
+Kalman smoothing give good results, however, RLS has similar 
+performance and can successfully be used. On the contrary, LMS fails 
+due to the time variations of the channel. 
+0 200 400 600 800 1000 1200 1400 1600 1800 2000 
+0 
+0.5 
+1 
+1.5 
+Re(h 
+1 
+) 
+0 200 400 600 800 1000 1200 1400 1600 1800 2000 
+0 
+0.5 
+1 
+1.5 
+Re(h 
+1 
+) 
+0 200 400 600 800 1000 1200 1400 1600 1800 2000 
+0 
+0.5 
+1 
+Re(h 
+1 
+) 
+number of samples 
+LMS 
+RLS 
+Kalman 
+Figure 2: Hilly Terrain, 100 km/h, 20dB, solid line is real part 
+of the true channel, dash line is real part of the estimated 
+channel using LMS, RLS and Kalman. 
+In the next example we want to emphasize the benefits of using the 
+smoothing technique in a demanding scenario 1 . RA-type of channel 
+with a receiver speed of 200 km/h is used at SNR 8 dB. This 
+simulation is in the third category suggested by ETSI. Four algorithms 
+are compared in channel estimation and tracking: regular Kalman, 
+Kalman smoothing, RLS and LMS. The performance index is 
+calculated for every simulation and averaged over 100 realizations. The 
+boxplot of the averaged performance indices is depicted in Figure 5. 
+The box has lines at the lower quartile, median, and upper quartile 
+values. The lines extending from each end show the extent of the rest 
+of the results with outliers presented as crosses. It can be observed 
+that the smoothing technique has the most stable performance. As 
+can be shown from figure (5 simulations have been performed also 
+with LMS, however, it has a poor performance. A zoom of the 
+boxplot figure was made in order to put more emphasis on the first three 
+1 By demanding scenario we understand a receiver with high speed in a 
+difficult environment at low SNR. 
+0 200 400 600 800 1000 1200 1400 1600 1800 2000 
+-4 
+-2 
+0 
+2 
+4 
+Im(h 
+1 
+) 
+0 200 400 600 800 1000 1200 1400 1600 1800 2000 
+-4 
+-2 
+0 
+2 
+4 
+Im(h 
+1 
+) 
+0 200 400 600 800 1000 1200 1400 1600 1800 2000 
+-4 
+-2 
+0 
+2 
+4 
+Im(h 
+1 
+) 
+number of samples 
+LMS 
+RLS 
+Kalman 
+Figure 3: Hilly Terrain, 100 km/h, 20dB, solid line is 
+imaginary part of the true channel, dash line is imaginary part of the 
+estimated channel using LMS, RLS and Kalman. 
+0 5 10 15 20 25 
+10 -3 
+10 -2 
+10 -1 
+10 0 
+ 
+known channel 
+RLS tracking 
+Kalman tracking 
+Kalman smoothing 
+LMS tracking 
+Figure 4: Comparison of LMS, RLS, Kalman and Kalman 
+smoothing tracking, RA - 70 km/h. 
+algorithms. 
+In the next simulation we focus on the second ETSI scenario. 
+We use regular Kalman, smoothing Kalman and RLS and LMS. The 
+channel type is HT with a receiver speed of 100 km/h and SNR 8 
+dB. The performance index is shown in Figure 6. We observe that 
+RLS has a satisfactory performance. Thus, it could be used in not 
+so demanding scenarios. As in the previous case LMS fails. Finally, 
+in the most easy scenario proposed by ETSI, a TU channel is used 
+with a receiver speed of 30 km/h and SNR 5 dB. The tracking 
+algorithms are regular Kalman, smoothing Kalman, LMS and RLS. The 
+performance index is shown in Figure 7. 
+V. DISCUSSION 
+In this paper several recursive algorithms have been applied for STBC 
+channel tracking. It has been shown by simulations that in not so 
+demanding scenarios, good tracking performance can be achieved using 
+1 2 3 4 
+0 
+0.01 
+0.02 
+0.03 
+0.04 
+0.05 
+0.06 
+0.07 
+0.08 
+0.09 
+0.1 
+performance 
+index 
+algorithm number 
+RA - 200 km/h, 8dB SNR 
+Figure 5: Performance index based on the orthogonality of H. 
+Algorithm numbers correspond (in order): Kalman, Kalman 
+smoothing, RLS, LMS. 
+1 2 3 4 
+0 
+5 
+10 
+15 
+20 
+x 10 -4 
+performance 
+index 
+algorithm number 
+HT - 100 km/h, 8 dB SNR 
+Figure 6: Performance index based on the orthogonality of H. 
+Algorithm numbers correspond (in order): Kalman, Kalman 
+smoothing, RLS, LMS. 
+LMS with relatively low computations. When one antenna is used at 
+the receiver complexity is not high even when using Kalman filter 
+since the operation that generates high complexity (computing the 
+inverse in the Kalman gain) is a scalar division. The complexity is 
+an issue when more than one antenna is used at the receiver. Then 
+we have to invert a matrix having the dimension proportional to the 
+number of receive antennas and complexity is increasing. Another 
+problem when using Kalman is that one needs to know noise 
+statistics needed (i.e. the measurement and noise covariances). In this 
+paper they have been assumed to be known, however, in real 
+situations they have to be estimated from the data [4] if one expects near 
+optimal performance.</body>
+    <biblio>
+      <reference refID="p4x303.0y492.0">
+        <ref-marker>[1]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Alamouti,</author-last>
+            <author-first>S.</author-first>
+            <author-middle>M.,</author-middle>
+          </author>
+        </authors>
+        <title>"A simple transmit diversity technique for wireless communications",</title>
+        <journal>IEEE Journal on Selected Areas in Communications,</journal>
+        <volume>vol. 16,</volume>
+        <number>no. 8,</number>
+        <pages>pp. 1451-1458,</pages>
+        <date>1998.</date>
+      </reference>
+      <reference refID="p4x303.0y460.0">
+        <ref-marker>[2]</ref-marker>
+        <authors>
+          <author>
+            <author-first>Z.</author-first>
+            <author-last>Ding,</author-last>
+          </author>
+          <author>
+            <author-first>G.</author-first>
+            <author-last>Li,</author-last>
+          </author>
+        </authors>
+        <title>"Single-Channel Blind Equalization for GSM Cellular Systems",</title>
+        <journal>IEEE J. Select. Areas. Commun.,</journal>
+        <volume>Vol. 16,</volume>
+        <pages>1493 - 1505,</pages>
+        <date>Oct. 1998.</date>
+      </reference>
+      <reference refID="p4x303.0y427.0">
+        <ref-marker>[3]</ref-marker>
+        <reference-hlabeled>"</reference-hlabeled>
+        <title>Digital Land Mobile Radio Communications - COST 207",</title>
+        <institution>Commission of the European Communities, Office for Official Publications of the European Communities,</institution>
+        <address>Luxembourg,</address>
+        <date>Mar. 14, 1984 - Sept. 13, 1988</date>
+      </reference>
+      <reference refID="p4x303.0y395.0">
+        <ref-marker>[4]</ref-marker>
+        <authors>
+          <author>
+            <author-first>M.</author-first>
+            <author-last>Enescu,</author-last>
+          </author>
+          <author>
+            <author-first>M.</author-first>
+            <author-last>Sirbu,</author-last>
+          </author>
+          <author>
+            <author-first>V.</author-first>
+            <author-last>Koivunen,</author-last>
+          </author>
+        </authors>
+        <title>"Adaptive Equalization of MIMO time-varying channels",</title>
+        <institution>submitted to Signal Processing,</institution>
+        <date>May 2001.</date>
+      </reference>
+      <reference refID="p4x303.0y372.0">
+        <ref-marker>[5]</ref-marker>
+        <authors>
+          <author>
+            <author-first>M.</author-first>
+            <author-last>Enescu,</author-last>
+          </author>
+          <author>
+            <author-first>V.</author-first>
+            <author-last>Koivunen,</author-last>
+          </author>
+        </authors>
+        <title>"Kalman smoothing based channel estimation for space-time block coding",</title>
+        <conference>submitted to EUSIPCO</conference>
+        <date>2002,</date>
+        <address>Toulouse, France.</address>
+      </reference>
+      <reference refID="p4x303.0y340.0">
+        <ref-marker>[6]</ref-marker>
+        <authors>
+          <author>
+            <author-first>S.</author-first>
+            <author-last>Haykin,</author-last>
+          </author>
+        </authors>
+        <title>"Adaptive Filter Theory", 3rd edition,</title>
+        <publisher>Prentice-Hall,</publisher>
+        <date>1996.</date>
+      </reference>
+      <reference refID="p4x303.0y326.0">
+        <ref-marker>[7]</ref-marker>
+        <authors>
+          <author>
+            <author-first>P.</author-first>
+            <author-last>Hoeher,</author-last>
+          </author>
+        </authors>
+        <title>"A Statistical Discrete-Time Model for the WSSUS Multipath Channel",</title>
+        <journal>IEEE Trans. on Vehicular Technology,</journal>
+        <volume>vol. 41,</volume>
+        <number>no. 4,</number>
+        <date>1992,</date>
+        <pages>461-468.</pages>
+      </reference>
+      <reference refID="p4x303.0y294.0">
+        <ref-marker>[8]</ref-marker>
+        <authors>
+          <author>
+            <author-first>W.</author-first>
+            <author-middle>C.</author-middle>
+            <author-last>Jakes,</author-last>
+          </author>
+        </authors>
+        <title>Ed. "Microwave Mobile Communications",</title>
+        <address>New York:</address>
+        <publisher>Wiley,</publisher>
+        <date>1974.</date>
+      </reference>
+      <reference refID="p4x303.0y271.0">
+        <ref-marker>[9]</ref-marker>
+        <authors>
+          <author>
+            <author-first>Z.</author-first>
+            <author-last>Liu,</author-last>
+          </author>
+          <author>
+            <author-first>X.</author-first>
+            <author-last>Ma</author-last>
+          </author>
+          and
+          <author>
+            <author-first>G.</author-first>
+            <author-middle>B.</author-middle>
+            <author-last>Giannakis,</author-last>
+          </author>
+        </authors>
+        <title>" Space-Time Coding and Kalman Filtering for Diversity Transmissions through Time-Selective Fading Channels",</title>
+        <conference>Proc. of MILCOM Conf.,</conference>
+        <address>Los Angeles, CA,</address>
+        <date>Oct.</date>
+        <pages>pp. 22-25,</pages>
+        <date>2000.</date>
+      </reference>
+      <reference refID="p4x303.0y238.0">
+        <ref-marker>[10]</ref-marker>
+        <authors>
+          <author>
+            <author-last>Molisch,</author-last>
+            <author-first>A.</author-first>
+            <author-middle>F.,</author-middle>
+          </author>
+        </authors>
+        <title>"Wideband wireless digital communications",</title>
+        <publisher>Prentice Hall,</publisher>
+        <date>2000.</date>
+      </reference>
+      <reference refID="p4x303.0y215.0">
+        <ref-marker>[11]</ref-marker>
+        <author>ETSI Normalization Committee,</author>
+        <reference-hlabeled>"</reference-hlabeled>
+        <title>Digital cellular telecommunications system (Phase 2+); Enhanced Data rates for GSM Evolution (EDGE); Project scheduling and open issues",</title>
+        <tech>Tech. Rep, 3GPP TR 50.059</tech>
+        <pages>version 4.0.0, 2001-04,</pages>
+        <note>downloadable at</note>
+        <web>http://www.etsi.org</web>
+      </reference>
+    </biblio>
+  </content>
+  <CitationContexts />
+  <grants />
+</document>
+

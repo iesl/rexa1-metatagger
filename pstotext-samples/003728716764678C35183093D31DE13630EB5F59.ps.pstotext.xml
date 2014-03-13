@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+<page n="1">
+<line><tbox llx="58" lly="734" urx="548" ury="753" f="1"><![CDATA[STOCHASTIC PRONUNCIATION MODELLING FROM HAND-LABELLED PHONETIC ]]></tbox></line>
+<line><tbox llx="266" lly="721" urx="341" ury="740" f="1"><![CDATA[CORPORA ]]></tbox></line>
+<line><tbox llx="88" lly="693" urx="142" ury="711" f="2"><![CDATA[M. Riley ]]></tbox><tbox llx="130" lly="699" urx="138" ury="705" f="3"><![CDATA[1 ]]></tbox><tbox llx="133" lly="693" urx="196" ury="711" f="2"><![CDATA[, W. Byrne ]]></tbox><tbox llx="184" lly="699" urx="192" ury="705" f="3"><![CDATA[2 ]]></tbox><tbox llx="187" lly="693" urx="250" ury="711" f="2"><![CDATA[, M. Finke ]]></tbox><tbox llx="238" lly="699" urx="246" ury="705" f="3"><![CDATA[3 ]]></tbox><tbox llx="241" lly="693" urx="328" ury="711" f="2"><![CDATA[, S. Khudanpur ]]></tbox><tbox llx="315" lly="699" urx="323" ury="705" f="3"><![CDATA[2 ]]></tbox><tbox llx="318" lly="693" urx="380" ury="711" f="2"><![CDATA[, A. Ljolje ]]></tbox><tbox llx="367" lly="699" urx="375" ury="705" f="3"><![CDATA[1 ]]></tbox><tbox llx="370" lly="693" urx="461" ury="711" f="2"><![CDATA[, J. McDonough ]]></tbox><tbox llx="449" lly="699" urx="457" ury="705" f="3"><![CDATA[2 ]]></tbox><tbox llx="452" lly="693" urx="511" ury="711" f="2"><![CDATA[, H. Nock ]]></tbox><tbox llx="499" lly="699" urx="506" ury="705" f="3"><![CDATA[4 ]]></tbox><tbox llx="502" lly="693" urx="519" ury="711" f="2"><![CDATA[, ]]></tbox></line>
+<line><tbox llx="191" lly="679" urx="263" ury="697" f="2"><![CDATA[M. Saraclar ]]></tbox><tbox llx="251" lly="686" urx="259" ury="692" f="3"><![CDATA[3 ]]></tbox><tbox llx="254" lly="679" urx="327" ury="697" f="2"><![CDATA[, C. Wooters ]]></tbox><tbox llx="314" lly="686" urx="322" ury="692" f="3"><![CDATA[5 ]]></tbox><tbox llx="317" lly="679" urx="411" ury="697" f="2"><![CDATA[, G. Zavaliagkos ]]></tbox><tbox llx="398" lly="686" urx="406" ury="692" f="3"><![CDATA[6 ]]></tbox></line>
+<line><tbox llx="177" lly="652" urx="424" ury="670" f="4"><![CDATA[AT&T Labs -- Research, Florham Park, NJ, USA ]]></tbox><tbox llx="413" lly="659" urx="420" ury="665" f="3"><![CDATA[1 ]]></tbox></line>
+<line><tbox llx="178" lly="639" urx="423" ury="656" f="4"><![CDATA[Johns Hopkins University, Baltimore, MD, USA ]]></tbox><tbox llx="412" lly="645" urx="420" ury="652" f="3"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="174" lly="625" urx="427" ury="643" f="4"><![CDATA[Carnegie-Mellon University, Pittsburgh, PA, USA ]]></tbox><tbox llx="416" lly="632" urx="423" ury="638" f="3"><![CDATA[3 ]]></tbox></line>
+<line><tbox llx="139" lly="612" urx="462" ury="630" f="4"><![CDATA[Cambridge University Engineering Department, Cambridge, UK ]]></tbox><tbox llx="451" lly="618" urx="458" ury="625" f="3"><![CDATA[4 ]]></tbox></line>
+<line><tbox llx="168" lly="599" urx="434" ury="616" f="4"><![CDATA[U.S. Department of Defense, Fort Meade, MD, USA ]]></tbox><tbox llx="422" lly="605" urx="430" ury="611" f="3"><![CDATA[5 ]]></tbox></line>
+<line><tbox llx="224" lly="585" urx="377" ury="603" f="4"><![CDATA[BBN, Cambridge, MA, USA ]]></tbox><tbox llx="365" lly="592" urx="373" ury="598" f="3"><![CDATA[6 ]]></tbox></line>
+<line><tbox llx="143" lly="548" urx="202" ury="563" f="5"><![CDATA[ABSTRACT ]]></tbox></line>
+<line><tbox llx="49" lly="535" urx="295" ury="548" f="6"><![CDATA[In the early '90s, the availability of the TIMIT read-speech phon- ]]></tbox></line>
+<line><tbox llx="49" lly="524" urx="295" ury="538" f="6"><![CDATA[etically transcribed corpus led to work at AT&T on the automatic ]]></tbox></line>
+<line><tbox llx="49" lly="514" urx="295" ury="527" f="6"><![CDATA[inference of pronunciation variation. This work, briefly summar- ]]></tbox></line>
+<line><tbox llx="49" lly="503" urx="295" ury="517" f="6"><![CDATA[ized here, used stochastic decisions trees trained on phonetic and ]]></tbox></line>
+<line><tbox llx="49" lly="493" urx="295" ury="506" f="6"><![CDATA[linguistic features, and was applied to the DARPA North American ]]></tbox></line>
+<line><tbox llx="49" lly="483" urx="197" ury="496" f="6"><![CDATA[Business News read-speech ASR task. ]]></tbox></line>
+<line><tbox llx="64" lly="472" urx="295" ury="485" f="6"><![CDATA[More recently, the ICSI spontaneous-speechphonetically tran- ]]></tbox></line>
+<line><tbox llx="49" lly="462" urx="296" ury="475" f="6"><![CDATA[scribed corpus was collected at the behest of the 1996 and 1997 ]]></tbox></line>
+<line><tbox llx="49" lly="451" urx="295" ury="465" f="6"><![CDATA[LVCSR Summer Workshops held at Johns Hopkins University. A ]]></tbox></line>
+<line><tbox llx="49" lly="441" urx="295" ury="454" f="6"><![CDATA[1997 workshop (WS97) group focused on pronunciation inference ]]></tbox></line>
+<line><tbox llx="49" lly="430" urx="296" ury="444" f="6"><![CDATA[from this corpus for application to the DoD Switchboard spontan- ]]></tbox></line>
+<line><tbox llx="49" lly="420" urx="296" ury="433" f="6"><![CDATA[eous telephone speech ASR task. We describe several approaches ]]></tbox></line>
+<line><tbox llx="49" lly="410" urx="299" ury="423" f="6"><![CDATA[taken there. Theseinclude (1) oneanalogousto the AT&T approach, ]]></tbox></line>
+<line><tbox llx="49" lly="399" urx="296" ury="413" f="6"><![CDATA[(2) one, inspired by work at WS96 and CMU, that involved adding ]]></tbox></line>
+<line><tbox llx="49" lly="389" urx="295" ury="402" f="6"><![CDATA[pronunciation variants of a sequence of one or more words (`mul- ]]></tbox></line>
+<line><tbox llx="49" lly="378" urx="295" ury="392" f="6"><![CDATA[tiwords') in the corpus (with corpus-derived probabilities) into the ]]></tbox></line>
+<line><tbox llx="49" lly="368" urx="295" ury="382" f="6"><![CDATA[ASR lexicon, and (1+2) a hybrid approachin which a decision-tree ]]></tbox></line>
+<line><tbox llx="49" lly="358" urx="295" ury="371" f="6"><![CDATA[model was used to automatically phonetically transcribe a much ]]></tbox></line>
+<line><tbox llx="49" lly="347" urx="296" ury="361" f="6"><![CDATA[larger speech corpus than ICSI and then the multiword approach ]]></tbox></line>
+<line><tbox llx="49" lly="337" urx="292" ury="350" f="6"><![CDATA[was used to construct an ASR recognition pronunciation lexicon. ]]></tbox></line>
+<line><tbox llx="125" lly="312" urx="220" ury="327" f="5"><![CDATA[1. INTRODUCTION ]]></tbox></line>
+<line><tbox llx="49" lly="293" urx="295" ury="306" f="6"><![CDATA[Most speech recognition systems rely on pronouncing dictionaries ]]></tbox></line>
+<line><tbox llx="49" lly="282" urx="295" ury="296" f="6"><![CDATA[that contain few alternate pronunciationsfor most words. In natural ]]></tbox></line>
+<line><tbox llx="49" lly="272" urx="295" ury="286" f="6"><![CDATA[speech, however, words seldom adhere to their citation forms. The ]]></tbox></line>
+<line><tbox llx="49" lly="262" urx="295" ury="275" f="6"><![CDATA[failure of ASR systems to capture this important source of variabil- ]]></tbox></line>
+<line><tbox llx="49" lly="251" urx="295" ury="265" f="6"><![CDATA[ity is potentially a significant source for recognition errors, partic- ]]></tbox></line>
+<line><tbox llx="49" lly="241" urx="296" ury="254" f="6"><![CDATA[ularly in spontaneous, conversational speech. We report methods ]]></tbox></line>
+<line><tbox llx="49" lly="230" urx="295" ury="244" f="6"><![CDATA[used to address this issue applied to read speech at AT&T [9] and to ]]></tbox></line>
+<line><tbox llx="49" lly="220" urx="295" ury="233" f="6"><![CDATA[spontaneous speech at and after WS97, the Fifth LVCSR Summer ]]></tbox></line>
+<line><tbox llx="49" lly="210" urx="295" ury="223" f="6"><![CDATA[Workshop, held at Johns Hopkins University, Baltimore, in July- ]]></tbox></line>
+<line><tbox llx="49" lly="199" urx="122" ury="213" f="6"><![CDATA[August, 1997 [2]. ]]></tbox></line>
+<line><tbox llx="64" lly="189" urx="295" ury="202" f="6"><![CDATA[As a first step towards alleviating this common limitation of ]]></tbox></line>
+<line><tbox llx="49" lly="178" urx="295" ury="192" f="6"><![CDATA[pronouncing dictionaries, we identify a systematic way of gener- ]]></tbox></line>
+<line><tbox llx="49" lly="168" urx="295" ury="181" f="6"><![CDATA[ating alternate pronunciations of words by using phonetically la- ]]></tbox></line>
+<line><tbox llx="49" lly="158" urx="295" ury="171" f="6"><![CDATA[belled portions of the TIMIT [5] and Switchboard [6] corpora. One ]]></tbox></line>
+<line><tbox llx="49" lly="147" urx="295" ury="160" f="6"><![CDATA[viewpoint we explore is that pronunciation variability may be mod- ]]></tbox></line>
+<line><tbox llx="49" lly="137" urx="295" ury="150" f="6"><![CDATA[elled by a statistical mapping from canonical pronunciations (base- ]]></tbox></line>
+<line><tbox llx="49" lly="126" urx="295" ury="140" f="6"><![CDATA[forms) to symbolic surface forms, and we use decision trees to cap- ]]></tbox></line>
+<line><tbox llx="308" lly="549" urx="555" ury="562" f="6"><![CDATA[ture this mapping. A second way we exploit the hand transcrip- ]]></tbox></line>
+<line><tbox llx="308" lly="538" urx="555" ury="552" f="6"><![CDATA[tions is by enhancing the dictionary using frequently seen pronun- ]]></tbox></line>
+<line><tbox llx="308" lly="528" urx="555" ury="541" f="6"><![CDATA[ciations. While the former has the potential to generalize to un- ]]></tbox></line>
+<line><tbox llx="308" lly="517" urx="555" ury="531" f="6"><![CDATA[seen words and pronunciations, the latter is more conservative and ]]></tbox></line>
+<line><tbox llx="308" lly="507" urx="427" ury="520" f="6"><![CDATA[hence potentially more robust. ]]></tbox></line>
+<line><tbox llx="323" lly="484" urx="555" ury="498" f="6"><![CDATA[As many researchers haveobserved earlier, simply adding sev- ]]></tbox></line>
+<line><tbox llx="308" lly="474" urx="555" ury="487" f="6"><![CDATA[eral alternate pronunciations to the dictionary increases the confus- ]]></tbox></line>
+<line><tbox llx="308" lly="463" urx="554" ury="477" f="6"><![CDATA[ability of words to the extent that the gains from havingthem are of- ]]></tbox></line>
+<line><tbox llx="308" lly="453" urx="555" ury="466" f="6"><![CDATA[ten more than nullified. We address this problem in two ways. We ]]></tbox></line>
+<line><tbox llx="308" lly="442" urx="489" ury="456" f="6"><![CDATA[assign costs to alternate pronunciations so that, ]]></tbox><tbox llx="482" lly="443" urx="508" ury="456" f="8"><![CDATA[e.g., ]]></tbox><tbox llx="500" lly="442" urx="555" ury="456" f="6"><![CDATA[if a frequent ]]></tbox></line>
+<line><tbox llx="308" lly="432" urx="555" ury="446" f="6"><![CDATA[pronunciation of "cause" and an infrequent pronunciation of "be- ]]></tbox></line>
+<line><tbox llx="308" lly="422" urx="555" ury="435" f="6"><![CDATA[cause" are identical, a penalty is incurred to attribute the pronunci- ]]></tbox></line>
+<line><tbox llx="308" lly="411" urx="554" ury="425" f="6"><![CDATA[ation to "because" rather than "cause." In addition, we account for ]]></tbox></line>
+<line><tbox llx="308" lly="401" urx="397" ury="414" f="6"><![CDATA[context effects so that, ]]></tbox><tbox llx="389" lly="401" urx="415" ury="415" f="8"><![CDATA[e.g., ]]></tbox><tbox llx="407" lly="401" urx="554" ury="414" f="6"><![CDATA["to" is allowed the pronunciation [ax], ]]></tbox></line>
+<line><tbox llx="308" lly="391" urx="555" ury="404" f="6"><![CDATA[which is a frequent pronunciation of "a," only if "to" is preceded ]]></tbox></line>
+<line><tbox llx="308" lly="380" urx="389" ury="394" f="6"><![CDATA[by "going," as in [g ]]></tbox><tbox llx="386" lly="379" urx="435" ury="395" f="9"><![CDATA[aa n ax]. ]]></tbox></line>
+<line><tbox llx="323" lly="357" urx="555" ury="371" f="6"><![CDATA[Our pronunciation modelling efforts may be divided into two ]]></tbox></line>
+<line><tbox llx="308" lly="347" urx="380" ury="360" f="6"><![CDATA[broad categories. ]]></tbox><tbox llx="375" lly="347" urx="407" ury="360" f="6"><![CDATA[In our ]]></tbox><tbox llx="400" lly="347" urx="528" ury="361" f="8"><![CDATA[tree based dictionary expansion ]]></tbox><tbox llx="519" lly="347" urx="555" ury="360" f="6"><![CDATA[experi- ]]></tbox></line>
+<line><tbox llx="308" lly="336" urx="556" ury="350" f="6"><![CDATA[ments, we apply decision tree based pronunciationmodels to entries ]]></tbox></line>
+<line><tbox llx="308" lly="326" urx="556" ury="340" f="6"><![CDATA[in our baseform dictionary to obtain alternate pronunciations, which ]]></tbox></line>
+<line><tbox llx="308" lly="316" urx="405" ury="329" f="6"><![CDATA[are then used in testing. ]]></tbox><tbox llx="400" lly="316" urx="432" ury="329" f="6"><![CDATA[In our ]]></tbox><tbox llx="425" lly="316" urx="542" ury="329" f="8"><![CDATA[explicit dictionary expansion ]]></tbox><tbox llx="533" lly="316" urx="555" ury="329" f="6"><![CDATA[ex- ]]></tbox></line>
+<line><tbox llx="308" lly="305" urx="555" ury="319" f="6"><![CDATA[periments, we apply the decision tree based pronunciation models ]]></tbox></line>
+<line><tbox llx="308" lly="295" urx="555" ury="308" f="6"><![CDATA[first to the training corpus, and perform a forced alignment with the ]]></tbox></line>
+<line><tbox llx="308" lly="285" urx="555" ury="298" f="6"><![CDATA[acoustic models to "choose"amongst the alternatives. The diction- ]]></tbox></line>
+<line><tbox llx="308" lly="274" urx="555" ury="287" f="6"><![CDATA[ary is then explicitly augmented with novel pronunciations which ]]></tbox></line>
+<line><tbox llx="308" lly="264" urx="555" ury="277" f="6"><![CDATA[occur sufficiently often. The tree based expansion implicitly adds ]]></tbox></line>
+<line><tbox llx="308" lly="253" urx="565" ury="267" f="6"><![CDATA[manymorenew pronunciations than the explicit expansion. However, ]]></tbox></line>
+<line><tbox llx="308" lly="243" urx="555" ury="256" f="6"><![CDATA[it does not attempt to model any cross-word coarticulation. The ex- ]]></tbox></line>
+<line><tbox llx="308" lly="232" urx="555" ury="246" f="6"><![CDATA[plicit expansion does so by allowing as dictionary entries a select ]]></tbox></line>
+<line><tbox llx="308" lly="222" urx="368" ury="235" f="6"><![CDATA[set (cf. [4]) of ]]></tbox><tbox llx="361" lly="222" urx="412" ury="236" f="8"><![CDATA[multiwords ]]></tbox><tbox llx="403" lly="222" urx="500" ury="235" f="6"><![CDATA[-- word pairs and triples. ]]></tbox></line>
+<line><tbox llx="323" lly="199" urx="555" ury="213" f="6"><![CDATA[We demonstrate in Sections 2 and 3 that the tree-based method ]]></tbox></line>
+<line><tbox llx="308" lly="189" urx="555" ury="202" f="6"><![CDATA[gives a reduction in the word error rate (WER) for the read-speech ]]></tbox></line>
+<line><tbox llx="308" lly="178" urx="555" ury="192" f="6"><![CDATA[North American Business (NAB) News task while both methods ]]></tbox></line>
+<line><tbox llx="308" lly="168" urx="560" ury="181" f="6"><![CDATA[give reductions for the conversationaltelephonespeechSwitchboard ]]></tbox></line>
+<line><tbox llx="308" lly="158" urx="555" ury="171" f="6"><![CDATA[task over baseline systems using only a citation-form dictionary. ]]></tbox></line>
+<line><tbox llx="308" lly="147" urx="555" ury="160" f="6"><![CDATA[Further, we show in Sections 4 and 5 that reductions persist when ]]></tbox></line>
+<line><tbox llx="308" lly="137" urx="557" ury="150" f="6"><![CDATA[the baselinesystems are improvedby coarticulation sensitive acous- ]]></tbox></line>
+<line><tbox llx="308" lly="126" urx="493" ury="140" f="6"><![CDATA[tic modelling and improved language modelling. ]]></tbox></line>
+<pbox llx="49.00" lly="126.00" urx="565.00" ury="771.00"/></page>
+<page n="2">
+<line><tbox llx="75" lly="756" urx="269" ury="771" f="1"><![CDATA[2. TREE BASED DICTIONARY EXPANSION ]]></tbox></line>
+<line><tbox llx="49" lly="736" urx="297" ury="750" f="2"><![CDATA[Our tree basedpronunciation modelswere inspired by phonological ]]></tbox></line>
+<line><tbox llx="49" lly="726" urx="193" ury="739" f="2"><![CDATA[rules in acoustic phonetic studies (cf., ]]></tbox><tbox llx="185" lly="726" urx="211" ury="739" f="3"><![CDATA[e.g., ]]></tbox><tbox llx="202" lly="726" urx="296" ury="739" f="2"><![CDATA[[7]) which characterize ]]></tbox></line>
+<line><tbox llx="49" lly="715" urx="295" ury="729" f="2"><![CDATA[allophonic variations in certain phonemic contexts, and by the suc- ]]></tbox></line>
+<line><tbox llx="49" lly="705" urx="295" ury="718" f="2"><![CDATA[cessful use of similar methods to model pronunciation variability ]]></tbox></line>
+<line><tbox llx="49" lly="694" urx="295" ury="708" f="2"><![CDATA[and constraints by other researchers (e.g., [3, 8, 4, 10, 12, 11]). Fig- ]]></tbox></line>
+<line><tbox llx="49" lly="684" urx="295" ury="698" f="2"><![CDATA[ure 1 illustrates the deletion or alteration of a phoneme in context ]]></tbox></line>
+<line><tbox llx="49" lly="674" urx="195" ury="687" f="2"><![CDATA[which we modelled via decision trees. ]]></tbox></line>
+<line><tbox llx="65" lly="655" urx="284" ury="666" f="4"><![CDATA[I HAVE FORMULATED A ]]></tbox></line>
+<line><tbox llx="65" lly="637" urx="287" ury="648" f="4"><![CDATA[ay hh ae v f ow r m y ax l ey t ih d ax ]]></tbox></line>
+<line><tbox llx="75" lly="563" urx="299" ury="574" f="4"><![CDATA[ay v_vl f ao r m ih_n l ey dx_t ih dx_d ax ]]></tbox></line>
+<line><tbox llx="95" lly="564" urx="119" ury="573" f="5"><![CDATA[f f ]]></tbox><tbox llx="195" lly="564" urx="205" ury="573" f="5"><![CDATA[f ]]></tbox></line>
+<line><tbox llx="86" lly="532" urx="258" ury="545" f="2"><![CDATA[Figure 1: Decision Trees as Phone Predictors ]]></tbox></line>
+<line><tbox llx="49" lly="489" urx="234" ury="504" f="1"><![CDATA[2.1. Decision Trees from Hand Labelled Data ]]></tbox></line>
+<line><tbox llx="49" lly="472" urx="295" ury="486" f="2"><![CDATA[The decision trees built for these tasks drew from a substantial por- ]]></tbox></line>
+<line><tbox llx="49" lly="462" urx="295" ury="476" f="2"><![CDATA[tion (134,000 phones) of the TIMIT data set and approximately 3.5 ]]></tbox></line>
+<line><tbox llx="49" lly="452" urx="295" ury="465" f="2"><![CDATA[hours (96,000 phones) of the phonetically labelled transcriptions of ]]></tbox></line>
+<line><tbox llx="49" lly="441" urx="174" ury="455" f="2"><![CDATA[the Switchboard (ICSI) data set. ]]></tbox></line>
+<line><tbox llx="64" lly="430" urx="295" ury="444" f="2"><![CDATA[The labels used by the annotators were slightly richer than the ]]></tbox></line>
+<line><tbox llx="49" lly="420" urx="295" ury="433" f="2"><![CDATA[phonetic labels in the pronouncing dictionary (PronLex) used for ]]></tbox></line>
+<line><tbox llx="49" lly="409" urx="308" ury="423" f="2"><![CDATA[these experiments. However, since the acoustic models for the baseline ]]></tbox></line>
+<line><tbox llx="49" lly="399" urx="295" ury="412" f="2"><![CDATA[system were trained using the PronLex phone set, the hand annota- ]]></tbox></line>
+<line><tbox llx="49" lly="388" urx="295" ury="402" f="2"><![CDATA[tions were mapped down to this phone set for reasons of consist- ]]></tbox></line>
+<line><tbox llx="49" lly="378" urx="77" ury="392" f="2"><![CDATA[ency. ]]></tbox></line>
+<line><tbox llx="64" lly="367" urx="297" ury="381" f="2"><![CDATA[Next, basedon the orthographic transcriptions and the pronoun- ]]></tbox></line>
+<line><tbox llx="49" lly="357" urx="295" ury="370" f="2"><![CDATA[cing dictionary, a phonemic transcription of the utterances was ob- ]]></tbox></line>
+<line><tbox llx="49" lly="346" urx="295" ury="360" f="2"><![CDATA[tained. Whenever the dictionary permitted more than one pronun- ]]></tbox></line>
+<line><tbox llx="49" lly="336" urx="295" ury="349" f="2"><![CDATA[ciation for a word, a choice was made via a forced alignment of ]]></tbox></line>
+<line><tbox llx="49" lly="325" urx="296" ury="339" f="2"><![CDATA[the acoustic signal with the alternatives using the baseline acoustic ]]></tbox></line>
+<line><tbox llx="49" lly="315" urx="87" ury="328" f="2"><![CDATA[models. ]]></tbox></line>
+<line><tbox llx="64" lly="304" urx="295" ury="317" f="2"><![CDATA[The phonemic transcriptions were then lined up with the phon- ]]></tbox></line>
+<line><tbox llx="49" lly="293" urx="295" ury="307" f="2"><![CDATA[etic labels, using as the alignment criterion the minimization of the ]]></tbox></line>
+<line><tbox llx="49" lly="283" urx="299" ury="297" f="2"><![CDATA[phonetic feature distance betweenthe two symbol streams [9]. Table ]]></tbox></line>
+<line><tbox llx="49" lly="273" urx="295" ury="286" f="2"><![CDATA[1 gives an example alignment from the ICSI corpus. This gave us ]]></tbox></line>
+<line><tbox llx="49" lly="262" urx="100" ury="276" f="2"><![CDATA[a corpus of ]]></tbox><tbox llx="93" lly="262" urx="172" ury="276" f="3"><![CDATA[phoneme-to-phone ]]></tbox><tbox llx="164" lly="262" urx="295" ury="276" f="2"><![CDATA[transformations together with the ]]></tbox></line>
+<line><tbox llx="49" lly="252" urx="151" ury="265" f="2"><![CDATA[phonemic environment or ]]></tbox><tbox llx="143" lly="252" urx="180" ury="266" f="3"><![CDATA[context ]]></tbox><tbox llx="172" lly="252" urx="245" ury="265" f="2"><![CDATA[for each instance. ]]></tbox></line>
+<line><tbox llx="64" lly="241" urx="295" ury="254" f="2"><![CDATA[Decision tree models were then built to represent this phon- ]]></tbox></line>
+<line><tbox llx="49" lly="230" urx="145" ury="244" f="2"><![CDATA[eme to phone mapping. ]]></tbox><tbox llx="140" lly="230" urx="295" ury="244" f="2"><![CDATA[The context included the identity of the ]]></tbox></line>
+<line><tbox llx="49" lly="220" urx="296" ury="233" f="2"><![CDATA[phoneme to be mapped as well as three neighbouring phonemes ]]></tbox></line>
+<line><tbox llx="49" lly="210" urx="296" ury="223" f="2"><![CDATA[on either side (each encoded in terms of its phonetic features -- see ]]></tbox></line>
+<line><tbox llx="49" lly="199" urx="296" ury="213" f="2"><![CDATA[Table 2), the lexical stress on neighbouringvowels as obtainedfrom ]]></tbox></line>
+<line><tbox llx="49" lly="189" urx="295" ury="202" f="2"><![CDATA[the pronouncing dictionary, and the distance of the phoneme from ]]></tbox></line>
+<line><tbox llx="49" lly="178" urx="296" ury="192" f="2"><![CDATA[the nearest segment boundary on either side, where the segment ]]></tbox></line>
+<line><tbox llx="49" lly="168" urx="295" ury="181" f="2"><![CDATA[could be either a syllable, a word or a phrase. A separate tree was ]]></tbox></line>
+<line><tbox llx="49" lly="158" urx="295" ury="171" f="2"><![CDATA[grown for each phoneme. The tree growing criterion was minim- ]]></tbox></line>
+<line><tbox llx="49" lly="147" urx="296" ury="160" f="2"><![CDATA[ization of the empirical entropy of the surface phone, the stopping ]]></tbox></line>
+<line><tbox llx="49" lly="137" urx="303" ury="150" f="2"><![CDATA[criterion wasaminimum samplecount at both parent and child nodes, ]]></tbox></line>
+<line><tbox llx="49" lly="126" urx="285" ury="140" f="2"><![CDATA[and the trees were pruned via internal fivefold cross-validation. ]]></tbox></line>
+<line><tbox llx="365" lly="705" urx="518" ury="720" f="1"><![CDATA[PHONEME PHONE WORD ]]></tbox></line>
+<line><tbox llx="365" lly="696" urx="499" ury="709" f="2"><![CDATA[f f for ]]></tbox></line>
+<line><tbox llx="365" lly="685" urx="447" ury="699" f="2"><![CDATA[ao ao ]]></tbox></line>
+<line><tbox llx="365" lly="675" urx="442" ury="688" f="2"><![CDATA[r - ]]></tbox></line>
+<line><tbox llx="365" lly="664" urx="500" ury="678" f="2"><![CDATA[dh dh the ]]></tbox></line>
+<line><tbox llx="365" lly="654" urx="446" ury="667" f="2"><![CDATA[ax iy ]]></tbox></line>
+<line><tbox llx="365" lly="644" urx="499" ury="657" f="2"><![CDATA[f f for ]]></tbox></line>
+<line><tbox llx="365" lly="633" urx="442" ury="646" f="2"><![CDATA[ao - ]]></tbox></line>
+<line><tbox llx="365" lly="623" urx="442" ury="636" f="2"><![CDATA[r - ]]></tbox></line>
+<line><tbox llx="365" lly="612" urx="500" ury="626" f="2"><![CDATA[dh dh the ]]></tbox></line>
+<line><tbox llx="365" lly="602" urx="447" ury="615" f="2"><![CDATA[ax ax ]]></tbox></line>
+<line><tbox llx="365" lly="592" urx="505" ury="605" f="2"><![CDATA[d jh drug ]]></tbox></line>
+<line><tbox llx="365" lly="581" urx="442" ury="594" f="2"><![CDATA[r r ]]></tbox></line>
+<line><tbox llx="365" lly="571" urx="447" ury="584" f="2"><![CDATA[ah ah ]]></tbox></line>
+<line><tbox llx="365" lly="560" urx="443" ury="574" f="2"><![CDATA[g g ]]></tbox></line>
+<line><tbox llx="355" lly="540" urx="508" ury="553" f="2"><![CDATA[Table 1: Phoneme-to-phone Alignment. ]]></tbox></line>
+<line><tbox llx="325" lly="408" urx="338" ury="420" f="4"><![CDATA[ffl ]]></tbox><tbox llx="333" lly="408" urx="422" ury="422" f="1"><![CDATA[Consonant-Manner: ]]></tbox></line>
+<line><tbox llx="333" lly="398" urx="554" ury="411" f="2"><![CDATA[voiced stop, unvoiced stop, voiced fricative, unvoiced fric- ]]></tbox></line>
+<line><tbox llx="333" lly="387" urx="554" ury="401" f="2"><![CDATA[ative, voiced affricate, unvoiced affricate, nasal, rhotic, lat- ]]></tbox></line>
+<line><tbox llx="333" lly="377" urx="416" ury="390" f="2"><![CDATA[eral, not--applicable. ]]></tbox></line>
+<line><tbox llx="325" lly="362" urx="338" ury="374" f="4"><![CDATA[ffl ]]></tbox><tbox llx="333" lly="362" urx="411" ury="377" f="1"><![CDATA[Consonant-Place: ]]></tbox></line>
+<line><tbox llx="333" lly="352" urx="555" ury="366" f="2"><![CDATA[bilabial, labiodental, dental, alveolar, palatal, velar, pharyn- ]]></tbox></line>
+<line><tbox llx="333" lly="342" urx="417" ury="355" f="2"><![CDATA[geal, not--applicable. ]]></tbox></line>
+<line><tbox llx="325" lly="327" urx="338" ury="339" f="4"><![CDATA[ffl ]]></tbox><tbox llx="333" lly="327" urx="403" ury="341" f="1"><![CDATA[Vowel-Manner: ]]></tbox></line>
+<line><tbox llx="333" lly="317" urx="555" ury="330" f="2"><![CDATA[monophthong, r--colored vowel, w--diphthong, ]]></tbox></line>
+<line><tbox llx="333" lly="307" urx="472" ury="320" f="2"><![CDATA[y--diphthong, glide, not--applicable . ]]></tbox></line>
+<line><tbox llx="325" lly="292" urx="338" ury="304" f="4"><![CDATA[ffl ]]></tbox><tbox llx="333" lly="292" urx="395" ury="306" f="1"><![CDATA[Vowel-Place : ]]></tbox></line>
+<line><tbox llx="333" lly="282" urx="555" ury="295" f="2"><![CDATA[front--low, front--mid--low, front--high, central--mid--low, ]]></tbox></line>
+<line><tbox llx="333" lly="271" urx="555" ury="285" f="2"><![CDATA[central--mid--high, back--low, back--mid--low, back--mid-- ]]></tbox></line>
+<line><tbox llx="333" lly="261" urx="460" ury="274" f="2"><![CDATA[high, back--high, not--applicable. ]]></tbox></line>
+<line><tbox llx="308" lly="235" urx="348" ury="248" f="2"><![CDATA[Table 2: ]]></tbox><tbox llx="343" lly="235" urx="458" ury="248" f="2"><![CDATA[Phoneme Encoding Scheme. ]]></tbox><tbox llx="454" lly="235" urx="555" ury="248" f="2"><![CDATA[Each phoneme is repres- ]]></tbox></line>
+<line><tbox llx="308" lly="224" urx="456" ury="238" f="2"><![CDATA[ented as a four-element feature vector, ]]></tbox><tbox llx="449" lly="223" urx="552" ury="239" f="5"><![CDATA[(consonant-manner, ]]></tbox></line>
+<line><tbox llx="309" lly="213" urx="549" ury="228" f="5"><![CDATA[consonant-place, vowel-manner, vowel-place). ]]></tbox></line>
+<line><tbox llx="308" lly="203" urx="366" ury="217" f="2"><![CDATA[For example, ]]></tbox><tbox llx="361" lly="203" urx="384" ury="218" f="5"><![CDATA[/s/ ]]></tbox><tbox llx="379" lly="203" urx="439" ury="217" f="2"><![CDATA[is encoded as ]]></tbox><tbox llx="433" lly="203" urx="552" ury="218" f="5"><![CDATA[(voiceless fricative, ]]></tbox></line>
+<line><tbox llx="309" lly="192" urx="413" ury="208" f="5"><![CDATA[palatal, n/a, n/a) ]]></tbox><tbox llx="415" lly="193" urx="438" ury="206" f="2"><![CDATA[and ]]></tbox><tbox llx="434" lly="192" urx="462" ury="208" f="5"><![CDATA[/iy/ ]]></tbox><tbox llx="460" lly="193" urx="523" ury="206" f="2"><![CDATA[is encoded as ]]></tbox><tbox llx="519" lly="192" urx="552" ury="208" f="5"><![CDATA[(n/a, ]]></tbox></line>
+<line><tbox llx="309" lly="182" urx="474" ury="197" f="5"><![CDATA[n/a, y-diphthong, high-front). ]]></tbox></line>
+<pbox llx="49.00" lly="126.00" urx="555.00" ury="771.00"/></page>
+<page n="3">
+<line><tbox llx="60" lly="749" urx="182" ury="763" f="1"><![CDATA[Training Data Average ]]></tbox><tbox llx="175" lly="749" urx="193" ury="760" f="2"><![CDATA[log ]]></tbox><tbox llx="187" lly="749" urx="193" ury="754" f="3"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="190" lly="749" urx="264" ury="763" f="1"><![CDATA[-prob (Efficiency) ]]></tbox></line>
+<line><tbox llx="141" lly="739" urx="268" ury="752" f="1"><![CDATA[ICSI-test TIMIT-test ]]></tbox></line>
+<line><tbox llx="73" lly="726" urx="148" ury="740" f="1"><![CDATA[TIMIT 0.76 ]]></tbox><tbox llx="142" lly="726" urx="159" ury="738" f="4"><![CDATA[! ]]></tbox><tbox llx="152" lly="726" urx="230" ury="740" f="1"><![CDATA[0.60 (20%) 0.34 ]]></tbox><tbox llx="223" lly="726" urx="240" ury="738" f="4"><![CDATA[! ]]></tbox><tbox llx="233" lly="726" urx="283" ury="740" f="1"><![CDATA[0.17 (51%) ]]></tbox></line>
+<line><tbox llx="77" lly="715" urx="148" ury="729" f="1"><![CDATA[ICSI 0.72 ]]></tbox><tbox llx="142" lly="715" urx="159" ury="727" f="4"><![CDATA[! ]]></tbox><tbox llx="152" lly="715" urx="201" ury="729" f="1"><![CDATA[0.50 (30%) ]]></tbox></line>
+<line><tbox llx="62" lly="705" urx="148" ury="718" f="1"><![CDATA[ICSI+TIMIT 0.71 ]]></tbox><tbox llx="142" lly="704" urx="159" ury="716" f="4"><![CDATA[! ]]></tbox><tbox llx="152" lly="705" urx="201" ury="718" f="1"><![CDATA[0.48 (32%) ]]></tbox></line>
+<line><tbox llx="73" lly="684" urx="271" ury="697" f="1"><![CDATA[Table 3: Prediction Entropy for Pronunciation Trees ]]></tbox></line>
+<line><tbox llx="64" lly="642" urx="252" ury="656" f="5"><![CDATA[2.1.1. Predicting Surface Forms from Baseforms ]]></tbox></line>
+<line><tbox llx="49" lly="626" urx="295" ury="639" f="1"><![CDATA[Each leaf in a tree thus assigned probabilities in some context to ]]></tbox></line>
+<line><tbox llx="49" lly="615" urx="295" ury="628" f="1"><![CDATA[more than one surface form realization of the phoneme it modelled. ]]></tbox></line>
+<line><tbox llx="49" lly="605" urx="295" ury="618" f="1"><![CDATA[A way to judge the goodness of these trees, therefore, was to apply ]]></tbox></line>
+<line><tbox llx="49" lly="594" urx="295" ury="608" f="1"><![CDATA[them as predictors on a held out portion of the hand labelled cor- ]]></tbox></line>
+<line><tbox llx="49" lly="584" urx="295" ury="597" f="1"><![CDATA[pora. Test sets from TIMIT and ICSI corpora were held out for this ]]></tbox></line>
+<line><tbox llx="49" lly="574" urx="295" ury="587" f="1"><![CDATA[purpose. The results in Table 3 summarize the predictive ability of ]]></tbox></line>
+<line><tbox llx="49" lly="563" urx="141" ury="576" f="1"><![CDATA[the trees on these sets. ]]></tbox><tbox llx="132" lly="568" urx="139" ury="574" f="3"><![CDATA[1 ]]></tbox><tbox llx="140" lly="563" urx="295" ury="576" f="1"><![CDATA[Relative to the context independent dis- ]]></tbox></line>
+<line><tbox llx="49" lly="553" urx="295" ury="566" f="1"><![CDATA[tribution of surface form realizations of a phoneme, decision trees ]]></tbox></line>
+<line><tbox llx="49" lly="542" urx="295" ury="556" f="1"><![CDATA[built on the TIMIT portion of the trainig set reduce the entropy by ]]></tbox></line>
+<line><tbox llx="49" lly="532" urx="295" ury="545" f="1"><![CDATA[about 50%, when tested on TIMIT. Those built on the Switchboard ]]></tbox></line>
+<line><tbox llx="49" lly="521" urx="295" ury="535" f="1"><![CDATA[portion of the training set reduce the entropy by about 30%, when ]]></tbox></line>
+<line><tbox llx="49" lly="511" urx="295" ury="524" f="1"><![CDATA[tested on Switchboard. Trees based on TIMIT alone are much less ]]></tbox></line>
+<line><tbox llx="49" lly="501" urx="295" ury="514" f="1"><![CDATA[effective on the Switchboard test set (20%), but adding them to the ]]></tbox></line>
+<line><tbox llx="49" lly="490" urx="295" ury="504" f="1"><![CDATA[Switchboard training data (ICSI+TIMIT) results in a small addi- ]]></tbox></line>
+<line><tbox llx="49" lly="480" urx="295" ury="493" f="1"><![CDATA[tional gain (32%). These results suggest there is more variability in ]]></tbox></line>
+<line><tbox llx="49" lly="469" urx="295" ury="483" f="1"><![CDATA[pronunciationsin Switchboard, relative to TIMIT, which is not cap- ]]></tbox></line>
+<line><tbox llx="49" lly="459" urx="299" ury="472" f="1"><![CDATA[tured by either the phonemiccontext cuesor the modellingparadigm ]]></tbox></line>
+<line><tbox llx="49" lly="448" urx="113" ury="462" f="1"><![CDATA[we considered. ]]></tbox></line>
+<line><tbox llx="64" lly="425" urx="227" ury="438" f="5"><![CDATA[2.1.2. The Effect of Leaving Out Features ]]></tbox></line>
+<line><tbox llx="49" lly="408" urx="295" ury="422" f="1"><![CDATA[In order to investigate the conditional utility of each of our contex- ]]></tbox></line>
+<line><tbox llx="49" lly="398" urx="295" ury="411" f="1"><![CDATA[tual features given the others, trees were built at WS97 by leaving ]]></tbox></line>
+<line><tbox llx="49" lly="388" urx="296" ury="401" f="1"><![CDATA[features out from the context one at a time. Table 4 summarizes ]]></tbox></line>
+<line><tbox llx="49" lly="377" urx="295" ury="390" f="1"><![CDATA[the results of these experiments. The trees were trained on all of ]]></tbox></line>
+<line><tbox llx="49" lly="367" urx="295" ury="380" f="1"><![CDATA[the Switchboard and TIMIT data mentioned above, and the test set ]]></tbox></line>
+<line><tbox llx="49" lly="356" urx="295" ury="370" f="1"><![CDATA[was the same as the one used for the Switchboard results of Table ]]></tbox></line>
+<line><tbox llx="49" lly="346" urx="295" ury="359" f="1"><![CDATA[3. Note that, at least for this corpus size, there was little additional ]]></tbox></line>
+<line><tbox llx="49" lly="335" urx="295" ury="349" f="1"><![CDATA[predictive power in neighbouring phonemes more than one posi- ]]></tbox></line>
+<line><tbox llx="49" lly="325" urx="295" ury="339" f="1"><![CDATA[tion away, when the triphone context, word boundary, and lexical ]]></tbox></line>
+<line><tbox llx="49" lly="315" urx="203" ury="328" f="1"><![CDATA[stress related information was specified. ]]></tbox></line>
+<line><tbox llx="64" lly="291" urx="246" ury="304" f="5"><![CDATA[2.1.3. The Impact of Some Additional Features ]]></tbox></line>
+<line><tbox llx="49" lly="274" urx="295" ury="288" f="1"><![CDATA[We also experimented at WS97 with adding new features to the de- ]]></tbox></line>
+<line><tbox llx="49" lly="264" urx="101" ury="277" f="1"><![CDATA[cision trees. ]]></tbox></line>
+<line><tbox llx="66" lly="249" urx="78" ury="261" f="4"><![CDATA[ffl ]]></tbox><tbox llx="74" lly="250" urx="295" ury="263" f="1"><![CDATA[Based on the number of distinct pronunciations of a word ]]></tbox></line>
+<line><tbox llx="74" lly="239" urx="295" ury="252" f="1"><![CDATA[that were seen in the ICSI-portion of the corpus, words were ]]></tbox></line>
+<line><tbox llx="74" lly="229" urx="295" ury="242" f="1"><![CDATA[categorized into ten bins: from words having many pronun- ]]></tbox></line>
+<line><tbox llx="74" lly="218" urx="295" ury="232" f="1"><![CDATA[ciations to words having few pronunciations. The bin num- ]]></tbox></line>
+<line><tbox llx="74" lly="208" urx="295" ury="221" f="1"><![CDATA[ber was then provided to the trees for each phoneme of the ]]></tbox></line>
+<line><tbox llx="74" lly="197" urx="295" ury="211" f="1"><![CDATA[word. It was hoped that knowing how stable a word's pro- ]]></tbox></line>
+<line><tbox llx="74" lly="187" urx="292" ury="200" f="1"><![CDATA[nunciation was would help predict the surface form better. ]]></tbox></line>
+<line><tbox llx="66" lly="172" urx="78" ury="184" f="4"><![CDATA[ffl ]]></tbox><tbox llx="74" lly="172" urx="295" ury="186" f="1"><![CDATA[It is varyingly conjectured that frequently used words, func- ]]></tbox></line>
+<line><tbox llx="74" lly="162" urx="295" ury="176" f="1"><![CDATA[tion words or low information bearing words often tend to ]]></tbox></line>
+<line><tbox llx="60" lly="149" urx="66" ury="154" f="3"><![CDATA[1 ]]></tbox><tbox llx="63" lly="145" urx="294" ury="157" f="6"><![CDATA[So that test observations in contexts unseen in training do not make en- ]]></tbox></line>
+<line><tbox llx="49" lly="136" urx="258" ury="148" f="6"><![CDATA[tropy figures infinite, the worst 10% of the test data (i.e., highest ]]></tbox><tbox llx="252" lly="137" urx="266" ury="143" f="7"><![CDATA[log ]]></tbox><tbox llx="263" lly="135" urx="269" ury="140" f="3"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="266" lly="136" urx="294" ury="148" f="6"><![CDATA[-prob) ]]></tbox></line>
+<line><tbox llx="49" lly="127" urx="241" ury="139" f="6"><![CDATA[is removed from each entropy measurement in this paper. ]]></tbox></line>
+<line><tbox llx="321" lly="749" urx="436" ury="763" f="1"><![CDATA[Features Provided as Context ]]></tbox><tbox llx="498" lly="749" urx="516" ury="760" f="2"><![CDATA[log ]]></tbox><tbox llx="510" lly="749" urx="516" ury="754" f="3"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="513" lly="749" urx="542" ury="763" f="1"><![CDATA[-prob ]]></tbox></line>
+<line><tbox llx="321" lly="736" urx="375" ury="750" f="1"><![CDATA[All Features ]]></tbox><tbox llx="504" lly="736" urx="535" ury="750" f="1"><![CDATA[0.485 ]]></tbox></line>
+<line><tbox llx="322" lly="724" urx="339" ury="736" f="8"><![CDATA[x ]]></tbox><tbox llx="332" lly="724" urx="390" ury="737" f="1"><![CDATA[3rd Phoneme ]]></tbox><tbox llx="383" lly="724" urx="401" ury="736" f="8"><![CDATA[y ]]></tbox><tbox llx="393" lly="724" urx="535" ury="737" f="1"><![CDATA[Excluded 0.484 ]]></tbox></line>
+<line><tbox llx="322" lly="713" urx="339" ury="725" f="8"><![CDATA[x ]]></tbox><tbox llx="332" lly="713" urx="424" ury="726" f="1"><![CDATA[2nd and 3rd Phonemes ]]></tbox><tbox llx="418" lly="713" urx="435" ury="725" f="8"><![CDATA[y ]]></tbox><tbox llx="428" lly="713" urx="535" ury="726" f="1"><![CDATA[Excluded 0.485 ]]></tbox></line>
+<line><tbox llx="321" lly="702" urx="535" ury="716" f="1"><![CDATA[Lexical Stress Excluded 0.487 ]]></tbox></line>
+<line><tbox llx="321" lly="691" urx="535" ury="705" f="1"><![CDATA[Segment Boundary Cue Excluded 0.490 ]]></tbox></line>
+<line><tbox llx="321" lly="681" urx="535" ury="694" f="1"><![CDATA[Vowels (manner and place) Excluded 0.497 ]]></tbox></line>
+<line><tbox llx="321" lly="670" urx="495" ury="683" f="1"><![CDATA[Stress and Segment Boundary Cues Excluded ]]></tbox><tbox llx="504" lly="670" urx="535" ury="683" f="1"><![CDATA[0.498 ]]></tbox></line>
+<line><tbox llx="321" lly="659" urx="467" ury="672" f="1"><![CDATA[Consonants (manner, place) Excluded ]]></tbox><tbox llx="504" lly="659" urx="535" ury="672" f="1"><![CDATA[0.527 ]]></tbox></line>
+<line><tbox llx="321" lly="648" urx="456" ury="662" f="1"><![CDATA[Right Phonemic Context Excluded ]]></tbox><tbox llx="504" lly="648" urx="535" ury="662" f="1"><![CDATA[0.537 ]]></tbox></line>
+<line><tbox llx="321" lly="637" urx="451" ury="651" f="1"><![CDATA[Left Phonemic Context Excluded ]]></tbox><tbox llx="504" lly="637" urx="535" ury="651" f="1"><![CDATA[0.547 ]]></tbox></line>
+<line><tbox llx="321" lly="626" urx="535" ury="640" f="1"><![CDATA[Entire Phonemic Context Excluded 0.606 ]]></tbox></line>
+<line><tbox llx="321" lly="616" urx="450" ury="629" f="1"><![CDATA[All Context Excluded (root trees) ]]></tbox><tbox llx="504" lly="616" urx="535" ury="629" f="1"><![CDATA[0.714 ]]></tbox></line>
+<line><tbox llx="340" lly="595" urx="523" ury="609" f="1"><![CDATA[Table 4: Leaving Out Features from the Context ]]></tbox></line>
+<line><tbox llx="323" lly="552" urx="429" ury="566" f="1"><![CDATA[Features Added to Context ]]></tbox><tbox llx="496" lly="553" urx="514" ury="563" f="2"><![CDATA[log ]]></tbox><tbox llx="508" lly="552" urx="514" ury="557" f="3"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="511" lly="552" urx="540" ury="566" f="1"><![CDATA[-prob ]]></tbox></line>
+<line><tbox llx="323" lly="540" urx="532" ury="553" f="1"><![CDATA[None 0.485 ]]></tbox></line>
+<line><tbox llx="323" lly="527" urx="492" ury="540" f="1"><![CDATA[Word level Pronunciation Variance (10 bins) ]]></tbox><tbox llx="502" lly="527" urx="532" ury="540" f="1"><![CDATA[0.481 ]]></tbox></line>
+<line><tbox llx="323" lly="516" urx="469" ury="529" f="1"><![CDATA[Word Frequency (from 60 hr training) ]]></tbox><tbox llx="502" lly="516" urx="532" ury="529" f="1"><![CDATA[0.483 ]]></tbox></line>
+<line><tbox llx="323" lly="505" urx="464" ury="519" f="1"><![CDATA[Pron. Variance and Word Frequency ]]></tbox><tbox llx="502" lly="505" urx="532" ury="519" f="1"><![CDATA[0.483 ]]></tbox></line>
+<line><tbox llx="323" lly="494" urx="532" ury="508" f="1"><![CDATA[Pron. Var., Word Freq., and Previous Phone 0.451 ]]></tbox></line>
+<line><tbox llx="345" lly="474" urx="518" ury="487" f="1"><![CDATA[Table 5: Adding New Features to the Context ]]></tbox></line>
+<line><tbox llx="333" lly="431" urx="555" ury="444" f="1"><![CDATA[be mispronounced. The frequency of occurrence of a word ]]></tbox></line>
+<line><tbox llx="333" lly="420" urx="555" ury="434" f="1"><![CDATA[in the 60 hour acoustic training corpus was provided to the ]]></tbox></line>
+<line><tbox llx="333" lly="410" urx="472" ury="424" f="1"><![CDATA[trees for each phoneme of the word. ]]></tbox></line>
+<line><tbox llx="325" lly="394" urx="338" ury="406" f="4"><![CDATA[ffl ]]></tbox><tbox llx="333" lly="394" urx="555" ury="408" f="1"><![CDATA[In the hope of capturing limited phonotactics, as well as to ]]></tbox></line>
+<line><tbox llx="333" lly="384" urx="555" ury="397" f="1"><![CDATA[indirectly model deletion or reduction of units larger than ]]></tbox></line>
+<line><tbox llx="333" lly="374" urx="555" ury="387" f="1"><![CDATA[phonemes, the trees were provided the surface form realiz- ]]></tbox></line>
+<line><tbox llx="333" lly="363" urx="454" ury="377" f="1"><![CDATA[ation of the previous phoneme. ]]></tbox></line>
+<line><tbox llx="323" lly="347" urx="449" ury="361" f="1"><![CDATA[Table 5 summarizes our results. ]]></tbox><tbox llx="443" lly="347" urx="555" ury="361" f="1"><![CDATA[All the features used by the ]]></tbox></line>
+<line><tbox llx="308" lly="337" urx="555" ury="350" f="1"><![CDATA[ICSI+ TIMIT trees of Table 3 are already present in the context. ]]></tbox></line>
+<line><tbox llx="308" lly="326" urx="554" ury="340" f="1"><![CDATA[Note that while we were unable to successfully exploit the inform- ]]></tbox></line>
+<line><tbox llx="308" lly="316" urx="555" ury="329" f="1"><![CDATA[ation about empirical pronunciation variability or frequency of a ]]></tbox></line>
+<line><tbox llx="308" lly="305" urx="555" ury="319" f="1"><![CDATA[word, knowing the previous surface form seems to be of significant ]]></tbox></line>
+<line><tbox llx="308" lly="295" urx="555" ury="309" f="1"><![CDATA[value in this modelling paradigm, perhaps because it compensates ]]></tbox></line>
+<line><tbox llx="308" lly="285" urx="555" ury="298" f="1"><![CDATA[for some of our conditional independence assumptions in model- ]]></tbox></line>
+<line><tbox llx="308" lly="274" urx="494" ury="288" f="1"><![CDATA[ling the phoneme to phone mapping very locally. ]]></tbox></line>
+<line><tbox llx="308" lly="247" urx="508" ury="262" f="9"><![CDATA[2.2. Generating Automatic Phone Transcriptions ]]></tbox></line>
+<line><tbox llx="308" lly="230" urx="555" ury="244" f="1"><![CDATA[Using decision trees is a data intensive modelling technique. Large ]]></tbox></line>
+<line><tbox llx="308" lly="220" urx="555" ury="233" f="1"><![CDATA[quantities of automatic phonetic transcriptions were generated to ]]></tbox></line>
+<line><tbox llx="308" lly="210" urx="555" ury="223" f="1"><![CDATA[augment the hand-labelled corpora using the 37,000 training sen- ]]></tbox></line>
+<line><tbox llx="308" lly="199" urx="555" ury="213" f="1"><![CDATA[tences (SI-284 training data set) for the NAB task at AT&T and us- ]]></tbox></line>
+<line><tbox llx="308" lly="189" urx="555" ury="202" f="1"><![CDATA[ing the 60-hour acoustic training corpus for the Switchboard task ]]></tbox></line>
+<line><tbox llx="308" lly="178" urx="555" ury="192" f="1"><![CDATA[at WS97. Unlike [11], where unconstrained phone recognition was ]]></tbox></line>
+<line><tbox llx="308" lly="168" urx="555" ury="181" f="1"><![CDATA[used to generate phone transcriptions, we constrained the words in ]]></tbox></line>
+<line><tbox llx="308" lly="158" urx="555" ury="171" f="1"><![CDATA[our training utterances to assumeonly pronunciations generated by ]]></tbox></line>
+<line><tbox llx="308" lly="147" urx="546" ury="160" f="1"><![CDATA[application of the decision trees to their phonemic baseforms: ]]></tbox><tbox llx="541" lly="147" urx="555" ury="160" f="1"><![CDATA[a ]]></tbox></line>
+<line><tbox llx="308" lly="137" urx="554" ury="150" f="1"><![CDATA[forced alignment was performed on the resulting network of altern- ]]></tbox></line>
+<line><tbox llx="308" lly="126" urx="555" ury="140" f="1"><![CDATA[ate pronunciations in an utterance and the most likely sequence of ]]></tbox></line>
+<pbox llx="49.00" lly="126.00" urx="555.00" ury="763.00"/></page>
+<page n="4">
+<line><tbox llx="84" lly="749" urx="213" ury="763" f="1"><![CDATA[Model # Trn tokens ]]></tbox><tbox llx="216" lly="749" urx="234" ury="760" f="2"><![CDATA[log ]]></tbox><tbox llx="228" lly="749" urx="234" ury="754" f="3"><![CDATA[2 ]]></tbox></line>
+<line><tbox llx="230" lly="749" urx="260" ury="763" f="1"><![CDATA[-prob ]]></tbox></line>
+<line><tbox llx="84" lly="736" urx="252" ury="750" f="1"><![CDATA[ICSI+TIMIT 96,040 0.525 ]]></tbox></line>
+<line><tbox llx="84" lly="724" urx="211" ury="737" f="1"><![CDATA[Recount Weights 2.36 million ]]></tbox><tbox llx="222" lly="724" urx="252" ury="737" f="1"><![CDATA[0.585 ]]></tbox></line>
+<line><tbox llx="84" lly="713" urx="145" ury="726" f="1"><![CDATA[Rebuild Trees ]]></tbox><tbox llx="158" lly="713" urx="211" ury="726" f="1"><![CDATA[2.36 million ]]></tbox><tbox llx="222" lly="713" urx="252" ury="726" f="1"><![CDATA[0.542 ]]></tbox></line>
+<line><tbox llx="63" lly="692" urx="281" ury="706" f="1"><![CDATA[Table 6: Rebuilding v/s Retuning the Pronunciation Trees ]]></tbox></line>
+<line><tbox llx="49" lly="651" urx="275" ury="664" f="1"><![CDATA[pronunciations was chosen to be the phonetic transcription. ]]></tbox><tbox llx="270" lly="651" urx="295" ury="664" f="1"><![CDATA[Pro- ]]></tbox></line>
+<line><tbox llx="49" lly="640" urx="295" ury="654" f="1"><![CDATA[nunciation probabilities derived from the trees were used as `lan- ]]></tbox></line>
+<line><tbox llx="49" lly="630" urx="295" ury="643" f="1"><![CDATA[guage model' weights during alignment, and since the word tran- ]]></tbox></line>
+<line><tbox llx="49" lly="620" urx="295" ury="633" f="1"><![CDATA[scription was provided, word level language model weights are re- ]]></tbox></line>
+<line><tbox llx="49" lly="609" urx="157" ury="622" f="1"><![CDATA[dundant and were not used. ]]></tbox></line>
+<line><tbox llx="64" lly="599" urx="297" ury="612" f="1"><![CDATA[Anecdotalevidencesuggeststhat this method of obtaining auto- ]]></tbox></line>
+<line><tbox llx="49" lly="588" urx="295" ury="602" f="1"><![CDATA[matic transcriptions is reasonable: it agrees more with human an- ]]></tbox></line>
+<line><tbox llx="49" lly="578" urx="295" ury="591" f="1"><![CDATA[notations than the phonemic baseforms do, though not by much. ]]></tbox></line>
+<line><tbox llx="49" lly="568" urx="295" ury="581" f="1"><![CDATA[For the hand labelled portion of the ICSI corpus, for instance, we ]]></tbox></line>
+<line><tbox llx="49" lly="557" urx="259" ury="570" f="1"><![CDATA[aligned the baseforms with the hand labels and found the ]]></tbox><tbox llx="251" lly="557" urx="296" ury="571" f="4"><![CDATA[phone er- ]]></tbox></line>
+<line><tbox llx="49" lly="547" urx="87" ury="560" f="4"><![CDATA[ror rate ]]></tbox><tbox llx="78" lly="547" urx="295" ury="560" f="1"><![CDATA[of the citation form transcription to be about 30%. The er- ]]></tbox></line>
+<line><tbox llx="49" lly="536" urx="295" ury="550" f="1"><![CDATA[ror rate for the automatic transcriptions for the same portion was ]]></tbox></line>
+<line><tbox llx="49" lly="526" urx="77" ury="539" f="1"><![CDATA[25%. ]]></tbox></line>
+<line><tbox llx="55" lly="496" urx="89" ury="511" f="5"><![CDATA[words ]]></tbox><tbox llx="98" lly="497" urx="293" ury="510" f="1"><![CDATA[just because they're grandparents ... ]]></tbox></line>
+<line><tbox llx="55" lly="486" urx="79" ury="501" f="5"><![CDATA[dict ]]></tbox><tbox llx="90" lly="487" urx="128" ury="500" f="1"><![CDATA[jh ah s t ]]></tbox><tbox llx="130" lly="487" urx="179" ury="500" f="1"><![CDATA[b ax k ah z ]]></tbox><tbox llx="181" lly="487" urx="304" ury="500" f="1"><![CDATA[dh ey r g r ae n p ey r ih n t s ]]></tbox></line>
+<line><tbox llx="55" lly="476" urx="77" ury="490" f="5"><![CDATA[icsi ]]></tbox><tbox llx="90" lly="476" urx="128" ury="490" f="1"><![CDATA[jh ah s t ]]></tbox><tbox llx="130" lly="476" urx="179" ury="490" f="1"><![CDATA[b ax k ah z ]]></tbox><tbox llx="181" lly="476" urx="304" ury="490" f="1"><![CDATA[dh ey r g r ae n p ey r ih n t s ]]></tbox></line>
+<line><tbox llx="55" lly="465" urx="82" ury="480" f="5"><![CDATA[auto ]]></tbox><tbox llx="92" lly="466" urx="179" ury="479" f="1"><![CDATA[jh ax s b ax k ao z ]]></tbox><tbox llx="190" lly="466" urx="293" ury="479" f="1"><![CDATA[er g r ae n p eh r s ]]></tbox></line>
+<line><tbox llx="64" lly="446" urx="295" ury="459" f="1"><![CDATA[It is also not clear if total agreement with the hand labels is de- ]]></tbox></line>
+<line><tbox llx="49" lly="435" urx="295" ury="448" f="1"><![CDATA[sirable. Occasionally, as in the transcriptions shown above, a large ]]></tbox></line>
+<line><tbox llx="49" lly="425" urx="295" ury="438" f="1"><![CDATA[number of human listeners preferred the automatic transcriptions ]]></tbox></line>
+<line><tbox llx="49" lly="414" urx="295" ury="428" f="1"><![CDATA[to those of the annotators! Readers who would wish to listen to ]]></tbox></line>
+<line><tbox llx="49" lly="404" urx="296" ury="417" f="1"><![CDATA[this particular utterance can find it on the 1997 LVCSR workshop ]]></tbox></line>
+<line><tbox llx="49" lly="394" urx="250" ury="407" f="1"><![CDATA[pronunciation project web page at www.clsp.jhu.edu. ]]></tbox></line>
+<line><tbox llx="64" lly="370" urx="297" ury="384" f="4"><![CDATA[2.2.1. Building Decision Trees from Automatic Transcriptions ]]></tbox></line>
+<line><tbox llx="49" lly="354" urx="275" ury="367" f="1"><![CDATA[These transcriptions were used to build new decision trees. ]]></tbox><tbox llx="269" lly="354" urx="295" ury="367" f="1"><![CDATA[Two ]]></tbox></line>
+<line><tbox llx="49" lly="343" urx="295" ury="357" f="1"><![CDATA[options were explored to use this large amount of training data -- re- ]]></tbox></line>
+<line><tbox llx="49" lly="333" urx="296" ury="346" f="1"><![CDATA[tain the topology (i.e., the sequenceof questions, or the equivalence ]]></tbox></line>
+<line><tbox llx="49" lly="322" urx="295" ury="336" f="1"><![CDATA[classification of the contexts) of the original phonetically hand la- ]]></tbox></line>
+<line><tbox llx="49" lly="312" urx="274" ury="325" f="1"><![CDATA[belled corpus trees, and only update their leaf distribution by ]]></tbox><tbox llx="266" lly="312" urx="296" ury="326" f="4"><![CDATA[pour- ]]></tbox></line>
+<line><tbox llx="49" lly="302" urx="71" ury="315" f="4"><![CDATA[ing ]]></tbox><tbox llx="62" lly="302" urx="295" ury="315" f="1"><![CDATA[this new training data down those trees; or rebuild the trees al- ]]></tbox></line>
+<line><tbox llx="49" lly="291" urx="295" ury="304" f="1"><![CDATA[together. When applied to Switchboard, there is very little differ- ]]></tbox></line>
+<line><tbox llx="49" lly="281" urx="295" ury="294" f="1"><![CDATA[encebetween the two methods as far as prediction entropy on a held ]]></tbox></line>
+<line><tbox llx="49" lly="270" urx="295" ury="284" f="1"><![CDATA[out set goes, as illustrated in Table 6. It is also not surprising that ]]></tbox></line>
+<line><tbox llx="49" lly="260" urx="295" ury="273" f="1"><![CDATA[the prediction entropy of these trees is higher than the ICSI+TIMIT ]]></tbox></line>
+<line><tbox llx="49" lly="250" urx="295" ury="263" f="1"><![CDATA[trees trained on hand labels alone, because there is an obvious mis- ]]></tbox></line>
+<line><tbox llx="49" lly="239" urx="295" ury="252" f="1"><![CDATA[match between the automatic derivation of the training transcrip- ]]></tbox></line>
+<line><tbox llx="49" lly="229" urx="295" ury="242" f="1"><![CDATA[tions, and the hand labelling of the test set. The fully rebuilt trees ]]></tbox></line>
+<line><tbox llx="49" lly="218" urx="102" ury="232" f="1"><![CDATA[were named ]]></tbox><tbox llx="94" lly="218" urx="162" ury="232" f="4"><![CDATA[Retrained trees. ]]></tbox></line>
+<line><tbox llx="64" lly="208" urx="295" ury="221" f="1"><![CDATA[Since we now had much more training data, we also built trees ]]></tbox></line>
+<line><tbox llx="49" lly="197" urx="295" ury="211" f="1"><![CDATA[which additionally included in the context the previously realized ]]></tbox></line>
+<line><tbox llx="49" lly="187" urx="295" ury="201" f="1"><![CDATA[surface form so as to capture some of the dependencyin the surface ]]></tbox></line>
+<line><tbox llx="49" lly="177" urx="201" ury="190" f="1"><![CDATA[string. Trees built this way were named ]]></tbox><tbox llx="193" lly="177" urx="265" ury="190" f="4"><![CDATA[Retrained2 trees. ]]></tbox></line>
+<line><tbox llx="49" lly="153" urx="265" ury="167" f="5"><![CDATA[2.3. Dictionary Expansion Using Pronunciation Trees ]]></tbox></line>
+<line><tbox llx="49" lly="137" urx="295" ury="150" f="1"><![CDATA[We applied the ICSI+TIMIT trees of Table 3 to successive phon- ]]></tbox></line>
+<line><tbox llx="49" lly="126" urx="295" ury="140" f="1"><![CDATA[emes of each baseform in the WS97 baseline dictionary to obtain a ]]></tbox></line>
+<line><tbox llx="390" lly="749" urx="472" ury="763" f="1"><![CDATA[Dictionary WER ]]></tbox></line>
+<line><tbox llx="401" lly="736" urx="473" ury="750" f="1"><![CDATA[TTS 12.7% ]]></tbox></line>
+<line><tbox llx="396" lly="724" urx="473" ury="737" f="1"><![CDATA[TIMIT 10.8% ]]></tbox></line>
+<line><tbox llx="389" lly="713" urx="473" ury="726" f="1"><![CDATA[Retrained2 10.0% ]]></tbox></line>
+<line><tbox llx="316" lly="692" urx="547" ury="706" f="1"><![CDATA[Table 7: NAB recognition results with Enhanced Dictionaries ]]></tbox></line>
+<line><tbox llx="308" lly="650" urx="554" ury="663" f="1"><![CDATA[weighted pronunciation network as described in [9]. Figure 2 illus- ]]></tbox></line>
+<line><tbox llx="308" lly="639" urx="436" ury="652" f="1"><![CDATA[trates sucha network for the word ]]></tbox><tbox llx="429" lly="638" urx="470" ury="654" f="6"><![CDATA[pretty. ]]></tbox><tbox llx="466" lly="639" urx="555" ury="652" f="1"><![CDATA[Applied statically, this ]]></tbox></line>
+<line><tbox llx="336" lly="542" urx="351" ury="556" f="7"><![CDATA[p ]]></tbox></line>
+<line><tbox llx="380" lly="524" urx="395" ury="538" f="7"><![CDATA[r ]]></tbox></line>
+<line><tbox llx="434" lly="559" urx="452" ury="574" f="7"><![CDATA[ix ]]></tbox></line>
+<line><tbox llx="425" lly="542" urx="443" ury="556" f="7"><![CDATA[ih ]]></tbox></line>
+<line><tbox llx="425" lly="533" urx="443" ury="547" f="7"><![CDATA[ix ]]></tbox></line>
+<line><tbox llx="434" lly="515" urx="452" ury="529" f="7"><![CDATA[ih ]]></tbox></line>
+<line><tbox llx="479" lly="533" urx="493" ury="547" f="7"><![CDATA[t ]]></tbox></line>
+<line><tbox llx="461" lly="515" urx="489" ury="529" f="7"><![CDATA[dx_t ]]></tbox></line>
+<line><tbox llx="515" lly="550" urx="532" ury="565" f="7"><![CDATA[ix ]]></tbox></line>
+<line><tbox llx="506" lly="542" urx="524" ury="556" f="7"><![CDATA[iy ]]></tbox></line>
+<line><tbox llx="515" lly="524" urx="532" ury="538" f="7"><![CDATA[iy ]]></tbox></line>
+<line><tbox llx="380" lly="551" urx="395" ury="563" f="8"><![CDATA[f ]]></tbox></line>
+<line><tbox llx="524" lly="560" urx="539" ury="572" f="8"><![CDATA[f ]]></tbox></line>
+<line><tbox llx="470" lly="551" urx="485" ury="563" f="8"><![CDATA[f ]]></tbox></line>
+<line><tbox llx="416" lly="612" urx="461" ury="631" f="9"><![CDATA[pretty ]]></tbox></line>
+<line><tbox llx="335" lly="585" urx="538" ury="604" f="9"><![CDATA[p r ih t iy ]]></tbox></line>
+<line><tbox llx="343" lly="492" urx="485" ury="505" f="1"><![CDATA[Figure 2: Pronunciation Network for ]]></tbox><tbox llx="479" lly="491" urx="517" ury="507" f="6"><![CDATA[pretty ]]></tbox></line>
+<line><tbox llx="308" lly="469" urx="507" ury="482" f="1"><![CDATA[resulted in an expanded dictionary which we call the ]]></tbox><tbox llx="499" lly="469" urx="555" ury="482" f="4"><![CDATA[ICSI+TIMIT ]]></tbox></line>
+<line><tbox llx="308" lly="458" urx="358" ury="472" f="4"><![CDATA[dictionary. ]]></tbox></line>
+<line><tbox llx="323" lly="447" urx="555" ury="461" f="1"><![CDATA[We also applied the Retrained trees to baseforms in the baseline ]]></tbox></line>
+<line><tbox llx="308" lly="437" urx="555" ury="450" f="1"><![CDATA[dictionary as before, to obtain a secondenhanced dictionary, which ]]></tbox></line>
+<line><tbox llx="308" lly="426" urx="356" ury="440" f="1"><![CDATA[we call the ]]></tbox><tbox llx="348" lly="427" urx="435" ury="440" f="4"><![CDATA[Retrained dictionary. ]]></tbox><tbox llx="427" lly="426" urx="555" ury="440" f="1"><![CDATA[Finally, expanding the baseforms ]]></tbox></line>
+<line><tbox llx="308" lly="416" urx="555" ury="430" f="1"><![CDATA[in the baseline dictionary using the Retrained2 trees resulted in the ]]></tbox></line>
+<line><tbox llx="308" lly="406" urx="400" ury="419" f="4"><![CDATA[Retrained2 dictionary. ]]></tbox></line>
+<line><tbox llx="308" lly="379" urx="477" ury="394" f="5"><![CDATA[2.4. Testing with Tree Based Dictionaries ]]></tbox></line>
+<line><tbox llx="308" lly="362" urx="555" ury="376" f="1"><![CDATA[At AT&T, both trees built on TIMIT and retrained trees built on the ]]></tbox></line>
+<line><tbox llx="308" lly="352" urx="555" ury="365" f="1"><![CDATA[automatically transcribed SI-284 training corpus were used to con- ]]></tbox></line>
+<line><tbox llx="308" lly="341" urx="555" ury="355" f="1"><![CDATA[stuct recognition dictionaries for the NAB Eval '95 test set. These ]]></tbox></line>
+<line><tbox llx="308" lly="331" urx="555" ury="345" f="1"><![CDATA[were compared with a baseline system whose pronunciations came ]]></tbox></line>
+<line><tbox llx="308" lly="321" urx="477" ury="334" f="1"><![CDATA[from the AT&T TTS text-to-speech system. ]]></tbox><tbox llx="472" lly="321" urx="555" ury="334" f="1"><![CDATA[Table 7 shows these ]]></tbox></line>
+<line><tbox llx="308" lly="310" urx="555" ury="324" f="1"><![CDATA[recognition results. We see that the TIMIT-based trees gave a 1.9% ]]></tbox></line>
+<line><tbox llx="308" lly="300" urx="555" ury="313" f="1"><![CDATA[WER reduction over the citation-form TTS dictionary, while trees ]]></tbox></line>
+<line><tbox llx="308" lly="289" urx="554" ury="303" f="1"><![CDATA[retrained on the SI-284 training corpus gave an additional 0.8% re- ]]></tbox></line>
+<line><tbox llx="308" lly="279" urx="555" ury="292" f="1"><![CDATA[duction. In this earlier work, the full TIMIT phone set (minus the ]]></tbox></line>
+<line><tbox llx="308" lly="268" urx="555" ury="282" f="1"><![CDATA[stop closures) was used, which contained 53 phones compared to ]]></tbox></line>
+<line><tbox llx="308" lly="258" urx="555" ury="272" f="1"><![CDATA[the TTS inventory of 41 phonemes. Thus, new acoustic modelshad ]]></tbox></line>
+<line><tbox llx="308" lly="248" urx="447" ury="261" f="1"><![CDATA[to be built for the larger phone set. ]]></tbox><tbox llx="442" lly="248" urx="555" ury="261" f="1"><![CDATA[In other words, the acoustic ]]></tbox></line>
+<line><tbox llx="308" lly="237" urx="555" ury="251" f="1"><![CDATA[models used for the TIMIT and Retrained2 entries in Table 7 were ]]></tbox></line>
+<line><tbox llx="308" lly="227" urx="555" ury="240" f="1"><![CDATA[different than the TTS-based test. At WS97, this was not required, ]]></tbox></line>
+<line><tbox llx="308" lly="216" urx="555" ury="230" f="1"><![CDATA[since as mentioned before, the phone realizations had been force- ]]></tbox></line>
+<line><tbox llx="308" lly="206" urx="444" ury="220" f="1"><![CDATA[ably mapped to the PRONLEX set. ]]></tbox></line>
+<line><tbox llx="323" lly="195" urx="555" ury="209" f="1"><![CDATA[At WS97, bigram lattices for the WS97 development-test were ]]></tbox></line>
+<line><tbox llx="308" lly="185" urx="555" ury="198" f="1"><![CDATA[rescored using the enhanceddictionaries described above using the ]]></tbox></line>
+<line><tbox llx="308" lly="174" urx="433" ury="188" f="1"><![CDATA[WS97 baseline acoustic models ]]></tbox><tbox llx="424" lly="180" urx="431" ury="185" f="3"><![CDATA[2 ]]></tbox><tbox llx="427" lly="174" urx="555" ury="188" f="1"><![CDATA[. Table 8 shows recognition per- ]]></tbox></line>
+<line><tbox llx="308" lly="164" urx="555" ury="177" f="1"><![CDATA[formance using the three static but weighted enhancements to the ]]></tbox></line>
+<line><tbox llx="320" lly="149" urx="326" ury="154" f="3"><![CDATA[2 ]]></tbox><tbox llx="322" lly="145" urx="554" ury="157" f="7"><![CDATA[The baselineacoustic modelswere state clusteredcross-wordtriphones ]]></tbox></line>
+<line><tbox llx="308" lly="136" urx="553" ury="148" f="7"><![CDATA[comprising about 7000 states, each with twelve-component Gaussian mix- ]]></tbox></line>
+<line><tbox llx="308" lly="127" urx="543" ury="139" f="7"><![CDATA[ture output densities, trained on about sixty hours of Switchboard data. ]]></tbox></line>
+<pbox llx="49.00" lly="126.00" urx="555.00" ury="763.00"/></page>
+<page n="5">
+<line><tbox llx="71" lly="749" urx="273" ury="763" f="1"><![CDATA[Dictionary WER DEL SUB INS ]]></tbox></line>
+<line><tbox llx="76" lly="736" urx="277" ury="750" f="1"><![CDATA[Pronlex 44.66% 10.85% 29.47% 4.34% ]]></tbox></line>
+<line><tbox llx="67" lly="724" urx="277" ury="737" f="1"><![CDATA[ICSI+TIMIT 46.14% 11.65% 30.39% 4.10% ]]></tbox></line>
+<line><tbox llx="73" lly="713" urx="277" ury="726" f="1"><![CDATA[Retrained 43.99% 10.90% 29.08% 4.02% ]]></tbox></line>
+<line><tbox llx="70" lly="702" urx="277" ury="716" f="1"><![CDATA[Retrained2 43.75% 10.87% 28.85% 4.02% ]]></tbox></line>
+<line><tbox llx="49" lly="682" urx="295" ury="695" f="1"><![CDATA[Table 8: Switchboard Recognition Results with Enhanced Diction- ]]></tbox></line>
+<line><tbox llx="49" lly="671" urx="75" ury="685" f="1"><![CDATA[aries ]]></tbox></line>
+<line><tbox llx="62" lly="631" urx="286" ury="645" f="1"><![CDATA[Dictionary Weights WER DEL SUB INS ]]></tbox></line>
+<line><tbox llx="66" lly="619" urx="286" ury="632" f="1"><![CDATA[PronLex -- 44.66% 1987 5398 796 ]]></tbox></line>
+<line><tbox llx="58" lly="606" urx="114" ury="619" f="1"><![CDATA[ICSI+TIMIT ]]></tbox><tbox llx="121" lly="612" urx="142" ury="626" f="2"><![CDATA[P ]]></tbox></line>
+<line><tbox llx="134" lly="606" urx="156" ury="616" f="3"><![CDATA[= 1 ]]></tbox><tbox llx="162" lly="606" urx="286" ury="619" f="1"><![CDATA[46.14% 2134 5568 751 ]]></tbox></line>
+<line><tbox llx="58" lly="595" urx="114" ury="608" f="1"><![CDATA[ICSI+TIMIT ]]></tbox><tbox llx="118" lly="595" urx="159" ury="605" f="3"><![CDATA[max = 1 ]]></tbox><tbox llx="162" lly="595" urx="286" ury="608" f="1"><![CDATA[46.13% 1904 5653 893 ]]></tbox></line>
+<line><tbox llx="88" lly="574" urx="256" ury="588" f="1"><![CDATA[Table 9: Scaling Pronunciation Probabilities ]]></tbox></line>
+<line><tbox llx="49" lly="532" urx="295" ury="546" f="1"><![CDATA[dictionary based on the ICSI+TIMIT trees, the Retrained trees and ]]></tbox></line>
+<line><tbox llx="49" lly="522" urx="132" ury="536" f="1"><![CDATA[the Retrained2 trees. ]]></tbox></line>
+<line><tbox llx="64" lly="512" urx="296" ury="525" f="1"><![CDATA[The degradationin performancefrom the ICSI+TIMIT diction- ]]></tbox></line>
+<line><tbox llx="49" lly="501" urx="295" ury="515" f="1"><![CDATA[ary came as a surprise, especially since the AT&T NAB experi- ]]></tbox></line>
+<line><tbox llx="49" lly="491" urx="296" ury="504" f="1"><![CDATA[ments showedan apparently opposite effect. There were, however, ]]></tbox></line>
+<line><tbox llx="49" lly="480" urx="296" ury="494" f="1"><![CDATA[many differences between the two tests including (1) a read speech, ]]></tbox></line>
+<line><tbox llx="49" lly="470" urx="295" ury="484" f="1"><![CDATA[low error task versus a spontaneousspeech,high error rate task, (2) ]]></tbox></line>
+<line><tbox llx="49" lly="460" urx="296" ury="473" f="1"><![CDATA[the TTS-dictionary versus the PRONLEX dictionary, (3) 53 phone ]]></tbox></line>
+<line><tbox llx="49" lly="449" urx="295" ury="463" f="1"><![CDATA[set versus a 43 phone set, (4) potentially different phonetic tran- ]]></tbox></line>
+<line><tbox llx="49" lly="439" urx="295" ury="452" f="1"><![CDATA[scription conventions between the TIMIT and ICSI labellers, and ]]></tbox></line>
+<line><tbox llx="49" lly="428" urx="295" ury="442" f="1"><![CDATA[(5) acoustic model retraining in the AT&T experiments but not in ]]></tbox></line>
+<line><tbox llx="49" lly="418" urx="295" ury="431" f="1"><![CDATA[the WS97 experiments. In fact, preliminary attempts at WS97 to ]]></tbox></line>
+<line><tbox llx="49" lly="408" urx="299" ury="421" f="1"><![CDATA[retrain acousticmodels using tree-based pronunciationlexicons lead ]]></tbox></line>
+<line><tbox llx="49" lly="397" urx="176" ury="411" f="1"><![CDATA[to significantly worse results [1]. ]]></tbox></line>
+<line><tbox llx="64" lly="387" urx="297" ury="400" f="1"><![CDATA[There were various conjecturesmadewhy the ICSI+TIMIT dic- ]]></tbox></line>
+<line><tbox llx="49" lly="376" urx="295" ury="390" f="1"><![CDATA[tionary gave a worse result and we launched an series of exper- ]]></tbox></line>
+<line><tbox llx="49" lly="366" urx="295" ury="379" f="1"><![CDATA[iments to investigate them. These are described in the next few ]]></tbox></line>
+<line><tbox llx="49" lly="356" urx="295" ury="369" f="1"><![CDATA[paragraphs. From Table 8, we also see that the Retrained and Re- ]]></tbox></line>
+<line><tbox llx="49" lly="345" urx="295" ury="358" f="1"><![CDATA[trained2 trees yielded modest but statistically significant improve- ]]></tbox></line>
+<line><tbox llx="49" lly="335" urx="262" ury="348" f="1"><![CDATA[ments in word error rate over the WS97 baseline system. ]]></tbox></line>
+<line><tbox llx="64" lly="311" urx="296" ury="325" f="4"><![CDATA[2.4.1. AreWords with Many PronunciationsBeing Penalized? ]]></tbox></line>
+<line><tbox llx="49" lly="295" urx="186" ury="308" f="1"><![CDATA[It is conceivable that a word such as ]]></tbox><tbox llx="179" lly="294" urx="205" ury="309" f="5"><![CDATA[and, ]]></tbox><tbox llx="199" lly="295" urx="295" ury="308" f="1"><![CDATA[which admits many pro- ]]></tbox></line>
+<line><tbox llx="49" lly="284" urx="295" ury="298" f="1"><![CDATA[nunciations, maybe unnecessarilypenalized relative to a word with ]]></tbox></line>
+<line><tbox llx="49" lly="274" urx="157" ury="287" f="1"><![CDATA[few pronunciations such as ]]></tbox><tbox llx="151" lly="273" urx="170" ury="288" f="5"><![CDATA[an. ]]></tbox><tbox llx="167" lly="274" urx="192" ury="287" f="4"><![CDATA[e.g., ]]></tbox><tbox llx="184" lly="274" urx="234" ury="287" f="1"><![CDATA[the phones ]]></tbox><tbox llx="227" lly="273" urx="266" ury="288" f="5"><![CDATA[[ae n] ]]></tbox><tbox llx="261" lly="274" urx="295" ury="287" f="1"><![CDATA[are the ]]></tbox></line>
+<line><tbox llx="49" lly="263" urx="183" ury="277" f="1"><![CDATA[most likely pronunciation for both ]]></tbox><tbox llx="177" lly="263" urx="194" ury="278" f="5"><![CDATA[an ]]></tbox><tbox llx="189" lly="263" urx="212" ury="277" f="1"><![CDATA[and ]]></tbox><tbox llx="206" lly="263" urx="229" ury="278" f="5"><![CDATA[and ]]></tbox><tbox llx="223" lly="263" urx="296" ury="277" f="1"><![CDATA[in conversational ]]></tbox></line>
+<line><tbox llx="49" lly="253" urx="295" ury="266" f="1"><![CDATA[speech. Since they havea much higher likelihood amongstpronun- ]]></tbox></line>
+<line><tbox llx="49" lly="243" urx="95" ury="256" f="1"><![CDATA[ciations of ]]></tbox><tbox llx="88" lly="242" urx="106" ury="257" f="5"><![CDATA[an ]]></tbox><tbox llx="100" lly="243" urx="187" ury="256" f="1"><![CDATA[than amongst those of ]]></tbox><tbox llx="179" lly="242" urx="205" ury="257" f="5"><![CDATA[and, ]]></tbox><tbox llx="198" lly="243" urx="295" ury="256" f="1"><![CDATA[other things being equal, ]]></tbox></line>
+<line><tbox llx="49" lly="232" urx="211" ury="245" f="1"><![CDATA[it costs less to map these phonesto the word ]]></tbox><tbox llx="204" lly="231" urx="223" ury="247" f="5"><![CDATA[an. ]]></tbox><tbox llx="219" lly="232" urx="296" ury="245" f="1"><![CDATA[If Viterbi decoding ]]></tbox></line>
+<line><tbox llx="49" lly="222" urx="295" ury="235" f="1"><![CDATA[is employed, many researchers have suggested that this problem is ]]></tbox></line>
+<line><tbox llx="49" lly="211" urx="295" ury="225" f="1"><![CDATA[alleviated by scaling the pronunciation probabilities of every word ]]></tbox></line>
+<line><tbox llx="49" lly="201" urx="247" ury="214" f="1"><![CDATA[so that the most likely pronunciation has unit weight ]]></tbox><tbox llx="239" lly="206" urx="245" ury="211" f="6"><![CDATA[3 ]]></tbox><tbox llx="241" lly="201" urx="253" ury="214" f="1"><![CDATA[. ]]></tbox></line>
+<line><tbox llx="64" lly="190" urx="295" ury="204" f="1"><![CDATA[We scaled our enhanced ICSI+TIMIT dictionary in this man- ]]></tbox></line>
+<line><tbox llx="49" lly="180" urx="295" ury="193" f="1"><![CDATA[ner, and found an insignificant gain (see Table 9), ruling this out as ]]></tbox></line>
+<line><tbox llx="60" lly="167" urx="66" ury="172" f="6"><![CDATA[3 ]]></tbox><tbox llx="63" lly="163" urx="295" ury="175" f="7"><![CDATA[This would perhaps be unnecessary if the likelihoods were properly ]]></tbox></line>
+<line><tbox llx="49" lly="154" urx="294" ury="166" f="7"><![CDATA[summed over all pronunciations of a word, but is a sensible adjustment for ]]></tbox></line>
+<line><tbox llx="49" lly="145" urx="294" ury="157" f="7"><![CDATA[Viterbi decoding, as is the additional scaling of the pronunciationprobabil- ]]></tbox></line>
+<line><tbox llx="49" lly="136" urx="294" ury="148" f="7"><![CDATA[ities by the languagemodel scale (12) to bring them on par with the acoustic ]]></tbox></line>
+<line><tbox llx="49" lly="127" urx="80" ury="139" f="7"><![CDATA[scores. ]]></tbox></line>
+<line><tbox llx="324" lly="749" urx="543" ury="763" f="1"><![CDATA[Dictionary Context WER DEL SUB INS ]]></tbox></line>
+<line><tbox llx="328" lly="736" urx="543" ury="750" f="1"><![CDATA[PronLex -- 44.66% 1987 5398 796 ]]></tbox></line>
+<line><tbox llx="319" lly="724" urx="543" ury="737" f="1"><![CDATA[ICSI+TIMIT None 46.14% 2134 5568 751 ]]></tbox></line>
+<line><tbox llx="319" lly="713" urx="418" ury="726" f="1"><![CDATA[ICSI+TIMIT 1 Phone ]]></tbox><tbox llx="419" lly="713" urx="543" ury="726" f="1"><![CDATA[46.09% 2112 5590 743 ]]></tbox></line>
+<line><tbox llx="308" lly="692" urx="555" ury="706" f="1"><![CDATA[Table 10: Word-Internal v/s Cross-Word Pronunciation Modelling ]]></tbox></line>
+<line><tbox llx="319" lly="647" urx="418" ury="661" f="1"><![CDATA[Dictionary (# Expanded) ]]></tbox><tbox llx="425" lly="647" urx="545" ury="661" f="1"><![CDATA[WER DEL SUB INS ]]></tbox></line>
+<line><tbox llx="348" lly="634" urx="545" ury="648" f="1"><![CDATA[PronLex 44.66% 1987 5398 796 ]]></tbox></line>
+<line><tbox llx="317" lly="622" urx="419" ury="635" f="1"><![CDATA[ICSI+TIMIT (All Words) ]]></tbox><tbox llx="421" lly="622" urx="545" ury="635" f="1"><![CDATA[46.14% 2134 5568 751 ]]></tbox></line>
+<line><tbox llx="321" lly="611" urx="545" ury="624" f="1"><![CDATA[ICSI+TIMIT (Top 100) 45.50% 2213 5456 666 ]]></tbox></line>
+<line><tbox llx="309" lly="590" urx="554" ury="604" f="1"><![CDATA[Table 11: Expanding Only the Most Frequent Words Using Trees ]]></tbox></line>
+<line><tbox llx="308" lly="545" urx="501" ury="558" f="1"><![CDATA[the major cause of the degradation in performance. ]]></tbox></line>
+<line><tbox llx="323" lly="512" urx="524" ury="526" f="4"><![CDATA[2.4.2. Do the Trees Badly Need Crossword Context? ]]></tbox></line>
+<line><tbox llx="308" lly="493" urx="555" ury="506" f="1"><![CDATA[Recall that the enhanceddictionaries were obtained by applying the ]]></tbox></line>
+<line><tbox llx="308" lly="482" urx="555" ury="496" f="1"><![CDATA[pronunciation trees to baseforms in isolation, and thus they could ]]></tbox></line>
+<line><tbox llx="308" lly="472" urx="554" ury="485" f="1"><![CDATA[not utilize crossword context. We wrote additional software utilit- ]]></tbox></line>
+<line><tbox llx="308" lly="461" urx="555" ury="475" f="1"><![CDATA[ies so that the pronunciation model could be applied to the bigram ]]></tbox></line>
+<line><tbox llx="308" lly="451" urx="555" ury="465" f="1"><![CDATA[lattices directly. However, looking at three neighbouringphonemes ]]></tbox></line>
+<line><tbox llx="308" lly="441" urx="555" ury="454" f="1"><![CDATA[across word boundaries would have resulted in a drastic expansion ]]></tbox></line>
+<line><tbox llx="308" lly="430" urx="555" ury="444" f="1"><![CDATA[of the lattice. We therefore implemented crossword pronunciation ]]></tbox></line>
+<line><tbox llx="308" lly="420" urx="555" ury="433" f="1"><![CDATA[trees which looked at only one neighbouring phoneme in the con- ]]></tbox></line>
+<line><tbox llx="308" lly="409" urx="555" ury="423" f="1"><![CDATA[text. This, we expected, would not be a severe limitation in light of ]]></tbox></line>
+<line><tbox llx="308" lly="399" urx="555" ury="412" f="1"><![CDATA[the fact (from Table 4) that the deleted context is of little additional ]]></tbox></line>
+<line><tbox llx="308" lly="388" urx="555" ury="402" f="1"><![CDATA[value in prediction. The results in Table 10 indicates that this too is ]]></tbox></line>
+<line><tbox llx="308" lly="378" urx="554" ury="392" f="1"><![CDATA[not the entire reason for the poor performance of the ICSI+TIMIT ]]></tbox></line>
+<line><tbox llx="308" lly="368" urx="555" ury="381" f="1"><![CDATA[dictionary. We conjecture that crossword pronunciation context is ]]></tbox></line>
+<line><tbox llx="308" lly="357" urx="523" ury="371" f="1"><![CDATA[perhaps more important for some words than others (e.g., ]]></tbox><tbox llx="517" lly="357" urx="553" ury="372" f="5"><![CDATA[and I, ]]></tbox></line>
+<line><tbox llx="309" lly="346" urx="359" ury="362" f="5"><![CDATA[want to). ]]></tbox></line>
+<line><tbox llx="323" lly="314" urx="498" ury="328" f="4"><![CDATA[2.4.3. Are the Trees Generalizing Too Much? ]]></tbox></line>
+<line><tbox llx="308" lly="295" urx="555" ury="308" f="1"><![CDATA[The motivation for using local decision tree based models is to be ]]></tbox></line>
+<line><tbox llx="308" lly="284" urx="555" ury="298" f="1"><![CDATA[able to observe phoneme to phone transformations which are uni- ]]></tbox></line>
+<line><tbox llx="308" lly="274" urx="555" ury="287" f="1"><![CDATA[versally applicable. However, it may be argued that since many ]]></tbox></line>
+<line><tbox llx="308" lly="263" urx="555" ury="277" f="1"><![CDATA[words exhibit remarkably stable pronunciationsin the handlabelled ]]></tbox></line>
+<line><tbox llx="308" lly="253" urx="555" ury="267" f="1"><![CDATA[data set, the pronunciation model when applied to these words cre- ]]></tbox></line>
+<line><tbox llx="308" lly="243" urx="555" ury="256" f="1"><![CDATA[ates confusion without generating useful new pronunciations. We ]]></tbox></line>
+<line><tbox llx="308" lly="232" urx="555" ury="246" f="1"><![CDATA[therefore expanded only the hundred most frequent words in the ]]></tbox></line>
+<line><tbox llx="308" lly="222" urx="555" ury="235" f="1"><![CDATA[corpus using the ICSI+TIMIT trees, and tested using this instead ]]></tbox></line>
+<line><tbox llx="308" lly="211" urx="428" ury="225" f="1"><![CDATA[of the ICSI+TIMIT dictionary. ]]></tbox></line>
+<line><tbox llx="323" lly="199" urx="555" ury="213" f="1"><![CDATA[As the results in Table 11 indicate, this is a significant improve- ]]></tbox></line>
+<line><tbox llx="308" lly="189" urx="555" ury="202" f="1"><![CDATA[ment over expanding all dictionary entries, and should be investig- ]]></tbox></line>
+<line><tbox llx="308" lly="178" urx="555" ury="192" f="1"><![CDATA[ated further. However, this is still not the sole reason for the poor ]]></tbox></line>
+<line><tbox llx="308" lly="168" urx="558" ury="181" f="1"><![CDATA[performance of the ICSI+TIMIT dictionary, as the performancecon- ]]></tbox></line>
+<line><tbox llx="308" lly="158" urx="554" ury="171" f="1"><![CDATA[tinues to be below that baseline system. It may be argued, for in- ]]></tbox></line>
+<line><tbox llx="308" lly="147" urx="555" ury="160" f="1"><![CDATA[stance, that expanding only the 100 most frequent words simply ]]></tbox></line>
+<line><tbox llx="308" lly="137" urx="555" ury="150" f="1"><![CDATA[brings the system closer to the baseline, and the recognition per- ]]></tbox></line>
+<line><tbox llx="308" lly="126" urx="432" ury="140" f="1"><![CDATA[formance tracks this regression. ]]></tbox></line>
+<pbox llx="49.00" lly="126.00" urx="558.00" ury="763.00"/></page>
+<page n="6">
+<line><tbox llx="69" lly="749" urx="228" ury="763" f="1"><![CDATA[Pronunciation Probability ]]></tbox></line>
+<line><tbox llx="131" lly="739" urx="228" ury="752" f="1"><![CDATA[ICSI+TIMIT Dictionary ]]></tbox><tbox llx="230" lly="739" urx="275" ury="752" f="1"><![CDATA[Empirical ]]></tbox></line>
+<line><tbox llx="69" lly="726" urx="121" ury="740" f="1"><![CDATA[WANT TO: ]]></tbox><tbox llx="115" lly="726" urx="133" ury="740" f="1"><![CDATA[[w ]]></tbox><tbox llx="130" lly="726" urx="199" ury="741" f="2"><![CDATA[aa n t t ax] ]]></tbox></line>
+<line><tbox llx="69" lly="715" urx="112" ury="729" f="1"><![CDATA[w aa n ax ]]></tbox><tbox llx="167" lly="715" urx="266" ury="729" f="1"><![CDATA[0.04 0.34 ]]></tbox></line>
+<line><tbox llx="69" lly="705" urx="117" ury="718" f="1"><![CDATA[w aa n t ax ]]></tbox><tbox llx="167" lly="705" urx="266" ury="718" f="1"><![CDATA[0.20 0.28 ]]></tbox></line>
+<line><tbox llx="69" lly="694" urx="115" ury="707" f="1"><![CDATA[w aa t t ax ]]></tbox><tbox llx="167" lly="694" urx="260" ury="707" f="1"><![CDATA[0.05 -- ]]></tbox></line>
+<line><tbox llx="69" lly="681" urx="121" ury="694" f="1"><![CDATA[WANT TO: ]]></tbox><tbox llx="115" lly="681" urx="133" ury="694" f="1"><![CDATA[[w ]]></tbox><tbox llx="130" lly="680" urx="199" ury="695" f="2"><![CDATA[ah n t t ax] ]]></tbox></line>
+<line><tbox llx="69" lly="670" urx="113" ury="683" f="1"><![CDATA[w ah n ax ]]></tbox><tbox llx="167" lly="670" urx="266" ury="683" f="1"><![CDATA[0.05 0.37 ]]></tbox></line>
+<line><tbox llx="69" lly="659" urx="118" ury="673" f="1"><![CDATA[w ah n t ax ]]></tbox><tbox llx="167" lly="659" urx="260" ury="673" f="1"><![CDATA[0.26 -- ]]></tbox></line>
+<line><tbox llx="69" lly="648" urx="118" ury="662" f="1"><![CDATA[w ah n t ah ]]></tbox><tbox llx="167" lly="648" urx="260" ury="662" f="1"><![CDATA[0.06 -- ]]></tbox></line>
+<line><tbox llx="56" lly="628" urx="288" ury="641" f="1"><![CDATA[Table 12: Empirical vs. ICSI+TIMIT Dictionary Probabilities ]]></tbox></line>
+<line><tbox llx="72" lly="584" urx="228" ury="597" f="1"><![CDATA[Pronunciation Probability ]]></tbox></line>
+<line><tbox llx="135" lly="574" urx="272" ury="587" f="1"><![CDATA[Retrained2 Dictionary Empirical ]]></tbox></line>
+<line><tbox llx="72" lly="561" urx="124" ury="574" f="1"><![CDATA[WANT TO: ]]></tbox><tbox llx="119" lly="561" urx="137" ury="574" f="1"><![CDATA[[w ]]></tbox><tbox llx="134" lly="560" urx="203" ury="575" f="2"><![CDATA[aa n t t ax] ]]></tbox></line>
+<line><tbox llx="72" lly="550" urx="116" ury="563" f="1"><![CDATA[w aa n ax ]]></tbox><tbox llx="167" lly="550" urx="262" ury="563" f="1"><![CDATA[0.08 0.34 ]]></tbox></line>
+<line><tbox llx="72" lly="539" urx="121" ury="552" f="1"><![CDATA[w aa n t ax ]]></tbox><tbox llx="167" lly="539" urx="262" ury="552" f="1"><![CDATA[0.49 0.28 ]]></tbox></line>
+<line><tbox llx="72" lly="528" urx="123" ury="542" f="1"><![CDATA[w aa n t uw ]]></tbox><tbox llx="167" lly="528" urx="256" ury="542" f="1"><![CDATA[0.08 -- ]]></tbox></line>
+<line><tbox llx="72" lly="515" urx="124" ury="529" f="1"><![CDATA[WANT TO: ]]></tbox><tbox llx="119" lly="515" urx="137" ury="529" f="1"><![CDATA[[w ]]></tbox><tbox llx="134" lly="515" urx="203" ury="530" f="2"><![CDATA[ah n t t ax] ]]></tbox></line>
+<line><tbox llx="72" lly="505" urx="262" ury="518" f="1"><![CDATA[w ah n ax 0.10 0.37 ]]></tbox></line>
+<line><tbox llx="72" lly="494" urx="122" ury="507" f="1"><![CDATA[w ah n t ax ]]></tbox><tbox llx="167" lly="494" urx="256" ury="507" f="1"><![CDATA[0.61 -- ]]></tbox></line>
+<line><tbox llx="72" lly="483" urx="124" ury="496" f="1"><![CDATA[w ah n t uw ]]></tbox><tbox llx="167" lly="483" urx="256" ury="496" f="1"><![CDATA[0.10 -- ]]></tbox></line>
+<line><tbox llx="62" lly="462" urx="282" ury="476" f="1"><![CDATA[Table 13: Empirical vs. Retrained Dictionary Probabilities ]]></tbox></line>
+<line><tbox llx="64" lly="418" urx="256" ury="432" f="3"><![CDATA[2.4.4. Can the Weights in Dictionary be Bettered? ]]></tbox></line>
+<line><tbox llx="49" lly="400" urx="295" ury="413" f="1"><![CDATA[Application of the decision tree model one phoneme at a time en- ]]></tbox></line>
+<line><tbox llx="49" lly="389" urx="295" ury="403" f="1"><![CDATA[tails a conditional independence assumption between the surface ]]></tbox></line>
+<line><tbox llx="49" lly="379" urx="310" ury="392" f="1"><![CDATA[forms given the baseforms, much as in a hiddenMarkovmodel (HMM). ]]></tbox></line>
+<line><tbox llx="49" lly="368" urx="307" ury="382" f="1"><![CDATA[Thus the resultant probability of a pronunciation (obtained as a product ]]></tbox></line>
+<line><tbox llx="49" lly="358" urx="295" ury="371" f="1"><![CDATA[of the conditional probabilities of the surface phones) is, at best, ]]></tbox></line>
+<line><tbox llx="49" lly="347" urx="295" ury="361" f="1"><![CDATA[as reflective of the observed frequency of the pronunciation as the ]]></tbox></line>
+<line><tbox llx="49" lly="337" urx="295" ury="351" f="1"><![CDATA[goodnessof this independenceassumption. To check this, we com- ]]></tbox></line>
+<line><tbox llx="49" lly="327" urx="295" ury="340" f="1"><![CDATA[pared the probabilities of the pronunciations in the ICSI+TIMIT ]]></tbox></line>
+<line><tbox llx="49" lly="316" urx="298" ury="330" f="1"><![CDATA[dictionary for afew hand-pickedwords with their relative frequency ]]></tbox></line>
+<line><tbox llx="49" lly="306" urx="297" ury="319" f="1"><![CDATA[in our automatic transcriptions. Table 12 suggeststhat the tree prob- ]]></tbox></line>
+<line><tbox llx="49" lly="295" urx="297" ury="309" f="1"><![CDATA[abilities, andperhapsthe independenceassumptionas well, are very ]]></tbox></line>
+<line><tbox llx="49" lly="285" urx="295" ury="298" f="1"><![CDATA[unsatisfactory. Much room for research and improvement remains ]]></tbox></line>
+<line><tbox llx="49" lly="274" urx="76" ury="288" f="1"><![CDATA[here. ]]></tbox></line>
+<line><tbox llx="64" lly="263" urx="296" ury="276" f="1"><![CDATA[Since the Retrained trees were basedonmuch more data (which ]]></tbox></line>
+<line><tbox llx="49" lly="252" urx="295" ury="266" f="1"><![CDATA[also happened to be the same data from which the empirical prob- ]]></tbox></line>
+<line><tbox llx="49" lly="242" urx="295" ury="256" f="1"><![CDATA[abilities of the pronunciations were inferred), we conducted a sim- ]]></tbox></line>
+<line><tbox llx="49" lly="232" urx="297" ury="245" f="1"><![CDATA[ilar comparison for the Retrained2 dictionary. The examplein Table ]]></tbox></line>
+<line><tbox llx="49" lly="221" urx="295" ury="235" f="1"><![CDATA[13 further reinforces our conclusion that it is the HMM-like inde- ]]></tbox></line>
+<line><tbox llx="49" lly="211" urx="302" ury="224" f="1"><![CDATA[pendenceassumptionmore than the leaf probability estimation which ]]></tbox></line>
+<line><tbox llx="49" lly="201" urx="295" ury="214" f="1"><![CDATA[skews the tree based pronunciation probabilities away from their ]]></tbox></line>
+<line><tbox llx="49" lly="190" urx="296" ury="203" f="1"><![CDATA[empirically observed values. Alternative probability assignments ]]></tbox></line>
+<line><tbox llx="49" lly="180" urx="279" ury="193" f="1"><![CDATA[at the surface string level should be investigated in the future. ]]></tbox></line>
+<line><tbox llx="64" lly="168" urx="295" ury="181" f="1"><![CDATA[We also conductedan experiment, which clearly brings out the ]]></tbox></line>
+<line><tbox llx="49" lly="158" urx="295" ury="171" f="1"><![CDATA[importance of correct pronunciation weight estimation even when ]]></tbox></line>
+<line><tbox llx="49" lly="147" urx="206" ury="160" f="1"><![CDATA[the HMM-like independence assumption ]]></tbox><tbox llx="199" lly="147" urx="215" ury="161" f="3"><![CDATA[is ]]></tbox><tbox llx="207" lly="147" urx="295" ury="160" f="1"><![CDATA[made. Since we were ]]></tbox></line>
+<line><tbox llx="49" lly="137" urx="298" ury="150" f="1"><![CDATA[not satisfied with the pronunciation probabilities of the ICSI+TIMIT ]]></tbox></line>
+<line><tbox llx="49" lly="126" urx="299" ury="140" f="1"><![CDATA[trees, we poured the 60 hours of automatically transcribed data down ]]></tbox></line>
+<line><tbox llx="318" lly="748" urx="555" ury="762" f="1"><![CDATA[Dictionary Weights WER DEL SUB INS ]]></tbox></line>
+<line><tbox llx="322" lly="736" urx="555" ury="749" f="1"><![CDATA[PronLex -- 44.66% 1987 5398 796 ]]></tbox></line>
+<line><tbox llx="314" lly="723" urx="555" ury="736" f="1"><![CDATA[ICSI+TIMIT ICSI+TIMIT 46.14% 2134 5568 751 ]]></tbox></line>
+<line><tbox llx="314" lly="712" urx="555" ury="725" f="1"><![CDATA[ICSI+TIMIT Retrained 44.05% 1982 5351 736 ]]></tbox></line>
+<line><tbox llx="308" lly="691" urx="555" ury="705" f="1"><![CDATA[Table 14: Impact of Reestimating Pronunciation Tree Probabilities ]]></tbox></line>
+<line><tbox llx="308" lly="652" urx="555" ury="665" f="1"><![CDATA[the trees and reestimated the leaf distributions, as described in the ]]></tbox></line>
+<line><tbox llx="308" lly="641" urx="555" ury="655" f="1"><![CDATA[context of Table 6. These trees continued to assign mismatched ]]></tbox></line>
+<line><tbox llx="308" lly="631" urx="555" ury="644" f="1"><![CDATA[pronunciation probabilities to words, much as above, but they had ]]></tbox></line>
+<line><tbox llx="308" lly="620" urx="555" ury="634" f="1"><![CDATA[considerably better recognition performance, as indicated in Table ]]></tbox></line>
+<line><tbox llx="308" lly="610" urx="555" ury="623" f="1"><![CDATA[14. We were unable to investigate due to time limitations during ]]></tbox></line>
+<line><tbox llx="308" lly="599" urx="555" ury="613" f="1"><![CDATA[the workshop why the three retrained trees help in spite of not al- ]]></tbox></line>
+<line><tbox llx="308" lly="589" urx="538" ury="603" f="1"><![CDATA[ways being in tune with empirical pronunciation frequencies. ]]></tbox></line>
+<line><tbox llx="308" lly="566" urx="481" ury="580" f="4"><![CDATA[2.5. Summary of Tree Based Experiments ]]></tbox></line>
+<line><tbox llx="325" lly="549" urx="338" ury="561" f="5"><![CDATA[ffl ]]></tbox><tbox llx="333" lly="550" urx="555" ury="563" f="1"><![CDATA[Pronunciation probabilities based on TIMIT trees for NAB ]]></tbox></line>
+<line><tbox llx="333" lly="539" urx="555" ury="553" f="1"><![CDATA[helped performance (+1.9%) and reestimated trees helped ]]></tbox></line>
+<line><tbox llx="333" lly="529" urx="395" ury="542" f="1"><![CDATA[more (+0.8%). ]]></tbox></line>
+<line><tbox llx="325" lly="515" urx="338" ury="527" f="5"><![CDATA[ffl ]]></tbox><tbox llx="333" lly="515" urx="554" ury="529" f="1"><![CDATA[Pronunciation probabilities based on ICSI+TIMIT trees for ]]></tbox></line>
+<line><tbox llx="333" lly="505" urx="555" ury="518" f="1"><![CDATA[Switchboard hurt performance (-1.5%), but those from rees- ]]></tbox></line>
+<line><tbox llx="333" lly="495" urx="440" ury="508" f="1"><![CDATA[timated trees help (+0.9%). ]]></tbox></line>
+<line><tbox llx="325" lly="481" urx="338" ury="493" f="5"><![CDATA[ffl ]]></tbox><tbox llx="333" lly="481" urx="558" ury="495" f="1"><![CDATA[Reestimated pronunciation probabilities still don't agree with ]]></tbox></line>
+<line><tbox llx="333" lly="471" urx="555" ury="484" f="1"><![CDATA[empirical frequencies in training. Word level pronunciation ]]></tbox></line>
+<line><tbox llx="333" lly="460" urx="464" ury="474" f="1"><![CDATA[probabilities should be examined. ]]></tbox></line>
+<line><tbox llx="325" lly="447" urx="338" ury="459" f="5"><![CDATA[ffl ]]></tbox><tbox llx="333" lly="447" urx="554" ury="460" f="1"><![CDATA[Words have variable tendencies to be mispronounced. All ]]></tbox></line>
+<line><tbox llx="333" lly="436" urx="543" ury="450" f="1"><![CDATA[words in the dictionary should not be expanded equally. ]]></tbox></line>
+<line><tbox llx="341" lly="412" urx="522" ury="426" f="4"><![CDATA[3. EXPLICIT DICTIONARY EXPANSION ]]></tbox></line>
+<line><tbox llx="308" lly="393" urx="555" ury="406" f="1"><![CDATA[The degradation in performance due to the ICSI+TIMIT diction- ]]></tbox></line>
+<line><tbox llx="308" lly="382" urx="555" ury="396" f="1"><![CDATA[ary admits the possibility that the ICSI+TIMIT trees either gener- ]]></tbox></line>
+<line><tbox llx="308" lly="372" urx="555" ury="385" f="1"><![CDATA[alize incorrectly or do a poor job of assigning costs to the alternate ]]></tbox></line>
+<line><tbox llx="308" lly="362" urx="555" ury="375" f="1"><![CDATA[pronunciations. Both of these are crucial to the success of diction- ]]></tbox></line>
+<line><tbox llx="308" lly="351" urx="439" ury="364" f="1"><![CDATA[ary enhancement based methods. ]]></tbox><tbox llx="435" lly="351" urx="555" ury="364" f="1"><![CDATA[An alternate, more conservat- ]]></tbox></line>
+<line><tbox llx="308" lly="341" urx="555" ury="354" f="1"><![CDATA[ive approach to dictionary enhancement was therefore examined ]]></tbox></line>
+<line><tbox llx="308" lly="330" urx="555" ury="344" f="1"><![CDATA[at WS97. As such, all experiments from here on apply to Switch- ]]></tbox></line>
+<line><tbox llx="308" lly="320" urx="341" ury="333" f="1"><![CDATA[board. ]]></tbox></line>
+<line><tbox llx="308" lly="296" urx="443" ury="311" f="4"><![CDATA[3.1. ICSI Multiword Dictionary ]]></tbox></line>
+<line><tbox llx="308" lly="280" urx="556" ury="294" f="1"><![CDATA[ThePronLex dictionary is first enhancedwith all the pronunciations ]]></tbox></line>
+<line><tbox llx="308" lly="270" urx="555" ury="283" f="1"><![CDATA[for words seen in the hand-labelled (ICSI) portion of the corpus. A ]]></tbox></line>
+<line><tbox llx="308" lly="260" urx="555" ury="273" f="1"><![CDATA[candidate list of 172 multiwords (cf. [4]) is also appended to the ]]></tbox></line>
+<line><tbox llx="308" lly="249" urx="555" ury="262" f="1"><![CDATA[dictionary to capture coarticulation, and pronunciations for these ]]></tbox></line>
+<line><tbox llx="308" lly="239" urx="515" ury="252" f="1"><![CDATA[are similarly extended using the hand-labelled corpus. ]]></tbox><tbox llx="510" lly="239" urx="555" ury="252" f="1"><![CDATA[The word ]]></tbox></line>
+<line><tbox llx="308" lly="228" urx="555" ury="242" f="1"><![CDATA[transcription of the training corpus is then expanded using these ]]></tbox></line>
+<line><tbox llx="308" lly="218" urx="555" ury="231" f="1"><![CDATA[alternate pronunciations and aligned with the acoustics using our ]]></tbox></line>
+<line><tbox llx="308" lly="208" urx="555" ury="221" f="1"><![CDATA[baselinemodels. New pronunciationswhich are chosensufficiently ]]></tbox></line>
+<line><tbox llx="308" lly="197" urx="381" ury="210" f="1"><![CDATA[often are deemed ]]></tbox><tbox llx="373" lly="197" urx="417" ury="211" f="3"><![CDATA[bona fide ]]></tbox><tbox llx="409" lly="197" urx="465" ury="210" f="1"><![CDATA[entries to the ]]></tbox><tbox llx="458" lly="197" urx="555" ury="211" f="3"><![CDATA[ICSI Multiword diction- ]]></tbox></line>
+<line><tbox llx="308" lly="187" urx="333" ury="200" f="3"><![CDATA[ary; ]]></tbox><tbox llx="325" lly="187" urx="555" ury="200" f="1"><![CDATA[the others are discarded. Pronunciations are assigned weights ]]></tbox></line>
+<line><tbox llx="308" lly="176" urx="437" ury="190" f="1"><![CDATA[based on their relative frequency. ]]></tbox></line>
+<line><tbox llx="308" lly="153" urx="443" ury="167" f="4"><![CDATA[3.2. Auto Multiword Dictionary ]]></tbox></line>
+<line><tbox llx="308" lly="137" urx="555" ury="150" f="1"><![CDATA[Instead of the forced alignment among alternate pronunciations ex- ]]></tbox></line>
+<line><tbox llx="308" lly="126" urx="555" ury="140" f="1"><![CDATA[tracted from the hand-labelled portion of the corpus as described ]]></tbox></line>
+<pbox llx="49.00" lly="126.00" urx="558.00" ury="763.00"/></page>
+<page n="7">
+<line><tbox llx="80" lly="749" urx="272" ury="763" f="1"><![CDATA[Dictionary WER DEL SUB INS ]]></tbox></line>
+<line><tbox llx="83" lly="736" urx="274" ury="750" f="1"><![CDATA[PronLex 44.7% 10.9% 29.5% 4.3% ]]></tbox></line>
+<line><tbox llx="70" lly="724" urx="274" ury="737" f="1"><![CDATA[ICSI Multiword 44.6% 10.3% 29.7% 4.6% ]]></tbox></line>
+<line><tbox llx="70" lly="713" urx="138" ury="726" f="1"><![CDATA[Auto Multiword ]]></tbox><tbox llx="140" lly="713" urx="274" ury="726" f="1"><![CDATA[43.8% 10.4% 29.1% 4.3% ]]></tbox></line>
+<line><tbox llx="49" lly="692" urx="295" ury="706" f="1"><![CDATA[Table 15: Lattice-Rescoring with Explicitly ExpandedDictionaries ]]></tbox></line>
+<line><tbox llx="49" lly="668" urx="299" ury="682" f="1"><![CDATA[above,new pronunciationsfor words andmultiwords may bechosen ]]></tbox></line>
+<line><tbox llx="49" lly="658" urx="295" ury="671" f="1"><![CDATA[from the large automatically transcribed corpus described in Sec- ]]></tbox></line>
+<line><tbox llx="49" lly="648" urx="220" ury="661" f="1"><![CDATA[tion 2.2. This alternative approach yields the ]]></tbox><tbox llx="212" lly="648" urx="296" ury="661" f="2"><![CDATA[Auto Multiword dic- ]]></tbox></line>
+<line><tbox llx="49" lly="637" urx="88" ury="651" f="2"><![CDATA[tionary. ]]></tbox><tbox llx="80" lly="637" urx="298" ury="651" f="1"><![CDATA[Qualitatively speaking, this dictionary invokesthe decision ]]></tbox></line>
+<line><tbox llx="49" lly="627" urx="295" ury="640" f="1"><![CDATA[tree pronunciation models to generate alternatives, but keeps only ]]></tbox></line>
+<line><tbox llx="49" lly="616" urx="295" ury="630" f="1"><![CDATA[those which occur frequently enough in the automatic transcrip- ]]></tbox></line>
+<line><tbox llx="49" lly="606" urx="295" ury="619" f="1"><![CDATA[tion. Again, weights are assigned to each pronunciation based on ]]></tbox></line>
+<line><tbox llx="49" lly="596" urx="136" ury="609" f="1"><![CDATA[its relative frequency. ]]></tbox></line>
+<line><tbox llx="49" lly="572" urx="266" ury="586" f="3"><![CDATA[3.3. Recognition Results using Expanded Dictionaries ]]></tbox></line>
+<line><tbox llx="49" lly="556" urx="296" ury="569" f="1"><![CDATA[Bigram lattices for the WS97 dev-test, generatedusing the PronLex ]]></tbox></line>
+<line><tbox llx="49" lly="545" urx="296" ury="559" f="1"><![CDATA[dictionary, are rescored using the enhanced dictionaries described ]]></tbox></line>
+<line><tbox llx="49" lly="535" urx="295" ury="548" f="1"><![CDATA[above. Table 15 shows recognition performance using the two dic- ]]></tbox></line>
+<line><tbox llx="49" lly="524" urx="295" ury="538" f="1"><![CDATA[tionaries. The 0.9% improvement due to the Auto Multiword dic- ]]></tbox></line>
+<line><tbox llx="49" lly="514" urx="295" ury="527" f="1"><![CDATA[tionary is encouraging, particularly in contrast to the lack of im- ]]></tbox></line>
+<line><tbox llx="49" lly="504" urx="297" ury="517" f="1"><![CDATA[provement obtained from the ICSI Multiword dictionary. This com- ]]></tbox></line>
+<line><tbox llx="49" lly="493" urx="296" ury="507" f="1"><![CDATA[parison further reinforces the impression that the hand-labelled data ]]></tbox></line>
+<line><tbox llx="49" lly="483" urx="295" ury="496" f="1"><![CDATA[is good for bootstrapping, but not reliable enough for directly es- ]]></tbox></line>
+<line><tbox llx="49" lly="472" urx="172" ury="486" f="1"><![CDATA[timating pronunciation models. ]]></tbox><tbox llx="166" lly="472" urx="295" ury="486" f="1"><![CDATA[At the least, incorporation of hu- ]]></tbox></line>
+<line><tbox llx="49" lly="462" urx="295" ury="475" f="1"><![CDATA[man expert knowledge into statistical information processing sys- ]]></tbox></line>
+<line><tbox llx="49" lly="452" urx="295" ury="465" f="1"><![CDATA[tems has been shown again to be a difficult problem in which naive ]]></tbox></line>
+<line><tbox llx="49" lly="441" urx="295" ury="454" f="1"><![CDATA[approachesdo not work as well as modelling techniques that match ]]></tbox></line>
+<line><tbox llx="49" lly="431" urx="259" ury="444" f="1"><![CDATA[the supplied knowledge to the capabilties of the system. ]]></tbox></line>
+<line><tbox llx="64" lly="406" urx="281" ury="420" f="3"><![CDATA[4. COARTICULATION SENSITIVE CLUSTERING ]]></tbox></line>
+<line><tbox llx="49" lly="387" urx="299" ury="400" f="1"><![CDATA[Context dependentacoustic modelssuch as triphone HMMs are cap- ]]></tbox></line>
+<line><tbox llx="49" lly="376" urx="295" ury="390" f="1"><![CDATA[able of implicitly modelling some allophonic variation. However, ]]></tbox></line>
+<line><tbox llx="49" lly="366" urx="295" ury="379" f="1"><![CDATA[the models in our baseline system do not distinguish betweenword- ]]></tbox></line>
+<line><tbox llx="49" lly="355" urx="295" ury="369" f="1"><![CDATA[internal and cross-word triphones, and one may hypothesise that ]]></tbox></line>
+<line><tbox llx="49" lly="345" urx="295" ury="358" f="1"><![CDATA[the gains above, especially those from the Multiword experiments, ]]></tbox></line>
+<line><tbox llx="49" lly="334" urx="295" ury="348" f="1"><![CDATA[are due to better modelling of common cross-word effects. To in- ]]></tbox></line>
+<line><tbox llx="49" lly="324" urx="295" ury="338" f="1"><![CDATA[vestigate this possibility, the triphone clustering procedure in our ]]></tbox></line>
+<line><tbox llx="49" lly="314" urx="223" ury="327" f="1"><![CDATA[(HTK) system is enhanced, as described next. ]]></tbox></line>
+<line><tbox llx="64" lly="303" urx="295" ury="317" f="1"><![CDATA[The major deviation from the baseline system is to mark the ]]></tbox></line>
+<line><tbox llx="49" lly="293" urx="295" ury="306" f="1"><![CDATA[phones in the the PronLex dictionary to permit acoustic triphone ]]></tbox></line>
+<line><tbox llx="49" lly="282" urx="295" ury="296" f="1"><![CDATA[state clustering routines to make explicit use of information about ]]></tbox></line>
+<line><tbox llx="49" lly="272" urx="295" ury="286" f="1"><![CDATA[word boundary location. Another important modification is the use ]]></tbox></line>
+<line><tbox llx="49" lly="262" urx="295" ury="275" f="1"><![CDATA[of a specific interjection phone set. This is not so much to model in- ]]></tbox></line>
+<line><tbox llx="49" lly="251" urx="295" ury="265" f="1"><![CDATA[terjections better as to prevent the very frequent interjections from ]]></tbox></line>
+<line><tbox llx="49" lly="241" urx="295" ury="254" f="1"><![CDATA[overwhelming the clustering and modelling of phones in noninter- ]]></tbox></line>
+<line><tbox llx="49" lly="230" urx="295" ury="244" f="1"><![CDATA[jections. Acoustic model training is carried out in the same manner ]]></tbox></line>
+<line><tbox llx="49" lly="220" urx="295" ury="233" f="1"><![CDATA[as the baseline system, with the difference that the question set for ]]></tbox></line>
+<line><tbox llx="49" lly="210" urx="295" ury="223" f="1"><![CDATA[triphone state clustering is augmented with questions regarding the ]]></tbox></line>
+<line><tbox llx="49" lly="199" urx="296" ury="213" f="1"><![CDATA[word boundary tags and interjection phone set. A set of acoustic ]]></tbox></line>
+<line><tbox llx="49" lly="189" urx="128" ury="202" f="1"><![CDATA[models, named the ]]></tbox><tbox llx="120" lly="189" urx="195" ury="202" f="2"><![CDATA[INTWBD models, ]]></tbox><tbox llx="188" lly="189" urx="296" ury="202" f="1"><![CDATA[comparable to the baseline ]]></tbox></line>
+<line><tbox llx="49" lly="178" urx="295" ury="192" f="1"><![CDATA[in terms of the number of states and Gaussian components, is thus ]]></tbox></line>
+<line><tbox llx="49" lly="168" urx="95" ury="181" f="1"><![CDATA[estimated. ]]></tbox></line>
+<line><tbox llx="64" lly="158" urx="295" ury="171" f="1"><![CDATA[Next, the training data is retranscribed using these models and ]]></tbox></line>
+<line><tbox llx="49" lly="147" urx="295" ury="160" f="1"><![CDATA[the pronunciation networks of Section 2.2. The Retrained2 diction- ]]></tbox></line>
+<line><tbox llx="49" lly="137" urx="295" ury="150" f="1"><![CDATA[ary and the Auto Multiword dictionary of Sections 2.2 and 3.2 re- ]]></tbox></line>
+<line><tbox llx="49" lly="126" urx="263" ury="140" f="1"><![CDATA[spectively are then regenerated from these transcriptions. ]]></tbox></line>
+<line><tbox llx="339" lly="749" urx="531" ury="763" f="1"><![CDATA[Dictionary WER DEL SUB INS ]]></tbox></line>
+<line><tbox llx="379" lly="736" urx="483" ury="750" f="1"><![CDATA[Baseline Acoustic Models ]]></tbox></line>
+<line><tbox llx="343" lly="726" urx="533" ury="739" f="1"><![CDATA[PronLex 43.4% 9.8% 29.4% 4.1% ]]></tbox></line>
+<line><tbox llx="377" lly="713" urx="486" ury="726" f="1"><![CDATA[INTWBD Acoustic Models ]]></tbox></line>
+<line><tbox llx="343" lly="702" urx="533" ury="716" f="1"><![CDATA[PronLex 41.8% 10.1% 27.8% 3.9% ]]></tbox></line>
+<line><tbox llx="339" lly="689" urx="533" ury="703" f="1"><![CDATA[Retrained2 41.3% 10.2% 27.5% 3.7% ]]></tbox></line>
+<line><tbox llx="329" lly="678" urx="533" ury="692" f="1"><![CDATA[Auto Multiword 41.1% 9.7% 27.5% 4.0% ]]></tbox></line>
+<line><tbox llx="347" lly="658" urx="515" ury="671" f="1"><![CDATA[Table 16: Lattice-Rescoring with New AMs ]]></tbox></line>
+<line><tbox llx="341" lly="629" urx="529" ury="642" f="1"><![CDATA[Dictionary WER DEL SUB INS ]]></tbox></line>
+<line><tbox llx="379" lly="616" urx="483" ury="629" f="1"><![CDATA[Baseline Acoustic Models ]]></tbox></line>
+<line><tbox llx="345" lly="605" urx="531" ury="619" f="1"><![CDATA[PronLex 40.9% 8.9% 27.8% 4.2% ]]></tbox></line>
+<line><tbox llx="377" lly="592" urx="486" ury="606" f="1"><![CDATA[INTWBD Acoustic Models ]]></tbox></line>
+<line><tbox llx="345" lly="581" urx="531" ury="595" f="1"><![CDATA[PronLex 39.4% 9.2% 26.2% 4.0% ]]></tbox></line>
+<line><tbox llx="341" lly="569" urx="531" ury="582" f="1"><![CDATA[Retrained2 38.9% 9.2% 25.9% 3.8% ]]></tbox></line>
+<line><tbox llx="331" lly="558" urx="399" ury="571" f="1"><![CDATA[Auto Multiword ]]></tbox><tbox llx="402" lly="558" urx="531" ury="571" f="1"><![CDATA[38.5% 8.6% 25.8% 4.2% ]]></tbox></line>
+<line><tbox llx="314" lly="537" urx="549" ury="551" f="1"><![CDATA[Table 17: Lattice-Rescoring with new AMs and a Trigram LM ]]></tbox></line>
+<line><tbox llx="308" lly="507" urx="543" ury="522" f="3"><![CDATA[4.1. Recognition Results Using Improved Acoustic Models ]]></tbox></line>
+<line><tbox llx="308" lly="486" urx="412" ury="500" f="1"><![CDATA[Table 16 shows the results ]]></tbox><tbox llx="404" lly="492" urx="410" ury="497" f="4"><![CDATA[4 ]]></tbox><tbox llx="408" lly="486" urx="555" ury="500" f="1"><![CDATA[of rescoring the WS97 dev-test set us- ]]></tbox></line>
+<line><tbox llx="308" lly="476" urx="555" ury="489" f="1"><![CDATA[ing the INTWBD acoustic models, and indicates that enabling the ]]></tbox></line>
+<line><tbox llx="308" lly="466" urx="555" ury="479" f="1"><![CDATA[state clustering to take advantage of word boundary information ]]></tbox></line>
+<line><tbox llx="308" lly="455" urx="555" ury="469" f="1"><![CDATA[and separate phones for interjections result in significant improve- ]]></tbox></line>
+<line><tbox llx="308" lly="445" urx="422" ury="458" f="1"><![CDATA[ment in performance (1.6%). ]]></tbox><tbox llx="417" lly="445" urx="555" ury="458" f="1"><![CDATA[Observe that the two dictionary en- ]]></tbox></line>
+<line><tbox llx="308" lly="434" urx="570" ury="448" f="1"><![CDATA[hancementtechniquescontinue to provide addedimprovements (0.7%), ]]></tbox></line>
+<line><tbox llx="308" lly="424" urx="460" ury="437" f="1"><![CDATA[though to a slightly smaller extent now. ]]></tbox></line>
+<line><tbox llx="338" lly="385" urx="526" ury="399" f="3"><![CDATA[5. LANGUAGE MODEL IMPROVEMENTS ]]></tbox></line>
+<line><tbox llx="308" lly="360" urx="555" ury="374" f="1"><![CDATA[In the spirit of investigating whether pronunciation modelling via ]]></tbox></line>
+<line><tbox llx="308" lly="350" urx="555" ury="364" f="1"><![CDATA[the two expandeddictionaries continues to be of benefit when other ]]></tbox></line>
+<line><tbox llx="308" lly="340" urx="554" ury="353" f="1"><![CDATA[components of the system are improved, lattices generated by a bi- ]]></tbox></line>
+<line><tbox llx="308" lly="329" urx="567" ury="343" f="1"><![CDATA[gram languagemodeland the baselinePronLex dictionary are rescored ]]></tbox></line>
+<line><tbox llx="308" lly="319" urx="554" ury="332" f="1"><![CDATA[using a trigram language model and the Retrained2 and Auto Mul- ]]></tbox></line>
+<line><tbox llx="308" lly="309" urx="388" ury="322" f="1"><![CDATA[tiword dictionaries. ]]></tbox><tbox llx="383" lly="309" urx="555" ury="322" f="1"><![CDATA[The results in Table 17 are therefore directly ]]></tbox></line>
+<line><tbox llx="308" lly="298" urx="562" ury="311" f="1"><![CDATA[comparablewith those in Table 16, which are basedon bigram scores. ]]></tbox></line>
+<line><tbox llx="323" lly="274" urx="555" ury="288" f="1"><![CDATA[Observe that the improvement from the INTWBD models over ]]></tbox></line>
+<line><tbox llx="308" lly="264" urx="555" ury="277" f="1"><![CDATA[the baseline models is 1.5%, which matches the 1.6% improvement ]]></tbox></line>
+<line><tbox llx="308" lly="254" urx="438" ury="267" f="1"><![CDATA[with the bigram language model. ]]></tbox><tbox llx="432" lly="254" urx="555" ury="267" f="1"><![CDATA[The additional improvement of ]]></tbox></line>
+<line><tbox llx="308" lly="243" urx="555" ury="257" f="1"><![CDATA[0.5% from the Retrained2 dictionary also continues to hold, and the ]]></tbox></line>
+<line><tbox llx="308" lly="233" urx="555" ury="246" f="1"><![CDATA[improvement from the Auto Multiword dictionary over the Pron- ]]></tbox></line>
+<line><tbox llx="308" lly="222" urx="555" ury="236" f="1"><![CDATA[Lex dictionary actually increases from 0.7% to 0.9%. All these res- ]]></tbox></line>
+<line><tbox llx="308" lly="212" urx="555" ury="225" f="1"><![CDATA[ults indicate that our straightforward pronunciation models and the ]]></tbox></line>
+<line><tbox llx="308" lly="202" urx="555" ury="215" f="1"><![CDATA[coarticulation sensitive acoustic modelling provide gains which are ]]></tbox></line>
+<line><tbox llx="308" lly="191" urx="471" ury="205" f="1"><![CDATA[additive to language model improvements. ]]></tbox></line>
+<line><tbox llx="320" lly="167" urx="326" ury="172" f="4"><![CDATA[4 ]]></tbox><tbox llx="322" lly="163" urx="553" ury="175" f="5"><![CDATA[Though these results are for the same baseline system and test set, the ]]></tbox></line>
+<line><tbox llx="308" lly="154" urx="553" ury="166" f="5"><![CDATA[baseline performance here differs slightly from the one shown in Tables 8 ]]></tbox></line>
+<line><tbox llx="308" lly="145" urx="553" ury="157" f="5"><![CDATA[and 15. This is mostly due to a change in the acoustic segmentation of the ]]></tbox></line>
+<line><tbox llx="308" lly="136" urx="553" ury="148" f="5"><![CDATA[test set between the two experiments, evidently for the better, and to a smal- ]]></tbox></line>
+<line><tbox llx="308" lly="127" urx="495" ury="139" f="5"><![CDATA[ler extent due to a small change in the scoring software. ]]></tbox></line>
+<pbox llx="49.00" lly="126.00" urx="570.00" ury="763.00"/></page>
+<page n="8">
+<line><tbox llx="86" lly="749" urx="269" ury="763" f="1"><![CDATA[Models WER DEL SUB INS ]]></tbox></line>
+<line><tbox llx="146" lly="736" urx="198" ury="750" f="1"><![CDATA[Bigram LM ]]></tbox></line>
+<line><tbox llx="81" lly="726" urx="271" ury="739" f="1"><![CDATA[INTWBD 41.8% 10.1% 27.8% 3.9% ]]></tbox></line>
+<line><tbox llx="73" lly="715" urx="271" ury="728" f="1"><![CDATA[MWINTWBD 41.3% 9.6% 27.5% 4.2% ]]></tbox></line>
+<line><tbox llx="145" lly="702" urx="199" ury="716" f="1"><![CDATA[Trigram LM ]]></tbox></line>
+<line><tbox llx="81" lly="691" urx="271" ury="705" f="1"><![CDATA[INTWBD 39.4% 9.2% 26.2% 4.0% ]]></tbox></line>
+<line><tbox llx="73" lly="681" urx="271" ury="694" f="1"><![CDATA[MWINTWBD 39.0% 8.7% 26.1% 4.2% ]]></tbox></line>
+<line><tbox llx="57" lly="660" urx="287" ury="673" f="1"><![CDATA[Table 18: Lattice-Rescoring with Retrained Acoustic Models ]]></tbox></line>
+<line><tbox llx="89" lly="634" urx="256" ury="648" f="2"><![CDATA[6. ACOUSTIC MODEL RETRAINING ]]></tbox></line>
+<line><tbox llx="49" lly="614" urx="295" ury="627" f="1"><![CDATA[The baseline as well as the INTWBD acoustic models are trained ]]></tbox></line>
+<line><tbox llx="49" lly="603" urx="295" ury="616" f="1"><![CDATA[on the PronLex dictionary, prompting the concern that these mod- ]]></tbox></line>
+<line><tbox llx="49" lly="593" urx="266" ury="606" f="1"><![CDATA[els are not appropriate for use with the new dictionaries. ]]></tbox><tbox llx="261" lly="593" urx="295" ury="606" f="1"><![CDATA[In par- ]]></tbox></line>
+<line><tbox llx="49" lly="582" urx="295" ury="596" f="1"><![CDATA[ticular, given the prevalence of reduced variants in the new dic- ]]></tbox></line>
+<line><tbox llx="49" lly="572" urx="295" ury="585" f="1"><![CDATA[tionaries, the acoustic contexts upon which the triphone states are ]]></tbox></line>
+<line><tbox llx="49" lly="562" urx="296" ury="575" f="1"><![CDATA[clustered in the baseline system are suspectedto be poorly matched ]]></tbox></line>
+<line><tbox llx="49" lly="551" urx="295" ury="564" f="1"><![CDATA[to the new dictionaries. This section describes a procedure used to ]]></tbox></line>
+<line><tbox llx="49" lly="541" urx="289" ury="554" f="1"><![CDATA[retrain models better matched to the ICSI Multiword dictionary ]]></tbox><tbox llx="281" lly="546" urx="287" ury="551" f="3"><![CDATA[5 ]]></tbox><tbox llx="283" lly="541" urx="295" ury="554" f="1"><![CDATA[. ]]></tbox></line>
+<line><tbox llx="49" lly="530" urx="295" ury="544" f="1"><![CDATA[This work makes use of training techniques developed by the Hid- ]]></tbox></line>
+<line><tbox llx="49" lly="520" urx="284" ury="533" f="1"><![CDATA[den Pronunciation Mode group at the 1996 LVCSR Workshop. ]]></tbox></line>
+<line><tbox llx="64" lly="509" urx="295" ury="522" f="1"><![CDATA[First, the state clustered triphone INTWBD models and the re- ]]></tbox></line>
+<line><tbox llx="49" lly="498" urx="295" ury="512" f="1"><![CDATA[generated ICSI Multiword dictionary of Section 4 are used to ob- ]]></tbox></line>
+<line><tbox llx="49" lly="488" urx="296" ury="501" f="1"><![CDATA[tain a phonetic transcription of the corpus, which then remains fixed ]]></tbox></line>
+<line><tbox llx="49" lly="477" urx="304" ury="491" f="1"><![CDATA[during training. Untied triphones for this transcription are then cloned ]]></tbox></line>
+<line><tbox llx="49" lly="467" urx="306" ury="480" f="1"><![CDATA[from the monophoneHMMs created during the training of the baseline ]]></tbox></line>
+<line><tbox llx="49" lly="457" urx="295" ury="470" f="1"><![CDATA[system. Finally, the training procedure for the INTWBD models is ]]></tbox></line>
+<line><tbox llx="49" lly="446" urx="295" ury="460" f="1"><![CDATA[mimicked starting with triphone HMM reestimation, followed by ]]></tbox></line>
+<line><tbox llx="49" lly="436" urx="114" ury="449" f="1"><![CDATA[state clustering, ]]></tbox><tbox llx="106" lly="436" urx="131" ury="449" f="4"><![CDATA[etc.. ]]></tbox><tbox llx="124" lly="436" urx="295" ury="449" f="1"><![CDATA[The resulting HMMs, comparable in the num- ]]></tbox></line>
+<line><tbox llx="49" lly="425" urx="295" ury="439" f="1"><![CDATA[ber of states and Gaussian components to the baseline system, are ]]></tbox></line>
+<line><tbox llx="49" lly="415" urx="80" ury="428" f="1"><![CDATA[called ]]></tbox><tbox llx="72" lly="415" urx="161" ury="429" f="4"><![CDATA[MWINTWBD models. ]]></tbox></line>
+<line><tbox llx="49" lly="387" urx="282" ury="401" f="2"><![CDATA[6.1. Recognition Results using Retrained Acoustic Models ]]></tbox></line>
+<line><tbox llx="49" lly="370" urx="296" ury="383" f="1"><![CDATA[Bigram lattices for the WS97 dev-test, generated using the baseline ]]></tbox></line>
+<line><tbox llx="49" lly="359" urx="295" ury="373" f="1"><![CDATA[acoustic models and the PronLex dictionary, are rescored using the ]]></tbox></line>
+<line><tbox llx="49" lly="349" urx="295" ury="362" f="1"><![CDATA[MWINTWBD acoustic models and the ICSI Multiword dictionary. ]]></tbox></line>
+<line><tbox llx="49" lly="339" urx="256" ury="352" f="1"><![CDATA[Table 18 shows the results of the rescoring experiment. ]]></tbox></line>
+<line><tbox llx="64" lly="327" urx="295" ury="341" f="1"><![CDATA[Recall from Table 15 that the ICSI Multiword dictionary gives ]]></tbox></line>
+<line><tbox llx="49" lly="317" urx="295" ury="330" f="1"><![CDATA[essentially no gain by itself, and thus the gain here (0.4%) may be ]]></tbox></line>
+<line><tbox llx="49" lly="307" urx="190" ury="320" f="1"><![CDATA[attributed to the acoustic retraining. ]]></tbox><tbox llx="186" lly="307" urx="296" ury="320" f="1"><![CDATA[It is expected that substan- ]]></tbox></line>
+<line><tbox llx="49" lly="296" urx="295" ury="310" f="1"><![CDATA[tially higher gains will be attained by acoustic retraining with better ]]></tbox></line>
+<line><tbox llx="49" lly="286" urx="295" ury="299" f="1"><![CDATA[phonetic transcription such as those obtained using the Auto Mul- ]]></tbox></line>
+<line><tbox llx="49" lly="275" urx="122" ury="289" f="1"><![CDATA[tiword dictionary. ]]></tbox></line>
+<line><tbox llx="131" lly="247" urx="214" ury="261" f="2"><![CDATA[7. CONCLUSION ]]></tbox></line>
+<line><tbox llx="49" lly="226" urx="295" ury="239" f="1"><![CDATA[This research suggests that significant improvement in speech re- ]]></tbox></line>
+<line><tbox llx="49" lly="216" urx="295" ury="229" f="1"><![CDATA[cognition can be made by suitably modelling systematic pronun- ]]></tbox></line>
+<line><tbox llx="49" lly="205" urx="120" ury="219" f="1"><![CDATA[ciation variation. ]]></tbox><tbox llx="115" lly="205" urx="295" ury="219" f="1"><![CDATA[Further, our results indicate that while a hand- ]]></tbox></line>
+<line><tbox llx="49" lly="195" urx="295" ury="208" f="1"><![CDATA[labelled corpus is very useful as a bootstrapping device, estimates ]]></tbox></line>
+<line><tbox llx="49" lly="184" urx="221" ury="198" f="1"><![CDATA[of pronunciationprobabilities, context effects, ]]></tbox><tbox llx="213" lly="184" urx="239" ury="198" f="4"><![CDATA[etc., ]]></tbox><tbox llx="230" lly="184" urx="295" ury="198" f="1"><![CDATA[are best derived ]]></tbox></line>
+<line><tbox llx="49" lly="174" urx="296" ury="187" f="1"><![CDATA[from larger amounts of automatic transcriptions, preferably done ]]></tbox></line>
+<line><tbox llx="60" lly="158" urx="66" ury="163" f="3"><![CDATA[5 ]]></tbox><tbox llx="63" lly="154" urx="294" ury="166" f="5"><![CDATA[The acoustic retraining was not on our best (Auto Multiword) diction- ]]></tbox></line>
+<line><tbox llx="49" lly="145" urx="294" ury="157" f="5"><![CDATA[ary for historical reasons: the ICSI Multiword dictionary was obtained first, ]]></tbox></line>
+<line><tbox llx="49" lly="136" urx="294" ury="148" f="5"><![CDATA[and a retraining effort was started before the superiority of the Auto Multi- ]]></tbox></line>
+<line><tbox llx="49" lly="127" urx="162" ury="139" f="5"><![CDATA[word dictionary was established. ]]></tbox></line>
+<line><tbox llx="308" lly="757" urx="555" ury="770" f="1"><![CDATA[using the same set of acoustic modelswhich will eventually beused ]]></tbox></line>
+<line><tbox llx="308" lly="747" urx="374" ury="760" f="1"><![CDATA[for recognition. ]]></tbox></line>
+<line><tbox llx="323" lly="736" urx="555" ury="750" f="1"><![CDATA[On NAB, using pronunciation modelling with acoustic model ]]></tbox></line>
+<line><tbox llx="308" lly="726" urx="555" ury="739" f="1"><![CDATA[retraining, we saw a 2.7% reduction in WER over a TTS baseline ]]></tbox></line>
+<line><tbox llx="308" lly="715" urx="555" ury="729" f="1"><![CDATA[system. On Switchboard, without acoustic model retraining, we ]]></tbox></line>
+<line><tbox llx="308" lly="705" urx="558" ury="718" f="1"><![CDATA[sawa 0.9% reduction in WER overa Pronlex baselinesystem, which ]]></tbox></line>
+<line><tbox llx="308" lly="694" urx="555" ury="708" f="1"><![CDATA[is demonstrably additive to improvements in language (2.5%) and ]]></tbox></line>
+<line><tbox llx="308" lly="684" urx="554" ury="698" f="1"><![CDATA[acoustic (1.5%) modelling, and to gains from adaptation (not repor- ]]></tbox></line>
+<line><tbox llx="308" lly="674" urx="352" ury="687" f="1"><![CDATA[ted here). ]]></tbox><tbox llx="347" lly="674" urx="555" ury="687" f="1"><![CDATA[Work is underway to develop effective acoustic model ]]></tbox></line>
+<line><tbox llx="308" lly="663" urx="555" ury="677" f="1"><![CDATA[retraining methods for Switchboard when these statistical pronun- ]]></tbox></line>
+<line><tbox llx="308" lly="653" urx="428" ury="666" f="1"><![CDATA[ciation lexicons are employed. ]]></tbox></line>
+<line><tbox llx="390" lly="628" urx="473" ury="642" f="2"><![CDATA[8. REFERENCES ]]></tbox></line>
+<line><tbox llx="312" lly="609" urx="376" ury="622" f="1"><![CDATA[[1] W. Byrne, ]]></tbox><tbox llx="370" lly="609" urx="400" ury="622" f="4"><![CDATA[et al, ]]></tbox><tbox llx="394" lly="609" urx="555" ury="622" f="1"><![CDATA["Pronunciation Modelling for Conversa- ]]></tbox></line>
+<line><tbox llx="328" lly="598" urx="437" ury="612" f="1"><![CDATA[tional Speech Recognition: ]]></tbox><tbox llx="432" lly="598" urx="555" ury="612" f="1"><![CDATA[A Status Report from WS97," ]]></tbox></line>
+<line><tbox llx="328" lly="588" urx="555" ury="601" f="1"><![CDATA[presented at the 1997 IEEE Workshop on Speech Recogni- ]]></tbox></line>
+<line><tbox llx="328" lly="578" urx="538" ury="591" f="1"><![CDATA[tion and Understanding, Santa Barbara, CA, Dec. 1997. ]]></tbox></line>
+<line><tbox llx="312" lly="563" urx="375" ury="577" f="1"><![CDATA[[2] W. Byrne, ]]></tbox><tbox llx="369" lly="563" urx="399" ury="577" f="4"><![CDATA[et al, ]]></tbox><tbox llx="392" lly="563" urx="555" ury="577" f="1"><![CDATA["Pronunciation Modelling Using a Hand- ]]></tbox></line>
+<line><tbox llx="328" lly="553" urx="555" ury="566" f="1"><![CDATA[labelled Corpus for Conversational Speech Recognition", ]]></tbox></line>
+<line><tbox llx="328" lly="542" urx="403" ury="556" f="4"><![CDATA[Proc. ICASSP '98 ]]></tbox><tbox llx="395" lly="542" urx="450" ury="556" f="1"><![CDATA[Seattle, WA. ]]></tbox></line>
+<line><tbox llx="312" lly="528" urx="555" ury="541" f="1"><![CDATA[[3] F. Chen, "Identification of Contextual Factors for Pronunci- ]]></tbox></line>
+<line><tbox llx="328" lly="518" urx="399" ury="531" f="1"><![CDATA[ation Networks," ]]></tbox><tbox llx="391" lly="518" urx="469" ury="531" f="4"><![CDATA[Proc. ICASSP `90, ]]></tbox><tbox llx="460" lly="518" urx="516" ury="531" f="1"><![CDATA[S14.9, 1990. ]]></tbox></line>
+<line><tbox llx="312" lly="503" urx="555" ury="517" f="1"><![CDATA[[4] M. Finke and A. Waibel, "Speaker Mode Dependent Pro- ]]></tbox></line>
+<line><tbox llx="328" lly="493" urx="555" ury="506" f="1"><![CDATA[nunciation Modelling in Large Vocabulary Conversational ]]></tbox></line>
+<line><tbox llx="328" lly="482" urx="425" ury="496" f="1"><![CDATA[Speech Recognition," in ]]></tbox><tbox llx="418" lly="482" urx="521" ury="496" f="4"><![CDATA[Proc. EUROSPEECH'97, ]]></tbox><tbox llx="513" lly="482" urx="543" ury="496" f="1"><![CDATA[1997. ]]></tbox></line>
+<line><tbox llx="312" lly="468" urx="555" ury="481" f="1"><![CDATA[[5] W. Fisher, V. Zue, J. Bernstein, and D. Pallet, "An Acoustic- ]]></tbox></line>
+<line><tbox llx="328" lly="458" urx="415" ury="471" f="1"><![CDATA[Phonetic Data Base," ]]></tbox><tbox llx="407" lly="458" urx="486" ury="471" f="4"><![CDATA[J. Acoust. Soc. Am. ]]></tbox><tbox llx="478" lly="457" urx="499" ury="472" f="2"><![CDATA[81, ]]></tbox><tbox llx="491" lly="458" urx="554" ury="471" f="1"><![CDATA[Suppl. 1,1987. ]]></tbox></line>
+<line><tbox llx="312" lly="443" urx="555" ury="457" f="1"><![CDATA[[6] S. Greenberg, "The Switchboard Transcription Project," ]]></tbox></line>
+<line><tbox llx="328" lly="433" urx="531" ury="446" f="4"><![CDATA[1996 LVCSR Summer Workshop Technical Reports, ]]></tbox><tbox llx="525" lly="433" urx="555" ury="446" f="1"><![CDATA[1996, ]]></tbox></line>
+<line><tbox llx="329" lly="422" urx="540" ury="437" f="6"><![CDATA[http://www.icsi.berkeley.edu/real/stp/ ]]></tbox></line>
+<line><tbox llx="312" lly="408" urx="387" ury="421" f="1"><![CDATA[[7] P. Ladefoged, ]]></tbox><tbox llx="379" lly="408" urx="472" ury="422" f="4"><![CDATA[A Course in Phonetics, ]]></tbox><tbox llx="464" lly="408" urx="555" ury="421" f="1"><![CDATA[Harcourt Brace Jovan- ]]></tbox></line>
+<line><tbox llx="328" lly="397" urx="442" ury="411" f="1"><![CDATA[ovich, Inc., New York, 1975. ]]></tbox></line>
+<line><tbox llx="312" lly="383" urx="555" ury="396" f="1"><![CDATA[[8] M. Randolph "A Data-Driven Method for Discovering and ]]></tbox></line>
+<line><tbox llx="328" lly="373" urx="458" ury="386" f="1"><![CDATA[Predicting Allophonic Variation," ]]></tbox><tbox llx="449" lly="373" urx="526" ury="386" f="4"><![CDATA[Proc. ICASSP `90, ]]></tbox><tbox llx="517" lly="373" urx="555" ury="386" f="1"><![CDATA[S14.10, ]]></tbox></line>
+<line><tbox llx="328" lly="362" urx="358" ury="376" f="1"><![CDATA[1990. ]]></tbox></line>
+<line><tbox llx="312" lly="348" urx="555" ury="361" f="1"><![CDATA[[9] M. Riley and A. Ljolje, "Automatic generation of detailed ]]></tbox></line>
+<line><tbox llx="328" lly="337" urx="426" ury="351" f="1"><![CDATA[pronunciation lexicons." ]]></tbox><tbox llx="418" lly="337" urx="555" ury="351" f="4"><![CDATA[Automatic Speech and Speaker Re- ]]></tbox></line>
+<line><tbox llx="328" lly="327" urx="442" ury="341" f="4"><![CDATA[cognition: Advanced Topics. ]]></tbox><tbox llx="433" lly="327" urx="494" ury="340" f="1"><![CDATA[Kluwer. 1995. ]]></tbox></line>
+<line><tbox llx="308" lly="313" urx="554" ury="326" f="1"><![CDATA[[10] G. Tajchman, E. Fosler, and D. Jurafsky, "Building Multiple ]]></tbox></line>
+<line><tbox llx="328" lly="302" urx="555" ury="316" f="1"><![CDATA[Pronunciation Models for Novel Words using Exploratory ]]></tbox></line>
+<line><tbox llx="328" lly="292" urx="439" ury="305" f="1"><![CDATA[Computational Phonology", ]]></tbox><tbox llx="431" lly="292" urx="521" ury="305" f="4"><![CDATA[Proc. Eurospeech '95, ]]></tbox><tbox llx="513" lly="292" urx="543" ury="305" f="1"><![CDATA[1995. ]]></tbox></line>
+<line><tbox llx="308" lly="277" urx="555" ury="291" f="1"><![CDATA[[11] M. Weintraub, E. Fosler, C. Galles, Y. Kao, S. Khudanpur, ]]></tbox></line>
+<line><tbox llx="328" lly="267" urx="555" ury="280" f="1"><![CDATA[M. Saraclar, S. Wegmann, "Automatic Learning of Word ]]></tbox></line>
+<line><tbox llx="328" lly="256" urx="434" ury="270" f="1"><![CDATA[Pronunciation from Data," ]]></tbox><tbox llx="427" lly="257" urx="556" ury="270" f="4"><![CDATA[1996 LVCSR Summer Workshop ]]></tbox></line>
+<line><tbox llx="328" lly="246" urx="406" ury="260" f="4"><![CDATA[Technical Reports, ]]></tbox><tbox llx="397" lly="246" urx="427" ury="260" f="1"><![CDATA[1996. ]]></tbox></line>
+<line><tbox llx="308" lly="232" urx="555" ury="245" f="1"><![CDATA[[12] M. Weintraub, H. Murveit, M. Cohen, P. Price, J. Bern- ]]></tbox></line>
+<line><tbox llx="328" lly="221" urx="555" ury="235" f="1"><![CDATA[stein, C. Baldwin, D. Bell, "Linguistic Constraints in Hidden ]]></tbox></line>
+<line><tbox llx="328" lly="211" urx="500" ury="224" f="1"><![CDATA[Markov Model Based Speech Recognition," ]]></tbox><tbox llx="493" lly="211" urx="555" ury="225" f="4"><![CDATA[Proc. ICASSP ]]></tbox></line>
+<line><tbox llx="328" lly="201" urx="353" ury="214" f="4"><![CDATA['89, ]]></tbox><tbox llx="344" lly="201" urx="400" ury="214" f="1"><![CDATA[S13.2, 1989. ]]></tbox></line>
+<line><tbox llx="308" lly="186" urx="555" ury="200" f="1"><![CDATA[[13] S. Young, J. Jansen, J. Odell, D. Ollasen, P. Woodland, ]]></tbox></line>
+<line><tbox llx="328" lly="176" urx="444" ury="190" f="4"><![CDATA[The HTK Book (Version 2.0), ]]></tbox><tbox llx="436" lly="176" urx="555" ury="189" f="1"><![CDATA[Entropic Cambridge Research ]]></tbox></line>
+<line><tbox llx="328" lly="165" urx="402" ury="179" f="1"><![CDATA[Laboratory, 1995.]]></tbox></line>
+<pbox llx="49.00" lly="127.00" urx="558.00" ury="770.00"/></page>
+<fonts>
+<font name="Times-Roman" h="12.41" n="1"/>
+<font name="Times-Bold" h="13.49" n="2"/>
+<font name="Unknown" h="4.32" n="3"/>
+<font name="Times-Italic" h="12.58" n="4"/>
+<font name="Times-Roman" h="11.03" n="5"/>
+<font name="Courier" h="14.32" n="6"/>
+<font name="Times-Roman" h="11.03" n="7"/>
+<font name="_Symbol" h="11.60" n="8"/>
+<font name="_Times-Bold" h="17.79" n="9"/>
+</fonts>
+</document>

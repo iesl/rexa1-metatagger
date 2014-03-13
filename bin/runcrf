@@ -1,0 +1,39 @@
+#!/usr/bin/perl -w
+
+use Getopt::Long qw(:config bundling no_ignore_case pass_through);
+use FindBin qw($Bin $RealBin);
+
+my $javaOpts='';
+GetOptions('javaopts=s' => \$javaOpts);
+
+my $BASEDIR = "$RealBin/..";
+my $JAVA_OPTS="-ea -server -Xmx2G ".$javaOpts;
+
+my @cp_jars = (qw/ 
+	    commons-cli-1.0.jar
+	    commons-collections-3.1.jar
+	    commons-httpclient.jar
+	    commons-io-1.0.jar
+	    commons-lang-2.2.jar
+	    commons-logging-api.jar
+	    commons-logging.jar
+	    commons-net-1.1.0.jar
+	    commons-pool-1.2.jar
+	    ecs-1.4.2.jar
+	    jakarta-oro-2.0.7.jar
+	    jdom-1.0.jar
+	    junit-3.8.1.jar
+	    junit.jar
+	    log4j-1.2.9.jar
+	    mallet.jar
+	    rexa-common.jar
+	    secondstring-serializable.jar
+	    xml-writer.jar 
+/);
+
+
+my $CLASSPATH = "$BASEDIR/class";
+map { $CLASSPATH = "$CLASSPATH:$BASEDIR/lib/$_" } @cp_jars;
+
+exec "java $JAVA_OPTS -cp $CLASSPATH org.rexo.ui.MetaTagger --data-dir $BASEDIR/data --enable-log";
+ 

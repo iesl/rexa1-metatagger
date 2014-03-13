@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-httpclient.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-api.jar"/>
+	<classpathentry kind="lib" path="lib/commons-net-1.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-pool-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/ecs-1.4.2.jar"/>
+	<classpathentry kind="lib" path="lib/endorsed/sax2.jar"/>
+	<classpathentry kind="lib" path="lib/endorsed/xalan.jar"/>
+	<classpathentry kind="lib" path="lib/endorsed/xerces.jar"/>
+	<classpathentry kind="lib" path="lib/endorsed/xml-apis.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta-oro-2.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/jdom-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jprof/agent.jar"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/mallet.jar" sourcepath="/mallet/src"/>
+	<classpathentry kind="lib" path="lib/secondstring-serializable.jar"/>
+	<classpathentry kind="lib" path="lib/xml-writer.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/rexa-common-trunk"/>
+	<classpathentry kind="output" path="class"/>
+</classpath>
