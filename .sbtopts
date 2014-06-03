@@ -1,0 +1,10 @@
+-verbose
+-J-Xmx4g
+-J-Xss4M
+-J-XX:+HeapDumpOnOutOfMemoryError
+-J-XX:ReservedCodeCacheSize=128m
+-J-XX:MaxPermSize=512M
+-J-XX:+DoEscapeAnalysis
+-J-XX:+UseCompressedOops
+-J-XX:+CMSClassUnloadingEnabled
+-J-XX:+UseCodeCacheFlushing

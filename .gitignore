@@ -1,0 +1,78 @@
+## hgignore-common
+syntax: glob
+
+#*#
+*.DS_Store
+*.class
+*.diff
+*.elc
+*.log
+*.pyc
+*~
+.*.swp
+.DS_Store
+.\#*
+.manager
+class
+log
+*.cache
+unpack
+*-tmp
+tmp-*
+
+.sbtopts-*
+.projectile
+
+## CVS & SVN
+CVS
+.cvsignore
+.svn
+
+##
+## ignore eclipse/idea/ensime
+.project
+.classpath
+.settings
+.distfiles
+.ensime
+.scala_dependencies
+dist
+
+# Intellij IDEA files
+syntax: glob
+.idea/
+*.iml
+*.ipr
+*.iws
+
+## sbt build directories
+.lib/
+lib_managed/
+src_managed/
+target/
+.target/
+project/boot/
+
+# General temp files
+.DS_Store
+*.ser
+*.pyc
+
+# Files related to Play build or usage
+target
+logs
+
+# IDE and editors
+*~
+.idea
+nbproject
+eclipse
+.amateras
+.settings
+.classpath
+.project
+*.iml
+*.ipr
+*.iws
+.ensime*
+/.sbtopts-common
