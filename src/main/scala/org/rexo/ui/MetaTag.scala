@@ -25,7 +25,6 @@ import edu.umass.cs.rexo.ghuang.segmentation.CRFBibliographySegmentor;
 
 
 
-
 object MetaTag extends Logger("MetaTag") {
 
 	val HEADER_CRF = "extractors/Hdrs.crf.dat.gz"
@@ -85,50 +84,50 @@ object MetaTag extends Logger("MetaTag") {
 		return pipeline
 	}
 
-	/** Run the meta-tagger pipeline */
-	def main(args: Array[String]) {
-		// val initProperties: Map = null
-    // val cli: CommandLineOptions = null
-
-		try {
-			EnglishDictionary.setDefaultWordfile( new File( dataDir, DICT_FILE ) )
-			val dictionary = EnglishDictionary.createDefault()
-			
-			val pipeline = buildPipeline()
-			
-			val reader = new BufferedReader( new InputStreamReader( System.in ) )
-			var line: String = null
-			info( "begin" )
-			while ((line=reader.readLine()) != null ) {
-				// format is input-filename -> output-filename
-				val files = line.split( "->" )
-				val infile = new File( files(0) )
-				val outfile = new File( files(1).trim() )
-				info( infile.getPath() + " -> " + outfile.getPath()  )
-				if ( infile.exists() ) {
-					val document = readInputDocument( infile )
-					val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
-					val rdoc = new RxDocument() 
-					rdoc.setTokenization( tokenization )
-
-					try {
-						pipeline.execute( rdoc )
-						info( "writing output file" )
-				writeOutput( outfile, rdoc )
-					}
-					catch (Exception e) {
-						error( e.getClass().getName() + ": " + e.getMessage() )						
-					}
-				}
-				else {
-					error( "File not found: " + infile.getPath() )
-				}
-			}
-		}
-		catch (Exception e) {
-			error( e.getClass().getName() + ": " + e.getMessage() )
-    }
-	}
+	///** Run the meta-tagger pipeline */
+	//def main(args: Array[String]) {
+	//  // val initProperties: Map = null
+  //  // val cli: CommandLineOptions = null
+  // 
+	//  try {
+	//  	EnglishDictionary.setDefaultWordfile( new File( dataDir, DICT_FILE ) )
+	//  	val dictionary = EnglishDictionary.createDefault()
+	//  	
+	//  	val pipeline = buildPipeline()
+	//  	
+	//  	val reader = new BufferedReader( new InputStreamReader( System.in ) )
+	//  	var line: String = null
+	//  	info( "begin" )
+	//  	while ((line=reader.readLine()) != null ) {
+	//  		// format is input-filename -> output-filename
+	//  		val files = line.split( "->" )
+	//  		val infile = new File( files(0) )
+	//  		val outfile = new File( files(1).trim() )
+	//  		info( infile.getPath() + " -> " + outfile.getPath()  )
+	//  		if ( infile.exists() ) {
+	//  			val document = readInputDocument( infile )
+	//  			val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
+	//  			val rdoc = new RxDocument() 
+	//  			rdoc.setTokenization( tokenization )
+  // 
+	//  			try {
+	//  				pipeline.execute( rdoc )
+	//  				info( "writing output file" )
+	//  		writeOutput( outfile, rdoc )
+	//  			}
+	//  			catch (Exception e) {
+	//  				error( e.getClass().getName() + ": " + e.getMessage() )						
+	//  			}
+	//  		}
+	//  		else {
+	//  			error( "File not found: " + infile.getPath() )
+	//  		}
+	//  	}
+	//  }
+	//  catch (Exception e) {
+	//  	error( e.getClass().getName() + ": " + e.getMessage() )
+  //  }
+	//}
 	
 	
 	//private static Document readInputDocument(File infile) throws IOException {
