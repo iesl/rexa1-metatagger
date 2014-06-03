@@ -1,0 +1,18 @@
+#!/bin/sh
+## Uses the separate jar files for the progs
+TOP=/usr/col/scratch1/fuchun/project
+MALLET=/usr/col/scratch1/fuchun/mallet
+
+JAVA=/exp/rcf/share/X11R5/jdk1.4/bin/java
+CP=:$TOP/class:$MALLET/class:$MALLET/lib/mallet-deps.jar
+
+main=edu.umass.cs.project.extraction.TestUI
+$JAVA -Xmx1800m -cp $CP $main --crf-input-file $1 \
+				--test-file $2
+
+
+#
+# $1: model file name
+# $2: tesing file, instances are separated with a seperator
+#     It could also be a directory. In this case, all files under this directory are tested.
+#

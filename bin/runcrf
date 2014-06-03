@@ -3,18 +3,18 @@
 use Getopt::Long qw(:config bundling no_ignore_case pass_through);
 use FindBin qw($Bin $RealBin);
 
-my $javaOpts='';
-GetOptions('javaopts=s' => \$javaOpts);
+my %options=();
+GetOptions();
 
 my $BASEDIR = "$RealBin/..";
-my $JAVA_OPTS="-ea -server -Xmx2G ".$javaOpts;
+my $JAVA_OPTS="-ea -server -Xmx2G";
 
 my @cp_jars = (qw/ 
 	    commons-cli-1.0.jar
 	    commons-collections-3.1.jar
 	    commons-httpclient.jar
 	    commons-io-1.0.jar
-	    commons-lang-2.2.jar
+	    commons-lang-2.0.jar
 	    commons-logging-api.jar
 	    commons-logging.jar
 	    commons-net-1.1.0.jar
@@ -26,7 +26,6 @@ my @cp_jars = (qw/
 	    junit.jar
 	    log4j-1.2.9.jar
 	    mallet.jar
-	    rexa-common.jar
 	    secondstring-serializable.jar
 	    xml-writer.jar 
 /);
