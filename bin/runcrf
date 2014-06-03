@@ -7,6 +7,11 @@ my $javaOpts='';
 GetOptions('javaopts=s' => \$javaOpts);
 
 my $BASEDIR = "$RealBin/..";
+
+#exec "echo $BASEDIR"
+#echo "hello"
+my $r = system("echo $BASEDIR |more"); 
+
 my $JAVA_OPTS="-ea -server -Xmx2G ".$javaOpts;
 
 my @cp_jars = (qw/ 
