@@ -1,6 +1,11 @@
 #### Rexa metatagger
 
-Label scientific paper headers and bibiliographic references.
+Scientific paper header and reference extraction.
+
+![Alt text](./docs/img/pdf-and-meta.png)
+
+*****************
+
 
 #### Compiling
 
