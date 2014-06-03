@@ -8,10 +8,13 @@ import org.jdom.Element;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 /**
  * Author: saunders Created Nov 16, 2005 Copyright (C) Univ. of Massachusetts Amherst, Computer Science Dept.
  */
 public class CRFOutputFormatter {
+    private static Logger log = Logger.getLogger( CRFOutputFormatter.class );
 
 	/**
 	 *
@@ -29,7 +32,9 @@ public class CRFOutputFormatter {
 			labels = labels.replaceAll( "author-begin", "authors:^author" );
 			labels = labels.replaceAll( "author-inside", "authors:author" );
 			String[] labelParts = labels.split( "[:|]" );
-			insertToken( rootElement, getSpanText( span ), labelParts );
+            //kzaporojets: insertTokenPosition also includes the position
+			//insertToken( rootElement, getSpanText( span ), labelParts );
+            insertTokenPosition(rootElement, getSpanText( span ), labelParts, getSpanBoxCoordinates(span));
 		}
 		return rootElement;
 	}
@@ -58,7 +63,17 @@ public class CRFOutputFormatter {
 		return stringBuffer.toString();
 	}
 
-	/**
+    private BoxCoordinates getSpanBoxCoordinates(Span span) {
+        BoxCoordinates boxCoordinates = new BoxCoordinates();
+        boxCoordinates.setLlx(((PropertyHolder)span).getNumericProperty( "llx" ));
+        boxCoordinates.setLly(((PropertyHolder) span).getNumericProperty("lly"));
+        boxCoordinates.setUrx(((PropertyHolder) span).getNumericProperty("urx"));
+        boxCoordinates.setUry(((PropertyHolder) span).getNumericProperty("ury"));
+
+        return boxCoordinates;
+    }
+
+    /**
 	 * insert a token into a jdom tree under the element specified by labelParts
 	 * @param parent
 	 * @param span
@@ -82,6 +97,62 @@ public class CRFOutputFormatter {
 			parent.addContent( span );
 		}
 	}
+
+
+    /**
+     * kzaporojets
+     * insert a token into a jdom tree under the element specified by labelParts, includes the position of the element
+     * @param parent
+     * @param span
+     * @param labelParts
+     */
+    private void insertTokenPosition(Element parent, String span, String[] labelParts, BoxCoordinates positionSpan) {
+        //associate position here
+        adjustPosition(parent, positionSpan);
+        //end associate position
+        if (labelParts.length > 0) {
+            String labelPart = labelParts[0];
+            Element child;
+
+            if ((child = lastChild( parent )) == null || labelPart.startsWith( "^" ) || !labelPart.equals( child.getName() )) {
+                labelPart = labelPart.replaceFirst( "^\\^", "" );
+                child = new Element( labelPart );
+                parent.addContent( child );
+            }
+            List tails = Arrays.asList( labelParts ).subList( 1, labelParts.length );
+            String[] labelTail = (String[])tails.toArray( new String[tails.size()] );
+            //associate position here
+
+            //end associate position
+            insertTokenPosition(child, span, labelTail, positionSpan);
+        }
+        else {
+            parent.addContent( span );
+        }
+    }
+
+    //adjust the position
+    private void adjustPosition(Element elem, BoxCoordinates pos)
+    {
+        try {
+            if (elem.getAttribute("llx") == null || elem.getAttribute("llx").getDoubleValue() > pos.getLlx()) {
+                elem.setAttribute("llx", String.valueOf(pos.getLlx()));
+            }
+            if (elem.getAttribute("lly") == null || elem.getAttribute("lly").getDoubleValue() < pos.getLly()) {
+                elem.setAttribute("lly", String.valueOf(pos.getLly()));
+            }
+            if (elem.getAttribute("urx") == null || elem.getAttribute("urx").getDoubleValue() < pos.getUrx()) {
+                elem.setAttribute("urx", String.valueOf(pos.getUrx()));
+            }
+            if (elem.getAttribute("ury") == null || elem.getAttribute("ury").getDoubleValue() > pos.getUry()) {
+                elem.setAttribute("ury", String.valueOf(pos.getUry()));
+            }
+        }
+        catch(org.jdom.DataConversionException ex)
+        {
+            log.error( ex.getClass().getName() + ": " + ex.getMessage() );
+        }
+    }
 
 	private Element lastChild(Element parent) {
 		List children = parent.getChildren();
