@@ -41,13 +41,13 @@ Reference fields include:
    + volume
    + web
 
-Each reference is given an id like so: <reference refID="p12x82.0y405.0">, which uniquely identifies
-that reference by page number/x, y position in postscript coordinates.
+Each reference XML tag is given an id, such as `refID="p12x82.0y405.0"`, which uniquely identifies
+that reference by page number and (x, y) page position in postscript coordinates.
 
 
 #### Compiling
 
-ant clean compile
+./sbt compile
 
 #### Running
 
@@ -55,6 +55,7 @@ Basic usage: cat input-file-list | bin/runcrf
 
 The wrapper script *runcrf* expects a list of filename inputs and output filenames, one per line,
 like so:
+
 
 ```
 /path/to/input/file.xml -> /path/to/output/file.output.xml
