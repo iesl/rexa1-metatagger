@@ -1,15 +1,53 @@
-#### Rexa metatagger
+#### Rexa metatagger: scientific paper header and reference extraction.
 
-Scientific paper header and reference extraction.
+Metatagger is a system which consumes the output of the Rexa's
+[pstotext](https://github.com/iesl/rexa1-pstotext), segments and labels various sections of the
+document, and writes the results to an XML file. The system is structured a series of pipelined
+steps, each representing some task, such as course layout analysis (e.g., header block, abstract,
+body text), or finer-grained labelling, such as identifying reference fields.
 
-![Alt text](./docs/img/pdf-and-meta.png)
+The stablest and most mature of the pipeline components are the coarse segementation system, the
+header field labeler, and the reference field labeler. Other components which are in various
+states of development include an "acknowledgements" section labeller, grant number/granting
+institution labelling, and citations-in-context identification (i.e., identifying the points in the
+document where the reference markers appear).
 
-*****************
+
+![Alt text](./docs/img/pdf-and-meta-hdr.png)
+
+Header fields include: 
+   + title
+   + authors, author, author-first, author-middle, author-last,
+   + institution
+   + address
+   + email
+   + abstract
+
+![Alt text](./docs/img/pdf-and-meta-ref.png)
+
+Reference fields include:
+   + address
+   + author, author-first, author-last, authors
+   + conference
+   + date
+   + journal
+   + note
+   + pages
+   + publisher
+   + reference
+   + ref-marker
+   + series
+   + title
+   + volume
+   + web
+
+Each reference XML tag is given an id, such as `refID="p12x82.0y405.0"`, which uniquely identifies
+that reference by page number and (x, y) page position in postscript coordinates.
 
 
 #### Compiling
 
-ant clean compile
+./sbt compile
 
 #### Running
 
@@ -17,6 +55,7 @@ Basic usage: cat input-file-list | bin/runcrf
 
 The wrapper script *runcrf* expects a list of filename inputs and output filenames, one per line,
 like so:
+
 
 ```
 /path/to/input/file.xml -> /path/to/output/file.output.xml
