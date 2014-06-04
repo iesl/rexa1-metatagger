@@ -1,6 +1,10 @@
 #### Rexa metatagger: scientific paper header and reference extraction.
 
-![Alt text](./docs/img/pdf-and-meta.png)
+##### Headers
+![Alt text](./docs/img/pdf-and-meta-hdr.png)
+
+##### Refs
+![Alt text](./docs/img/pdf-and-meta-ref.png)
 
 #### Compiling
 
