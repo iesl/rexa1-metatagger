@@ -1,9 +1,9 @@
 #### Rexa metatagger: scientific paper header and reference extraction.
 
 Metatagger is a system which consumes the output of the Rexa's
-[pstotext](https://github.com/iesl/rexa1-pstotext), segments and labels various sections of the
-document, and writes the results to an XML file. The system is structured a series of pipelined
-steps, each representing some task, such as course layout analysis (e.g., header block, abstract,
+[pstotext](https://github.com/iesl/rexa1-pstotext) tool, and produces an annotated version of the
+text, and writes the results to an XML file. The system is structured a series of pipelined
+components, each performing some task, such as layout analysis (e.g., header block, abstract,
 body text), or finer-grained labelling, such as identifying reference fields.
 
 The stablest and most mature of the pipeline components are the coarse segementation system, the
