@@ -8,6 +8,15 @@ public class BoxCoordinates {
     private double urx;
     private double lly;
     private double llx;
+    private int pageNum;
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
+    }
 
     public double getUry() {
         return ury;
