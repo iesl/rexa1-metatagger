@@ -135,6 +135,16 @@ public class CRFOutputFormatter {
     private void adjustPosition(Element elem, BoxCoordinates pos)
     {
         try {
+            //if suddenly all the attributes change abruptly, and we are in references section, don't change them:
+            //probably its just a new column. Won't deel with it for now.
+            if (elem.getAttribute("llx")!=null && elem.getName().equals("reference"))
+            {
+                if(Math.abs(elem.getAttribute("lly").getDoubleValue() - pos.getLly())>150 &&
+                        Math.abs(elem.getAttribute("ury").getDoubleValue() - pos.getUry())>150)
+                {
+                    return;
+                }
+            }
             if (elem.getAttribute("llx") == null || elem.getAttribute("llx").getDoubleValue() > pos.getLlx()) {
                 elem.setAttribute("llx", String.valueOf(pos.getLlx()));
             }
