@@ -16,6 +16,8 @@ import org.apache.log4j.Logger;
 public class CRFOutputFormatter {
     private static Logger log = Logger.getLogger( CRFOutputFormatter.class );
 
+    //
+    private int lastWidth
 	/**
 	 *
 	 * @param input
@@ -139,8 +141,8 @@ public class CRFOutputFormatter {
             //probably its just a new column. Won't deel with it for now.
             if (elem.getAttribute("llx")!=null && elem.getName().equals("reference"))
             {
-                if(Math.abs(elem.getAttribute("lly").getDoubleValue() - pos.getLly())>150 &&
-                        Math.abs(elem.getAttribute("ury").getDoubleValue() - pos.getUry())>150)
+                if(Math.abs(elem.getAttribute("lly").getDoubleValue() - pos.getLly())>400 &&
+                        Math.abs(elem.getAttribute("ury").getDoubleValue() - pos.getUry())>400)
                 {
                     return;
                 }
