@@ -65,11 +65,11 @@ public class CRFOutputFormatter {
 
     private BoxCoordinates getSpanBoxCoordinates(Span span) {
         BoxCoordinates boxCoordinates = new BoxCoordinates();
-        boxCoordinates.setLlx(((PropertyHolder)span).getNumericProperty( "llx" ));
+        boxCoordinates.setLlx(((PropertyHolder) span).getNumericProperty( "llx" ));
         boxCoordinates.setLly(((PropertyHolder) span).getNumericProperty("lly"));
         boxCoordinates.setUrx(((PropertyHolder) span).getNumericProperty("urx"));
         boxCoordinates.setUry(((PropertyHolder) span).getNumericProperty("ury"));
-
+        boxCoordinates.setPageNum( (int)((PropertyHolder) span).getNumericProperty("pageNum"));
         return boxCoordinates;
     }
 
@@ -135,17 +135,30 @@ public class CRFOutputFormatter {
     private void adjustPosition(Element elem, BoxCoordinates pos)
     {
         try {
+            //if suddenly all the attributes change abruptly, and we are in references section, don't change them:
+            //probably its just a new column. Won't deel with it for now.
+            if (elem.getAttribute("llx")!=null && elem.getName().equals("reference"))
+            {
+                if(Math.abs(elem.getAttribute("lly").getDoubleValue() - pos.getLly())>150 &&
+                        Math.abs(elem.getAttribute("ury").getDoubleValue() - pos.getUry())>150)
+                {
+                    return;
+                }
+            }
             if (elem.getAttribute("llx") == null || elem.getAttribute("llx").getDoubleValue() > pos.getLlx()) {
                 elem.setAttribute("llx", String.valueOf(pos.getLlx()));
             }
-            if (elem.getAttribute("lly") == null || elem.getAttribute("lly").getDoubleValue() < pos.getLly()) {
+            if (elem.getAttribute("lly") == null || elem.getAttribute("lly").getDoubleValue() > pos.getLly()) {
                 elem.setAttribute("lly", String.valueOf(pos.getLly()));
             }
             if (elem.getAttribute("urx") == null || elem.getAttribute("urx").getDoubleValue() < pos.getUrx()) {
                 elem.setAttribute("urx", String.valueOf(pos.getUrx()));
             }
-            if (elem.getAttribute("ury") == null || elem.getAttribute("ury").getDoubleValue() > pos.getUry()) {
+            if (elem.getAttribute("ury") == null || elem.getAttribute("ury").getDoubleValue() < pos.getUry()) {
                 elem.setAttribute("ury", String.valueOf(pos.getUry()));
+            }
+            if (elem.getAttribute("pageNum") == null) {
+                elem.setAttribute("pageNum", String.valueOf(pos.getPageNum()));
             }
         }
         catch(org.jdom.DataConversionException ex)
