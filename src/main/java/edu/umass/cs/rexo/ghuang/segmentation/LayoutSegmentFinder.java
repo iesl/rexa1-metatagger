@@ -32,7 +32,7 @@ public class LayoutSegmentFinder
 	
 	
 	static {
-		INTRODUCTION_PATTERN = Pattern.compile("^[\\s\\.\\d]*I(?i:ntroduction)");
+		INTRODUCTION_PATTERN = Pattern.compile("^[#\\s\\.\\d]*I(?i:ntroduction)");
 		ABSTRACT_PATTERN = Pattern.compile("^[\\s]*A(?i:bstract)");
 		BIBLIOGRAPHY_PATTERN = Pattern
 				.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes))\\s*$");
@@ -67,17 +67,6 @@ public class LayoutSegmentFinder
 		ArrayList lineSpans = new ArrayList();
 		lineSpans.addAll(tokenization.getLineSpans());
 
-//        Object testSpan = lineSpans.get(2);
-//
-//        List<StringSpan> pl = ((CompositeSpan)testSpan).getSpans();
-//
-//        Object prop = pl.get(4).getProperty("lly");
-
-//        for(Object s: lineSpans)
-//        {
-//            System.out.println(s.toString());
-//        }
-        System.out.println(Arrays.toString(lineSpans.toArray()));
 
 		//**** Find header ****
 		LinkedList headerLineList = new LinkedList();
@@ -86,10 +75,10 @@ public class LayoutSegmentFinder
 				ABSTRACT_PATTERN, /*lineCountMax=*/Integer.MAX_VALUE, /*pageCountMax=*/
 				Integer.MAX_VALUE);
 
-//        for(Object s: subList)
-//        {
-//            System.out.println(s.toString());
-//        }
+        for(Object s: lineSpans)
+        {
+            System.out.println(s.toString());
+        }
 
 		if (!subList.isEmpty()) {
 			// add everything before 'abstract' to header list

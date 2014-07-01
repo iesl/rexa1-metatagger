@@ -15,6 +15,8 @@ public class ECSJournalSegmenter extends JournalSegmenter{
     {
         int count = 0;
         Double prevSpan = 0.0;
+        Double avgX = 0.0;
+        Double sumX = 0.0;
         for(Object obj: lineSpan)
         {
             if(obj instanceof CompositeSpan)
@@ -30,10 +32,13 @@ public class ECSJournalSegmenter extends JournalSegmenter{
 
                 if(count > 10)
                 {
-                    if(/*(prevSpan) > 400.0 && (xRight - xLeft)<280 &&*/ xLeft < 60.0 )
+                    //System.out.println(xLeft);
+                    if(/*(prevSpan) > 400.0 && (xRight - xLeft)<280 &&*/ xLeft < avgX - 20 )
                     {
-                        return lineSpan.subList(0, count);
+                        return lineSpan.subList(0, count-1);
                     }
+                    sumX += xLeft;
+                    avgX = sumX/(count - 10);
                 }
                 prevSpan = xRight - xLeft;
 

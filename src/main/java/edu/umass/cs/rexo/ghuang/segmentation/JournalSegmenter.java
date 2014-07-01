@@ -23,11 +23,13 @@ public abstract class JournalSegmenter {
     static HashMap<Pattern, JournalSegmenter> journalSegmenters = new HashMap<Pattern,JournalSegmenter>();
     static
     {
-        journalSegmenters.put(Pattern.compile("Journal of The Electrochemical Society.*The Electrochemical Society"), new ECSJournalSegmenter());
+//        journalSegmenters.put(Pattern.compile("©.*The Electrochemical Society"), new ECSJournalSegmenter());
+        journalSegmenters.put(Pattern.compile("The Electrochemical Society"), new ECSJournalSegmenter());
     }
 
     static JournalSegmenter getSegmenter(List lineSpans)
     {
+//        System.out.println(Arrays.toString(lineSpans.toArray()));
 
         for (Map.Entry<Pattern, JournalSegmenter> curr :journalSegmenters.entrySet() )
         {
