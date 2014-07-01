@@ -1,13 +1,11 @@
 package edu.umass.cs.rexo.ghuang.segmentation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.umass.cs.mallet.base.extract.StringSpan;
+import edu.umass.cs.mallet.base.util.PropertyList;
 import org.rexo.extraction.NewHtmlTokenization;
 import org.rexo.referencetagging.HeaderNotFoundException;
 import org.rexo.referencetagging.ReferenceParsingException;
@@ -15,6 +13,7 @@ import org.rexo.referencetagging.ReferencesNotFoundException;
 
 import edu.umass.cs.mallet.base.extract.Span;
 import edu.umass.cs.mallet.base.types.PropertyHolder;
+import org.rexo.span.CompositeSpan;
 
 /**
  * Author: saunders Created Nov 9, 2005 Copyright (C) Univ. of Massachusetts Amherst, Computer Science Dept.
@@ -33,10 +32,10 @@ public class LayoutSegmentFinder
 	
 	
 	static {
-		INTRODUCTION_PATTERN = Pattern.compile("I(?i:ntroduction)");
-		ABSTRACT_PATTERN = Pattern.compile("A(?i:bstract)");
+		INTRODUCTION_PATTERN = Pattern.compile("^[\\s\\.\\d]*I(?i:ntroduction)");
+		ABSTRACT_PATTERN = Pattern.compile("^[\\s]*A(?i:bstract)");
 		BIBLIOGRAPHY_PATTERN = Pattern
-				.compile("^[iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography))\\s*$");
+				.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes))\\s*$");
 	}
 
 	
@@ -68,12 +67,30 @@ public class LayoutSegmentFinder
 		ArrayList lineSpans = new ArrayList();
 		lineSpans.addAll(tokenization.getLineSpans());
 
+//        Object testSpan = lineSpans.get(2);
+//
+//        List<StringSpan> pl = ((CompositeSpan)testSpan).getSpans();
+//
+//        Object prop = pl.get(4).getProperty("lly");
+
+//        for(Object s: lineSpans)
+//        {
+//            System.out.println(s.toString());
+//        }
+        System.out.println(Arrays.toString(lineSpans.toArray()));
+
 		//**** Find header ****
 		LinkedList headerLineList = new LinkedList();
 		// look for 'abstract'
 		List subList = findMatchingLines(lineSpans, NULL_PATTERN,
 				ABSTRACT_PATTERN, /*lineCountMax=*/Integer.MAX_VALUE, /*pageCountMax=*/
 				Integer.MAX_VALUE);
+
+//        for(Object s: subList)
+//        {
+//            System.out.println(s.toString());
+//        }
+
 		if (!subList.isEmpty()) {
 			// add everything before 'abstract' to header list
 			headerLineList.addAll(subList);
@@ -93,10 +110,30 @@ public class LayoutSegmentFinder
 				headerLineList.addAll(subList);
 				subList.clear();
 			} else {
-				throw new HeaderNotFoundException(
-						"did not find 'abstract' or 'introduction'");
+                //TODO: try with rules for each of the journals
+                JournalSegmenter js = JournalSegmenter.getSegmenter(lineSpans);
+
+                if(js==null)
+                {
+                    throw new HeaderNotFoundException(
+                            "did not find 'abstract' or 'introduction'");
+                }
+                subList = js.getAbstract(lineSpans);
+
+
+                if(subList.isEmpty() )
+                {
+                    throw new HeaderNotFoundException(
+                            "did not find 'abstract' or 'introduction'");
+                }
+                else
+                {
+                    headerLineList.addAll(subList);
+                    subList.clear();
+                }
 			}
 		}
+
 
 		// Create header element
 		long[] headerTokenBoundaries = lineListBoundaries(headerLineList);
@@ -106,6 +143,10 @@ public class LayoutSegmentFinder
 		subsections.put("headerTokenization", header);
 
 		//***** Find body ****
+//        for(Object s: lineSpans)
+//        {
+//            System.out.println(s.toString());
+//        }
 		ArrayList bodyLines = new ArrayList();
 		subList = findMatchingLines(lineSpans, NULL_PATTERN,
 				BIBLIOGRAPHY_PATTERN, /*lineCountMax=*/Integer.MAX_VALUE, /*pageCountMax=*/
@@ -118,6 +159,12 @@ public class LayoutSegmentFinder
 					BIBLIOGRAPHY_PATTERN, /*lineCountMax=*/Integer.MAX_VALUE, /*pageCountMax=*/
 					Integer.MAX_VALUE);
 		}
+
+
+//        for(Object s: lineSpans)
+//        {
+//            System.out.println(s.toString());
+//        }
 
 		if (!bodyLines.isEmpty()) {
 			// Create body element

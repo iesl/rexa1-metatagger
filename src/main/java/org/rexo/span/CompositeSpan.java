@@ -29,6 +29,10 @@ public class CompositeSpan implements Span, PropertyHolder {
 		_spans.add( s );
 	}
 
+    public List getSpans()
+    {
+        return _spans;
+    }
 	public String getText() {
 		StringBuffer rangeText = new StringBuffer();
 		for (int i = 0; i < _spans.size(); i++) {

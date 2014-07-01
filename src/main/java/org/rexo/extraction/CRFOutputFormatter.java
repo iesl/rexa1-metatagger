@@ -17,7 +17,7 @@ public class CRFOutputFormatter {
     private static Logger log = Logger.getLogger( CRFOutputFormatter.class );
 
     //
-    private int lastWidth
+    //private int lastWidth = 0;
 	/**
 	 *
 	 * @param input
