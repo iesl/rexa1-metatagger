@@ -75,10 +75,10 @@ public class LayoutSegmentFinder
 				ABSTRACT_PATTERN, /*lineCountMax=*/Integer.MAX_VALUE, /*pageCountMax=*/
 				Integer.MAX_VALUE);
 
-        for(Object s: lineSpans)
-        {
-            System.out.println(s.toString());
-        }
+//        for(Object s: lineSpans)
+//        {
+//            System.out.println(s.toString());
+//        }
 
 		if (!subList.isEmpty()) {
 			// add everything before 'abstract' to header list
