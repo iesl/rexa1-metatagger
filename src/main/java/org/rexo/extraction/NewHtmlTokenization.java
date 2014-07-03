@@ -44,7 +44,9 @@ public class NewHtmlTokenization extends TokenSequence implements Tokenization {
 	// original: private static final Pattern LEXER_PATTERN_1 = Pattern.compile("``|''|\\n|&amp;|1st|2nd|3rd|[4-9]th|Ph.D.|\\S+@\\S+|\\w\\.|\\+[A-Z]+\\+|\\p{Alpha}+|\\p{Digit}+|\\p{Punct}" );
 	// private static final Pattern LEXER_PATTERN = Pattern.compile( "[^\\s,]+[\\s,]+" );
 
-	public static final Pattern LEXER_PATTERN = Pattern.compile( "(``|''|\\n|&amp;|1st|2nd|3rd|[4-9]th|Ph.D.|\\S+@\\S+|\\w\\.|\\+[A-Z]+\\+|\\p{Alpha}+|\\p{Digit}+|\\p{Punct}|^)\\s*" );
+    //kzaporojets: added © symbol
+//	public static final Pattern LEXER_PATTERN = Pattern.compile( "(``|©|''|\\n|&amp;|1st|2nd|3rd|[4-9]th|Ph.D.|\\S+@\\S+|\\w\\.|\\+[A-Z]+\\+|\\p{Alpha}+|\\p{Digit}+|\\p{Punct}|^)\\s*" );
+    public static final Pattern LEXER_PATTERN = Pattern.compile( "(``|''|\\n|&amp;|1st|2nd|3rd|[4-9]th|Ph.D.|\\S+@\\S+|\\w\\.|\\+[A-Z]+\\+|\\p{Alpha}+|\\p{Digit}+|\\p{Punct}|^)\\s*" );
 	// private static final Pattern LEXER_PATTERN = Pattern.compile("(``|''|\\n|1st|2nd|3rd|[4-9]th|Ph.D.|\\S+@\\S+|\\w\\.|\\+[A-Z]+\\+|\\p{Alpha}+|\\p{Digit}+|\\p{Punct})\\s*" );
 	private static final Pattern DIGIT_OR_SPACE = Pattern.compile( "\\d+| " );
 
