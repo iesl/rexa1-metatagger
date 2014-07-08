@@ -32,7 +32,7 @@ public class LayoutSegmentFinder
 	
 	
 	static {
-		INTRODUCTION_PATTERN = Pattern.compile("^[#\\s\\.\\d]*I(?i:ntroduction)");
+		INTRODUCTION_PATTERN = Pattern.compile("^[#iIvVxX\\s\\.\\d]*I(?i:ntroduction)");
 		ABSTRACT_PATTERN = Pattern.compile("^[\\s]*A(?i:bstract)");
 		BIBLIOGRAPHY_PATTERN = Pattern
 				.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes))\\s*$");
