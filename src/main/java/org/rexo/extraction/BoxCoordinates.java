@@ -10,6 +10,18 @@ public class BoxCoordinates {
     private double llx;
     private int pageNum;
 
+    public BoxCoordinates()
+    {
+
+    }
+    public BoxCoordinates(double ury, double urx, double lly, double llx, int pageNum)
+    {
+        this.ury = ury;
+        this.urx = urx;
+        this.lly = lly;
+        this.llx = llx;
+        this.pageNum = pageNum;
+    }
     public int getPageNum() {
         return pageNum;
     }

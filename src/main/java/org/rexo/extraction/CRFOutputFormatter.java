@@ -5,10 +5,12 @@ import edu.umass.cs.mallet.base.types.Sequence;
 import edu.umass.cs.mallet.base.types.PropertyHolder;
 import org.jdom.Element;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.rexo.span.CompositeSpan;
 
 /**
  * Author: saunders Created Nov 16, 2005 Copyright (C) Univ. of Massachusetts Amherst, Computer Science Dept.
@@ -27,6 +29,13 @@ public class CRFOutputFormatter {
 	 */
 	public Element toXmlElement(NewHtmlTokenization input, Sequence tokenLabels, String parentName) {
 		Element rootElement = new Element( parentName );
+        List<BoxCoordinates> columns = null;
+        int currentColumn = 1;
+        //kzaporojets: gets the columns and its coordinates in terms of the width
+        if(parentName.equals("reference")) {
+            columns = getColumnData(input.getLineSpans());
+        }
+
 		for (int i = 0; i < input.size(); i++) {
 			Span span = (Span)input.get( i );
 			String labels = tokenLabels.get( i ).toString();
@@ -34,12 +43,71 @@ public class CRFOutputFormatter {
 			labels = labels.replaceAll( "author-begin", "authors:^author" );
 			labels = labels.replaceAll( "author-inside", "authors:author" );
 			String[] labelParts = labels.split( "[:|]" );
+
+            //kzaporojets: gets the columns and its coordinates in terms of the width
+            if(parentName.equals("reference")) {
+                currentColumn = getCurrentColumn(columns,span);
+            }
+
             //kzaporojets: insertTokenPosition also includes the position
 			//insertToken( rootElement, getSpanText( span ), labelParts );
-            insertTokenPosition(rootElement, getSpanText( span ), labelParts, getSpanBoxCoordinates(span));
+            insertTokenPosition(rootElement, getSpanText( span ), labelParts, getSpanBoxCoordinates(span),currentColumn);
 		}
 		return rootElement;
 	}
+
+
+    int getCurrentColumn(List<BoxCoordinates> columns, Span span)
+    {
+        double llxSpan = ((PropertyHolder) span).getNumericProperty( "llx" );
+        double urxSpan = ((PropertyHolder) span).getNumericProperty( "urx" );
+        int col=1;
+        for(BoxCoordinates bc : columns)
+        {
+            if(bc.getLlx()<=llxSpan && urxSpan<=bc.getUrx())
+            {
+                return col;
+            }
+            col++;
+        }
+        return 1;
+    }
+    List<BoxCoordinates> getColumnData(List lineSpan)
+    {
+        List<BoxCoordinates> retVal = new ArrayList<BoxCoordinates>();
+        int currCol=0;
+        for (Object span:lineSpan)
+        {
+            Double llx = Double.valueOf(((CompositeSpan)span).getProperty("llx").toString());
+            Double urx = Double.valueOf(((CompositeSpan)span).getProperty("urx").toString());
+            if(retVal.size()<=currCol)
+            {
+                //double ury, double urx, double lly, double llx, int pageNum
+                retVal.add(new BoxCoordinates(-1,urx,-1, llx, -1));
+            }
+            else
+            {
+                BoxCoordinates bc = retVal.get(currCol);
+                if(bc.getLlx()<llx)
+                {
+                    currCol ++ ;
+                    retVal.add(new BoxCoordinates(-1,urx,-1, llx, -1));
+                }
+                else
+                {
+                    if(bc.getLlx()>llx){
+                        bc.setLlx(llx);
+                    }
+                    if(bc.getUrx()<urx)
+                    {
+                        bc.setUrx(urx);
+                    }
+                }
+
+            }
+        }
+        return retVal;
+    }
 
 	public Element toXmlElement(String[] tokenStrings, Sequence tokenLabels, String parentName) {
 		Element rootElement = new Element( parentName );
@@ -108,9 +176,9 @@ public class CRFOutputFormatter {
      * @param span
      * @param labelParts
      */
-    private void insertTokenPosition(Element parent, String span, String[] labelParts, BoxCoordinates positionSpan) {
+    private void insertTokenPosition(Element parent, String span, String[] labelParts, BoxCoordinates positionSpan, int currentColumn) {
         //associate position here
-        adjustPosition(parent, positionSpan);
+        adjustPosition(parent, positionSpan, currentColumn);
         //end associate position
         if (labelParts.length > 0) {
             String labelPart = labelParts[0];
@@ -126,7 +194,7 @@ public class CRFOutputFormatter {
             //associate position here
 
             //end associate position
-            insertTokenPosition(child, span, labelTail, positionSpan);
+            insertTokenPosition(child, span, labelTail, positionSpan, currentColumn);
         }
         else {
             parent.addContent( span );
@@ -134,11 +202,16 @@ public class CRFOutputFormatter {
     }
 
     //adjust the position
-    private void adjustPosition(Element elem, BoxCoordinates pos)
+    private void adjustPosition(Element elem, BoxCoordinates pos, int currentColumn)
     {
         try {
             //if suddenly all the attributes change abruptly, and we are in references section, don't change them:
             //probably its just a new column. Won't deel with it for now.
+            String llxAttr = currentColumn==1?"llx":"llxc" + currentColumn;
+            String llyAttr = currentColumn==1?"lly":"llyc" + currentColumn;
+            String urxAttr = currentColumn==1?"urx":"urxc" + currentColumn;
+            String uryAttr = currentColumn==1?"ury":"uryc" + currentColumn;
+
             if (elem.getAttribute("llx")!=null && elem.getName().equals("reference"))
             {
                 if(Math.abs(elem.getAttribute("lly").getDoubleValue() - pos.getLly())>400 &&
@@ -147,17 +220,17 @@ public class CRFOutputFormatter {
                     return;
                 }
             }
-            if (elem.getAttribute("llx") == null || elem.getAttribute("llx").getDoubleValue() > pos.getLlx()) {
-                elem.setAttribute("llx", String.valueOf(pos.getLlx()));
+            if (elem.getAttribute(llxAttr) == null || elem.getAttribute(llxAttr).getDoubleValue() > pos.getLlx()) {
+                elem.setAttribute(llxAttr, String.valueOf(pos.getLlx()));
             }
-            if (elem.getAttribute("lly") == null || elem.getAttribute("lly").getDoubleValue() > pos.getLly()) {
-                elem.setAttribute("lly", String.valueOf(pos.getLly()));
+            if (elem.getAttribute(llyAttr) == null || elem.getAttribute(llyAttr).getDoubleValue() > pos.getLly()) {
+                elem.setAttribute(llyAttr, String.valueOf(pos.getLly()));
             }
-            if (elem.getAttribute("urx") == null || elem.getAttribute("urx").getDoubleValue() < pos.getUrx()) {
-                elem.setAttribute("urx", String.valueOf(pos.getUrx()));
+            if (elem.getAttribute(urxAttr) == null || elem.getAttribute(urxAttr).getDoubleValue() < pos.getUrx()) {
+                elem.setAttribute(urxAttr, String.valueOf(pos.getUrx()));
             }
-            if (elem.getAttribute("ury") == null || elem.getAttribute("ury").getDoubleValue() < pos.getUry()) {
-                elem.setAttribute("ury", String.valueOf(pos.getUry()));
+            if (elem.getAttribute(uryAttr) == null || elem.getAttribute(uryAttr).getDoubleValue() < pos.getUry()) {
+                elem.setAttribute(uryAttr, String.valueOf(pos.getUry()));
             }
             if (elem.getAttribute("pageNum") == null) {
                 elem.setAttribute("pageNum", String.valueOf(pos.getPageNum()));
