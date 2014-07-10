@@ -207,21 +207,22 @@ public class CRFOutputFormatter {
         try {
             //if suddenly all the attributes change abruptly, and we are in references section, don't change them:
             //probably its just a new column. Won't deel with it for now.
-            String llxAttr = currentColumn==1?"llx":"llxc" + currentColumn;
-            String llyAttr = currentColumn==1?"lly":"llyc" + currentColumn;
-            String urxAttr = currentColumn==1?"urx":"urxc" + currentColumn;
-            String uryAttr = currentColumn==1?"ury":"uryc" + currentColumn;
+            String llxAttr = currentColumn==1?"llx":elem.getAttribute("llx")!=null?"llxc" + currentColumn:"llx";
+            String llyAttr = currentColumn==1?"lly":elem.getAttribute("lly")!=null?"llyc" + currentColumn:"lly";
+            String urxAttr = currentColumn==1?"urx":elem.getAttribute("urx")!=null?"urxc" + currentColumn:"urx";
+            String uryAttr = currentColumn==1?"ury":elem.getAttribute("ury")!=null?"uryc" + currentColumn:"ury";
 
-            if (elem.getAttribute("llx")!=null && elem.getName().equals("reference"))
-            {
-                if(Math.abs(elem.getAttribute("lly").getDoubleValue() - pos.getLly())>400 &&
-                        Math.abs(elem.getAttribute("ury").getDoubleValue() - pos.getUry())>400)
-                {
-                    return;
-                }
-            }
+//            if (elem.getAttribute(llxAttr)!=null && elem.getName().equals("reference"))
+//            {
+//                if(Math.abs(elem.getAttribute(llyAttr).getDoubleValue() - pos.getLly())>400 &&
+//                        Math.abs(elem.getAttribute(uryAttr).getDoubleValue() - pos.getUry())>400)
+//                {
+//                    return;
+//                }
+//            }
             if (elem.getAttribute(llxAttr) == null || elem.getAttribute(llxAttr).getDoubleValue() > pos.getLlx()) {
                 elem.setAttribute(llxAttr, String.valueOf(pos.getLlx()));
+
             }
             if (elem.getAttribute(llyAttr) == null || elem.getAttribute(llyAttr).getDoubleValue() > pos.getLly()) {
                 elem.setAttribute(llyAttr, String.valueOf(pos.getLly()));
