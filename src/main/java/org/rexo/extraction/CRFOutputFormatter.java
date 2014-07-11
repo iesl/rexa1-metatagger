@@ -36,22 +36,30 @@ public class CRFOutputFormatter {
             columns = getColumnData(input.getLineSpans());
         }
 
+        int page = -1;
 		for (int i = 0; i < input.size(); i++) {
+
 			Span span = (Span)input.get( i );
 			String labels = tokenLabels.get( i ).toString();
 			// hack: header/reference related fixes
 			labels = labels.replaceAll( "author-begin", "authors:^author" );
 			labels = labels.replaceAll( "author-inside", "authors:author" );
 			String[] labelParts = labels.split( "[:|]" );
-
+            BoxCoordinates bcord = getSpanBoxCoordinates(span);
             //kzaporojets: gets the columns and its coordinates in terms of the width
             if(parentName.equals("reference")) {
                 currentColumn = getCurrentColumn(columns,span);
+                //all in the same page
+                if(page!=-1 && bcord.getPageNum()!=page)
+                {
+                    bcord.setPageNum(page);
+                }
             }
+            page = bcord.getPageNum();
 
             //kzaporojets: insertTokenPosition also includes the position
 			//insertToken( rootElement, getSpanText( span ), labelParts );
-            insertTokenPosition(rootElement, getSpanText( span ), labelParts, getSpanBoxCoordinates(span),currentColumn);
+            insertTokenPosition(rootElement, getSpanText( span ), labelParts, bcord,currentColumn);
 		}
 		return rootElement;
 	}
@@ -88,7 +96,7 @@ public class CRFOutputFormatter {
             else
             {
                 BoxCoordinates bc = retVal.get(currCol);
-                if(bc.getLlx()<llx)
+                if(bc.getUrx()<llx || urx < bc.getLlx())
                 {
                     currCol ++ ;
                     retVal.add(new BoxCoordinates(-1,urx,-1, llx, -1));
