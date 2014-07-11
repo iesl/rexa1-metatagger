@@ -32,10 +32,10 @@ public class LayoutSegmentFinder
 	
 	
 	static {
-		INTRODUCTION_PATTERN = Pattern.compile("^[#\\s\\.\\d]*I(?i:ntroduction)");
-		ABSTRACT_PATTERN = Pattern.compile("^[\\s]*A(?i:bstract)");
+		INTRODUCTION_PATTERN = Pattern.compile("^[#iIvVxX\\s\\.\\d]*I(?i:ntroduction)");
+		ABSTRACT_PATTERN = Pattern.compile("^[\\s]*((A(?i:bstract))|((abstract)[\\s]*$))");
 		BIBLIOGRAPHY_PATTERN = Pattern
-				.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes))\\s*$");
+				.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited))\\s*$");
 	}
 
 	
@@ -126,7 +126,9 @@ public class LayoutSegmentFinder
 
 		// Create header element
 		long[] headerTokenBoundaries = lineListBoundaries(headerLineList);
-		NewHtmlTokenization header = tokenization.getSubspanTokenization(
+        System.out.println(Arrays.toString(headerTokenBoundaries));
+
+        NewHtmlTokenization header = tokenization.getSubspanTokenization(
 				(int) headerTokenBoundaries[0], (int) headerTokenBoundaries[1]);
 
 		subsections.put("headerTokenization", header);
@@ -168,7 +170,9 @@ public class LayoutSegmentFinder
 		// Extract References
 
 		long[] biblioBoundaries= lineListBoundaries(lineSpans);
+        System.out.println(Arrays.toString(biblioBoundaries));
 		NewHtmlTokenization biblio = tokenization.getSubspanTokenization((int)biblioBoundaries[0], (int)biblioBoundaries[1]);
+        System.out.println(Arrays.toString(biblio.getLineSpans().toArray()));
 		CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
 
 		// Create biblioPrologue element
