@@ -126,7 +126,7 @@ public class LayoutSegmentFinder
 
 		// Create header element
 		long[] headerTokenBoundaries = lineListBoundaries(headerLineList);
-        System.out.println(Arrays.toString(headerTokenBoundaries));
+//        System.out.println(Arrays.toString(headerTokenBoundaries));
 
         NewHtmlTokenization header = tokenization.getSubspanTokenization(
 				(int) headerTokenBoundaries[0], (int) headerTokenBoundaries[1]);
@@ -170,9 +170,9 @@ public class LayoutSegmentFinder
 		// Extract References
 
 		long[] biblioBoundaries= lineListBoundaries(lineSpans);
-        System.out.println(Arrays.toString(biblioBoundaries));
+//        System.out.println(Arrays.toString(biblioBoundaries));
 		NewHtmlTokenization biblio = tokenization.getSubspanTokenization((int)biblioBoundaries[0], (int)biblioBoundaries[1]);
-        System.out.println(Arrays.toString(biblio.getLineSpans().toArray()));
+//        System.out.println(Arrays.toString(biblio.getLineSpans().toArray()));
 		CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
 
 		// Create biblioPrologue element
