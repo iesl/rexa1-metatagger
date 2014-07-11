@@ -50,12 +50,12 @@ public class CRFOutputFormatter {
             if(parentName.equals("reference")) {
                 currentColumn = getCurrentColumn(columns,span);
                 //all in the same page
-                if(page!=-1 && bcord.getPageNum()!=page)
-                {
-                    bcord.setPageNum(page);
-                }
+//                if(page!=-1 && bcord.getPageNum()!=page)
+//                {
+//                    bcord.setPageNum(page);
+//                }
             }
-            page = bcord.getPageNum();
+//            page = bcord.getPageNum();
 
             //kzaporojets: insertTokenPosition also includes the position
 			//insertToken( rootElement, getSpanText( span ), labelParts );
@@ -70,15 +70,38 @@ public class CRFOutputFormatter {
         double llxSpan = ((PropertyHolder) span).getNumericProperty( "llx" );
         double urxSpan = ((PropertyHolder) span).getNumericProperty( "urx" );
         int col=1;
+        int estimateCol = 1;
+        double estimateDistance = 10000;
         for(BoxCoordinates bc : columns)
         {
             if(bc.getLlx()<=llxSpan && urxSpan<=bc.getUrx())
             {
                 return col;
             }
+            else
+            {
+                if(bc.getLlx()<=llxSpan&&bc.getUrx()>=llxSpan)
+                {
+//                    estimateDistance=0;
+                    estimateCol = col;
+                }
+                else if (bc.getLlx()<=urxSpan&&bc.getUrx()>=urxSpan)
+                {
+//                    estimateDistance=0;
+                    estimateCol = col;
+                }
+                else if(bc.getLlx()>=llxSpan&&bc.getUrx()<=urxSpan)
+                {
+                    estimateCol = col;
+                }
+                else if(bc.getUrx()<=urxSpan&&bc.getUrx()<=llxSpan)
+                {
+                    estimateCol = col;
+                }
+            }
             col++;
         }
-        return 1;
+        return estimateCol;
     }
     List<BoxCoordinates> getColumnData(List lineSpan)
     {
@@ -96,10 +119,15 @@ public class CRFOutputFormatter {
             else
             {
                 BoxCoordinates bc = retVal.get(currCol);
-                if(bc.getUrx()<llx || urx < bc.getLlx())
+                if(bc.getUrx()<llx)
                 {
-                    currCol ++ ;
+                    currCol = retVal.size() ;
                     retVal.add(new BoxCoordinates(-1,urx,-1, llx, -1));
+                }
+                else if (urx < bc.getLlx())
+                {
+                    //add in the beginning of the list
+                    retVal.add(0,new BoxCoordinates(-1,urx,-1, llx, -1));
                 }
                 else
                 {
@@ -111,7 +139,17 @@ public class CRFOutputFormatter {
                         bc.setUrx(urx);
                     }
                 }
+            }
+        }
 
+        if(retVal.size()>1) {
+            BoxCoordinates prevBc = retVal.get(0);
+            for (BoxCoordinates bc : retVal.subList(1,retVal.size())) {
+                if(bc.getLlx()<prevBc.getUrx())
+                {
+                    bc.setLlx(prevBc.getUrx()+1);
+                }
+                prevBc = bc;
             }
         }
         return retVal;
@@ -215,19 +253,34 @@ public class CRFOutputFormatter {
         try {
             //if suddenly all the attributes change abruptly, and we are in references section, don't change them:
             //probably its just a new column. Won't deel with it for now.
-            String llxAttr = currentColumn==1?"llx":elem.getAttribute("llx")!=null?"llxc" + currentColumn:"llx";
-            String llyAttr = currentColumn==1?"lly":elem.getAttribute("lly")!=null?"llyc" + currentColumn:"lly";
-            String urxAttr = currentColumn==1?"urx":elem.getAttribute("urx")!=null?"urxc" + currentColumn:"urx";
-            String uryAttr = currentColumn==1?"ury":elem.getAttribute("ury")!=null?"uryc" + currentColumn:"ury";
+            int initCol = 1;
+            if(elem.getAttribute("initialCol")!=null)
+            {
+                initCol = elem.getAttribute("initialCol").getIntValue();
+            }
 
-//            if (elem.getAttribute(llxAttr)!=null && elem.getName().equals("reference"))
-//            {
-//                if(Math.abs(elem.getAttribute(llyAttr).getDoubleValue() - pos.getLly())>400 &&
-//                        Math.abs(elem.getAttribute(uryAttr).getDoubleValue() - pos.getUry())>400)
-//                {
-//                    return;
-//                }
-//            }
+            String llxAttr = currentColumn==initCol?"llx":elem.getAttribute("llx")!=null?"llxc" + (Math.abs(currentColumn - initCol)+1):"llx";
+            String llyAttr = currentColumn==initCol?"lly":elem.getAttribute("lly")!=null?"llyc" + (Math.abs(currentColumn - initCol)+1):"lly";
+            String urxAttr = currentColumn==initCol?"urx":elem.getAttribute("urx")!=null?"urxc" + (Math.abs(currentColumn - initCol)+1):"urx";
+            String uryAttr = currentColumn==initCol?"ury":elem.getAttribute("ury")!=null?"uryc" + (Math.abs(currentColumn - initCol)+1):"ury";
+
+
+
+
+            if (elem.getAttribute(llxAttr)!=null && elem.getName().equals("reference"))
+            {
+                if(Math.abs(elem.getAttribute(llyAttr).getDoubleValue() - pos.getLly())>400 &&
+                        Math.abs(elem.getAttribute(uryAttr).getDoubleValue() - pos.getUry())>400)
+                {
+                    return;
+                }
+            }
+            //inserts the number of column with respect to which the llxc_ is calculated
+            if(llxAttr.equals("llx") && elem.getAttribute("initialCol")==null)
+            {
+                elem.setAttribute("initialCol",String.valueOf(currentColumn));
+            }
+
             if (elem.getAttribute(llxAttr) == null || elem.getAttribute(llxAttr).getDoubleValue() > pos.getLlx()) {
                 elem.setAttribute(llxAttr, String.valueOf(pos.getLlx()));
 
