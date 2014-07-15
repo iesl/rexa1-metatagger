@@ -109,34 +109,27 @@ public class CRFOutputFormatter {
         int currCol=0;
         for (Object span:lineSpan)
         {
-            Double llx = Double.valueOf(((CompositeSpan)span).getProperty("llx").toString());
-            Double urx = Double.valueOf(((CompositeSpan)span).getProperty("urx").toString());
-            if(retVal.size()<=currCol)
-            {
-                //double ury, double urx, double lly, double llx, int pageNum
-                retVal.add(new BoxCoordinates(-1,urx,-1, llx, -1));
-            }
-            else
-            {
-                BoxCoordinates bc = retVal.get(currCol);
-                if(bc.getUrx()<llx)
-                {
-                    currCol = retVal.size() ;
-                    retVal.add(new BoxCoordinates(-1,urx,-1, llx, -1));
-                }
-                else if (urx < bc.getLlx())
-                {
-                    //add in the beginning of the list
-                    retVal.add(0,new BoxCoordinates(-1,urx,-1, llx, -1));
-                }
-                else
-                {
-                    if(bc.getLlx()>llx){
-                        bc.setLlx(llx);
-                    }
-                    if(bc.getUrx()<urx)
-                    {
-                        bc.setUrx(urx);
+            if(span instanceof CompositeSpan) {
+                Double llx = Double.valueOf(((CompositeSpan)span).getProperty("llx").toString());
+                Double urx = Double.valueOf(((CompositeSpan)span).getProperty("urx").toString());
+                if (retVal.size() <= currCol) {
+                    //double ury, double urx, double lly, double llx, int pageNum
+                    retVal.add(new BoxCoordinates(-1, urx, -1, llx, -1));
+                } else {
+                    BoxCoordinates bc = retVal.get(currCol);
+                    if (bc.getUrx() < llx) {
+                        currCol = retVal.size();
+                        retVal.add(new BoxCoordinates(-1, urx, -1, llx, -1));
+                    } else if (urx < bc.getLlx()) {
+                        //add in the beginning of the list
+                        retVal.add(0, new BoxCoordinates(-1, urx, -1, llx, -1));
+                    } else {
+                        if (bc.getLlx() > llx) {
+                            bc.setLlx(llx);
+                        }
+                        if (bc.getUrx() < urx) {
+                            bc.setUrx(urx);
+                        }
                     }
                 }
             }
