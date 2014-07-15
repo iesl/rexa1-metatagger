@@ -60,6 +60,8 @@ public class CRFBibliographySegmentor
 	// NOTE: argument "result" is modified
 	private static String checkAndSegmentReferences(List lines, Sequence predictedLabels, ReferenceData result)
 	{
+
+
 		String warning = "";
 		boolean seenPrologue = false;
 		boolean seenRef = false;
@@ -68,6 +70,8 @@ public class CRFBibliographySegmentor
 		LinkedList reference = new LinkedList();
 		int lineIdx = 0;
 		int labIdx = 0;
+
+
 
 		while (labIdx < predictedLabels.size() && lineIdx < lines.size()) {
 			String tag = predictedLabels.get(labIdx).toString();
@@ -123,8 +127,13 @@ public class CRFBibliographySegmentor
 			lineIdx++;
 		}
 
-		if (reference.size() > 0)
-			result.referenceLineList.add(reference);
+		if (reference.size() > 0) {
+            result.referenceLineList.add(reference);
+            //kzaporojets: building additional stats to detect references
+            BibliographyStats stats = BibliographyStats.getStats(result.referenceLineList);
+
+        }
+
 
 		return warning;
 	}
