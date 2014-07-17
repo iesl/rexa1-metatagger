@@ -130,8 +130,8 @@ public class CRFBibliographySegmentor
 		if (reference.size() > 0) {
             result.referenceLineList.add(reference);
             //kzaporojets: building additional stats to detect references
-            BibliographyStats stats = BibliographyStats.getStats(result.referenceLineList);
-
+            BibliographyStats stats = BibliographyStats.getStats(result.referenceLineList, lines, predictedLabels);
+            result.referenceLineList = stats.getRevisedReferences();
         }
 
 
