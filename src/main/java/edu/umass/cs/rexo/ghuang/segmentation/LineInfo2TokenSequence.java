@@ -68,7 +68,7 @@ public class LineInfo2TokenSequence extends Pipe implements Serializable
 
 	
 	
-	private void computeFeatures(LineInfo[] lineInfos)
+	public void computeFeatures(LineInfo[] lineInfos)
 	{
 		computeLexiconFeatures(lineInfos);
 		computeLayoutFeatures(lineInfos);
@@ -220,6 +220,11 @@ public class LineInfo2TokenSequence extends Pipe implements Serializable
 				lineInfos[i].presentFeatures.add("beginBrackets");
 				numBeginBrackets++;
 			}
+            //kzaporojets: the numbering of some references start with parenthesis
+            if (squishedText.matches("^\\(.+\\).*")) {
+                lineInfos[i].presentFeatures.add("beginBrackets");
+                numBeginBrackets++;
+            }
 			if (squishedText.matches("^[0-9]+\\.?\\p{Lu}.*")) {
 				lineInfos[i].presentFeatures.add("beginsNumberCapital");
 				numBeginNumberCapital++;

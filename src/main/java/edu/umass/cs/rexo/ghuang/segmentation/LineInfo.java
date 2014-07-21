@@ -21,9 +21,14 @@ public class LineInfo
 
 	HashSet presentFeatures = new HashSet();  // contains names of binary features that are "on" in this line 
 	String[] textTokens;  // tokenized text of this line
-	
+	//kzaporojets: here add one with reference stats (ex: averageLineWidth, averageVerticalDistanceLines...)
+
+
+
 	public LineInfo() {}
-	
+
+
+
 	// Constructed from a line of the form output by 'MakeLabeledData.java'.
 	public LineInfo(String line) 
 	{

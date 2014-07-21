@@ -1,6 +1,7 @@
 package edu.umass.cs.rexo.ghuang.segmentation;
 
 import edu.umass.cs.mallet.base.extract.StringSpan;
+import edu.umass.cs.mallet.base.types.PropertyHolder;
 import edu.umass.cs.mallet.base.types.Sequence;
 import org.rexo.span.CompositeSpan;
 
@@ -19,6 +20,26 @@ public class BibliographyStats {
 
 
     private LinkedList references;
+
+    public List getLines() {
+        return lines;
+    }
+
+    public void setLines(List lines) {
+        this.lines = lines;
+    }
+
+    public Sequence getPredictedLabels() {
+        return predictedLabels;
+    }
+
+    public void setPredictedLabels(Sequence predictedLabels) {
+        this.predictedLabels = predictedLabels;
+    }
+
+    private List lines;
+
+    private Sequence predictedLabels;
 
 
     private boolean suspiciousReferences;
@@ -60,7 +81,8 @@ public class BibliographyStats {
     {
         BibliographyStats biblioStats = new BibliographyStats();
         biblioStats.setReferences(references);
-
+        biblioStats.setLines(lines);
+        biblioStats.setPredictedLabels(predictedLabels);
         for(LinkedList reference : (LinkedList<LinkedList>)references)
         {
             if(reference.get(0) instanceof CompositeSpan)
@@ -235,10 +257,106 @@ public class BibliographyStats {
         return newReferences2;
     }
 
+
+    private class LineProperties {
+        private long llx = -1;
+        private long lly = -1;
+        private long urx = -1;
+        private long ury = -1;
+        private long pageNumber = -1;
+//        LineProperties()
+//        {
+//
+//        }
+        void setLineProperties(Object spans)
+        {
+            if(spans instanceof CompositeSpan) {
+                CompositeSpan compositeSpan = (CompositeSpan)spans;
+                urx = Math.round(getHorizontal("urx",compositeSpan.getSpans()));
+                llx = Math.round(getHorizontal("llx",compositeSpan.getSpans()));
+                ury = Math.round(compositeSpan.getNumericProperty("ury"));
+                lly = Math.round(compositeSpan.getNumericProperty("lly"));
+            }
+            else if(spans instanceof PropertyHolder)
+            {
+                PropertyHolder propertyHolder = (PropertyHolder)spans;
+                llx = Math.round(propertyHolder.getNumericProperty("llx"));
+                lly = Math.round(propertyHolder.getNumericProperty("lly"));
+                urx = Math.round(propertyHolder.getNumericProperty("urx"));
+                ury = Math.round(propertyHolder.getNumericProperty("ury"));
+                pageNumber = Math.round(propertyHolder.getNumericProperty("pageNum"));
+
+            }
+        }
+
+        long getVerticalDifference(LineProperties lineProperties)
+        {
+            return llx - lineProperties.urx;
+        }
+        boolean isEmpty()
+        {
+            return (llx==-1 && lly==-1 && urx==-1 && ury==-1 && pageNumber==-1);
+        }
+    }
+    private Object calculatePreliminaryStats()
+    {
+        ArrayList<Integer> verticalDistances = new ArrayList<>();
+        LineProperties lineProperties1 = new LineProperties();
+        boolean resetted=true;
+        for(Object line:lines)
+        {
+            if(line instanceof PropertyHolder || line instanceof CompositeSpan)
+            {
+                if(!resetted)
+                {
+                    //calculate vert distance
+
+                }
+                else
+                {
+                    lineProperties1.setLineProperties(line);
+                    resetted = false;
+                }
+            }
+            else
+            {
+                resetted = true;
+            }
+        }
+        return null;
+    }
     //code that returns fixed references without re-working references created by CRF (as in getRevisedReferences() method), it does it from scratch
     //
-    public LinkedList<List> getRevisedReferencesWithoutCRF(LinkedList references,List lines, Sequence predictedLabels) {
+    public LinkedList<List> getRevisedReferencesWithoutCRF() {
+
+
+        //step 0: calculate the vertical distances between the lines, and other peliminary statistics?
+        List<List<List<Object>>> pageColumnLine = new ArrayList<List<List<Object>>>();
+
+
+        ArrayList<Integer> verticalDistances = new ArrayList<>();
+
+        Object preliminaryStats = calculatePreliminaryStats();
+
+        //step 1: break the lines in pages and columns inside each page, taking into account footer and headers.
+        //the Object represents the line type which in most of the cases seems to be org.rexo.span.CompositeSpan
+
+        //step 2: detect the kind of alignment: firstleft, firstright (for now)
+
+//        AlignType alignmentType =
+
+        //step 3: break into the references following only the alignment (no regex so far)
+
+        //take into account:
+        // - different columns (create the map of the pages with column coordinates (including vertical?) where all the references are located)
+        // - different pages (idem previous)
+        // - headers and footers (by creating the map in the previous point, should take the headers/footers as "outliers" and ignore them).
+        // - when a particular line was already labeled as header/footer by previous code ...
+        // - one way to differenciate between a reference and a header is looking for a vertical distance, the vertical distance between references
+        // should be approximately the same, but if it diverges too much inside the same page, it must be a footer/header.
+
         return null;
+
     }
 
     private LinkedList<List> applySecondRule(List reference)

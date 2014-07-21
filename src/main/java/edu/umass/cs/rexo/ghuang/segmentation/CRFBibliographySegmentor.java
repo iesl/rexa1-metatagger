@@ -34,7 +34,11 @@ public class CRFBibliographySegmentor
 	public ReferenceData segmentReferences(NewHtmlTokenization htmlTokenization)
 	{
 		Instance inst = new Instance(htmlTokenization, null, null, null, m_crf.getInputPipe());
+        //todo: kzaporojets: here another instance with LineInfo2TokenSequence pipe, adding also data such as
+        //average line width
 		Sequence predictedLabels = m_crf.transduce ((Sequence) inst.getData());
+
+
 		ReferenceData ret = new ReferenceData();
 		ArrayList lineSpans = new ArrayList();
 
@@ -131,7 +135,13 @@ public class CRFBibliographySegmentor
             result.referenceLineList.add(reference);
             //kzaporojets: building additional stats to detect references
             BibliographyStats stats = BibliographyStats.getStats(result.referenceLineList, lines, predictedLabels);
-            result.referenceLineList = stats.getRevisedReferences();
+
+
+            //result.referenceLineList = stats.getRevisedReferences();
+            if(stats.hasSuspiciousReferences())
+            {
+//                result.referenceLineList = stats.getRevisedReferencesWithoutCRF();
+            }
         }
 
 
