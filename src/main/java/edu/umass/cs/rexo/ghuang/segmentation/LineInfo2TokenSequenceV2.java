@@ -6,9 +6,7 @@ import edu.umass.cs.mallet.base.types.Token;
 import edu.umass.cs.mallet.base.types.TokenSequence;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Some added features to the original LineInfo2TokenSequence to help identify the references
@@ -90,11 +88,10 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
          - mode of the width (for all of the lines)
          - mode of llx a urx (for the lines on a particular page) to identify both of the columns
          - mode of vertical distance between the lines (the two first modes) for all the lines.
-
         */
-        Map <Integer, Integer> verticalDistance = new HashMap<Integer, Integer>();
-        Map <Integer, Integer> widthLine = new HashMap<Integer, Integer>();
-        Map <Integer, HashMap<ColumnData, Integer>> columnsData = new HashMap<Integer,HashMap<ColumnData,Integer>>();
+        List <Entry<Integer>> verticalDistance = new ArrayList<Entry<Integer>>();
+        List <Entry<Integer>> widthLine = new ArrayList<Entry<Integer>>();
+        Map <Integer, List<Entry<ColumnData>>> columnsData = new HashMap<Integer,List<Entry<ColumnData>>>();
 
         /*kzaporojetes: end of additional data, further in the code it will get completed*/
 
@@ -127,22 +124,59 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
             int width = lineInfos[i-1].urx - lineInfos[i].llx;
 
-            if(widthLine.get(width)!=null)
+            Entry<Integer> currentWidthEntry = new Entry<Integer>(width,1);
+            int iOf = widthLine.indexOf(currentWidthEntry);
+            if(iOf>-1)
             {
-                widthLine.put(width,verticalDistance.get(width)+1);
-
+                Entry actualData = widthLine.get(iOf);
+                actualData.setQty(actualData.getQty()+1);
+            }
+            else
+            {
+                widthLine.add(currentWidthEntry);
             }
 
+//        Map <Integer, HashMap<ColumnData, Integer>> columnsData = new HashMap<Integer,HashMap<ColumnData,Integer>>();
 
-            if (lineInfos[i].page == prevPageNum && i>0 && lineInfos[i-1].lly < lineInfos[i].ury) {
-                int vertDistance = lineInfos[i-1].lly - lineInfos[i].ury;
-                if(verticalDistance.get(vertDistance)!=null)
+            ColumnData columnData = new ColumnData();
+            columnData.setLeftX(lineInfos[i].llx);
+            columnData.setRightX(lineInfos[i].urx);
+
+            if(columnsData.get(lineInfos[i].page)==null)
+            {
+                List <Entry<ColumnData>> colData = new ArrayList<Entry<ColumnData>>();
+                colData.add(new Entry<ColumnData>(columnData, 1));
+                columnsData.put(lineInfos[i].page,colData);
+            }
+            else
+            {
+                Entry<ColumnData> currEntry = new Entry<ColumnData>(columnData,1);
+                List entriesInThePage = columnsData.get(lineInfos[i].page);
+                int iOe = entriesInThePage.indexOf(currEntry);
+                if(iOe>-1)
                 {
-                    verticalDistance.put(vertDistance,verticalDistance.get(vertDistance)+1);
+                    Entry<ColumnData> existentEntry = columnsData.get(lineInfos[i].page).get(iOe);
+                    existentEntry.setQty(existentEntry.getQty()+1);
                 }
                 else
                 {
-                    verticalDistance.put(vertDistance,1);
+                    columnsData.get(lineInfos[i].page).add(currEntry);
+                }
+            }
+
+            if (lineInfos[i].page == prevPageNum && i>0 && lineInfos[i-1].lly > lineInfos[i].ury) {
+                Integer vertDistance = lineInfos[i-1].lly - lineInfos[i].ury;
+                Entry<Integer > initialEntry = new Entry<Integer>(vertDistance,1);
+                iOf = verticalDistance.indexOf(initialEntry);
+                if(iOf > -1)
+                {
+                    //verticalDistance.put(vertDistance,verticalDistance.get(vertDistance)+1);
+                    Entry<Integer> exEntry = verticalDistance.get(iOf);
+                    exEntry.setQty(exEntry.getQty()+1);
+                }
+                else
+                {
+                    verticalDistance.add(initialEntry);
                 }
             }
 
@@ -197,8 +231,15 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
         }
 
+
+        Collections.sort(verticalDistance); //sortByValue(verticalDistance);
+        //widthLine = sortByValue(widthLine);
+        Collections.sort(widthLine);
+
+        int currentPage = lineInfos[0].page;
         // A second pass of feature computations
         for (int i = 0; i < lineInfos.length; i++) {
+
             if (lineInfos[i].urx - lineInfos[i].llx <= 0.75 * avgLineLength)
                 lineInfos[i].presentFeatures.add("shortLineLength");
 
@@ -212,11 +253,84 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 lineInfos[i].presentFeatures.add("usesRefFont");
             else if (refFont != -1 && ! lineInfos[i].presentFeatures.contains("containsMultiFonts"))
                 lineInfos[i].presentFeatures.add("doesntUseRefFont");
+
+
+            //todo: "possibleColumn", the first widest that is not overlapping with the second? See overlapColumnDatas method
+
+
+            //width analysis "firstCommonWidth" && "secondCommonWidth"
+            int currentWidth = lineInfos[i].urx - lineInfos[i].llx;
+
+            int iOf = widthLine.indexOf(new Entry(currentWidth,0));
+            if(iOf==0)
+            {
+                lineInfos[i].presentFeatures.add("firstCommonWidth");
+            }
+            else if(iOf==1)
+            {
+                lineInfos[i].presentFeatures.add("secondCommonWidth");
+            }
+            else if(iOf==2)
+            {
+                lineInfos[i].presentFeatures.add("thirdCommonWidth");
+            }
+
+
+            //vertical line analysis
+            if(i+1<lineInfos.length && lineInfos[i].page == lineInfos[i+1].page && lineInfos[i].lly > lineInfos[i+1].ury)
+            {
+                int currVertDistance = lineInfos[i].lly - lineInfos[i+1].ury;
+                //can be improved by checking the number of elements in each key. The spaces between the references should represent
+                //at least 15% (maybe much more, try with up to 50%...) of the lines in references , if it is less, then can be header-footer
+                if((verticalDistance.size()>1&&verticalDistance.indexOf(new Entry<Integer>(currVertDistance,0))>1))
+                {
+                    lineInfos[i].presentFeatures.add("verticalOutlier");
+                }
+                else if ((verticalDistance.size()>1&&verticalDistance.indexOf(new Entry<Integer>(currVertDistance,0))==1) &&
+                        ( (double)verticalDistance.get(0).getQty()/(double)verticalDistance.get(1).getQty() > 0.15))
+                {
+                    lineInfos[i].presentFeatures.add("verticalSpace");
+                }
+            }
+
+            currentPage = lineInfos[i].page;
         }
 
         //also see if it is possible to get a notion where do they start (the columns)
 	}
+//
+//    public static <K, V extends Comparable<? super V>> Map<K, V>
+//                                                    sortByValue( Map<K, V> map )
+//    {
+//        List<Map.Entry<K, V>> list =
+//                new LinkedList<Map.Entry<K, V>>( map.entrySet() );
+//        Collections.sort( list, new Comparator<Map.Entry<K, V>>()
+//        {
+//            public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
+//            {
+//                return (o1.getValue()).compareTo( o2.getValue() );
+//            }
+//        } );
+//
+//        Map<K, V> result = new LinkedHashMap<K, V>();
+//        for (Map.Entry<K, V> entry : list)
+//        {
+//            result.put( entry.getKey(), entry.getValue() );
+//        }
+//        return result;
+//    }
 
+    private boolean overlapColumnDatas(ColumnData columnData1, ColumnData columnData2)
+    {
+        if((columnData1.getLeftX()>=columnData2.getLeftX() && columnData1.getLeftX()<=columnData2.getRightX()) ||
+                (columnData1.getRightX()>=columnData2.getLeftX() && columnData1.getRightX()<=columnData2.getRightX()) ||
+                (columnData1.getLeftX()<=columnData2.getLeftX() && columnData1.getRightX()>=columnData2.getRightX()) ||
+                (columnData1.getLeftX()>=columnData2.getLeftX() && columnData1.getRightX()<=columnData2.getRightX()))
+        {
+            return true;
+        }
+        return false;
+    }
 
 	private void computeLexiconFeatures(LineInfo[] lineInfos)
 	{
@@ -391,6 +505,64 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 		return count;
 	}
 	
+}
+
+class Entry<T1> implements Comparable<Entry<T1>>
+{
+    T1 key;
+    Integer qty;
+
+    public Entry(T1 key, Integer qty)
+    {
+        this.key = key;
+        this.qty = qty;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
+    }
+
+    public T1 getKey() {
+        return key;
+    }
+
+    public void setKey(T1 key) {
+        this.key = key;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        return ((Entry)obj).getKey().equals(this.key);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return key.hashCode();
+    }
+
+    @Override
+    public int compareTo(Entry<T1> entry)
+    {
+        int otherQty = entry.getQty();
+        if(this.qty > otherQty)
+        {
+            return 1;
+        }
+        else if (this.qty == otherQty)
+        {
+            return 0;
+        }
+        else
+        {
+            return -1;
+        }
+    }
 }
 
 class ColumnData
