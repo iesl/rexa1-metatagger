@@ -86,12 +86,14 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
         /*kzaporojets: some additional data with respect to layout include:
          - mode of the width (for all of the lines)
-         - mode of llx a urx (for the lines on a particular page) to identify both of the columns
-         - mode of vertical distance between the lines (the two first modes) for all the lines.
+         - mode of llx a urx (for the lines on a particular page) to help identify the columns
+         - mode of vertical distance between the lines for all the lines.
         */
         List <Entry<Integer>> verticalDistance = new ArrayList<Entry<Integer>>();
         List <Entry<Integer>> widthLine = new ArrayList<Entry<Integer>>();
         Map <Integer, List<Entry<ColumnData>>> columnsData = new HashMap<Integer,List<Entry<ColumnData>>>();
+        //dimension of each of the pages
+        Map <Integer, PageData> pagesData = new HashMap<Integer,PageData>();
 
         /*kzaporojetes: end of additional data, further in the code it will get completed*/
 
@@ -138,9 +140,31 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
 //        Map <Integer, HashMap<ColumnData, Integer>> columnsData = new HashMap<Integer,HashMap<ColumnData,Integer>>();
 
+
+            PageData pageData = pagesData.get(lineInfos[i].page);
+            if(pageData==null)
+            {
+                pageData = new PageData();
+                pageData.setBottomY(lineInfos[i].lly);
+                pageData.setTopY(lineInfos[i].ury);
+                pageData.setLeftX(lineInfos[i].llx);
+                pageData.setRightX(lineInfos[i].urx);
+
+                pagesData.put(lineInfos[i].page,pageData);
+            }
+            else
+            {
+                pageData.setBottomY(pageData.getBottomY()>lineInfos[i].lly?lineInfos[i].lly:pageData.getBottomY());
+                pageData.setTopY(pageData.getTopY()<lineInfos[i].ury?lineInfos[i].ury:pageData.getTopY());
+                pageData.setLeftX(pageData.getLeftX()>lineInfos[i].llx?lineInfos[i].llx:pageData.getLeftX());
+                pageData.setRightX(pageData.getRightX()<lineInfos[i].urx?lineInfos[i].urx:pageData.getRightX());
+            }
+
             ColumnData columnData = new ColumnData();
             columnData.setLeftX(lineInfos[i].llx);
             columnData.setRightX(lineInfos[i].urx);
+            columnData.setTopY(lineInfos[i].ury);
+            columnData.setBottomY(lineInfos[i].lly);
 
             if(columnsData.get(lineInfos[i].page)==null)
             {
@@ -157,6 +181,12 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 {
                     Entry<ColumnData> existentEntry = columnsData.get(lineInfos[i].page).get(iOe);
                     existentEntry.setQty(existentEntry.getQty()+1);
+                    if(lineInfos[i].ury>existentEntry.getKey().getTopY()) {
+                        existentEntry.getKey().setTopY(lineInfos[i].ury);
+                    }
+                    if(lineInfos[i].lly<existentEntry.getKey().getBottomY()) {
+                        existentEntry.getKey().setBottomY(lineInfos[i].lly);
+                    }
                 }
                 else
                 {
@@ -255,7 +285,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 lineInfos[i].presentFeatures.add("doesntUseRefFont");
 
 
-            //todo: "possibleColumn", the first widest that is not overlapping with the second? See overlapColumnDatas method
+
 
 
             //width analysis "firstCommonWidth" && "secondCommonWidth"
@@ -292,6 +322,25 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                     lineInfos[i].presentFeatures.add("verticalSpace");
                 }
             }
+
+            //todo: "possibleColumn", the first widest that is not overlapping with the second? See overlapColumnDatas method
+            //certain % with respect to the first most common and overlapping: the indent shouldn't be wider/narrower
+            //than 10% with respect to the most common? check it!
+            //also check the total page width
+            //also take into account that the width of each of the columns should be practically the same, maybe with +-5% of diff?
+            //also take into account the x initial position of the line, that should be the same that one of the coordinates of the column...
+            // not in all cases :( , but equally should heavily base on this (maybe with +-5% of tolerance), as well as in the vertical distances! Be careful, sometimes when there is
+            // enumeration, such as in 2013Twu_LiMnF4.pdf, the numbers are differently left-aligned according to the range: 1-9; 10-99; 100-999, can include
+            //check for this!
+            //it the vertical distance also should be taken into account
+            //in some cases there is no specific width, such as in p1361-whissell.pdf
+            //Try to do references from paper_2_10.pdf!!!: check if the sentence ends in a point! ("noEndingPeriod"), but some of the references don't end in a
+            // point such as paper3_10.pdf or paper4_3.pdf
+            // paper5_1.pdf examples of when not all lines aligned on the left on second line of the reference.
+
+
+            //function shape should be as follows
+            //columns = getColumnsCoordinates
 
             currentPage = lineInfos[i].page;
         }
@@ -567,8 +616,28 @@ class Entry<T1> implements Comparable<Entry<T1>>
 
 class ColumnData
 {
+
+    private int topY;
+    private int bottomY;
+
     private int leftX;
     private int rightX;
+
+    public int getTopY() {
+        return topY;
+    }
+
+    public void setTopY(int topY) {
+        this.topY = topY;
+    }
+
+    public int getBottomY() {
+        return bottomY;
+    }
+
+    public void setBottomY(int bottomY) {
+        this.bottomY = bottomY;
+    }
 
     public int getLeftX() {
         return leftX;
@@ -602,4 +671,66 @@ class ColumnData
     {
         return Integer.valueOf(leftX).hashCode();
     }
+}
+
+class PageData
+{
+
+    private int topY;
+    private int bottomY;
+
+    private int leftX;
+    private int rightX;
+
+    public int getTopY() {
+        return topY;
+    }
+
+    public void setTopY(int topY) {
+        this.topY = topY;
+    }
+
+    public int getBottomY() {
+        return bottomY;
+    }
+
+    public void setBottomY(int bottomY) {
+        this.bottomY = bottomY;
+    }
+
+    public int getLeftX() {
+        return leftX;
+    }
+
+    public void setLeftX(int leftX) {
+        this.leftX = leftX;
+    }
+
+    public int getRightX() {
+        return rightX;
+    }
+
+    public void setRightX(int rightX) {
+        this.rightX = rightX;
+    }
+
+    public int getWidth() {
+        return (rightX - leftX);
+    }
+    public int getHeight(){
+        return (topY - bottomY);
+    }
+
+//    @Override
+//    public boolean equals(Object obj )
+//    {
+//        return ((ColumnData)obj).rightX == this.rightX &&
+//                ((ColumnData)obj).leftX == this.leftX;
+//    }
+
+//    @Override
+//    public int hashCode()
+//    {
+//        return Integer.valueOf(leftX).hashCode();
+//    }
 }
