@@ -200,8 +200,8 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 }
             }
 
-            if (i+1 < lineInfos.length && lineInfos[i].page == lineInfos[i + 1].page && i>0 && lineInfos[i].lly > lineInfos[i+1].ury) {
-                Integer vertDistance = lineInfos[i].lly - lineInfos[i + 1].ury;
+            if (i+1 < lineInfos.length && lineInfos[i].page == lineInfos[i + 1].page && lineInfos[i].lly > lineInfos[i+1].lly) {
+                Integer vertDistance = lineInfos[i].lly - lineInfos[i + 1].lly;
                 Entry<Integer > initialEntry = new Entry<Integer>(vertDistance,1);
                 iOf = verticalDistance.indexOf(initialEntry);
                 if(iOf > -1)

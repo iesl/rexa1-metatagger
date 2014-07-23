@@ -166,7 +166,7 @@ public class LayoutSegmentFinder
 //        System.out.println(Arrays.toString(biblioBoundaries));
 		NewHtmlTokenization biblio = tokenization.getSubspanTokenization((int)biblioBoundaries[0], (int)biblioBoundaries[1]);
 //        System.out.println(Arrays.toString(biblio.getLineSpans().toArray()));
-		//CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
+//		CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
 
         RulesBibliographySegmentor.ReferenceData referenceData = m_rulesBibSegmentor.segmentReferences(biblio, m_crfBibSegmentor.getInputPipe());
 		// Create biblioPrologue element

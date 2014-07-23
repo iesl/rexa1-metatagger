@@ -4,16 +4,14 @@ import edu.umass.cs.mallet.base.extract.StringSpan;
 import edu.umass.cs.mallet.base.fst.CRF4;
 import edu.umass.cs.mallet.base.pipe.Pipe;
 import edu.umass.cs.mallet.base.pipe.SerialPipes;
-import edu.umass.cs.mallet.base.types.Instance;
-import edu.umass.cs.mallet.base.types.Sequence;
+import edu.umass.cs.mallet.base.types.*;
 import org.apache.log4j.Logger;
 import org.rexo.extraction.NewHtmlTokenization;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import edu.umass.cs.mallet.base.types.ArraySequence;
 
 /**
  * Use rules to segment references.
@@ -52,6 +50,7 @@ public class RulesBibliographySegmentor
             }
             else
             {
+                //((Pipe)pipe).setParent(null);
                 newPipeList.add(pipe);
             }
         }
@@ -59,18 +58,43 @@ public class RulesBibliographySegmentor
 
         List pipes = new ArrayList();
         pipes.add(new NewHtmlTokenization2LineInfo());
-        pipes.add(new LineInfo2TokenSequenceV2());
+        Pipe pli = new LineInfo2TokenSequenceV2();
+        pli.setTargetProcessing(false);
+        pipes.add(pli);
         SerialPipes serialPipes = new SerialPipes(pipes);
-//        SerialPipes serialPipes = new SerialPipes(newPipeList);
+        //SerialPipes serialPipes = new SerialPipes(newPipeList);
 //        //serialPipes.
         return serialPipes;
 
 
     }
 
+    //here go the rules to identify the references
     private Sequence transduce(Sequence data)
     {
-        return data;
+        Sequence transducedData = new TokenSequence();
+        Iterator iter = ((TokenSequence)data).iterator();
+        String label;
+        for(int i=0; i<((TokenSequence)data).size(); i++)
+        {
+            Token tkn = (Token)(((TokenSequence)data).get(i));
+            if (tkn.getText().toUpperCase().trim().equals("REFERENCES"))
+            {
+                label = "biblioPrologue";
+            }
+            else if(tkn.hasProperty("beginNumericBrackets"))
+            {
+                label = "biblio-B";
+            }
+            else
+            {
+                label = "biblio-I";
+            }
+
+            ((TokenSequence)transducedData).add(label);
+        }
+
+        return transducedData;
     }
 	public ReferenceData segmentReferences(NewHtmlTokenization htmlTokenization, Pipe crfInputPipe)
 	{
