@@ -37,20 +37,49 @@ public class RulesBibliographySegmentor
 
     public RulesBibliographySegmentor(){}
 
-    private Pipe getInputPipe()
+    private Pipe transformFromCrfToRulesPipe(Pipe crfInputPipe)
     {
+//       edu.umass.cs.rexo.ghuang.segmentation.NewHtmlTokenization2LineInfo@5ef80a07
+
+        List newPipeList = new ArrayList();
+
+
+        for(Object pipe: ((edu.umass.cs.mallet.base.pipe.SerialPipes)crfInputPipe).getPipes())
+        {
+            if(pipe instanceof LineInfo2TokenSequence)
+            {
+                newPipeList.add(new LineInfo2TokenSequenceV2());
+            }
+            else
+            {
+                newPipeList.add(pipe);
+            }
+        }
+
+
         List pipes = new ArrayList();
+        pipes.add(new NewHtmlTokenization2LineInfo());
         pipes.add(new LineInfo2TokenSequenceV2());
         SerialPipes serialPipes = new SerialPipes(pipes);
-        //serialPipes.
+//        SerialPipes serialPipes = new SerialPipes(newPipeList);
+//        //serialPipes.
         return serialPipes;
+
+
     }
-	public ReferenceData segmentReferences(NewHtmlTokenization htmlTokenization)
+
+    private Sequence transduce(Sequence data)
+    {
+        return data;
+    }
+	public ReferenceData segmentReferences(NewHtmlTokenization htmlTokenization, Pipe crfInputPipe)
 	{
-		Instance inst = new Instance(htmlTokenization, null, null, null, getInputPipe());
+
+        Pipe rulesInputPipe = transformFromCrfToRulesPipe(crfInputPipe);
+		Instance inst = new Instance(htmlTokenization, null, null, null, rulesInputPipe);
         //todo: kzaporojets: here another instance with LineInfo2TokenSequence pipe, adding also data such as
         //average line width
-		Sequence predictedLabels = null; // m_crf.transduce ((Sequence) inst.getData());
+		Sequence predictedLabels = transduce((Sequence)inst.getData()); // m_crf.transduce ((Sequence) inst.getData());
 
 
 		ReferenceData ret = new ReferenceData();

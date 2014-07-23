@@ -31,11 +31,16 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 		Token[] dataTokens = new Token[oldData.length];
 		Token[] sourceTokens = new Token[oldData.length];
 
-        tokenSequence.computeFeatures(oldData);
+//            tokenSequence.computeFeatures(oldData);
 
+        try {
+	    	computeFeatures(oldData);
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
 
-		computeFeatures(oldData);
-		
 		for (int i = 0; i < oldData.length; i++) {
 			dataTokens[i] = new Token(oldData[i].text);
 			Iterator iter = oldData[i].presentFeatures.iterator();
@@ -124,7 +129,8 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 lineInfos[i].presentFeatures.add("sameIndentationAsPrevLine");
 
 
-            int width = lineInfos[i-1].urx - lineInfos[i].llx;
+
+            int width = lineInfos[i].urx - lineInfos[i].llx;
 
             Entry<Integer> currentWidthEntry = new Entry<Integer>(width,1);
             int iOf = widthLine.indexOf(currentWidthEntry);
@@ -601,7 +607,7 @@ class Entry<T1> implements Comparable<Entry<T1>>
         int otherQty = entry.getQty();
         if(this.qty > otherQty)
         {
-            return 1;
+            return -1;
         }
         else if (this.qty == otherQty)
         {
@@ -609,7 +615,7 @@ class Entry<T1> implements Comparable<Entry<T1>>
         }
         else
         {
-            return -1;
+            return 1;
         }
     }
 }

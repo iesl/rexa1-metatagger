@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.umass.cs.mallet.base.pipe.Pipe;
 import org.apache.log4j.Logger;
 import org.rexo.extraction.NewHtmlTokenization;
 
@@ -30,7 +31,10 @@ public class CRFBibliographySegmentor
 		m_crf = crf;
 	}
 
-	
+	public Pipe getInputPipe()
+    {
+        return m_crf.getInputPipe();
+    }
 	public ReferenceData segmentReferences(NewHtmlTokenization htmlTokenization)
 	{
 		Instance inst = new Instance(htmlTokenization, null, null, null, m_crf.getInputPipe());
