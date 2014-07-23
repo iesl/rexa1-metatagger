@@ -3,6 +3,7 @@ package edu.umass.cs.rexo.ghuang.segmentation;
 import edu.umass.cs.mallet.base.extract.StringSpan;
 import edu.umass.cs.mallet.base.fst.CRF4;
 import edu.umass.cs.mallet.base.pipe.Pipe;
+import edu.umass.cs.mallet.base.pipe.SerialPipes;
 import edu.umass.cs.mallet.base.types.Instance;
 import edu.umass.cs.mallet.base.types.Sequence;
 import org.apache.log4j.Logger;
@@ -11,6 +12,8 @@ import org.rexo.extraction.NewHtmlTokenization;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import edu.umass.cs.mallet.base.types.ArraySequence;
 
 /**
  * Use rules to segment references.
@@ -21,6 +24,8 @@ import java.util.List;
 public class RulesBibliographySegmentor
 {
 	private static Logger log = Logger.getLogger(RulesBibliographySegmentor.class);
+
+//    ArraySequence arraySequence = new ArraySequence();
 
 //	private CRF4 m_crf;
 
@@ -34,14 +39,18 @@ public class RulesBibliographySegmentor
 
     private Pipe getInputPipe()
     {
-        return null;
+        List pipes = new ArrayList();
+        pipes.add(new LineInfo2TokenSequenceV2());
+        SerialPipes serialPipes = new SerialPipes(pipes);
+        //serialPipes.
+        return serialPipes;
     }
 	public ReferenceData segmentReferences(NewHtmlTokenization htmlTokenization)
 	{
 		Instance inst = new Instance(htmlTokenization, null, null, null, getInputPipe());
         //todo: kzaporojets: here another instance with LineInfo2TokenSequence pipe, adding also data such as
         //average line width
-		Sequence predictedLabels = m_crf.transduce ((Sequence) inst.getData());
+		Sequence predictedLabels = null; // m_crf.transduce ((Sequence) inst.getData());
 
 
 		ReferenceData ret = new ReferenceData();

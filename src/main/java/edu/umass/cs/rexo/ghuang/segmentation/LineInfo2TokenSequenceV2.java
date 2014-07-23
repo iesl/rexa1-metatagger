@@ -22,7 +22,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
 
 	public LineInfo2TokenSequenceV2()	{
-        LineInfo2TokenSequence tokenSequence = new LineInfo2TokenSequence();
+        /*LineInfo2TokenSequence tokenSequence = new LineInfo2TokenSequence();*/
     }
 
 	public Instance pipe(Instance carrier)
