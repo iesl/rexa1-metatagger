@@ -82,7 +82,8 @@ public class RulesBibliographySegmentor
             {
                 label = "biblioPrologue";
             }
-            else if(tkn.getFeatures().hasProperty("samePatternAsInFirst")
+            else if(tkn.getFeatures().hasProperty("possibleInit")
+            //tkn.getFeatures().hasProperty("samePatternAsInFirst")
             /*tkn.getFeatures().hasProperty("beginNumericBrackets") || tkn.getFeatures().hasProperty("beginsNumberCapital")*/)
             {
                 label = "biblio-B";

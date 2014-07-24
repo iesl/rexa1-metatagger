@@ -175,13 +175,13 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
             else if (i > 0 && lineInfos[i].llx < lineInfos[i-1].llx) {
                 lineInfos[i].presentFeatures.add("unTabbedFromPrevLine");
-                if(lineInfos[i-1].presentFeatures.contains("samePatternAsInFirst")) {
+                if(lineInfos[i-1].presentFeatures.contains("samePatternAsInFirst") && (!lineInfos[i].presentFeatures.contains("samePatternAsInFirst"))) {
                     untabbedAfterFirst++;
                 }
             }
             else if (i > 0 && lineInfos[i].llx == lineInfos[i-1].llx) {
                 lineInfos[i].presentFeatures.add("sameIndentationAsPrevLine");
-                if(lineInfos[i-1].presentFeatures.contains("samePatternAsInFirst")&& (!lineInfos[i].presentFeatures.contains("samePatternAsInFirst"))) {
+                if(lineInfos[i-1].presentFeatures.contains("samePatternAsInFirst") && (!lineInfos[i].presentFeatures.contains("samePatternAsInFirst"))) {
                     sameAfterFirst++;
                 }
             }
@@ -310,7 +310,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 dist2prevLine[i] = Math.abs(lineInfos[i-1].lly - lineInfos[i].lly);
         }
 
-        IndentationType indentationType;
+        IndentationType indentationType = IndentationType.SAME;
         if((Double.valueOf(sameAfterFirst)/Double.valueOf(sameAfterFirst+indentedAfterFirst+untabbedAfterFirst))>0.8)
         {
             indentationType = IndentationType.SAME;
@@ -349,6 +349,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         Collections.sort(widthLine);
 
         int currentPage = lineInfos[0].page;
+        boolean movedMargin = false;
         // A second pass of feature computations
         for (int i = 0; i < lineInfos.length; i++) {
 
@@ -404,9 +405,21 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 }
             }
 
-            if ()
+            if(!movedMargin && lineInfos[i].presentFeatures.contains("samePatternAsInFirst"))
             {
+                lineInfos[i].presentFeatures.add("possibleInit");
+            }
 
+            if (indentationType == IndentationType.INDENTED && (i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("indentedFromPrevLine"))
+            {
+                lineInfos[i].presentFeatures.add("possibleInit");
+                movedMargin = true;
+            }
+            if (indentationType == IndentationType.INDENTED && (i+1)<lineInfos.length && (lineInfos[i+1].presentFeatures.contains("untabbedFromPrevLine") ||
+                    (lineInfos[i+1].presentFeatures.contains("newColumn") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ||
+                    (lineInfos[i+1].presentFeatures.contains("newPage") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ))
+            {
+                movedMargin = false;
             }
 
             //todo: "possibleColumn" (implement only if necessary based on pdfs tests), the first widest that is not overlapping with the second? See overlapColumnDatas method
