@@ -156,6 +156,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 lineInfos[i].presentFeatures.add("samePatternAsInFirst");
             }
 
+            //todo: to be considered indented or tabbed, the intentation/tab should be at least of 3 px, see if it works and if more stats is needed
             if (lineInfos[i].page != prevPageNum) {
                 lineInfos[i].presentFeatures.add("newPage");
                 prevPageNum = lineInfos[i].page;
@@ -164,16 +165,16 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                     lineInfos[i-1].presentFeatures.add("lastLineOnPage");
             }
 
-            else if (i > 0 && (lineInfos[i].llx > lineInfos[i-1].llx && lineInfos[i].lly > lineInfos[i-1].lly))
+            else if (i > 0 && (lineInfos[i].llx > lineInfos[i-1].urx && lineInfos[i].lly > lineInfos[i-1].lly))
                 lineInfos[i].presentFeatures.add("newColumn");
-            else if (i > 0 && lineInfos[i].llx > lineInfos[i-1].llx) {
+            else if (i > 0 && lineInfos[i].llx > lineInfos[i-1].llx && (lineInfos[i].llx - lineInfos[i-1].llx)>2) {
                 lineInfos[i].presentFeatures.add("indentedFromPrevLine");
                 if(lineInfos[i-1].presentFeatures.contains("samePatternAsInFirst"))
                 {
                     indentedAfterFirst++;
                 }
             }
-            else if (i > 0 && lineInfos[i].llx < lineInfos[i-1].llx) {
+            else if (i > 0 && lineInfos[i].llx < lineInfos[i-1].llx && (lineInfos[i-1].llx - lineInfos[i].llx)>2) {
                 lineInfos[i].presentFeatures.add("unTabbedFromPrevLine");
                 if(lineInfos[i-1].presentFeatures.contains("samePatternAsInFirst") && (!lineInfos[i].presentFeatures.contains("samePatternAsInFirst"))) {
                     untabbedAfterFirst++;
@@ -311,15 +312,15 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         }
 
         IndentationType indentationType = IndentationType.SAME;
-        if((Double.valueOf(sameAfterFirst)/Double.valueOf(sameAfterFirst+indentedAfterFirst+untabbedAfterFirst))>0.8)
+        if((Double.valueOf(sameAfterFirst)/Double.valueOf(sameAfterFirst+indentedAfterFirst+untabbedAfterFirst))>0.5)
         {
             indentationType = IndentationType.SAME;
         }
-        else if ((Double.valueOf(indentedAfterFirst)/Double.valueOf(sameAfterFirst+indentedAfterFirst+untabbedAfterFirst))>0.8)
+        else if ((Double.valueOf(indentedAfterFirst)/Double.valueOf(sameAfterFirst+indentedAfterFirst+untabbedAfterFirst))>0.5)
         {
             indentationType = IndentationType.INDENTED;
         }
-        else if ((Double.valueOf(indentedAfterFirst)/Double.valueOf(sameAfterFirst+indentedAfterFirst+untabbedAfterFirst))>0.8)
+        else if ((Double.valueOf(indentedAfterFirst)/Double.valueOf(sameAfterFirst+indentedAfterFirst+untabbedAfterFirst))>0.5)
         {
             indentationType = IndentationType.UNTABBED;
         }
@@ -352,6 +353,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         boolean movedMargin = false;
         // A second pass of feature computations
         for (int i = 0; i < lineInfos.length; i++) {
+            boolean ignore = false;
 
 
             if (lineInfos[i].urx - lineInfos[i].llx <= 0.75 * avgLineLength)
@@ -405,19 +407,38 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 }
             }
 
-            if(!movedMargin && lineInfos[i].presentFeatures.contains("samePatternAsInFirst"))
+            //
+            if(i>0 && !lineInfos[i].presentFeatures.contains("newColumn") && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].lly>lineInfos[i-1].lly)
             {
-                lineInfos[i].presentFeatures.add("possibleInit");
+                ignore = true;
             }
 
-            if (indentationType == IndentationType.INDENTED && (i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("indentedFromPrevLine"))
-            {
-                lineInfos[i].presentFeatures.add("possibleInit");
-                movedMargin = true;
+            if(!ignore) {
+                if ((!movedMargin && lineInfos[i].presentFeatures.contains("samePatternAsInFirst")) ||
+                        //the following is for deal well with ref[3] of 1997Fey_The_affects_of_stoichiometry..., see how it works, if not delete delete? :
+                        (!movedMargin && i > 0 && !lineInfos[i].presentFeatures.contains("newPage") && !lineInfos[i].presentFeatures.contains("newColumn")
+                                && lineInfos[i - 1].presentFeatures.contains("possibleInit") &&
+                                !lineInfos[i].presentFeatures.contains("indentedFromPrevLine") && indentationType == IndentationType.INDENTED)
+                        )
+                //end: the following...
+                {
+                    lineInfos[i].presentFeatures.add("possibleInit");
+                }
+
+                if (!movedMargin && indentationType == IndentationType.INDENTED && (i + 1) < lineInfos.length && lineInfos[i + 1].presentFeatures.contains("indentedFromPrevLine") &&
+                        (!lineInfos[i].presentFeatures.contains("bibliography"))) {
+                    lineInfos[i].presentFeatures.add("possibleInit");
+                    movedMargin = true;
+                }
             }
-            if (indentationType == IndentationType.INDENTED && (i+1)<lineInfos.length && (lineInfos[i+1].presentFeatures.contains("untabbedFromPrevLine") ||
-                    (lineInfos[i+1].presentFeatures.contains("newColumn") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ||
-                    (lineInfos[i+1].presentFeatures.contains("newPage") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ))
+            else
+            {
+                lineInfos[i].presentFeatures.add("ignore");
+            }
+
+            if ((indentationType == IndentationType.INDENTED && (i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("unTabbedFromPrevLine")) ||
+                    ((i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("newColumn") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ||
+                    ((i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("newPage") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) )
             {
                 movedMargin = false;
             }
@@ -561,7 +582,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             if (biblioTitleIndex==-1 &&
                     squishedText.matches("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferencesandNotes)|L(?i:iteratureCited))\\s*$")) {
                 biblioTitleIndex=i;
-
+                lineInfos[i].presentFeatures.add("bibliography");
             }
 
 //            if (squishedText.matches("(^)[0-9]+\\.?\\p{Lu}.*")) {

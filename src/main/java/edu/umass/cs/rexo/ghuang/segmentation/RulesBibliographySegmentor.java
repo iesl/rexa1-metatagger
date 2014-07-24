@@ -88,6 +88,10 @@ public class RulesBibliographySegmentor
             {
                 label = "biblio-B";
             }
+            else if(tkn.getFeatures().hasProperty("ignore"))
+            {
+                label = "junk";
+            }
             else
             {
                 label = "biblio-I";
