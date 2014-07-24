@@ -391,9 +391,9 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
 
             //vertical line analysis
-            if(i+1<lineInfos.length && lineInfos[i].page == lineInfos[i+1].page && lineInfos[i].lly > lineInfos[i+1].ury)
+            if(i+1<lineInfos.length && lineInfos[i].page == lineInfos[i+1].page && lineInfos[i].lly > lineInfos[i+1].lly)
             {
-                int currVertDistance = lineInfos[i].lly - lineInfos[i+1].ury;
+                int currVertDistance = lineInfos[i].lly - lineInfos[i+1].lly;
                 //can be improved by checking the number of elements in each key. The spaces between the references should represent
                 //at least 15% (maybe much more, try with up to 50%...) of the lines in references , if it is less, then can be header-footer
                 if((verticalDistance.size()>1&&verticalDistance.indexOf(new Entry<Integer>(currVertDistance,0))>1))
@@ -407,10 +407,29 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 }
             }
 
-            //
+            //todo: see if this can be added in previous loop
             if(i>0 && !lineInfos[i].presentFeatures.contains("newColumn") && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].lly>lineInfos[i-1].lly)
             {
                 ignore = true;
+            }
+            //if column starts on the left, ignore everything after that
+            //todo: see it generalizes well
+            if(i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].urx < lineInfos[i-1].llx)
+            {
+                ignore = true;
+                lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
+            }
+
+            if(i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i-1].presentFeatures.contains("ignoreAllPosteriorOnPage"))
+            {
+                ignore = true;
+                lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
+            }
+
+            //todo: think in something else, this feature has multiple values, not only one
+            if(lineInfos[i].presentFeatures.contains("verticalOutlier"))
+            {
+                //ignore = true;
             }
 
             if(!ignore) {
