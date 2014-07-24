@@ -85,7 +85,22 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 		computeLayoutFeatures(lineInfos);
 	}
 	
-	
+	private enum EnumerationType
+    {
+        PARENTHESIS,
+        SQUARE_BRACKETS,
+        NUMBER_CAPITAL,
+        CAP_INITIALS,
+        NONE
+    }
+
+    private enum IndentationType
+    {
+        INDENTED,
+        UNTABBED,
+        SAME
+    }
+
 	private static void computeLayoutFeatures(LineInfo[] lineInfos)
 	{
 
@@ -104,13 +119,43 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
         int prevPageNum = 0;
         int prevFontNum = -1;
+
         int sumLineLengths = 0;
         int[] dist2prevLine = new int[lineInfos.length];
         HashMap refFontCounts = new HashMap();
 
 
+        int indentedAfterFirst = 0;
+        int untabbedAfterFirst = 0;
+        int sameAfterFirst = 0;
 
+        EnumerationType enumerationType = EnumerationType.NONE;
         for (int i = 0; i < lineInfos.length; i++) {
+
+            if(lineInfos[i].presentFeatures.contains("firstReferenceLine") && lineInfos[i].presentFeatures.contains("seqHasBeginSquareBrackets") &&
+                    lineInfos[i].presentFeatures.contains("beginSquareBrackets") )
+            {
+                enumerationType = EnumerationType.SQUARE_BRACKETS;
+            }
+            else if(lineInfos[i].presentFeatures.contains("firstReferenceLine") && lineInfos[i].presentFeatures.contains("seqHasBeginParenthesis") &&
+                    lineInfos[i].presentFeatures.contains("beginParenthesis") )
+            {
+                enumerationType = EnumerationType.PARENTHESIS;
+            }
+            else if (lineInfos[i].presentFeatures.contains("firstReferenceLine") && lineInfos[i].presentFeatures.contains("seqHasBeginNumberCapital") &&
+                    lineInfos[i].presentFeatures.contains("beginsNumberCapital") )
+            {
+                enumerationType = EnumerationType.NUMBER_CAPITAL;
+            }
+
+            //TODO: add the information about alignment
+            if((enumerationType == EnumerationType.SQUARE_BRACKETS && lineInfos[i].presentFeatures.contains("beginSquareBrackets")) ||
+                    (enumerationType == EnumerationType.PARENTHESIS && lineInfos[i].presentFeatures.contains("beginParenthesis")) ||
+                    (enumerationType == EnumerationType.NUMBER_CAPITAL && lineInfos[i].presentFeatures.contains("beginsNumberCapital")))
+            {
+                lineInfos[i].presentFeatures.add("samePatternAsInFirst");
+            }
+
             if (lineInfos[i].page != prevPageNum) {
                 lineInfos[i].presentFeatures.add("newPage");
                 prevPageNum = lineInfos[i].page;
@@ -121,13 +166,30 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
             else if (i > 0 && (lineInfos[i].llx > lineInfos[i-1].llx && lineInfos[i].lly > lineInfos[i-1].lly))
                 lineInfos[i].presentFeatures.add("newColumn");
-            else if (i > 0 && lineInfos[i].llx > lineInfos[i-1].llx)
+            else if (i > 0 && lineInfos[i].llx > lineInfos[i-1].llx) {
                 lineInfos[i].presentFeatures.add("indentedFromPrevLine");
-            else if (i > 0 && lineInfos[i].llx < lineInfos[i-1].llx)
+                if(lineInfos[i-1].presentFeatures.contains("samePatternAsInFirst"))
+                {
+                    indentedAfterFirst++;
+                }
+            }
+            else if (i > 0 && lineInfos[i].llx < lineInfos[i-1].llx) {
                 lineInfos[i].presentFeatures.add("unTabbedFromPrevLine");
-            else if (i > 0 && lineInfos[i].llx == lineInfos[i-1].llx)
+                if(lineInfos[i-1].presentFeatures.contains("samePatternAsInFirst")) {
+                    untabbedAfterFirst++;
+                }
+            }
+            else if (i > 0 && lineInfos[i].llx == lineInfos[i-1].llx) {
                 lineInfos[i].presentFeatures.add("sameIndentationAsPrevLine");
+                if(lineInfos[i-1].presentFeatures.contains("samePatternAsInFirst")&& (!lineInfos[i].presentFeatures.contains("samePatternAsInFirst"))) {
+                    sameAfterFirst++;
+                }
+            }
 
+//            if(!lineInfos[i].presentFeatures.contains("newColumn") && )
+//            {
+//
+//            }
 
 
             int width = lineInfos[i].urx - lineInfos[i].llx;
@@ -248,6 +310,20 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 dist2prevLine[i] = Math.abs(lineInfos[i-1].lly - lineInfos[i].lly);
         }
 
+        IndentationType indentationType;
+        if((Double.valueOf(sameAfterFirst)/Double.valueOf(sameAfterFirst+indentedAfterFirst+untabbedAfterFirst))>0.8)
+        {
+            indentationType = IndentationType.SAME;
+        }
+        else if ((Double.valueOf(indentedAfterFirst)/Double.valueOf(sameAfterFirst+indentedAfterFirst+untabbedAfterFirst))>0.8)
+        {
+            indentationType = IndentationType.INDENTED;
+        }
+        else if ((Double.valueOf(indentedAfterFirst)/Double.valueOf(sameAfterFirst+indentedAfterFirst+untabbedAfterFirst))>0.8)
+        {
+            indentationType = IndentationType.UNTABBED;
+        }
+
         final int tolerance = 1; // difference in baseline y-coordinates must be greater than this to have "bigVertSpaceBefore" feature
         double avgLineLength = sumLineLengths / lineInfos.length;
 
@@ -276,6 +352,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         // A second pass of feature computations
         for (int i = 0; i < lineInfos.length; i++) {
 
+
             if (lineInfos[i].urx - lineInfos[i].llx <= 0.75 * avgLineLength)
                 lineInfos[i].presentFeatures.add("shortLineLength");
 
@@ -284,7 +361,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                     && !lineInfos[i].presentFeatures.contains("newColumn")
                     && dist2prevLine[i] - dist2prevLine[i-1] > tolerance)
                 lineInfos[i].presentFeatures.add("bigVertSpaceBefore");
-
             if (lineInfos[i].font == refFont)
                 lineInfos[i].presentFeatures.add("usesRefFont");
             else if (refFont != -1 && ! lineInfos[i].presentFeatures.contains("containsMultiFonts"))
@@ -328,7 +404,12 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 }
             }
 
-            //todo: "possibleColumn", the first widest that is not overlapping with the second? See overlapColumnDatas method
+            if ()
+            {
+
+            }
+
+            //todo: "possibleColumn" (implement only if necessary based on pdfs tests), the first widest that is not overlapping with the second? See overlapColumnDatas method
             //certain % with respect to the first most common and overlapping: the indent shouldn't be wider/narrower
             //than 10% with respect to the most common? check it!
             //also check the total page width
@@ -406,10 +487,14 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 "September", "Sept?\\.?\\s", "October", "Oct\\.?\\s",  "November", "Nov\\.?\\s", "December", "Dec\\.?\\s" };
 
         int numBeginBrackets = 0;
+        int numBeginSquareBrackets = 0;
+        int numBeginParenthesis = 0;
         int numBeginNumberCapital = 0;
         int numBeginCapInitials = 0;
         int numPages = 1;
         int prevPage = 0;
+
+        int biblioTitleIndex = -1;
 
         for (int i = 0; i < lineInfos.length; i++) {
 
@@ -419,6 +504,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 numPages++;
                 prevPage = lineInfos[i].page;
             }
+
 
 
             String squishedText = lineInfos[i].text.replaceAll("\\s", "");
@@ -435,19 +521,40 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 lineInfos[i].presentFeatures.add("someSpecialPuncts");
 
             if (squishedText.matches("^\\[.+\\].*")) {
+                //"beginBrackets" is needed to work with crf as it is, "beginSquareBrackets" is for rules.
                 lineInfos[i].presentFeatures.add("beginBrackets");
+                lineInfos[i].presentFeatures.add("beginSquareBrackets");
                 numBeginBrackets++;
+                numBeginSquareBrackets++;
             }
             //kzaporojets: the numbering of some references start with parenthesis
             if (squishedText.matches("^\\(.+\\).*")) {
+                //"beginBrackets" is needed to work with crf as it is, "beginParenthesis" is for rules.
                 lineInfos[i].presentFeatures.add("beginBrackets");
+                lineInfos[i].presentFeatures.add("beginParenthesis");
                 numBeginBrackets++;
+                numBeginParenthesis++;
             }
             //kzaporojets: some other features
             if (squishedText.matches("^\\([0-9]+\\).*")) {
                 lineInfos[i].presentFeatures.add("beginNumericBrackets");
-                numBeginBrackets++;
+                //numBeginBrackets++;
             }
+
+            if (biblioTitleIndex>-1 && (i-biblioTitleIndex)==1) {
+                lineInfos[i].presentFeatures.add("firstReferenceLine");
+            }
+
+            if (biblioTitleIndex==-1 &&
+                    squishedText.matches("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferencesandNotes)|L(?i:iteratureCited))\\s*$")) {
+                biblioTitleIndex=i;
+
+            }
+
+//            if (squishedText.matches("(^)[0-9]+\\.?\\p{Lu}.*")) {
+//                lineInfos[i].presentFeatures.add("beginsNumber");
+//               // numBeginNumberCapital++;
+//            }
 
             //kzaporojets: end some other features
             if (squishedText.matches("^[0-9]+\\.?\\p{Lu}.*")) {
@@ -520,13 +627,20 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         double threshold = (numPages > 2) ? 4  : 1;
         boolean seqHasBeginBrackets = false;
         boolean seqHasBeginNumberCapital = false;
+        boolean seqHasBeginSquareBrackets = false;
+        boolean seqHasBeginParenthesis = false;
         int max = 0;
 
-        if (numBeginBrackets > numBeginNumberCapital && numBeginBrackets > numBeginCapInitials) {
-            seqHasBeginBrackets = true;
-            max = numBeginBrackets;
+        if (numBeginSquareBrackets > numBeginNumberCapital && numBeginSquareBrackets > numBeginCapInitials && numBeginSquareBrackets > numBeginParenthesis) {
+            seqHasBeginSquareBrackets = true;
+            max = numBeginSquareBrackets;
         }
-        else if (numBeginNumberCapital > numBeginBrackets && numBeginNumberCapital > numBeginCapInitials) {
+        else if (numBeginParenthesis > numBeginNumberCapital && numBeginParenthesis > numBeginCapInitials && numBeginParenthesis > numBeginSquareBrackets)
+        {
+            seqHasBeginParenthesis = true;
+            max = numBeginParenthesis;
+        }
+        else if (numBeginNumberCapital > numBeginSquareBrackets && numBeginNumberCapital > numBeginCapInitials && numBeginNumberCapital > numBeginParenthesis) {
             seqHasBeginNumberCapital = true;
             max = numBeginNumberCapital;
         }
@@ -537,8 +651,12 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             return;
 
         for (int i = 0; i < lineInfos.length; i++) {
-            if (seqHasBeginBrackets)
-                lineInfos[i].presentFeatures.add("seqHasBeginBrackets");
+            if (seqHasBeginSquareBrackets)
+                lineInfos[i].presentFeatures.add("seqHasBeginSquareBrackets");
+            else if (seqHasBeginParenthesis)
+            {
+                lineInfos[i].presentFeatures.add("seqHasBeginParenthesis");
+            }
             else if (seqHasBeginNumberCapital)
                 lineInfos[i].presentFeatures.add("seqHasBeginNumberCapital");
             else
