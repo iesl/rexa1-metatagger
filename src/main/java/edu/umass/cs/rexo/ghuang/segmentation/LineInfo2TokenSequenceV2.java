@@ -187,6 +187,12 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 }
             }
 
+            //detects possibly same line
+            if(i>0 && lineInfos[i].lly == lineInfos[i-1].lly && lineInfos[i].llx > lineInfos[i-1].llx && lineInfos[i].urx > lineInfos[i-1].urx)
+            {
+                lineInfos[i].presentFeatures.add("sameLine");
+            }
+
 //            if(!lineInfos[i].presentFeatures.contains("newColumn") && )
 //            {
 //
@@ -349,6 +355,11 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         //widthLine = sortByValue(widthLine);
         Collections.sort(widthLine);
 
+        int refsEndingInPoint=0;
+        int refsNotEndingInPoint=0;
+
+
+
         int currentPage = lineInfos[0].page;
         boolean movedMargin = false;
         // A second pass of feature computations
@@ -414,7 +425,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
             //if column starts on the left, ignore everything after that
             //todo: see it generalizes well
-            if(i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].urx < lineInfos[i-1].llx)
+            if(i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].urx < lineInfos[i-1].llx && !lineInfos[i-1].presentFeatures.contains("sameLine"))
             {
                 ignore = true;
                 lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
@@ -425,6 +436,21 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 ignore = true;
                 lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
             }
+
+            //if for identifying the footer, and ignoring everything that's after it
+            //todo: for now it is only adapted IndentationType.INDENTED, adapt to other indentations
+            //todo: also track numbers in case (if the number from which footer begins, break the sequence, then ignore)
+            //signs to look for:
+            //1- previous line ends in point and to the left.
+            //2- average vertical distance BETWEEN the references, if it escapes +- 2 px ?  (todo: calculate)
+            //3- if the references in general end in point (the percentage ended in point)
+            //4- the percentile of lower web page y . < 0.08
+            //5-
+            if(indentationType == IndentationType.INDENTED)
+            {
+
+            }
+
 
             //todo: think in something else, this feature has multiple values, not only one
             if(lineInfos[i].presentFeatures.contains("verticalOutlier"))
@@ -442,22 +468,49 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 //end: the following...
                 {
                     lineInfos[i].presentFeatures.add("possibleInit");
+                    if(i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && !lineInfos[i-1].presentFeatures.contains("noEndingPeriod"))
+                    {
+                        refsEndingInPoint++;
+                    }
+                    else if (i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && lineInfos[i-1].presentFeatures.contains("noEndingPeriod"))
+                    {
+                        refsNotEndingInPoint++;
+                    }
                 }
 
                 if (!movedMargin && indentationType == IndentationType.INDENTED && (i + 1) < lineInfos.length && lineInfos[i + 1].presentFeatures.contains("indentedFromPrevLine") &&
-                        (!lineInfos[i].presentFeatures.contains("bibliography"))) {
+                        (!lineInfos[i].presentFeatures.contains("bibliography")) &&
+                        //this latter is to prevent footers to be taken as references as in 1301.3781.pdf
+                        lineInfos[i].presentFeatures.contains("samePatternAsInFirst")
+                        ) {
+
                     lineInfos[i].presentFeatures.add("possibleInit");
                     movedMargin = true;
+                    if(i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && !lineInfos[i-1].presentFeatures.contains("noEndingPeriod"))
+                    {
+                        refsEndingInPoint++;
+                    }
+                    else if (i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && lineInfos[i-1].presentFeatures.contains("noEndingPeriod"))
+                    {
+                        refsNotEndingInPoint++;
+                    }
+
                 }
+
+
             }
             else
             {
                 lineInfos[i].presentFeatures.add("ignore");
             }
 
-            if ((indentationType == IndentationType.INDENTED && (i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("unTabbedFromPrevLine")) ||
+            if (
+                    //sometimes the two "lines" actually belong to the same line , this first condition takes it into account
+//                    (i==0 || (i>0 && lineInfos[i-1].llx != lineInfos[i].llx))
+//            &&
+            ((indentationType == IndentationType.INDENTED && (i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("unTabbedFromPrevLine")) ||
                     ((i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("newColumn") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ||
-                    ((i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("newPage") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) )
+                    ((i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("newPage") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ) )
             {
                 movedMargin = false;
             }
