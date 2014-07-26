@@ -357,7 +357,8 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
         int refsEndingInPoint=0;
         int refsNotEndingInPoint=0;
-
+        int totRefsSoFar = 0;
+        int sumVertDistRefs = 0;
 
 
         int currentPage = lineInfos[0].page;
@@ -445,12 +446,25 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             //2- average vertical distance BETWEEN the references, if it escapes +- 2 px ?  (todo: calculate)
             //3- if the references in general end in point (the percentage ended in point)
             //4- the percentile of lower web page y . < 0.08
-            //5-
-            if(indentationType == IndentationType.INDENTED)
-            {
+            //5- what else?
 
+            if(totRefsSoFar>0) {
+                int avgDistBetwRef = (int) (Double.valueOf(sumVertDistRefs) / Double.valueOf(totRefsSoFar));
+                //add 10%
+                int maxLimitDist = avgDistBetwRef + (int) (Double.valueOf(avgDistBetwRef) * 0.1);
+                double percentile = (Double.valueOf(lineInfos[i].lly - pagesData.get(lineInfos[i].page).getBottomY())) /
+                        (Double.valueOf(pagesData.get(lineInfos[i].page).getHeight()));
+                if (i>0 && indentationType == IndentationType.INDENTED && !lineInfos[i].presentFeatures.contains("newColumn") && lineInfos[i].page ==
+                        lineInfos[i-1].page &&
+                    //2-
+                        lineInfos[i-1].lly > lineInfos[i].lly && lineInfos[i-1].lly - lineInfos[i].lly > maxLimitDist
+                    //4-
+                        && percentile < 0.08
+                        ) {
+                    ignore = true;
+                    lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
+                }
             }
-
 
             //todo: think in something else, this feature has multiple values, not only one
             if(lineInfos[i].presentFeatures.contains("verticalOutlier"))
@@ -459,6 +473,8 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
 
             if(!ignore) {
+
+                //todo:redo the two following if, so they are exclusive
                 if ((!movedMargin && lineInfos[i].presentFeatures.contains("samePatternAsInFirst")) ||
                         //the following is for deal well with ref[3] of 1997Fey_The_affects_of_stoichiometry..., see how it works, if not delete delete? :
                         (!movedMargin && i > 0 && !lineInfos[i].presentFeatures.contains("newPage") && !lineInfos[i].presentFeatures.contains("newColumn")
@@ -468,34 +484,31 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 //end: the following...
                 {
                     lineInfos[i].presentFeatures.add("possibleInit");
-                    if(i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && !lineInfos[i-1].presentFeatures.contains("noEndingPeriod"))
-                    {
-                        refsEndingInPoint++;
-                    }
-                    else if (i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && lineInfos[i-1].presentFeatures.contains("noEndingPeriod"))
-                    {
-                        refsNotEndingInPoint++;
-                    }
                 }
 
                 if (!movedMargin && indentationType == IndentationType.INDENTED && (i + 1) < lineInfos.length && lineInfos[i + 1].presentFeatures.contains("indentedFromPrevLine") &&
-                        (!lineInfos[i].presentFeatures.contains("bibliography")) &&
+                        (!lineInfos[i].presentFeatures.contains("bibliography")) //&&
                         //this latter is to prevent footers to be taken as references as in 1301.3781.pdf
-                        lineInfos[i].presentFeatures.contains("samePatternAsInFirst")
+                        //lineInfos[i].presentFeatures.contains("samePatternAsInFirst")
                         ) {
 
                     lineInfos[i].presentFeatures.add("possibleInit");
                     movedMargin = true;
-                    if(i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && !lineInfos[i-1].presentFeatures.contains("noEndingPeriod"))
-                    {
-                        refsEndingInPoint++;
-                    }
-                    else if (i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && lineInfos[i-1].presentFeatures.contains("noEndingPeriod"))
-                    {
-                        refsNotEndingInPoint++;
-                    }
-
+//                    int sumVertDistRefs = 0;
                 }
+
+                if(lineInfos[i].presentFeatures.contains("possibleInit"))
+                {
+                    refsEndingInPoint = refsEndingInPoint + refEndsInPoint(i,lineInfos);
+                    refsNotEndingInPoint = refsNotEndingInPoint + refNotEndsInPoint(i,lineInfos);
+                    int vertDist=vertDifFromPrevRef(i,lineInfos);
+                    if(vertDist>0) {
+                        totRefsSoFar++;
+                        sumVertDistRefs += vertDifFromPrevRef(i, lineInfos);
+                    }
+                }
+
+
 
 
             }
@@ -539,6 +552,33 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
         //also see if it is possible to get a notion where do they start (the columns)
 	}
+
+    private static int refEndsInPoint(int i, LineInfo[] lineInfos)
+    {
+        if(i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && !lineInfos[i-1].presentFeatures.contains("noEndingPeriod"))
+        {
+            return 1;
+        }
+        return 0;
+    }
+    private static int refNotEndsInPoint(int i, LineInfo[] lineInfos)
+    {
+        if(i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && lineInfos[i-1].presentFeatures.contains("noEndingPeriod"))
+        {
+            return 1;
+        }
+        return 0;
+    }
+    private static int vertDifFromPrevRef(int i, LineInfo[] lineInfos)
+    {
+        if(i>0 && !lineInfos[i-1].presentFeatures.contains("bibliography") && lineInfos[i].page == lineInfos[i-1].page &&
+                !lineInfos[i].presentFeatures.contains("newColumn") && lineInfos[i].lly < lineInfos[i-1].lly)
+        {
+            return lineInfos[i-1].lly - lineInfos[i].lly;
+        }
+        return 0;
+    }
+
 //
 //    public static <K, V extends Comparable<? super V>> Map<K, V>
 //                                                    sortByValue( Map<K, V> map )
