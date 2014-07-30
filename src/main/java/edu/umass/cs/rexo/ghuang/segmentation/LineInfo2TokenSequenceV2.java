@@ -623,12 +623,14 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         Collections.sort(verticalDistance); //sortByValue(verticalDistance);
         //widthLine = sortByValue(widthLine);
         Collections.sort(widthLine);
-
+        Map<Integer,List<ColumnData>> cols = null;
+        Map<Integer, Map<Integer,List<ColumnData>>> colsPerPage = new HashMap<Integer, Map<Integer,List<ColumnData>>>();
         for(Object key: columnsData.keySet()) {
             Collections.sort(columnsData.get(key));
-            Map<Integer,List<ColumnData>> cols = getColumns(null, columnsData.get(key),
+            cols = getColumns(null, columnsData.get(key),
                     pagesData.get(key), firstLine, false,
                             indentationType, lineInfos);
+            colsPerPage.put((Integer)key,cols);
             System.out.println("cols obtained");
         }
 
@@ -640,9 +642,23 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
         int currentPage = lineInfos[0].page;
         boolean movedMargin = false;
+        Ignore ignor = new Ignore();
+        ignor.setIgnorePage(0);
+
         // A second pass of feature computations
         for (int i = 0; i < lineInfos.length; i++) {
-            boolean ignore = false;
+
+            if(ignor.getIgnoreType() == IgnoreType.IGNORE ||
+                    ignor.getIgnorePage() != lineInfos[i].page)
+            {
+                ignor.setIgnoreType(IgnoreType.CLEAN);
+                ignor.setIgnorePage(lineInfos[i].page);
+            }
+            if(ignor.getIgnoreType() == IgnoreType.IGNORE_UNLESS_Y_SMALLER && lineInfos[i].ury < ignor.getIgnoreY())
+            {
+                ignor.setIgnoreType(IgnoreType.CLEAN);
+            }
+            //boolean ignore = false;
 
 
             if (lineInfos[i].urx - lineInfos[i].llx <= 0.75 * avgLineLength)
@@ -697,38 +713,110 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
 
 
-            if(lineInfos[i].presentFeatures.contains("shortLineLength") && lineInfos[i].presentFeatures.contains("lastLineOnPage") && lineInfos[i].presentFeatures.contains("bigVertSpaceBefore"))
+            if(ignor.getIgnoreType() == IgnoreType.CLEAN && lineInfos[i].presentFeatures.contains("shortLineLength") && lineInfos[i].presentFeatures.contains("lastLineOnPage") && lineInfos[i].presentFeatures.contains("bigVertSpaceBefore"))
             {
                 //probably some short footer, such as page number
-                ignore = true;
+//                ignore = true;
+                ignor.setIgnoreType(IgnoreType.IGNORE);
+                ignor.setIgnorePage(lineInfos[i].page);
+
+
             }
 
             //todo: see if this can be added in previous loop
-            if(i>0 && !lineInfos[i].presentFeatures.contains("newColumn") && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].lly>lineInfos[i-1].lly)
+            if(ignor.getIgnoreType()==IgnoreType.CLEAN && i>0 && !lineInfos[i].presentFeatures.contains("newColumn") && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].lly>lineInfos[i-1].lly)
             {
-                ignore = true;
+                ignor.setIgnoreType(IgnoreType.IGNORE);
+                ignor.setIgnorePage(lineInfos[i].page);
+//                ignore = true;
             }
 
-            if((lineInfos[i].presentFeatures.contains("newPage") && lineInfos[i].presentFeatures.contains("doesntUseRefFont"))
-                    || (i>0 && lineInfos[i-1].presentFeatures.contains("newPageNoRefFont") && lineInfos[i].presentFeatures.contains("doesntUseRefFont"))
+//            if((lineInfos[i].presentFeatures.contains("newPage") && lineInfos[i].presentFeatures.contains("doesntUseRefFont"))
+//                    || (i>0 && lineInfos[i-1].presentFeatures.contains("newPageNoRefFont") && lineInfos[i].presentFeatures.contains("doesntUseRefFont"))
+//                    )
+//            {
+//                ignore = true;
+//                lineInfos[i].presentFeatures.add("newPageNoRefFont");
+//            }
+
+            if(ignor.getIgnoreType()==IgnoreType.CLEAN &&!lineInfos[i].presentFeatures.contains("sameLine"))
+            {
+                Map<Integer,List<ColumnData>> colsInPage = colsPerPage.get(lineInfos[i].page);
+                boolean ignoreMiddle = false;
+                boolean ignoreMargin = false;
+
+                for(List<ColumnData> indents:colsInPage.values())
+                {
+                    //try with 20 px if only first margin present
+                    //try with 10 px if the second margin is present
+                    if(indents.size()==0 || indents.get(0)==null)
+                    {
+                        continue;
+                    }
+                    ColumnData leftIndent = indents.get(0);
+                    ColumnData rightIndent = new ColumnData();
+                    if(indents.size()>1)
+                    {
+                        rightIndent = indents.get(1);
+                    }
+                    int maxX = leftIndent.getRightX()>rightIndent.getRightX()?leftIndent.getRightX():rightIndent.getRightX();
+                    if(leftIndent.isInitialized()) {
+                        //not to span two cols
+                        if (lineInfos[i].llx >= leftIndent.getLeftX()  && lineInfos[i].llx<=maxX  &&
+                                (lineInfos[i].urx > maxX + 10 ))
+                        {
+                            ignoreMiddle = true;
+                        }
+                        else if (lineInfos[i].llx >= leftIndent.getLeftX() - 10 && lineInfos[i].llx<=maxX + 10 &&
+                                (lineInfos[i].urx < maxX + 10))
+                        {
+                            ignoreMiddle = false;
+                        }
+
+//                        if(rightIndent.isInitialized() && (indentationType == IndentationType.INDENTED ||
+//                                indentationType == IndentationType.UNTABBED) && lineInfos[i].llx >= leftIndent.getLeftX() && lineInfos[i].llx<=maxX &&
+//                                lineInfos[i].llx - leftIndent.getLeftX()>30)
+                        if(rightIndent.isInitialized() && (indentationType == IndentationType.INDENTED ||
+                                indentationType == IndentationType.UNTABBED) && lineInfos[i].llx >= leftIndent.getLeftX() && lineInfos[i].llx<=maxX &&
+                                lineInfos[i].llx - rightIndent.getLeftX()>5)
+                        {
+                            ignoreMargin = true;
+                        }
+                        else if (rightIndent.isInitialized() && (indentationType == IndentationType.INDENTED ||
+                                indentationType == IndentationType.UNTABBED) && lineInfos[i].llx >= leftIndent.getLeftX() && lineInfos[i].llx<=maxX &&
+                                lineInfos[i].llx - leftIndent.getLeftX()<=30)
+                        {
+                            ignoreMargin = false;
+                        }
+                    }
+                }
+                if(ignoreMargin || ignoreMiddle)
+                {
+                    //ignore = true;
+                    ignor.setIgnoreType(IgnoreType.IGNORE);
+                    ignor.setIgnorePage(lineInfos[i].page);
+                }
+            }
+
+            //if column starts on the left, ignore everything after that
+            //todo: see if it generalizes well
+            if(ignor.getIgnoreType() != IgnoreType.IGNORE_ALL_POSTERIOR && i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].urx < lineInfos[i-1].llx && !lineInfos[i-1].presentFeatures.contains("sameLine")
+                    && !(ignor.getIgnoreType() == IgnoreType.IGNORE_UNLESS_Y_SMALLER && ignor.getIgnoreY()<lineInfos[i-1].lly)
                     )
             {
-                ignore = true;
-                lineInfos[i].presentFeatures.add("newPageNoRefFont");
-            }
-            //if column starts on the left, ignore everything after that
-            //todo: see it generalizes well
-            if(!ignore && i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].urx < lineInfos[i-1].llx && !lineInfos[i-1].presentFeatures.contains("sameLine"))
-            {
-                ignore = true;
-                lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
+//                ignore = true;
+
+                ignor.setIgnoreType(IgnoreType.IGNORE_UNLESS_Y_SMALLER);
+                ignor.setIgnoreY(lineInfos[i-1].lly);
+                ignor.setIgnorePage(lineInfos[i].page);
+                //lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
             }
 
-            if(i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i-1].presentFeatures.contains("ignoreAllPosteriorOnPage"))
-            {
-                ignore = true;
-                lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
-            }
+//            if(i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i-1].presentFeatures.contains("ignoreAllPosteriorOnPage"))
+//            {
+//                ignore = true;
+//                lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
+//            }
 
             //if for identifying the footer, and ignoring everything that's after it
             //todo: for now it is only adapted IndentationType.INDENTED, adapt to other indentations
@@ -756,7 +844,9 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                     //4-
                         && percentile < 0.08
                         ) {
-                    ignore = true;
+//                    ignore = true;
+                    ignor.setIgnoreType(IgnoreType.IGNORE_ALL_POSTERIOR);
+                    ignor.setIgnorePage(lineInfos[i].page);
                     lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
                 }
             }
@@ -767,9 +857,12 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 //ignore = true;
             }
 
-            if(!ignore) {
+            if(ignor.getIgnoreType() == IgnoreType.CLEAN /*!ignore*/) {
 
                 //todo:redo the two following if, so they are exclusive
+
+                System.out.println("Clean: " + i + " " + lineInfos[i].text);
+
                 if ((!movedMargin && lineInfos[i].presentFeatures.contains("samePatternAsInFirst")) ||
                         //the following is for deal well with ref[3] of 1997Fey_The_affects_of_stoichiometry..., see how it works, if not delete delete? :
                         (!movedMargin && i > 0 && !lineInfos[i].presentFeatures.contains("newPage") && !lineInfos[i].presentFeatures.contains("newColumn")
@@ -1118,6 +1211,48 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 		return count;
 	}
 	
+}
+
+enum IgnoreType
+{
+    IGNORE,
+    IGNORE_UNLESS_Y_SMALLER,
+    IGNORE_ALL_POSTERIOR,
+    CLEAN;
+}
+
+class Ignore
+{
+
+    IgnoreType ignoreType;
+    private int ignoreY;
+
+
+    private int ignorePage;
+
+    public int getIgnorePage() {
+        return ignorePage;
+    }
+
+    public void setIgnorePage(int ignorePage) {
+        this.ignorePage = ignorePage;
+    }
+
+    public IgnoreType getIgnoreType() {
+        return ignoreType;
+    }
+
+    public void setIgnoreType(IgnoreType ignoreType) {
+        this.ignoreType = ignoreType;
+    }
+
+    public int getIgnoreY() {
+        return ignoreY;
+    }
+
+    public void setIgnoreY(int ignoreY) {
+        this.ignoreY = ignoreY;
+    }
 }
 
 class Entry<T1> implements Comparable<Entry<T1>>
