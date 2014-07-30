@@ -159,7 +159,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         }
         else
         {
-            maxColumnWidth = pageData.getWidth()/2-20;
+            maxColumnWidth = pageData.getWidth()/2+10;
             minColumnWidth = pageData.getWidth()/3;
         }
 
@@ -174,22 +174,34 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             //two columns
             ColumnData[] firstIndentation = new ColumnData[numberOfColumns];
             ColumnData[] secondIndentation = new ColumnData[numberOfColumns];
+            for(int cl = 0; cl < numberOfColumns; cl++)
+            {
+                firstIndentation[cl] = new ColumnData();
+                secondIndentation[cl] = new ColumnData();
+            }
 
             boolean [] completedIndentations = new boolean[4];
 
             int cont = 0;
             for(Entry<ColumnData> entr: allLeftMargins)
             {
-                if(cont>completedIndentations.length*2.5 || allElementsTrue(completedIndentations)) {
-                    //only checks the first most important margins, avoiding the noise of the latter ones
-                    //todo: check if allElementsTrue part is necessary in the previous condition, if it is too restrictive, comment it
+                if(/*cont>completedIndentations.length*2.5 && doesn't make sense because one of the columns can be very short
+                */ allElementsTrue(completedIndentations)) {
                     break;
                 }
 
 
                 List<Integer> sortW = getSortedWidths(entr.getKey().getLeftX(), lineInfos);
                 int currColumn = -1;
-                if(sortW.get(0)>minColumnWidth && sortW.get(0)<=maxColumnWidth)
+                int idealWidth = 0;
+                for (; idealWidth < sortW.size(); idealWidth++)
+                {
+                    if(sortW.get(idealWidth)<=maxColumnWidth){
+                        break;
+                    }
+                }
+                idealWidth=idealWidth>=sortW.size()?sortW.size()-1:idealWidth;
+                if(sortW.get(idealWidth)>minColumnWidth && sortW.get(idealWidth)<=maxColumnWidth)
                 {
 
 //                    if(!((entr.getKey().getLeftX() - sortW.get(0) < pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(0)*2 + 20 <pageData.getRightX() ) ||
@@ -199,14 +211,14 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 //                        //doesnt make sense to be a column because somewhere in the middle
 //                        continue;
 //                    }
-                    if((entr.getKey().getLeftX() - sortW.get(0) < pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(0)*2 + 20 <pageData.getRightX()
+                    if((entr.getKey().getLeftX() - sortW.get(idealWidth) < pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(idealWidth)*2 - 10 <pageData.getRightX()
                     ))
                     {
                         currColumn = 0;
 
                     }
 
-                    if (entr.getKey().getLeftX() - sortW.get(0) - 20 > pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(0)*2 + 20 > pageData.getRightX())
+                    if (entr.getKey().getLeftX() - sortW.get(idealWidth) + 10 > pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(idealWidth)*2 - 10 > pageData.getRightX())
                     {
                         currColumn = 1;
                     }
@@ -221,7 +233,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                     if(!firstIndentation[currColumn].isInitialized())
                     {
                         firstIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
-                        firstIndentation[currColumn].setRightX(sortW.get(0));
+                        firstIndentation[currColumn].setRightX(sortW.get(idealWidth) + entr.getKey().getLeftX());
                         completedIndentations[currColumn*2 + 0]=true;
                         //todo: somewhere an if to check that the current range doesn't overlap with the rest of the columns (and in the rest of the code too)
 //                        leftIndentation = true;
@@ -233,7 +245,12 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                             //up to 10 px, just can be number difference
                             if(firstIndentation[currColumn].getLeftX()-entr.getKey().getLeftX()<10)
                             {
+                                int wid = firstIndentation[currColumn].getWidth();
                                 firstIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
+                                if(sortW.get(idealWidth)>wid)
+                                {
+                                    firstIndentation[currColumn].setRightX(entr.getKey().getRightX());
+                                }
                             }
                             //more than 10 px, can mean, that
                             else
@@ -241,17 +258,21 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                                 secondIndentation[currColumn] = firstIndentation[currColumn];
                                 firstIndentation[currColumn] = new ColumnData();
                                 firstIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
-                                firstIndentation[currColumn].setRightX(sortW.get(0));
+                                firstIndentation[currColumn].setRightX(sortW.get(idealWidth) + entr.getKey().getLeftX());
 //                                rightIndentation = true;
                                 completedIndentations[currColumn*2 + 1]=true;
                             }
                         }
                         else if(firstIndentation[currColumn].getLeftX()<entr.getKey().getLeftX())
                         {
-                            secondIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
-                            secondIndentation[currColumn].setRightX(sortW.get(0));
+                            if(entr.getKey().getLeftX() - firstIndentation[currColumn].getLeftX() >= 5) {
+
+
+                                secondIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
+                                secondIndentation[currColumn].setRightX(sortW.get(idealWidth) + entr.getKey().getLeftX());
 //                            rightIndentation = true;
-                            completedIndentations[currColumn*2 + 1]=true;
+                                completedIndentations[currColumn * 2 + 1] = true;
+                            }
                         }
                     }
                 }
@@ -259,7 +280,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
             Map toRMap = new HashMap();
 
-            for (int i=1; i<numberOfColumns; i++) {
+            for (int i=0; i<numberOfColumns; i++) {
                 List<ColumnData> toReturn = new ArrayList<ColumnData>();
                 if (firstIndentation[i].isInitialized()) {
                     toReturn.add(firstIndentation[i]);
@@ -295,7 +316,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                     if(!firstIndentation.isInitialized())
                     {
                         firstIndentation.setLeftX(entr.getKey().getLeftX());
-                        firstIndentation.setRightX(sortW.get(0));
+                        firstIndentation.setRightX(sortW.get(0) + entr.getKey().getLeftX());
                         leftIndentation = true;
                     }
                     else
@@ -313,15 +334,18 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                                 secondIndentation = firstIndentation;
                                 firstIndentation = new ColumnData();
                                 firstIndentation.setLeftX(entr.getKey().getLeftX());
-                                firstIndentation.setRightX(sortW.get(0));
+                                firstIndentation.setRightX(sortW.get(0) + entr.getKey().getLeftX());
                                 rightIndentation = true;
                             }
                         }
                         else if(firstIndentation.getLeftX()<entr.getKey().getLeftX())
                         {
-                            secondIndentation.setLeftX(entr.getKey().getLeftX());
-                            secondIndentation.setRightX(sortW.get(0));
-                            rightIndentation = true;
+                            if(entr.getKey().getLeftX() - firstIndentation.getLeftX() >= 10)
+                            {
+                                secondIndentation.setLeftX(entr.getKey().getLeftX());
+                                secondIndentation.setRightX(sortW.get(0) + entr.getKey().getLeftX());
+                                rightIndentation = true;
+                            }
                         }
                     }
                 }
