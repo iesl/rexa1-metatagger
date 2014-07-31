@@ -39,6 +39,7 @@ public class LayoutSegmentFinder
 				.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited))\\s*$");
 	}
 
+
 	
 	public LayoutSegmentFinder(CRFBibliographySegmentor crfBibSegmentor)
 	{
@@ -166,9 +167,9 @@ public class LayoutSegmentFinder
 //        System.out.println(Arrays.toString(biblioBoundaries));
 		NewHtmlTokenization biblio = tokenization.getSubspanTokenization((int)biblioBoundaries[0], (int)biblioBoundaries[1]);
 //        System.out.println(Arrays.toString(biblio.getLineSpans().toArray()));
-//		CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
+		CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
 
-        RulesBibliographySegmentor.ReferenceData referenceData = m_rulesBibSegmentor.segmentReferences(biblio, m_crfBibSegmentor.getInputPipe());
+//        RulesBibliographySegmentor.ReferenceData referenceData = m_rulesBibSegmentor.segmentReferences(biblio, m_crfBibSegmentor.getInputPipe());
 		// Create biblioPrologue element
 		if (!referenceData.prologueList.isEmpty()) {
 			long[] prologueTokenBoundaries = lineListBoundaries(referenceData.prologueList);

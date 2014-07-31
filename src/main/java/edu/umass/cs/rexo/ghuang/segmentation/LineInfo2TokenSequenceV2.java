@@ -102,6 +102,12 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
     }
 
 
+    private static boolean firstLineHardRule(LineInfo lineInfo)
+    {
+        //if the line starts with lowercase alphabetic character, it can not be the first reference line.
+        return true;
+
+    }
     private static List<Integer> getSortedWidths(int posX, LineInfo[] lineInfos)
     {
         //averaging the width that are not outliers (within 5%?)
@@ -812,6 +818,11 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 //lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
             }
 
+
+            if(ignor.getIgnoreType() == IgnoreType.CLEAN && lineInfos[i].presentFeatures.contains("bibliography"))
+            {
+                ignor.setIgnoreType(IgnoreType.IGNORE);
+            }
 //            if(i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i-1].presentFeatures.contains("ignoreAllPosteriorOnPage"))
 //            {
 //                ignore = true;
@@ -1125,6 +1136,14 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 lineInfos[i].presentFeatures.add("beginsCapitalInitials");
                 numBeginCapInitials++;
             }
+
+            //kzaporojets: begin lowercase for hardrule of the first reference line
+            if (lineInfos[i].text.matches("^([a-z]).*") )
+            {
+                lineInfos[i].presentFeatures.add("beginsLowerCase");
+                numBeginCapInitials++;
+            }
+            //todo: something similar, but for numbers, parenthesis... and others that may be the starting characters of a particular reference ... ??
 
             for (int j = 0; j < keywords.length; j++) {
                 if (lineInfos[i].text.matches(".*" + keywords[j] + ".*")) {
