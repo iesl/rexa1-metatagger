@@ -654,6 +654,9 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         // A second pass of feature computations
         for (int i = 0; i < lineInfos.length; i++) {
 
+//            if(lineInfos[i].page == 14)
+//                break;
+
             if(ignor.getIgnoreType() == IgnoreType.IGNORE ||
                     ignor.getIgnorePage() != lineInfos[i].page)
             {
@@ -1141,7 +1144,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             if (lineInfos[i].text.matches("^([a-z]).*") )
             {
                 lineInfos[i].presentFeatures.add("beginsLowerCase");
-                numBeginCapInitials++;
+//                numBeginCapInitials++;
             }
             //todo: something similar, but for numbers, parenthesis... and others that may be the starting characters of a particular reference ... ??
 
