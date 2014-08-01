@@ -169,7 +169,7 @@ public class LayoutSegmentFinder
 //uncomment to use rule-based approach
 //        RulesBibliographySegmentor.ReferenceData referenceData = m_rulesBibSegmentor.segmentReferences(biblio, m_crfBibSegmentor.getInputPipe());
 
-        
+
 		// Create biblioPrologue element
 		if (!referenceData.prologueList.isEmpty()) {
 			long[] prologueTokenBoundaries = lineListBoundaries(referenceData.prologueList);
