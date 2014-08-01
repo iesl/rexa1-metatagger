@@ -31,7 +31,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 		Token[] dataTokens = new Token[oldData.length];
 		Token[] sourceTokens = new Token[oldData.length];
 
-//            tokenSequence.computeFeatures(oldData);
 
         try {
 	    	computeFeatures(oldData);
@@ -47,13 +46,11 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 			
 			sourceTokens[i] = new Token(oldData[i].text);
 			
-//			System.out.println(oldData[i].text);
-			
+
 			while (iter.hasNext()) {
 				String featName = (String) iter.next();
 				dataTokens[i].setFeatureValue(featName, 1);
 				
-//				System.out.println("\t" + featName);
 			}
 			
 		}
@@ -300,10 +297,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 	private static void computeLayoutFeatures(LineInfo[] lineInfos)
 	{
 
-        /*kzaporojets: some additional data with respect to layout include:
-         - mode of the width (for all of the lines)
-         - mode of llx a urx (for the lines on a particular page) to help identify the columns
-         - mode of vertical distance between the lines for all the lines.
+        /*kzaporojets: some additional data with respect to layout
         */
         List <Entry<Integer>> verticalDistance = new ArrayList<Entry<Integer>>();
         List <Entry<Integer>> widthLine = new ArrayList<Entry<Integer>>();
@@ -391,11 +385,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             {
                 lineInfos[i].presentFeatures.add("sameLine");
             }
-
-//            if(!lineInfos[i].presentFeatures.contains("newColumn") && )
-//            {
-//
-//            }
 
 
             int width = lineInfos[i].urx - lineInfos[i].llx;
@@ -578,8 +567,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         // A second pass of feature computations
         for (int i = 0; i < lineInfos.length; i++) {
 
-//            if(lineInfos[i].page == 14)
-//                break;
 
             if(ignor.getIgnoreType() == IgnoreType.IGNORE ||
                     ignor.getIgnorePage() != lineInfos[i].page)
@@ -648,8 +635,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
             if(ignor.getIgnoreType() == IgnoreType.CLEAN && lineInfos[i].presentFeatures.contains("shortLineLength") && lineInfos[i].presentFeatures.contains("lastLineOnPage") && lineInfos[i].presentFeatures.contains("bigVertSpaceBefore"))
             {
-                //probably some short footer, such as page number
-//                ignore = true;
                 ignor.setIgnoreType(IgnoreType.IGNORE);
                 ignor.setIgnorePage(lineInfos[i].page);
 
@@ -661,7 +646,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             {
                 ignor.setIgnoreType(IgnoreType.IGNORE);
                 ignor.setIgnorePage(lineInfos[i].page);
-//                ignore = true;
             }
 
 //            if((lineInfos[i].presentFeatures.contains("newPage") && lineInfos[i].presentFeatures.contains("doesntUseRefFont"))
@@ -706,9 +690,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                             ignoreMiddle = false;
                         }
 
-//                        if(rightIndent.isInitialized() && (indentationType == IndentationType.INDENTED ||
-//                                indentationType == IndentationType.UNTABBED) && lineInfos[i].llx >= leftIndent.getLeftX() && lineInfos[i].llx<=maxX &&
-//                                lineInfos[i].llx - leftIndent.getLeftX()>30)
                         if(rightIndent.isInitialized() && (indentationType == IndentationType.INDENTED ||
                                 indentationType == IndentationType.UNTABBED) && lineInfos[i].llx >= leftIndent.getLeftX() && lineInfos[i].llx<=maxX &&
                                 lineInfos[i].llx - rightIndent.getLeftX()>5)
@@ -732,17 +713,13 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
 
             //if column starts on the left, ignore everything after that
-            //todo: see if it generalizes well
             if(ignor.getIgnoreType() != IgnoreType.IGNORE_ALL_POSTERIOR && i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].urx < lineInfos[i-1].llx && !lineInfos[i-1].presentFeatures.contains("sameLine")
                     && !(ignor.getIgnoreType() == IgnoreType.IGNORE_UNLESS_Y_SMALLER && ignor.getIgnoreY()<lineInfos[i-1].lly)
                     )
             {
-//                ignore = true;
-
                 ignor.setIgnoreType(IgnoreType.IGNORE_UNLESS_Y_SMALLER);
                 ignor.setIgnoreY(lineInfos[i-1].lly);
                 ignor.setIgnorePage(lineInfos[i].page);
-                //lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
             }
 
 
@@ -750,11 +727,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             {
                 ignor.setIgnoreType(IgnoreType.IGNORE);
             }
-//            if(i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i-1].presentFeatures.contains("ignoreAllPosteriorOnPage"))
-//            {
-//                ignore = true;
-//                lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
-//            }
 
             //if for identifying the footer, and ignoring everything that's after it
             //todo: for now it is only adapted IndentationType.INDENTED, adapt to other indentations
@@ -782,24 +754,14 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                     //4-
                         && percentile < 0.08
                         ) {
-//                    ignore = true;
                     ignor.setIgnoreType(IgnoreType.IGNORE_ALL_POSTERIOR);
                     ignor.setIgnorePage(lineInfos[i].page);
                     lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
                 }
             }
 
-            //todo: think in something else, this feature has multiple values, not only one
-            if(lineInfos[i].presentFeatures.contains("verticalOutlier"))
-            {
-                //ignore = true;
-            }
-
             if(ignor.getIgnoreType() == IgnoreType.CLEAN /*!ignore*/) {
 
-                //todo:redo the two following if, so they are exclusive
-
-                System.out.println("Clean: " + i + " " + lineInfos[i].text);
 
                 if ((!movedMargin && lineInfos[i].presentFeatures.contains("samePatternAsInFirst")) ||
                         //the following is for deal well with ref[3] of 1997Fey_The_affects_of_stoichiometry..., see how it works, if not delete delete? :
@@ -807,7 +769,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                                 && lineInfos[i - 1].presentFeatures.contains("possibleInit") &&
                                 !lineInfos[i].presentFeatures.contains("indentedFromPrevLine") && indentationType == IndentationType.INDENTED)
                         )
-                //end: the following...
                 {
                     lineInfos[i].presentFeatures.add("possibleInit");
                 }
@@ -820,7 +781,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
                     lineInfos[i].presentFeatures.add("possibleInit");
                     movedMargin = true;
-//                    int sumVertDistRefs = 0;
                 }
 
                 if(lineInfos[i].presentFeatures.contains("possibleInit"))
@@ -844,9 +804,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
 
             if (
-                    //sometimes the two "lines" actually belong to the same line , this first condition takes it into account
-//                    (i==0 || (i>0 && lineInfos[i-1].llx != lineInfos[i].llx))
-//            &&
             ((indentationType == IndentationType.INDENTED && (i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("unTabbedFromPrevLine")) ||
                     ((i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("newColumn") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ||
                     ((i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("newPage") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ) )
@@ -854,24 +811,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 movedMargin = false;
             }
 
-            //todo: "possibleColumn" (implement only if necessary based on pdfs tests), the first widest that is not overlapping with the second? See overlapColumnDatas method
-            //certain % with respect to the first most common and overlapping: the indent shouldn't be wider/narrower
-            //than 10% with respect to the most common? check it!
-            //also check the total page width
-            //also take into account that the width of each of the columns should be practically the same, maybe with +-5% of diff?
-            //also take into account the x initial position of the line, that should be the same that one of the coordinates of the column...
-            // not in all cases :( , but equally should heavily base on this (maybe with +-5% of tolerance), as well as in the vertical distances! Be careful, sometimes when there is
-            // enumeration, such as in 2013Twu_LiMnF4.pdf, the numbers are differently left-aligned according to the range: 1-9; 10-99; 100-999, can include
-            //check for this!
-            //it the vertical distance also should be taken into account
-            //in some cases there is no specific width, such as in p1361-whissell.pdf
-            //Try to do references from paper_2_10.pdf!!!: check if the sentence ends in a point! ("noEndingPeriod"), but some of the references don't end in a
-            // point such as paper3_10.pdf or paper4_3.pdf
-            // paper5_1.pdf examples of when not all lines aligned on the left on second line of the reference.
-
-
-            //function shape should be as follows
-            //columns = getColumnsCoordinates
 
             currentPage = lineInfos[i].page;
         }
