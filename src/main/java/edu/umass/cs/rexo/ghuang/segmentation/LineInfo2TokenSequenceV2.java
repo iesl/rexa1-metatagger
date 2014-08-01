@@ -1141,7 +1141,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             if (lineInfos[i].text.matches("^([a-z]).*") )
             {
                 lineInfos[i].presentFeatures.add("beginsLowerCase");
-                numBeginCapInitials++;
+//                numBeginCapInitials++;
             }
             //todo: something similar, but for numbers, parenthesis... and others that may be the starting characters of a particular reference ... ??
 
