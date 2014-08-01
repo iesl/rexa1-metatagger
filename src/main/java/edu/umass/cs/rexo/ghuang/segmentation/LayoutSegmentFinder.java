@@ -164,12 +164,12 @@ public class LayoutSegmentFinder
 		// Extract References
 
 		long[] biblioBoundaries= lineListBoundaries(lineSpans);
-//        System.out.println(Arrays.toString(biblioBoundaries));
 		NewHtmlTokenization biblio = tokenization.getSubspanTokenization((int)biblioBoundaries[0], (int)biblioBoundaries[1]);
-//        System.out.println(Arrays.toString(biblio.getLineSpans().toArray()));
 		CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
-
+//uncomment to use rule-based approach
 //        RulesBibliographySegmentor.ReferenceData referenceData = m_rulesBibSegmentor.segmentReferences(biblio, m_crfBibSegmentor.getInputPipe());
+
+
 		// Create biblioPrologue element
 		if (!referenceData.prologueList.isEmpty()) {
 			long[] prologueTokenBoundaries = lineListBoundaries(referenceData.prologueList);
@@ -190,7 +190,7 @@ public class LayoutSegmentFinder
 			NewHtmlTokenization reference = tokenization
 					.getSubspanTokenization((int) referenceTokenBoundaries[0],
 							(int) referenceTokenBoundaries[1]);
-			refTokenizationList.add(reference);
+			refTokenizationList.add(reference); //here adds ALL, junk included (ex: [70] in paper2_1.pdf), todo: improve it so it ignores "junk" part
 
 		}
 		subsections.put("referenceList", refTokenizationList);

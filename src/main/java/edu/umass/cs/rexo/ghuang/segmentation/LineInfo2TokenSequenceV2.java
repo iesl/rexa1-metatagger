@@ -31,7 +31,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 		Token[] dataTokens = new Token[oldData.length];
 		Token[] sourceTokens = new Token[oldData.length];
 
-//            tokenSequence.computeFeatures(oldData);
 
         try {
 	    	computeFeatures(oldData);
@@ -47,13 +46,11 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 			
 			sourceTokens[i] = new Token(oldData[i].text);
 			
-//			System.out.println(oldData[i].text);
-			
+
 			while (iter.hasNext()) {
 				String featName = (String) iter.next();
 				dataTokens[i].setFeatureValue(featName, 1);
 				
-//				System.out.println("\t" + featName);
 			}
 			
 		}
@@ -171,44 +168,44 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
         List<ColumnData> columnData = new ArrayList<ColumnData>();
 
-
-        if(!oneColumn)
-        {
+        int numberOfColumns = 1;
+        if(!oneColumn) {
             //two by default, see if it is necessary to add more
             //todo: generalize the code to for more than two columns (if it works well with two columns first)
-            int numberOfColumns = 2;
-            //two columns
-            ColumnData[] firstIndentation = new ColumnData[numberOfColumns];
-            ColumnData[] secondIndentation = new ColumnData[numberOfColumns];
-            for(int cl = 0; cl < numberOfColumns; cl++)
-            {
-                firstIndentation[cl] = new ColumnData();
-                secondIndentation[cl] = new ColumnData();
+            numberOfColumns = 2;
+        }
+        //two columns
+        ColumnData[] firstIndentation = new ColumnData[numberOfColumns];
+        ColumnData[] secondIndentation = new ColumnData[numberOfColumns];
+        for(int cl = 0; cl < numberOfColumns; cl++)
+        {
+            firstIndentation[cl] = new ColumnData();
+            secondIndentation[cl] = new ColumnData();
+        }
+
+        boolean [] completedIndentations = new boolean[4];
+
+        int cont = 0;
+        for(Entry<ColumnData> entr: allLeftMargins)
+        {
+            if(/*cont>completedIndentations.length*2.5 && doesn't make sense because one of the columns can be very short
+            */ allElementsTrue(completedIndentations)) {
+                break;
             }
 
-            boolean [] completedIndentations = new boolean[4];
 
-            int cont = 0;
-            for(Entry<ColumnData> entr: allLeftMargins)
+            List<Integer> sortW = getSortedWidths(entr.getKey().getLeftX(), lineInfos);
+            int currColumn = -1;
+            int idealWidth = 0;
+            for (; idealWidth < sortW.size(); idealWidth++)
             {
-                if(/*cont>completedIndentations.length*2.5 && doesn't make sense because one of the columns can be very short
-                */ allElementsTrue(completedIndentations)) {
+                if(sortW.get(idealWidth)<=maxColumnWidth){
                     break;
                 }
-
-
-                List<Integer> sortW = getSortedWidths(entr.getKey().getLeftX(), lineInfos);
-                int currColumn = -1;
-                int idealWidth = 0;
-                for (; idealWidth < sortW.size(); idealWidth++)
-                {
-                    if(sortW.get(idealWidth)<=maxColumnWidth){
-                        break;
-                    }
-                }
-                idealWidth=idealWidth>=sortW.size()?sortW.size()-1:idealWidth;
-                if(sortW.get(idealWidth)>minColumnWidth && sortW.get(idealWidth)<=maxColumnWidth)
-                {
+            }
+            idealWidth=idealWidth>=sortW.size()?sortW.size()-1:idealWidth;
+            if(sortW.get(idealWidth)>minColumnWidth && sortW.get(idealWidth)<=maxColumnWidth)
+            {
 
 //                    if(!((entr.getKey().getLeftX() - sortW.get(0) < pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(0)*2 + 20 <pageData.getRightX() ) ||
 //                         (entr.getKey().getLeftX() - sortW.get(0) - 20 > pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(0)*2 + 20 > pageData.getRightX())
@@ -217,169 +214,90 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 //                        //doesnt make sense to be a column because somewhere in the middle
 //                        continue;
 //                    }
-                    if((entr.getKey().getLeftX() - sortW.get(idealWidth) < pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(idealWidth)*2 - 10 <pageData.getRightX()
-                    ))
-                    {
+                if(numberOfColumns>1) {
+                    if ((entr.getKey().getLeftX() - sortW.get(idealWidth) < pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(idealWidth) * 2 - 10 < pageData.getRightX()
+                    )) {
                         currColumn = 0;
 
                     }
 
-                    if (entr.getKey().getLeftX() - sortW.get(idealWidth) + 10 > pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(idealWidth)*2 - 10 > pageData.getRightX())
-                    {
+                    if (entr.getKey().getLeftX() - sortW.get(idealWidth) + 10 > pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(idealWidth) * 2 - 10 > pageData.getRightX()) {
                         currColumn = 1;
                     }
+                }
+                else
+                {
+                    currColumn = 0;
+                }
 
+                if(currColumn == -1)
+                {
+                    //doesnt make sense to be a column because somewhere in the middle of the page or too narrow or too wide
+                    continue;
+                }
 
-                    if(currColumn == -1)
+                if(!firstIndentation[currColumn].isInitialized())
+                {
+                    firstIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
+                    firstIndentation[currColumn].setRightX(sortW.get(idealWidth) + entr.getKey().getLeftX());
+                    completedIndentations[currColumn*2 + 0]=true;
+                    //todo: somewhere an if to check that the current range doesn't overlap with the rest of the columns (and in the rest of the code too)
+                }
+                else
+                {
+                    if(firstIndentation[currColumn].getLeftX()>entr.getKey().getLeftX())
                     {
-                        //doesnt make sense to be a column because somewhere in the middle of the page or too narrow or too wide
-                        continue;
-                    }
-
-                    if(!firstIndentation[currColumn].isInitialized())
-                    {
-                        firstIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
-                        firstIndentation[currColumn].setRightX(sortW.get(idealWidth) + entr.getKey().getLeftX());
-                        completedIndentations[currColumn*2 + 0]=true;
-                        //todo: somewhere an if to check that the current range doesn't overlap with the rest of the columns (and in the rest of the code too)
-//                        leftIndentation = true;
-                    }
-                    else
-                    {
-                        if(firstIndentation[currColumn].getLeftX()>entr.getKey().getLeftX())
+                        //up to 10 px, just can be number difference
+                        if(firstIndentation[currColumn].getLeftX()-entr.getKey().getLeftX()<10)
                         {
-                            //up to 10 px, just can be number difference
-                            if(firstIndentation[currColumn].getLeftX()-entr.getKey().getLeftX()<10)
+                            int wid = firstIndentation[currColumn].getWidth();
+                            firstIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
+                            if(sortW.get(idealWidth)>wid)
                             {
-                                int wid = firstIndentation[currColumn].getWidth();
-                                firstIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
-                                if(sortW.get(idealWidth)>wid)
-                                {
-                                    firstIndentation[currColumn].setRightX(entr.getKey().getRightX());
-                                }
-                            }
-                            //more than 10 px, can mean, that
-                            else
-                            {
-                                secondIndentation[currColumn] = firstIndentation[currColumn];
-                                firstIndentation[currColumn] = new ColumnData();
-                                firstIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
-                                firstIndentation[currColumn].setRightX(sortW.get(idealWidth) + entr.getKey().getLeftX());
-//                                rightIndentation = true;
-                                completedIndentations[currColumn*2 + 1]=true;
+                                firstIndentation[currColumn].setRightX(entr.getKey().getRightX());
                             }
                         }
-                        else if(firstIndentation[currColumn].getLeftX()<entr.getKey().getLeftX())
+                        //more than 10 px, can mean, that
+                        else
                         {
-                            if(entr.getKey().getLeftX() - firstIndentation[currColumn].getLeftX() >= 5) {
-
-
-                                secondIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
-                                secondIndentation[currColumn].setRightX(sortW.get(idealWidth) + entr.getKey().getLeftX());
-//                            rightIndentation = true;
-                                completedIndentations[currColumn * 2 + 1] = true;
-                            }
+                            secondIndentation[currColumn] = firstIndentation[currColumn];
+                            firstIndentation[currColumn] = new ColumnData();
+                            firstIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
+                            firstIndentation[currColumn].setRightX(sortW.get(idealWidth) + entr.getKey().getLeftX());
+                            completedIndentations[currColumn*2 + 1]=true;
+                        }
+                    }
+                    else if(firstIndentation[currColumn].getLeftX()<entr.getKey().getLeftX())
+                    {
+                        if(entr.getKey().getLeftX() - firstIndentation[currColumn].getLeftX() >= 5) {
+                            secondIndentation[currColumn].setLeftX(entr.getKey().getLeftX());
+                            secondIndentation[currColumn].setRightX(sortW.get(idealWidth) + entr.getKey().getLeftX());
+                            completedIndentations[currColumn * 2 + 1] = true;
                         }
                     }
                 }
-                cont++;
             }
-            Map toRMap = new HashMap();
-
-            for (int i=0; i<numberOfColumns; i++) {
-                List<ColumnData> toReturn = new ArrayList<ColumnData>();
-                if (firstIndentation[i].isInitialized()) {
-                    toReturn.add(firstIndentation[i]);
-                }
-                if (secondIndentation[i].isInitialized()) {
-                    toReturn.add(secondIndentation[i]);
-                }
-                toRMap.put(i, toReturn);
-            }
-
-            return toRMap;
+            cont++;
         }
-        else
-        {
-            ColumnData firstIndentation = new ColumnData();
-            ColumnData secondIndentation = new ColumnData();
+        Map toRMap = new HashMap();
 
-//            int firstQty = allLeftMargins.get(0).getQty();
-
-            boolean leftIndentation=false ;
-            boolean rightIndentation = false;
-            for(Entry<ColumnData> entr:allLeftMargins)
-            {
-
-                if(leftIndentation && rightIndentation)
-                {
-                    break;
-                }
-
-                List<Integer> sortW = getSortedWidths(entr.getKey().getLeftX(), lineInfos);
-                if(sortW.get(0)>minColumnWidth && sortW.get(0)<=maxColumnWidth)
-                {
-                    if(!firstIndentation.isInitialized())
-                    {
-                        firstIndentation.setLeftX(entr.getKey().getLeftX());
-                        firstIndentation.setRightX(sortW.get(0) + entr.getKey().getLeftX());
-                        leftIndentation = true;
-                    }
-                    else
-                    {
-                        if(firstIndentation.getLeftX()>entr.getKey().getLeftX())
-                        {
-                            //up to 10 px, just can be number difference
-                            if(firstIndentation.getLeftX()-entr.getKey().getLeftX()<10)
-                            {
-                                firstIndentation.setLeftX(entr.getKey().getLeftX());
-                            }
-                            //more than 10 px, can mean, that
-                            else
-                            {
-                                secondIndentation = firstIndentation;
-                                firstIndentation = new ColumnData();
-                                firstIndentation.setLeftX(entr.getKey().getLeftX());
-                                firstIndentation.setRightX(sortW.get(0) + entr.getKey().getLeftX());
-                                rightIndentation = true;
-                            }
-                        }
-                        else if(firstIndentation.getLeftX()<entr.getKey().getLeftX())
-                        {
-                            if(entr.getKey().getLeftX() - firstIndentation.getLeftX() >= 10)
-                            {
-                                secondIndentation.setLeftX(entr.getKey().getLeftX());
-                                secondIndentation.setRightX(sortW.get(0) + entr.getKey().getLeftX());
-                                rightIndentation = true;
-                            }
-                        }
-                    }
-                }
-            }
+        for (int i=0; i<numberOfColumns; i++) {
             List<ColumnData> toReturn = new ArrayList<ColumnData>();
-            if(firstIndentation.isInitialized())
-            {
-                toReturn.add(firstIndentation);
+            if (firstIndentation[i].isInitialized()) {
+                toReturn.add(firstIndentation[i]);
             }
-            if(secondIndentation.isInitialized())
-            {
-                toReturn.add(secondIndentation);
+            if (secondIndentation[i].isInitialized()) {
+                toReturn.add(secondIndentation[i]);
             }
-            Map toRMap = new HashMap();
-            toRMap.put(1,toReturn);
-            return toRMap;
+            toRMap.put(i, toReturn);
         }
 
-
-//        return null;
+        return toRMap;
     }
 	private static void computeLayoutFeatures(LineInfo[] lineInfos)
 	{
 
-        /*kzaporojets: some additional data with respect to layout include:
-         - mode of the width (for all of the lines)
-         - mode of llx a urx (for the lines on a particular page) to help identify the columns
-         - mode of vertical distance between the lines for all the lines.
+        /*kzaporojets: some additional data with respect to layout
         */
         List <Entry<Integer>> verticalDistance = new ArrayList<Entry<Integer>>();
         List <Entry<Integer>> widthLine = new ArrayList<Entry<Integer>>();
@@ -467,11 +385,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             {
                 lineInfos[i].presentFeatures.add("sameLine");
             }
-
-//            if(!lineInfos[i].presentFeatures.contains("newColumn") && )
-//            {
-//
-//            }
 
 
             int width = lineInfos[i].urx - lineInfos[i].llx;
@@ -654,6 +567,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         // A second pass of feature computations
         for (int i = 0; i < lineInfos.length; i++) {
 
+
             if(ignor.getIgnoreType() == IgnoreType.IGNORE ||
                     ignor.getIgnorePage() != lineInfos[i].page)
             {
@@ -721,8 +635,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
             if(ignor.getIgnoreType() == IgnoreType.CLEAN && lineInfos[i].presentFeatures.contains("shortLineLength") && lineInfos[i].presentFeatures.contains("lastLineOnPage") && lineInfos[i].presentFeatures.contains("bigVertSpaceBefore"))
             {
-                //probably some short footer, such as page number
-//                ignore = true;
                 ignor.setIgnoreType(IgnoreType.IGNORE);
                 ignor.setIgnorePage(lineInfos[i].page);
 
@@ -734,7 +646,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             {
                 ignor.setIgnoreType(IgnoreType.IGNORE);
                 ignor.setIgnorePage(lineInfos[i].page);
-//                ignore = true;
             }
 
 //            if((lineInfos[i].presentFeatures.contains("newPage") && lineInfos[i].presentFeatures.contains("doesntUseRefFont"))
@@ -779,9 +690,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                             ignoreMiddle = false;
                         }
 
-//                        if(rightIndent.isInitialized() && (indentationType == IndentationType.INDENTED ||
-//                                indentationType == IndentationType.UNTABBED) && lineInfos[i].llx >= leftIndent.getLeftX() && lineInfos[i].llx<=maxX &&
-//                                lineInfos[i].llx - leftIndent.getLeftX()>30)
                         if(rightIndent.isInitialized() && (indentationType == IndentationType.INDENTED ||
                                 indentationType == IndentationType.UNTABBED) && lineInfos[i].llx >= leftIndent.getLeftX() && lineInfos[i].llx<=maxX &&
                                 lineInfos[i].llx - rightIndent.getLeftX()>5)
@@ -805,17 +713,13 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
 
             //if column starts on the left, ignore everything after that
-            //todo: see if it generalizes well
             if(ignor.getIgnoreType() != IgnoreType.IGNORE_ALL_POSTERIOR && i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i].urx < lineInfos[i-1].llx && !lineInfos[i-1].presentFeatures.contains("sameLine")
                     && !(ignor.getIgnoreType() == IgnoreType.IGNORE_UNLESS_Y_SMALLER && ignor.getIgnoreY()<lineInfos[i-1].lly)
                     )
             {
-//                ignore = true;
-
                 ignor.setIgnoreType(IgnoreType.IGNORE_UNLESS_Y_SMALLER);
                 ignor.setIgnoreY(lineInfos[i-1].lly);
                 ignor.setIgnorePage(lineInfos[i].page);
-                //lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
             }
 
 
@@ -823,11 +727,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             {
                 ignor.setIgnoreType(IgnoreType.IGNORE);
             }
-//            if(i>0 && lineInfos[i].page==lineInfos[i-1].page && lineInfos[i-1].presentFeatures.contains("ignoreAllPosteriorOnPage"))
-//            {
-//                ignore = true;
-//                lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
-//            }
 
             //if for identifying the footer, and ignoring everything that's after it
             //todo: for now it is only adapted IndentationType.INDENTED, adapt to other indentations
@@ -855,24 +754,14 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                     //4-
                         && percentile < 0.08
                         ) {
-//                    ignore = true;
                     ignor.setIgnoreType(IgnoreType.IGNORE_ALL_POSTERIOR);
                     ignor.setIgnorePage(lineInfos[i].page);
                     lineInfos[i].presentFeatures.add("ignoreAllPosteriorOnPage");
                 }
             }
 
-            //todo: think in something else, this feature has multiple values, not only one
-            if(lineInfos[i].presentFeatures.contains("verticalOutlier"))
-            {
-                //ignore = true;
-            }
-
             if(ignor.getIgnoreType() == IgnoreType.CLEAN /*!ignore*/) {
 
-                //todo:redo the two following if, so they are exclusive
-
-                System.out.println("Clean: " + i + " " + lineInfos[i].text);
 
                 if ((!movedMargin && lineInfos[i].presentFeatures.contains("samePatternAsInFirst")) ||
                         //the following is for deal well with ref[3] of 1997Fey_The_affects_of_stoichiometry..., see how it works, if not delete delete? :
@@ -880,7 +769,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                                 && lineInfos[i - 1].presentFeatures.contains("possibleInit") &&
                                 !lineInfos[i].presentFeatures.contains("indentedFromPrevLine") && indentationType == IndentationType.INDENTED)
                         )
-                //end: the following...
                 {
                     lineInfos[i].presentFeatures.add("possibleInit");
                 }
@@ -893,7 +781,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
                     lineInfos[i].presentFeatures.add("possibleInit");
                     movedMargin = true;
-//                    int sumVertDistRefs = 0;
                 }
 
                 if(lineInfos[i].presentFeatures.contains("possibleInit"))
@@ -917,9 +804,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
 
             if (
-                    //sometimes the two "lines" actually belong to the same line , this first condition takes it into account
-//                    (i==0 || (i>0 && lineInfos[i-1].llx != lineInfos[i].llx))
-//            &&
             ((indentationType == IndentationType.INDENTED && (i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("unTabbedFromPrevLine")) ||
                     ((i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("newColumn") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ||
                     ((i+1)<lineInfos.length && lineInfos[i+1].presentFeatures.contains("newPage") && lineInfos[i+1].presentFeatures.contains("samePatternAsInFirst")) ) )
@@ -927,24 +811,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 movedMargin = false;
             }
 
-            //todo: "possibleColumn" (implement only if necessary based on pdfs tests), the first widest that is not overlapping with the second? See overlapColumnDatas method
-            //certain % with respect to the first most common and overlapping: the indent shouldn't be wider/narrower
-            //than 10% with respect to the most common? check it!
-            //also check the total page width
-            //also take into account that the width of each of the columns should be practically the same, maybe with +-5% of diff?
-            //also take into account the x initial position of the line, that should be the same that one of the coordinates of the column...
-            // not in all cases :( , but equally should heavily base on this (maybe with +-5% of tolerance), as well as in the vertical distances! Be careful, sometimes when there is
-            // enumeration, such as in 2013Twu_LiMnF4.pdf, the numbers are differently left-aligned according to the range: 1-9; 10-99; 100-999, can include
-            //check for this!
-            //it the vertical distance also should be taken into account
-            //in some cases there is no specific width, such as in p1361-whissell.pdf
-            //Try to do references from paper_2_10.pdf!!!: check if the sentence ends in a point! ("noEndingPeriod"), but some of the references don't end in a
-            // point such as paper3_10.pdf or paper4_3.pdf
-            // paper5_1.pdf examples of when not all lines aligned on the left on second line of the reference.
-
-
-            //function shape should be as follows
-            //columns = getColumnsCoordinates
 
             currentPage = lineInfos[i].page;
         }
