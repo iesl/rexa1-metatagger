@@ -62,7 +62,7 @@ public class CRFBibliographySegmentor
 		}
 		
 		return ret;
-	}
+}
 
 	
 	// NOTE: argument "result" is modified
