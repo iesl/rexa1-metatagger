@@ -15,6 +15,7 @@ import edu.umass.cs.mallet.base.pipe.SerialPipes;
 import edu.umass.cs.mallet.base.types.PropertyHolder;
 import edu.umass.cs.mallet.base.types.Sequence;
 import edu.umass.cs.rexo.ghuang.segmentation.NewHtmlTokenization2LineInfo;
+import edu.umass.cs.rexo.ghuang.segmentation.Token2BodyFeatureSequence;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.rexo.extraction.CRFOutputFormatter;
@@ -52,6 +53,8 @@ public class BodyExtractionFilter extends AbstractFilter {
 	private void initExtractor() {
         List pipes = new ArrayList();
         pipes.add(  /*new NewHtmlTokenization2LineInfo()*/ new NewHtmlTokenization2TokenSequence());
+
+        pipes.add(new Token2BodyFeatureSequence());
 
         SerialPipes sp = new SerialPipes(pipes);
         _bodyExtractor = new RulesExtractor(sp);
