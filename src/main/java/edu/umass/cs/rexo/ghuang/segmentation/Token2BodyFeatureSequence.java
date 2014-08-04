@@ -69,12 +69,14 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         // high correlation with non-bibliographic content
         String[] NonSectionWords = {"^(Table).*", "^(Figure).*", "^(Fig\\.).*"};
         String allCaps = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ1-9]+";
+        String initCap = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ].*";
         String finalDot = "((.*)\\.)$";
         String lonelyNumbers = "[1-9][\\.]{0,1}"; //"[1-9][\\.]{0,1}";
         String lonelyLetters = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ][\\.]{0,1}"; //"[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ][\\.]{0,1}";
         String firstLevelSection = "^((\\s).*([\\d]+)([\\.]{0,1})([\\s]+).*)";
         String secondLevelSection = "^((\\s).*([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+).*)";
         String thirdLevelSection = "^((\\s).*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+).*)";
+
 //        String fourthLevelSection = "^((\\s).*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+).*)";
 
                 /*{ "^[^A-Za-z]*Received[^A-Za-z]",
