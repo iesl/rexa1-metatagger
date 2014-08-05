@@ -4,6 +4,7 @@ import edu.umass.cs.rexo.ghuang.segmentation.LineInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by klimzaporojets on 8/5/14.
@@ -26,6 +27,23 @@ public class LayoutUtils {
         {
             widthLine.add(currentWidthEntry);
         }
+    }
+
+    public static void adjustLineWidthPerPage(LineInfo[] lineInfos, int i, Map<Integer, List<Entry<Integer>>> widthLinePerPage)
+    {
+        LineInfo lineInfo = lineInfos[i];
+        List<Entry<Integer>> entry = widthLinePerPage.get(lineInfo.page);
+
+        if(entry == null)
+        {
+            entry = new ArrayList<Entry<Integer>>();
+        }
+//        else
+//        {
+//
+//        }
+        adjustLineWidth(lineInfos, i, entry);
+        widthLinePerPage.put(lineInfo.page,entry);
     }
 
     public static void adjustVerticalDistance(LineInfo[] lineInfos, int i,  List<Entry<Integer>> verticalDistance)

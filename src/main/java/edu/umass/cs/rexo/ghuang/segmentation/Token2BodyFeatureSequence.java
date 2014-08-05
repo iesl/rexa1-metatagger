@@ -10,10 +10,7 @@ import org.rexo.extraction.NewHtmlTokenization;
 import org.rexo.span.CompositeSpan;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,6 +66,13 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         List <LayoutUtils.Entry<Integer>> verticalDistance = new ArrayList<LayoutUtils.Entry<Integer>>();
         List <LayoutUtils.Entry<Integer>> widthLine = new ArrayList<LayoutUtils.Entry<Integer>>();
 
+        //it can be the case when the first page has one column and the rest of the pages two for example, this is why it is important
+        //to have a per-page width stats
+        Map<Integer, List<LayoutUtils.Entry<Integer>>> widthLinePerPage = new HashMap <Integer, List<LayoutUtils.Entry<Integer>>>();
+
+
+
+
         for(int i =0; i<lineInfos.length; i++ )
         {
             List<String> features = new ArrayList<String>();
@@ -78,10 +82,15 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
             LayoutUtils.adjustLineWidth(lineInfos, i, widthLine);
 
+            LayoutUtils.adjustLineWidthPerPage(lineInfos, i, widthLinePerPage);
 
         }
         Collections.sort(verticalDistance);
         Collections.sort(widthLine);
+        for(Integer page: widthLinePerPage.keySet())
+        {
+            Collections.sort(widthLinePerPage.get(page));
+        }
 
         System.out.print("sorted vertical distances");
 
