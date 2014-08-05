@@ -8,6 +8,9 @@ import edu.umass.cs.mallet.base.types.TokenSequence;
 import java.io.Serializable;
 import java.util.*;
 
+import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils;
+import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils.Entry;
+
 /**
  * Some added features to the original LineInfo2TokenSequence to help identify the references
  * 
@@ -387,21 +390,21 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             }
 
 
-            int width = lineInfos[i].urx - lineInfos[i].llx;
+            LayoutUtils.adjustLineWidth(lineInfos,i,widthLine);
+//            int width = lineInfos[i].urx - lineInfos[i].llx;
+//
+//            Entry<Integer> currentWidthEntry = new Entry<Integer>(width,1);
+//            int iOf = widthLine.indexOf(currentWidthEntry);
+//            if(iOf>-1)
+//            {
+//                Entry actualData = widthLine.get(iOf);
+//                actualData.setQty(actualData.getQty()+1);
+//            }
+//            else
+//            {
+//                widthLine.add(currentWidthEntry);
+//            }
 
-            Entry<Integer> currentWidthEntry = new Entry<Integer>(width,1);
-            int iOf = widthLine.indexOf(currentWidthEntry);
-            if(iOf>-1)
-            {
-                Entry actualData = widthLine.get(iOf);
-                actualData.setQty(actualData.getQty()+1);
-            }
-            else
-            {
-                widthLine.add(currentWidthEntry);
-            }
-
-//        Map <Integer, HashMap<ColumnData, Integer>> columnsData = new HashMap<Integer,HashMap<ColumnData,Integer>>();
 
 
             PageData pageData = pagesData.get(lineInfos[i].page);
@@ -457,21 +460,22 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 }
             }
 
-            if (i+1 < lineInfos.length && lineInfos[i].page == lineInfos[i + 1].page && lineInfos[i].lly > lineInfos[i+1].lly) {
-                Integer vertDistance = lineInfos[i].lly - lineInfos[i + 1].lly;
-                Entry<Integer > initialEntry = new Entry<Integer>(vertDistance,1);
-                iOf = verticalDistance.indexOf(initialEntry);
-                if(iOf > -1)
-                {
-                    //verticalDistance.put(vertDistance,verticalDistance.get(vertDistance)+1);
-                    Entry<Integer> exEntry = verticalDistance.get(iOf);
-                    exEntry.setQty(exEntry.getQty()+1);
-                }
-                else
-                {
-                    verticalDistance.add(initialEntry);
-                }
-            }
+            LayoutUtils.adjustVerticalDistance(lineInfos,i,verticalDistance);
+//            if (i+1 < lineInfos.length && lineInfos[i].page == lineInfos[i + 1].page && lineInfos[i].lly > lineInfos[i+1].lly) {
+//                Integer vertDistance = lineInfos[i].lly - lineInfos[i + 1].lly;
+//                Entry<Integer > initialEntry = new Entry<Integer>(vertDistance,1);
+//                iOf = verticalDistance.indexOf(initialEntry);
+//                if(iOf > -1)
+//                {
+//                    //verticalDistance.put(vertDistance,verticalDistance.get(vertDistance)+1);
+//                    Entry<Integer> exEntry = verticalDistance.get(iOf);
+//                    exEntry.setQty(exEntry.getQty()+1);
+//                }
+//                else
+//                {
+//                    verticalDistance.add(initialEntry);
+//                }
+//            }
 
 
             if (lineInfos[i].multibox)
@@ -539,8 +543,8 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         }
 
 
-        Collections.sort(verticalDistance); //sortByValue(verticalDistance);
-        //widthLine = sortByValue(widthLine);
+        Collections.sort(verticalDistance);
+
         Collections.sort(widthLine);
         Map<Integer,List<ColumnData>> cols = null;
         Map<Integer, Map<Integer,List<ColumnData>>> colsPerPage = new HashMap<Integer, Map<Integer,List<ColumnData>>>();
@@ -844,27 +848,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
         return 0;
     }
 
-//
-//    public static <K, V extends Comparable<? super V>> Map<K, V>
-//                                                    sortByValue( Map<K, V> map )
-//    {
-//        List<Map.Entry<K, V>> list =
-//                new LinkedList<Map.Entry<K, V>>( map.entrySet() );
-//        Collections.sort( list, new Comparator<Map.Entry<K, V>>()
-//        {
-//            public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
-//            {
-//                return (o1.getValue()).compareTo( o2.getValue() );
-//            }
-//        } );
-//
-//        Map<K, V> result = new LinkedHashMap<K, V>();
-//        for (Map.Entry<K, V> entry : list)
-//        {
-//            result.put( entry.getKey(), entry.getValue() );
-//        }
-//        return result;
-//    }
 
     private boolean overlapColumnDatas(ColumnData columnData1, ColumnData columnData2)
     {
@@ -1140,63 +1123,63 @@ class Ignore
     }
 }
 
-class Entry<T1> implements Comparable<Entry<T1>>
-{
-    T1 key;
-    Integer qty;
-
-    public Entry(T1 key, Integer qty)
-    {
-        this.key = key;
-        this.qty = qty;
-    }
-
-    public Integer getQty() {
-        return qty;
-    }
-
-    public void setQty(Integer qty) {
-        this.qty = qty;
-    }
-
-    public T1 getKey() {
-        return key;
-    }
-
-    public void setKey(T1 key) {
-        this.key = key;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        return ((Entry)obj).getKey().equals(this.key);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return key.hashCode();
-    }
-
-    @Override
-    public int compareTo(Entry<T1> entry)
-    {
-        int otherQty = entry.getQty();
-        if(this.qty > otherQty)
-        {
-            return -1;
-        }
-        else if (this.qty == otherQty)
-        {
-            return 0;
-        }
-        else
-        {
-            return 1;
-        }
-    }
-}
+//class Entry<T1> implements Comparable<Entry<T1>>
+//{
+//    T1 key;
+//    Integer qty;
+//
+//    public Entry(T1 key, Integer qty)
+//    {
+//        this.key = key;
+//        this.qty = qty;
+//    }
+//
+//    public Integer getQty() {
+//        return qty;
+//    }
+//
+//    public void setQty(Integer qty) {
+//        this.qty = qty;
+//    }
+//
+//    public T1 getKey() {
+//        return key;
+//    }
+//
+//    public void setKey(T1 key) {
+//        this.key = key;
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj)
+//    {
+//        return ((Entry)obj).getKey().equals(this.key);
+//    }
+//
+//    @Override
+//    public int hashCode()
+//    {
+//        return key.hashCode();
+//    }
+//
+//    @Override
+//    public int compareTo(Entry<T1> entry)
+//    {
+//        int otherQty = entry.getQty();
+//        if(this.qty > otherQty)
+//        {
+//            return -1;
+//        }
+//        else if (this.qty == otherQty)
+//        {
+//            return 0;
+//        }
+//        else
+//        {
+//            return 1;
+//        }
+//    }
+//}
 
 //class Column
 

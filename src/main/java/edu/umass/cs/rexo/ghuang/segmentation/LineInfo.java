@@ -10,18 +10,17 @@ import java.util.HashSet;
  */
 public class LineInfo 
 {
-	String text;
-	int page;
-	int llx, lly, urx, ury;
-	int font;
-	boolean multibox;
+	public String text;
+	public int page;
+	public int llx, lly, urx, ury;
+	public int font;
+	public boolean multibox;
 
 	boolean newRef; // unused
 	String trueLabel;
 
 	HashSet presentFeatures = new HashSet();  // contains names of binary features that are "on" in this line 
 	String[] textTokens;  // tokenized text of this line
-	//kzaporojets: here add one with reference stats (ex: averageLineWidth, averageVerticalDistanceLines...)
 
 
 

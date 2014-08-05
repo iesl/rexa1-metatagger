@@ -5,11 +5,13 @@ import edu.umass.cs.mallet.base.extract.StringSpan;
 import edu.umass.cs.mallet.base.pipe.Pipe;
 import edu.umass.cs.mallet.base.types.Instance;
 import edu.umass.cs.mallet.base.types.Token;
+import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils;
 import org.rexo.extraction.NewHtmlTokenization;
 import org.rexo.span.CompositeSpan;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -60,15 +62,28 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
     private void computeFeatures(LineInfo[] lineInfos, NewHtmlTokenization data)
     {
         computeLexiconFeatures(data);
-//        computeLayoutFeatures(lineInfos, data);
+        computeLayoutFeatures(lineInfos, data);
     }
 
     private static void computeLayoutFeatures(LineInfo[] lineInfos, NewHtmlTokenization data) {
+        List <LayoutUtils.Entry<Integer>> verticalDistance = new ArrayList<LayoutUtils.Entry<Integer>>();
+        List <LayoutUtils.Entry<Integer>> widthLine = new ArrayList<LayoutUtils.Entry<Integer>>();
+
         for(int i =0; i<lineInfos.length; i++ )
         {
             List<String> features = new ArrayList<String>();
+            //calculates the vertical distance between lines
+
+            LayoutUtils.adjustVerticalDistance(lineInfos, i, verticalDistance);
+
+            LayoutUtils.adjustLineWidth(lineInfos, i, widthLine);
+
 
         }
+        Collections.sort(verticalDistance);
+        Collections.sort(widthLine);
+
+        System.out.print("sorted vertical distances");
 
     }
 
@@ -100,7 +115,6 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
             for (int j = 0; j < nonSectionWords.length; j++) {
                 if (currentLineText.matches(nonSectionWords[j])) {
-                    //lineInfos[i].presentFeatures.add("containsPostword1");
                     ls.setFeatureValue("startsNonSectionWord", 1.0);
                     break;
                 }
@@ -119,7 +133,6 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 ls.setFeatureValue("endsInDot", 1.0);
             }
 
-            Matcher matcher = ptrnLonelyLetters.matcher(currentLineText);
             if(isUpFlagCount(currentLineText,ptrnLonelyLetters,0.5))
             {
                 ls.setFeatureValue("manyLonelyLetters", 1.0);
