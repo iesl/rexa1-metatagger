@@ -3,21 +3,83 @@ package edu.umass.cs.rexo.ghuang.segmentation.utils;
 import edu.umass.cs.rexo.ghuang.segmentation.LineInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by klimzaporojets on 8/5/14.
- *
+ * Some utility functions related to layout.
  */
 public class LayoutUtils {
 
 
-    private static Map<Integer,List<ColumnData>> getColumns(List<Entry<ColumnData>> allSpans, List<Entry<ColumnData>> allLeftMargins,
-                                                            PageData pageData, LineInfo[] lineInfos)
+
+    public static List<ColumnData> getColumns(List<Entry<ColumnData>> allSpans, PageData pageData)
     {
-        return null;
+        List<ColumnData> columnList = new ArrayList<ColumnData>();
+
+        //by default, considers that the first column, is the one that appears first in the list of allSpans grouped by qty
+        ColumnData firstColumn = allSpans.get(0).getKey();
+        columnList.add(firstColumn);
+
+//        int columnsSoFar = 1;
+        int widthSoFar = firstColumn.getWidth();
+
+        if(firstColumn.getWidth()>((double)pageData.getWidth())/2.0)
+        {
+            return columnList;
+        }
+
+        for(Entry<ColumnData> colData:allSpans)
+        {
+            if(!isOverlapping(columnList,colData.getKey()) && isWidthSimilar(columnList,colData.getKey(),0.95))
+            {
+                //add column
+                columnList.add(colData.getKey());
+                //update the accumulated width and counter of cols
+                widthSoFar =+ colData.getKey().getWidth();
+//                columnsSoFar++;
+                //check if continue the loop by checking the accumulatedWidth
+                if(widthSoFar + firstColumn.getWidth() > pageData.getWidth())
+                {
+                    break;
+                }
+            }
+        }
+        return columnList;
     }
+
+    private static boolean isOverlapping(List<ColumnData> columns, ColumnData columnToCheck)
+    {
+        for(ColumnData col: columns)
+        {
+            if((col.getLeftX()>=columnToCheck.getLeftX() && col.getLeftX()<=columnToCheck.getRightX()) ||
+                    (col.getRightX()>=columnToCheck.getLeftX() && col.getRightX()<=columnToCheck.getRightX()) ||
+                    (col.getLeftX()<=columnToCheck.getLeftX() && col.getRightX()>=columnToCheck.getRightX()) ||
+                    (col.getLeftX()>=columnToCheck.getLeftX() && col.getRightX()<=columnToCheck.getRightX()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isWidthSimilar(List<ColumnData> columns, ColumnData columnToCheck, double errorRatio)
+    {
+        for(ColumnData col: columns)
+        {
+            if(columnToCheck.getWidth() < ((double)col.getWidth())*errorRatio ||
+                    columnToCheck.getWidth() > ((double)col.getWidth())*(2.0 - errorRatio))
+            {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+
 
 
     public static void adjustPageData(LineInfo[] lineInfos, int i, Map <Integer, PageData> pagesData)
@@ -30,7 +92,7 @@ public class LayoutUtils {
             pageData.setTopY(lineInfos[i].ury);
             pageData.setLeftX(lineInfos[i].llx);
             pageData.setRightX(lineInfos[i].urx);
-
+            pageData.setPageNumber(lineInfos[i].page);
             pagesData.put(lineInfos[i].page,pageData);
         }
         else
@@ -291,6 +353,16 @@ public class LayoutUtils {
 
         private int leftX;
         private int rightX;
+
+        private int pageNumber;
+
+        public int getPageNumber() {
+            return pageNumber;
+        }
+
+        public void setPageNumber(int pageNumber) {
+            this.pageNumber = pageNumber;
+        }
 
         public int getTopY() {
             return topY;

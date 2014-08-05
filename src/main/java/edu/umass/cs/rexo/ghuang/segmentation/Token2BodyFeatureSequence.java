@@ -60,6 +60,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
         Map <Integer, LayoutUtils.PageData> pagesData = new HashMap<Integer,LayoutUtils.PageData>();
 
+        Map <Integer, List<ColumnData>> columns = new HashMap<Integer,List<ColumnData>>();
 
 
         for(int i =0; i<lineInfos.length; i++ )
@@ -86,7 +87,31 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             Collections.sort(widthLinePerPage.get(page));
             Collections.sort(columnsData.get(page));
             Collections.sort(leftMarginsData.get(page));
+
+            List<ColumnData> currentPageCols = LayoutUtils.getColumns(columnsData.get(page),pagesData.get(page));
+            //todo:sort currentPageCols, so the first columns are the leftmost ones
+
+            Collections.sort(currentPageCols, new Comparator<ColumnData>() {
+                @Override
+                public int compare(ColumnData o1, ColumnData o2) {
+                    if(o1.getLeftX()>o2.getLeftX())
+                    {
+                        return 1;
+                    }
+                    else if (o1.getLeftX()<o2.getLeftX())
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                }
+            });
+            columns.put(page,currentPageCols);
         }
+        
 
         System.out.print("sorted vertical distances");
 
