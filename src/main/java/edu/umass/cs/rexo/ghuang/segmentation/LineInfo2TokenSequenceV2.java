@@ -11,6 +11,7 @@ import java.util.*;
 import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils;
 import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils.Entry;
 import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils.ColumnData;
+import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils.PageData;
 
 /**
  * Some added features to the original LineInfo2TokenSequence to help identify the references
@@ -401,24 +402,26 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
 
 
-            PageData pageData = pagesData.get(lineInfos[i].page);
-            if(pageData==null)
-            {
-                pageData = new PageData();
-                pageData.setBottomY(lineInfos[i].lly);
-                pageData.setTopY(lineInfos[i].ury);
-                pageData.setLeftX(lineInfos[i].llx);
-                pageData.setRightX(lineInfos[i].urx);
+            LayoutUtils.adjustPageData(lineInfos, i, pagesData);
 
-                pagesData.put(lineInfos[i].page,pageData);
-            }
-            else
-            {
-                pageData.setBottomY(pageData.getBottomY()>lineInfos[i].lly?lineInfos[i].lly:pageData.getBottomY());
-                pageData.setTopY(pageData.getTopY()<lineInfos[i].ury?lineInfos[i].ury:pageData.getTopY());
-                pageData.setLeftX(pageData.getLeftX()>lineInfos[i].llx?lineInfos[i].llx:pageData.getLeftX());
-                pageData.setRightX(pageData.getRightX()<lineInfos[i].urx?lineInfos[i].urx:pageData.getRightX());
-            }
+//            PageData pageData = pagesData.get(lineInfos[i].page);
+//            if(pageData==null)
+//            {
+//                pageData = new PageData();
+//                pageData.setBottomY(lineInfos[i].lly);
+//                pageData.setTopY(lineInfos[i].ury);
+//                pageData.setLeftX(lineInfos[i].llx);
+//                pageData.setRightX(lineInfos[i].urx);
+//
+//                pagesData.put(lineInfos[i].page,pageData);
+//            }
+//            else
+//            {
+//                pageData.setBottomY(pageData.getBottomY()>lineInfos[i].lly?lineInfos[i].lly:pageData.getBottomY());
+//                pageData.setTopY(pageData.getTopY()<lineInfos[i].ury?lineInfos[i].ury:pageData.getTopY());
+//                pageData.setLeftX(pageData.getLeftX()>lineInfos[i].llx?lineInfos[i].llx:pageData.getLeftX());
+//                pageData.setRightX(pageData.getRightX()<lineInfos[i].urx?lineInfos[i].urx:pageData.getRightX());
+//            }
 
             LayoutUtils.adjustColumnData(lineInfos,i,columnsData,false);
 //            ColumnData columnData = new ColumnData();
@@ -1266,64 +1269,52 @@ class Ignore
 //    }
 //}
 
-class PageData
-{
-
-    private int topY;
-    private int bottomY;
-
-    private int leftX;
-    private int rightX;
-
-    public int getTopY() {
-        return topY;
-    }
-
-    public void setTopY(int topY) {
-        this.topY = topY;
-    }
-
-    public int getBottomY() {
-        return bottomY;
-    }
-
-    public void setBottomY(int bottomY) {
-        this.bottomY = bottomY;
-    }
-
-    public int getLeftX() {
-        return leftX;
-    }
-
-    public void setLeftX(int leftX) {
-        this.leftX = leftX;
-    }
-
-    public int getRightX() {
-        return rightX;
-    }
-
-    public void setRightX(int rightX) {
-        this.rightX = rightX;
-    }
-
-    public int getWidth() {
-        return (rightX - leftX);
-    }
-    public int getHeight(){
-        return (topY - bottomY);
-    }
-
-//    @Override
-//    public boolean equals(Object obj )
-//    {
-//        return ((ColumnData)obj).rightX == this.rightX &&
-//                ((ColumnData)obj).leftX == this.leftX;
+//class PageData
+//{
+//
+//    private int topY;
+//    private int bottomY;
+//
+//    private int leftX;
+//    private int rightX;
+//
+//    public int getTopY() {
+//        return topY;
 //    }
-
-//    @Override
-//    public int hashCode()
-//    {
-//        return Integer.valueOf(leftX).hashCode();
+//
+//    public void setTopY(int topY) {
+//        this.topY = topY;
 //    }
-}
+//
+//    public int getBottomY() {
+//        return bottomY;
+//    }
+//
+//    public void setBottomY(int bottomY) {
+//        this.bottomY = bottomY;
+//    }
+//
+//    public int getLeftX() {
+//        return leftX;
+//    }
+//
+//    public void setLeftX(int leftX) {
+//        this.leftX = leftX;
+//    }
+//
+//    public int getRightX() {
+//        return rightX;
+//    }
+//
+//    public void setRightX(int rightX) {
+//        this.rightX = rightX;
+//    }
+//
+//    public int getWidth() {
+//        return (rightX - leftX);
+//    }
+//    public int getHeight(){
+//        return (topY - bottomY);
+//    }
+//
+//}

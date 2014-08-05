@@ -58,6 +58,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
         Map <Integer, List<LayoutUtils.Entry<ColumnData>>> leftMarginsData = new HashMap<Integer,List<LayoutUtils.Entry<ColumnData>>>();
 
+        Map <Integer, LayoutUtils.PageData> pagesData = new HashMap<Integer,LayoutUtils.PageData>();
 
 
 
@@ -75,6 +76,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true);
 
             LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false);
+
+            LayoutUtils.adjustPageData(lineInfos, i, pagesData);
         }
         Collections.sort(verticalDistance);
         Collections.sort(widthLine);

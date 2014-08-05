@@ -13,6 +13,37 @@ import java.util.Map;
 public class LayoutUtils {
 
 
+    private static Map<Integer,List<ColumnData>> getColumns(List<Entry<ColumnData>> allSpans, List<Entry<ColumnData>> allLeftMargins,
+                                                            PageData pageData, LineInfo[] lineInfos)
+    {
+        return null;
+    }
+
+
+    public static void adjustPageData(LineInfo[] lineInfos, int i, Map <Integer, PageData> pagesData)
+    {
+        PageData pageData = pagesData.get(lineInfos[i].page);
+        if(pageData==null)
+        {
+            pageData = new PageData();
+            pageData.setBottomY(lineInfos[i].lly);
+            pageData.setTopY(lineInfos[i].ury);
+            pageData.setLeftX(lineInfos[i].llx);
+            pageData.setRightX(lineInfos[i].urx);
+
+            pagesData.put(lineInfos[i].page,pageData);
+        }
+        else
+        {
+            pageData.setBottomY(pageData.getBottomY()>lineInfos[i].lly?lineInfos[i].lly:pageData.getBottomY());
+            pageData.setTopY(pageData.getTopY()<lineInfos[i].ury?lineInfos[i].ury:pageData.getTopY());
+            pageData.setLeftX(pageData.getLeftX()>lineInfos[i].llx?lineInfos[i].llx:pageData.getLeftX());
+            pageData.setRightX(pageData.getRightX()<lineInfos[i].urx?lineInfos[i].urx:pageData.getRightX());
+        }
+
+    }
+
+
     public static void adjustLineWidth(LineInfo[] lineInfos, int i, List <Entry<Integer>> widthLine)
     {
         int width = lineInfos[i].urx - lineInfos[i].llx;
@@ -251,4 +282,54 @@ public class LayoutUtils {
         }
     }
 
+
+    public static class PageData
+    {
+
+        private int topY;
+        private int bottomY;
+
+        private int leftX;
+        private int rightX;
+
+        public int getTopY() {
+            return topY;
+        }
+
+        public void setTopY(int topY) {
+            this.topY = topY;
+        }
+
+        public int getBottomY() {
+            return bottomY;
+        }
+
+        public void setBottomY(int bottomY) {
+            this.bottomY = bottomY;
+        }
+
+        public int getLeftX() {
+            return leftX;
+        }
+
+        public void setLeftX(int leftX) {
+            this.leftX = leftX;
+        }
+
+        public int getRightX() {
+            return rightX;
+        }
+
+        public void setRightX(int rightX) {
+            this.rightX = rightX;
+        }
+
+        public int getWidth() {
+            return (rightX - leftX);
+        }
+        public int getHeight(){
+            return (topY - bottomY);
+        }
+
+    }
 }
