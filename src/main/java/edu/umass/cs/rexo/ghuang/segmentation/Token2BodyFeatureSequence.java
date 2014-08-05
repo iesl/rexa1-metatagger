@@ -62,12 +62,9 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
         Map <Integer, List<ColumnData>> columns = new HashMap<Integer,List<ColumnData>>();
 
-
+        //first scan to calculate general statistics of the paper (such as line width, or vertical distances between lines)
         for(int i =0; i<lineInfos.length; i++ )
         {
-            List<String> features = new ArrayList<String>();
-            //calculates the vertical distance between lines
-
             LayoutUtils.adjustVerticalDistance(lineInfos, i, verticalDistance);
 
             LayoutUtils.adjustLineWidth(lineInfos, i, widthLine);
@@ -89,7 +86,6 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             Collections.sort(leftMarginsData.get(page));
 
             List<ColumnData> currentPageCols = LayoutUtils.getColumns(columnsData.get(page),pagesData.get(page));
-            //todo:sort currentPageCols, so the first columns are the leftmost ones
 
             Collections.sort(currentPageCols, new Comparator<ColumnData>() {
                 @Override
@@ -111,7 +107,20 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             });
             columns.put(page,currentPageCols);
         }
-        
+
+        //second scan to calculate more detailed features based on the statistics of the first scan
+        for(int i =0; i<lineInfos.length; i++ )
+        {
+            ColumnData currentLineColumn  = LayoutUtils.getCurrentLineColumn(lineInfos,i,columns.get(lineInfos[i].page)) ;
+            CompositeSpan lineSpan = (CompositeSpan)data.getLineSpans().get(i);
+            if(currentLineColumn == null)
+            {
+                //add "noColumnAssociated" feature
+                lineSpan.setFeatureValue("noColumnAssociated", 1.0);
+            }
+        }
+
+
 
         System.out.print("sorted vertical distances");
 

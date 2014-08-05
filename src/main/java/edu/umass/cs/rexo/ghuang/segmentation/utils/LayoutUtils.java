@@ -15,6 +15,34 @@ public class LayoutUtils {
 
 
 
+    public static ColumnData getCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns)
+    {
+        LineInfo lineInfo = lineInfos[i];
+
+        for(ColumnData col:columns)
+        {
+            boolean doesBelong = doesBelongToColumn(col, lineInfo.llx, lineInfo.urx, 0.03);
+            if(doesBelong)
+            {
+                return col;
+            }
+        }
+        return null;
+    }
+
+    private static boolean doesBelongToColumn(ColumnData col, int leftX, int rightX, double errorRatio)
+    {
+
+        int relaxedColLeft = col.getLeftX() - (int)(((double)col.getWidth())*(errorRatio));
+        int relaxedColRight = col.getRightX() - (int)(((double)col.getWidth())*(errorRatio));
+
+        if(leftX > relaxedColLeft && rightX < relaxedColRight)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public static List<ColumnData> getColumns(List<Entry<ColumnData>> allSpans, PageData pageData)
     {
         List<ColumnData> columnList = new ArrayList<ColumnData>();
@@ -33,7 +61,7 @@ public class LayoutUtils {
 
         for(Entry<ColumnData> colData:allSpans)
         {
-            if(!isOverlapping(columnList,colData.getKey()) && isWidthSimilar(columnList,colData.getKey(),0.95))
+            if(!isOverlapping(columnList,colData.getKey()) && isWidthSimilar(columnList,colData.getKey(),0.05))
             {
                 //add column
                 columnList.add(colData.getKey());
@@ -69,8 +97,8 @@ public class LayoutUtils {
     {
         for(ColumnData col: columns)
         {
-            if(columnToCheck.getWidth() < ((double)col.getWidth())*errorRatio ||
-                    columnToCheck.getWidth() > ((double)col.getWidth())*(2.0 - errorRatio))
+            if(columnToCheck.getWidth() < ((double)col.getWidth())*(1.0-errorRatio) ||
+                    columnToCheck.getWidth() > ((double)col.getWidth())*(1.0 + errorRatio))
             {
                 return false;
             }
