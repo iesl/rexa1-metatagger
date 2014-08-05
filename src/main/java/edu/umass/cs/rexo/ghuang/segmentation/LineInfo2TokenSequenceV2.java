@@ -10,6 +10,7 @@ import java.util.*;
 
 import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils;
 import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils.Entry;
+import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils.ColumnData;
 
 /**
  * Some added features to the original LineInfo2TokenSequence to help identify the references
@@ -210,13 +211,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             if(sortW.get(idealWidth)>minColumnWidth && sortW.get(idealWidth)<=maxColumnWidth)
             {
 
-//                    if(!((entr.getKey().getLeftX() - sortW.get(0) < pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(0)*2 + 20 <pageData.getRightX() ) ||
-//                         (entr.getKey().getLeftX() - sortW.get(0) - 20 > pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(0)*2 + 20 > pageData.getRightX())
-//                    ))
-//                    {
-//                        //doesnt make sense to be a column because somewhere in the middle
-//                        continue;
-//                    }
                 if(numberOfColumns>1) {
                     if ((entr.getKey().getLeftX() - sortW.get(idealWidth) < pageData.getLeftX() && entr.getKey().getLeftX() + sortW.get(idealWidth) * 2 - 10 < pageData.getRightX()
                     )) {
@@ -426,39 +420,40 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 pageData.setRightX(pageData.getRightX()<lineInfos[i].urx?lineInfos[i].urx:pageData.getRightX());
             }
 
-            ColumnData columnData = new ColumnData();
-            columnData.setLeftX(lineInfos[i].llx);
-            columnData.setRightX(lineInfos[i].urx);
-            columnData.setTopY(lineInfos[i].ury);
-            columnData.setBottomY(lineInfos[i].lly);
-
-            if(columnsData.get(lineInfos[i].page)==null)
-            {
-                List <Entry<ColumnData>> colData = new ArrayList<Entry<ColumnData>>();
-                colData.add(new Entry<ColumnData>(columnData, 1));
-                columnsData.put(lineInfos[i].page,colData);
-            }
-            else
-            {
-                Entry<ColumnData> currEntry = new Entry<ColumnData>(columnData,1);
-                List entriesInThePage = columnsData.get(lineInfos[i].page);
-                int iOe = entriesInThePage.indexOf(currEntry);
-                if(iOe>-1)
-                {
-                    Entry<ColumnData> existentEntry = columnsData.get(lineInfos[i].page).get(iOe);
-                    existentEntry.setQty(existentEntry.getQty()+1);
-                    if(lineInfos[i].ury>existentEntry.getKey().getTopY()) {
-                        existentEntry.getKey().setTopY(lineInfos[i].ury);
-                    }
-                    if(lineInfos[i].lly<existentEntry.getKey().getBottomY()) {
-                        existentEntry.getKey().setBottomY(lineInfos[i].lly);
-                    }
-                }
-                else
-                {
-                    columnsData.get(lineInfos[i].page).add(currEntry);
-                }
-            }
+            LayoutUtils.adjustColumnData(lineInfos,i,columnsData,false);
+//            ColumnData columnData = new ColumnData();
+//            columnData.setLeftX(lineInfos[i].llx);
+//            columnData.setRightX(lineInfos[i].urx);
+//            columnData.setTopY(lineInfos[i].ury);
+//            columnData.setBottomY(lineInfos[i].lly);
+//
+//            if(columnsData.get(lineInfos[i].page)==null)
+//            {
+//                List <Entry<ColumnData>> colData = new ArrayList<Entry<ColumnData>>();
+//                colData.add(new Entry<ColumnData>(columnData, 1));
+//                columnsData.put(lineInfos[i].page,colData);
+//            }
+//            else
+//            {
+//                Entry<ColumnData> currEntry = new Entry<ColumnData>(columnData,1);
+//                List entriesInThePage = columnsData.get(lineInfos[i].page);
+//                int iOe = entriesInThePage.indexOf(currEntry);
+//                if(iOe>-1)
+//                {
+//                    Entry<ColumnData> existentEntry = columnsData.get(lineInfos[i].page).get(iOe);
+//                    existentEntry.setQty(existentEntry.getQty()+1);
+//                    if(lineInfos[i].ury>existentEntry.getKey().getTopY()) {
+//                        existentEntry.getKey().setTopY(lineInfos[i].ury);
+//                    }
+//                    if(lineInfos[i].lly<existentEntry.getKey().getBottomY()) {
+//                        existentEntry.getKey().setBottomY(lineInfos[i].lly);
+//                    }
+//                }
+//                else
+//                {
+//                    columnsData.get(lineInfos[i].page).add(currEntry);
+//                }
+//            }
 
             LayoutUtils.adjustVerticalDistance(lineInfos,i,verticalDistance);
 //            if (i+1 < lineInfos.length && lineInfos[i].page == lineInfos[i + 1].page && lineInfos[i].lly > lineInfos[i+1].lly) {
@@ -1183,93 +1178,93 @@ class Ignore
 
 //class Column
 
-class ColumnData
-{
-
-    private int topY=-1;
-    private int bottomY=-1;
-
-    private int leftX=-1;
-    private int rightX=-1;
-    boolean equalsBothMargins = false;
-
-    public ColumnData()
-    {
-
-    }
-
-
-    public ColumnData(boolean equalsBothMargins)
-    {
-
-    }
-    public boolean isInitialized()
-    {
-        return !(topY==-1 && bottomY==-1 && leftX == -1 && rightX == -1);
-    }
-    public boolean isEqualsBothMargins() {
-        return equalsBothMargins;
-    }
-
-    public void setEqualsBothMargins(boolean equalsBothMargins) {
-        this.equalsBothMargins = equalsBothMargins;
-    }
-    public int getTopY() {
-        return topY;
-    }
-
-    public void setTopY(int topY) {
-        this.topY = topY;
-    }
-
-    public int getBottomY() {
-        return bottomY;
-    }
-
-    public void setBottomY(int bottomY) {
-        this.bottomY = bottomY;
-    }
-
-    public int getLeftX() {
-        return leftX;
-    }
-
-    public void setLeftX(int leftX) {
-        this.leftX = leftX;
-    }
-
-    public int getRightX() {
-        return rightX;
-    }
-
-    public void setRightX(int rightX) {
-        this.rightX = rightX;
-    }
-
-    public int getWidth() {
-        return (rightX - leftX);
-    }
-
-    @Override
-    public boolean equals(Object obj )
-    {
-        if(!equalsBothMargins) {
-            return //((ColumnData)obj).rightX == this.rightX &&
-                    ((ColumnData) obj).leftX == this.leftX;
-        }
-        else
-        {
-            return ((ColumnData)obj).rightX == this.rightX &&
-                    ((ColumnData) obj).leftX == this.leftX;
-        }
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Integer.valueOf(leftX).hashCode();
-    }
-}
+//class ColumnData
+//{
+//
+//    private int topY=-1;
+//    private int bottomY=-1;
+//
+//    private int leftX=-1;
+//    private int rightX=-1;
+//    boolean equalsBothMargins = false;
+//
+//    public ColumnData()
+//    {
+//
+//    }
+//
+//
+//    public ColumnData(boolean equalsBothMargins)
+//    {
+//
+//    }
+//    public boolean isInitialized()
+//    {
+//        return !(topY==-1 && bottomY==-1 && leftX == -1 && rightX == -1);
+//    }
+//    public boolean isEqualsBothMargins() {
+//        return equalsBothMargins;
+//    }
+//
+//    public void setEqualsBothMargins(boolean equalsBothMargins) {
+//        this.equalsBothMargins = equalsBothMargins;
+//    }
+//    public int getTopY() {
+//        return topY;
+//    }
+//
+//    public void setTopY(int topY) {
+//        this.topY = topY;
+//    }
+//
+//    public int getBottomY() {
+//        return bottomY;
+//    }
+//
+//    public void setBottomY(int bottomY) {
+//        this.bottomY = bottomY;
+//    }
+//
+//    public int getLeftX() {
+//        return leftX;
+//    }
+//
+//    public void setLeftX(int leftX) {
+//        this.leftX = leftX;
+//    }
+//
+//    public int getRightX() {
+//        return rightX;
+//    }
+//
+//    public void setRightX(int rightX) {
+//        this.rightX = rightX;
+//    }
+//
+//    public int getWidth() {
+//        return (rightX - leftX);
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj )
+//    {
+//        if(!equalsBothMargins) {
+//            return //((ColumnData)obj).rightX == this.rightX &&
+//                    ((ColumnData) obj).leftX == this.leftX;
+//        }
+//        else
+//        {
+//            return ((ColumnData)obj).rightX == this.rightX &&
+//                    ((ColumnData) obj).leftX == this.leftX;
+//        }
+//    }
+//
+//    @Override
+//    public int hashCode()
+//    {
+//        return Integer.valueOf(leftX).hashCode();
+//    }
+//}
 
 class PageData
 {

@@ -6,6 +6,7 @@ import edu.umass.cs.mallet.base.pipe.Pipe;
 import edu.umass.cs.mallet.base.types.Instance;
 import edu.umass.cs.mallet.base.types.Token;
 import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils;
+import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils.ColumnData;
 import org.rexo.extraction.NewHtmlTokenization;
 import org.rexo.span.CompositeSpan;
 
@@ -34,23 +35,6 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         NewHtmlTokenization2LineInfo nhtml2LineInfo = new NewHtmlTokenization2LineInfo();
         Instance onlyLines =  nhtml2LineInfo.pipe(carrier);
         computeFeatures((LineInfo [])onlyLines.getData(),data);
-        int qty = 0;
-//        for(int i = 0; i< lineSpans.size(); i++)
-//        {
-//            int min = 0;
-//            CompositeSpan ls = lineSpans.get(i);
-//
-//            for(Span sp:(List<Span>)ls.getSpans())
-//            {
-//                System.out.println(qty);
-//                System.out.println(sp.getText() + " vs. " + data.getToken(qty).getText());
-//                if(!sp.getText().equals(data.getToken(qty).getText()))
-//                {
-//                    System.out.println("distinct");
-//                }
-//                qty++;
-//            }
-//        }
 
         return carrier;
     }
@@ -70,6 +54,10 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         //to have a per-page width stats
         Map<Integer, List<LayoutUtils.Entry<Integer>>> widthLinePerPage = new HashMap <Integer, List<LayoutUtils.Entry<Integer>>>();
 
+        Map <Integer, List<LayoutUtils.Entry<ColumnData>>> columnsData = new HashMap<Integer,List<LayoutUtils.Entry<ColumnData>>>();
+
+        Map <Integer, List<LayoutUtils.Entry<ColumnData>>> leftMarginsData = new HashMap<Integer,List<LayoutUtils.Entry<ColumnData>>>();
+
 
 
 
@@ -84,12 +72,17 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
             LayoutUtils.adjustLineWidthPerPage(lineInfos, i, widthLinePerPage);
 
+            LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true);
+
+            LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false);
         }
         Collections.sort(verticalDistance);
         Collections.sort(widthLine);
         for(Integer page: widthLinePerPage.keySet())
         {
             Collections.sort(widthLinePerPage.get(page));
+            Collections.sort(columnsData.get(page));
+            Collections.sort(leftMarginsData.get(page));
         }
 
         System.out.print("sorted vertical distances");
