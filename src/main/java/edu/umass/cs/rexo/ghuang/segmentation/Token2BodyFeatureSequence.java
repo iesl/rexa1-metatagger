@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by klimzaporojets on 8/4/14.
- * Adds features useful to identify parts of the body of a particular paper.
+ * Adds useful features to identify parts of the body of a particular paper.
  */
 public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
@@ -71,7 +71,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
             LayoutUtils.adjustLineWidthPerPage(lineInfos, i, widthLinePerPage);
 
-            LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true ,2);
+            LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true, 3);
 
             LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false,0);
 
@@ -85,7 +85,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             Collections.sort(columnsData.get(page));
             Collections.sort(leftMarginsData.get(page));
 
-            List<ColumnData> currentPageCols = LayoutUtils.getColumns(columnsData.get(page),pagesData.get(page));
+//            List<ColumnData> currentPageCols = LayoutUtils.getColumns(columnsData.get(page),pagesData.get(page));
+            List<ColumnData> currentPageCols = LayoutUtils.getColumnsV2(columnsData.get(page),pagesData.get(page));
 
             Collections.sort(currentPageCols, new Comparator<ColumnData>() {
                 @Override
