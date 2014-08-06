@@ -201,19 +201,60 @@ public class LayoutUtils {
 
 
 
-    public static void adjustColumnData(LineInfo[]lineInfos, int i, Map <Integer, List<Entry<ColumnData>>> columnsData, boolean equalsBothMargins)
+    private static ColumnData getColumnData(boolean equalsBothMargins, int acceptableMarginError,
+                                            LineInfo lineInfo)
     {
-        ColumnData columnData = new ColumnData(equalsBothMargins);
-        columnData.setLeftX(lineInfos[i].llx);
-        columnData.setRightX(lineInfos[i].urx);
-        columnData.setTopY(lineInfos[i].ury);
-        columnData.setBottomY(lineInfos[i].lly);
+        ColumnData columnData = new ColumnData(equalsBothMargins, acceptableMarginError);
+        columnData.setLeftX(lineInfo.llx);
+        columnData.setRightX(lineInfo.urx);
+        columnData.setTopY(lineInfo.ury);
+        columnData.setBottomY(lineInfo.lly);
+        return columnData;
+    }
+    public static void checkCounterparts(boolean equalsBothMargins, int acceptableMarginError,
+                                         ColumnData columnData, LineInfo[] lineInfos, int i)
+    {
+        ColumnData columnData1 = null;
+        if(i>0)
+        {
+            columnData1 = getColumnData(equalsBothMargins, acceptableMarginError, lineInfos[i-1]);
+            if(columnData.equals(columnData1))
+            {
+                columnData.incrementContiguous();
+                return;
+            }
+        }
+        if(i<lineInfos.length)
+        {
+            columnData1 = getColumnData(equalsBothMargins, acceptableMarginError, lineInfos[i+1]);
+            if(columnData.equals(columnData1))
+            {
+                columnData.incrementContiguous();
+                return;
+            }
+        }
+    }
+    public static void adjustColumnData(LineInfo[]lineInfos, int i, Map <Integer, List<Entry<ColumnData>>> columnsData, boolean equalsBothMargins,
+                                        int acceptableMarginError)
+    {
+
+//        ColumnData columnData = new ColumnData(equalsBothMargins, acceptableMarginError);
+//        columnData.setLeftX(lineInfos[i].llx);
+//        columnData.setRightX(lineInfos[i].urx);
+//        columnData.setTopY(lineInfos[i].ury);
+//        columnData.setBottomY(lineInfos[i].lly);
+
+        ColumnData columnData = getColumnData(equalsBothMargins, acceptableMarginError, lineInfos[i]);
 
         if(columnsData.get(lineInfos[i].page)==null)
         {
             List <Entry<ColumnData>> colData = new ArrayList<Entry<ColumnData>>();
             colData.add(new Entry<ColumnData>(columnData, 1));
+
+            checkCounterparts(equalsBothMargins, acceptableMarginError, columnData, lineInfos, i);
+
             columnsData.put(lineInfos[i].page,colData);
+
         }
         else
         {
@@ -230,9 +271,11 @@ public class LayoutUtils {
                 if(lineInfos[i].lly<existentEntry.getKey().getBottomY()) {
                     existentEntry.getKey().setBottomY(lineInfos[i].lly);
                 }
+                checkCounterparts(equalsBothMargins, acceptableMarginError, existentEntry.getKey(), lineInfos, i);
             }
             else
             {
+                checkCounterparts(equalsBothMargins, acceptableMarginError, currEntry.getKey(), lineInfos, i);
                 columnsData.get(lineInfos[i].page).add(currEntry);
             }
         }
@@ -309,16 +352,38 @@ public class LayoutUtils {
         private int rightX=-1;
         boolean equalsBothMargins = false;
 
+        //accepted margin of error (in pixels) when performing equals
+        int errorMargin = 0;
+
+        //only used when ColumnData is used as a key to group , to indicate the number of
+        //cases when the same-width column lines have contiguous counterpart.
+        //It is used to detect lines such as those tabbed to the right that have the same width and leftX and leftY pos
+        //but are still are not representative to be considered as a different column
+        int contiguousCounterparts = 0;
+
+        public void incrementContiguous()
+        {
+            contiguousCounterparts++;
+        }
+
+        public int getContiguousCounterparts()
+        {
+            return contiguousCounterparts;
+        }
+
         public ColumnData()
         {
 
         }
 
 
-        public ColumnData(boolean equalsBothMargins)
+        public ColumnData(boolean equalsBothMargins, int errorMargin)
         {
-
+            this.equalsBothMargins = equalsBothMargins;
+            this.errorMargin = errorMargin;
         }
+
+
         public boolean isInitialized()
         {
             return !(topY==-1 && bottomY==-1 && leftX == -1 && rightX == -1);
@@ -375,8 +440,16 @@ public class LayoutUtils {
             }
             else
             {
-                return ((ColumnData)obj).rightX == this.rightX &&
-                        ((ColumnData) obj).leftX == this.leftX;
+                return (((ColumnData)obj).rightX == this.rightX &&
+                        ((ColumnData) obj).leftX == this.leftX) ||
+                        (((ColumnData)obj).rightX == this.rightX &&
+                                (((ColumnData) obj).leftX >= this.leftX - errorMargin &&
+                                        ((ColumnData) obj).leftX <= this.leftX + errorMargin)) ||
+                        ((((ColumnData) obj).rightX >= this.rightX - errorMargin &&
+                                ((ColumnData) obj).rightX <= this.rightX + errorMargin) &&
+                                ((ColumnData) obj).leftX == this.leftX)
+
+                        ;
             }
         }
 

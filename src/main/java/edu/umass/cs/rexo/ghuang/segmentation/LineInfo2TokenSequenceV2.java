@@ -423,7 +423,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 //                pageData.setRightX(pageData.getRightX()<lineInfos[i].urx?lineInfos[i].urx:pageData.getRightX());
 //            }
 
-            LayoutUtils.adjustColumnData(lineInfos,i,columnsData,false);
+            LayoutUtils.adjustColumnData(lineInfos,i,columnsData,false,0);
 //            ColumnData columnData = new ColumnData();
 //            columnData.setLeftX(lineInfos[i].llx);
 //            columnData.setRightX(lineInfos[i].urx);

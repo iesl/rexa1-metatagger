@@ -37,7 +37,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         computeFeatures((LineInfo [])onlyLines.getData(),data);
 
         return carrier;
-    }
+}
 
 
     private void computeFeatures(LineInfo[] lineInfos, NewHtmlTokenization data)
@@ -71,9 +71,9 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
             LayoutUtils.adjustLineWidthPerPage(lineInfos, i, widthLinePerPage);
 
-            LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true);
+            LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true ,2);
 
-            LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false);
+            LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false,0);
 
             LayoutUtils.adjustPageData(lineInfos, i, pagesData);
         }
