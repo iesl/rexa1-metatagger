@@ -93,6 +93,106 @@ public class LayoutUtils {
         return columnList;
     }
 
+
+    //this version takes into account that the width of the column can vary on a particular page of a paper
+    public static List<ColumnData> getColumnsV2(List<Entry<ColumnData>> allSpans, PageData pageData)
+    {
+        List<ColumnData> columnList = new ArrayList<ColumnData>();
+
+        //by default, considers that the first column, is the one that appears first in the list of allSpans grouped by qty
+        ColumnData firstColumn = allSpans.get(0).getKey();
+        columnList.add(firstColumn);
+
+//        int widthSoFar = firstColumn.getWidth();
+
+        if(firstColumn.getWidth()>((double)pageData.getWidth())/2.0)
+        {
+            return columnList;
+        }
+
+        for(Entry<ColumnData> colData:allSpans)
+        {
+            //to be considered as a new column:
+            //1- ratio of contiguousCounterpart/qty should be large enough (0.8?)
+            //2- If it overlaps, then at leas one border should be equal
+            //3- can not overlap more than 1 column
+            //4- the qty >=3?
+            if(colData.qty >= 3 && contiguousCounterpartRatio(colData,0.8) &&
+                    smartOverlaps(columnList, colData.getKey()))
+            {
+                //add column
+                columnList.add(colData.getKey());
+                //update the accumulated width and counter of cols
+//                widthSoFar =+ colData.getKey().getWidth();
+//                //check if continue the loop by checking the accumulatedWidth
+//                if(widthSoFar + firstColumn.getWidth() > pageData.getWidth())
+//                {
+//                    break;
+//                }
+            }
+            if(colData.qty<3)
+            {
+                break;
+            }
+        }
+        return columnList;
+    }
+
+    private static boolean isEqualMargin(int margin1, int margin2, int acceptedErr)
+    {
+        return (margin1 >= margin2-acceptedErr && margin1 <= margin2+acceptedErr);
+    }
+
+    private static boolean smartOverlaps(List<ColumnData> columns, ColumnData columnToCheck)
+    {
+        int numberOverlapping=0;
+        int isSmart= -1;
+        for(ColumnData col: columns)
+        {
+            if((col.getLeftX()>=columnToCheck.getLeftX() && col.getLeftX()<=columnToCheck.getRightX()) ||
+                    (col.getRightX()>=columnToCheck.getLeftX() && col.getRightX()<=columnToCheck.getRightX()) ||
+                    (col.getLeftX()<=columnToCheck.getLeftX() && col.getRightX()>=columnToCheck.getRightX()) ||
+                    (col.getLeftX()>=columnToCheck.getLeftX() && col.getRightX()<=columnToCheck.getRightX()))
+            {
+                numberOverlapping++;
+                if(isEqualMargin(col.getLeftX(),columnToCheck.getLeftX(),2) &&
+                        //the other margin must be at least 15% away
+                        ((col.getRightX()>columnToCheck.getRightX() &&
+                                        col.getRightX()-columnToCheck.getRightX() >= ((double)col.getWidth()) * 0.15) ||
+                                (col.getRightX()<columnToCheck.getRightX() &&
+                                        columnToCheck.getRightX()-col.getRightX() >= ((double)columnToCheck.getWidth()) * 0.15))
+                        )
+                {
+                    isSmart = isSmart==-1?1:isSmart;
+                }
+                else if(isEqualMargin(col.getRightX(),columnToCheck.getRightX(),2) &&
+                        //the other margin must be at least 15% away
+                        ((col.getLeftX()>columnToCheck.getLeftX() &&
+                                col.getLeftX()-columnToCheck.getLeftX() >= ((double)columnToCheck.getWidth()) * 0.15) ||
+                                (col.getLeftX()<columnToCheck.getLeftX() &&
+                                        columnToCheck.getLeftX()-col.getLeftX() >= ((double)col.getWidth()) * 0.15))
+                        )
+                {
+                    isSmart = isSmart==-1?1:isSmart;
+                }
+                else
+                {
+                    isSmart = 0;
+                }
+            }
+
+        }
+        if(numberOverlapping==0 || (numberOverlapping==1 && isSmart==1))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean contiguousCounterpartRatio(Entry<ColumnData> columnData, double ratio)
+    {
+        return ((double)columnData.getKey().getContiguousCounterparts())/((double)columnData.getQty()) >= ratio;
+    }
     private static boolean isOverlapping(List<ColumnData> columns, ColumnData columnToCheck)
     {
         for(ColumnData col: columns)
@@ -224,7 +324,7 @@ public class LayoutUtils {
                 return;
             }
         }
-        if(i<lineInfos.length)
+        if(i<lineInfos.length-1)
         {
             columnData1 = getColumnData(equalsBothMargins, acceptableMarginError, lineInfos[i+1]);
             if(columnData.equals(columnData1))
@@ -237,13 +337,6 @@ public class LayoutUtils {
     public static void adjustColumnData(LineInfo[]lineInfos, int i, Map <Integer, List<Entry<ColumnData>>> columnsData, boolean equalsBothMargins,
                                         int acceptableMarginError)
     {
-
-//        ColumnData columnData = new ColumnData(equalsBothMargins, acceptableMarginError);
-//        columnData.setLeftX(lineInfos[i].llx);
-//        columnData.setRightX(lineInfos[i].urx);
-//        columnData.setTopY(lineInfos[i].ury);
-//        columnData.setBottomY(lineInfos[i].lly);
-
         ColumnData columnData = getColumnData(equalsBothMargins, acceptableMarginError, lineInfos[i]);
 
         if(columnsData.get(lineInfos[i].page)==null)
