@@ -248,20 +248,35 @@ public class LayoutUtils {
 
     }
 
-
-    public static void adjustLineWidth(LineInfo[] lineInfos, int i, List <Entry<Integer>> widthLine)
+    public static void adjustLineHeight(LineInfo[] lineInfos, int i, List <Entry<Integer>> lineHeight)
     {
-        int width = lineInfos[i].urx - lineInfos[i].llx;
-        Entry<Integer> currentWidthEntry = new Entry<Integer>(width,1);
-        int iOf = widthLine.indexOf(currentWidthEntry);
+        int height = lineInfos[i].ury - lineInfos[i].lly;
+        Entry<Integer> currentHeightEntry = new Entry<Integer>(height,1);
+        int iOf = lineHeight.indexOf(currentHeightEntry);
         if(iOf>-1)
         {
-            Entry actualData = widthLine.get(iOf);
+            Entry actualData = lineHeight.get(iOf);
             actualData.setQty(actualData.getQty()+1);
         }
         else
         {
-            widthLine.add(currentWidthEntry);
+            lineHeight.add(currentHeightEntry);
+        }
+    }
+
+    public static void adjustLineWidth(LineInfo[] lineInfos, int i, List <Entry<Integer>> lineWidth)
+    {
+        int width = lineInfos[i].urx - lineInfos[i].llx;
+        Entry<Integer> currentWidthEntry = new Entry<Integer>(width,1);
+        int iOf = lineWidth.indexOf(currentWidthEntry);
+        if(iOf>-1)
+        {
+            Entry actualData = lineWidth.get(iOf);
+            actualData.setQty(actualData.getQty()+1);
+        }
+        else
+        {
+            lineWidth.add(currentWidthEntry);
         }
     }
 
@@ -278,6 +293,13 @@ public class LayoutUtils {
         widthLinePerPage.put(lineInfo.page,entry);
     }
 
+    public static int getCurrentVerticalDistance(LineInfo[] lineInfos, int i)
+    {
+        if (i+1 < lineInfos.length && lineInfos[i].page == lineInfos[i + 1].page && lineInfos[i].lly > lineInfos[i+1].lly) {
+            return (lineInfos[i].lly - lineInfos[i + 1].lly);
+        }
+        return -1;
+    }
     public static void adjustVerticalDistance(LineInfo[] lineInfos, int i,  List<Entry<Integer>> verticalDistance)
     {
 

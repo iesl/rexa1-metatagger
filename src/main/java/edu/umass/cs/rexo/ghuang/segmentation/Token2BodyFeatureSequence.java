@@ -48,7 +48,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
     private static void computeLayoutFeatures(LineInfo[] lineInfos, NewHtmlTokenization data) {
         List <LayoutUtils.Entry<Integer>> verticalDistance = new ArrayList<LayoutUtils.Entry<Integer>>();
-        List <LayoutUtils.Entry<Integer>> widthLine = new ArrayList<LayoutUtils.Entry<Integer>>();
+        List <LayoutUtils.Entry<Integer>> lineWidth = new ArrayList<LayoutUtils.Entry<Integer>>();
 
         //it can be the case when the first page has one column and the rest of the pages two for example, this is why it is important
         //to have a per-page width stats
@@ -62,12 +62,16 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
         Map <Integer, List<ColumnData>> columns = new HashMap<Integer,List<ColumnData>>();
 
+        List<LayoutUtils.Entry<Integer>> lineHeight = new ArrayList<LayoutUtils.Entry<Integer>>();
+
         //first scan to calculate general statistics of the paper (such as line width, or vertical distances between lines)
         for(int i =0; i<lineInfos.length; i++ )
         {
+            LayoutUtils.adjustLineHeight(lineInfos, i, lineHeight);
+
             LayoutUtils.adjustVerticalDistance(lineInfos, i, verticalDistance);
 
-            LayoutUtils.adjustLineWidth(lineInfos, i, widthLine);
+            LayoutUtils.adjustLineWidth(lineInfos, i, lineWidth);
 
             LayoutUtils.adjustLineWidthPerPage(lineInfos, i, widthLinePerPage);
 
@@ -78,7 +82,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             LayoutUtils.adjustPageData(lineInfos, i, pagesData);
         }
         Collections.sort(verticalDistance);
-        Collections.sort(widthLine);
+        Collections.sort(lineHeight);
+        Collections.sort(lineWidth);
         for(Integer page: widthLinePerPage.keySet())
         {
             Collections.sort(widthLinePerPage.get(page));
@@ -86,7 +91,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             Collections.sort(leftMarginsData.get(page));
 
 //            List<ColumnData> currentPageCols = LayoutUtils.getColumns(columnsData.get(page),pagesData.get(page));
-            List<ColumnData> currentPageCols = LayoutUtils.getColumnsV2(columnsData.get(page),pagesData.get(page));
+            List<ColumnData> currentPageCols = LayoutUtils.getColumnsV2(columnsData.get(page), pagesData.get(page));
 
             Collections.sort(currentPageCols, new Comparator<ColumnData>() {
                 @Override
@@ -116,10 +121,18 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             Span lineSpan = (Span)data.getLineSpans().get(i);
             if(currentLineColumn == null)
             {
-                //add "noColumnAssociated" feature
                 LayoutUtils.setFeatureValue(lineSpan,"noColumnAssociated",1.0);
-//                lineSpan.setFeatureValue("noColumnAssociated", 1.0);
             }
+
+            //the following are additional features to implement:
+            //- vertical distance outliers
+            Integer mostCommonVertDistance = verticalDistance.get(0).getKey();
+            Integer currentVertDistance = LayoutUtils.getCurrentVerticalDistance(lineInfos, i, ... );
+            if(mostCommonVertDistance)
+
+            //- centered or not
+            //- if the left margin is the same as column, but the right margin is to the left.
+            //-
         }
 
         System.out.print("sorted vertical distances");
