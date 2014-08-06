@@ -36,7 +36,9 @@ public class LayoutSegmentFinder
 		INTRODUCTION_PATTERN = Pattern.compile("^[#iIvVxX\\s\\.\\d]*I(?i:ntroduction)");
 		ABSTRACT_PATTERN = Pattern.compile("^[\\s]*((A(?i:bstract))|((abstract)[\\s]*$))");
 		BIBLIOGRAPHY_PATTERN = Pattern
-				.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited))\\s*$");
+			//	.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited))\\s*$");
+                //just temporary to make it work with 2010Song_...
+            .compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited)|A(?i:cknowledgements))\\s*$");
 	}
 
 
@@ -165,9 +167,9 @@ public class LayoutSegmentFinder
 
 		long[] biblioBoundaries= lineListBoundaries(lineSpans);
 		NewHtmlTokenization biblio = tokenization.getSubspanTokenization((int)biblioBoundaries[0], (int)biblioBoundaries[1]);
-//		CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
+		CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
 //uncomment to use rule-based approach
-        RulesBibliographySegmentor.ReferenceData referenceData = m_rulesBibSegmentor.segmentReferences(biblio, m_crfBibSegmentor.getInputPipe());
+//        RulesBibliographySegmentor.ReferenceData referenceData = m_rulesBibSegmentor.segmentReferences(biblio, m_crfBibSegmentor.getInputPipe());
 
 
 		// Create biblioPrologue element

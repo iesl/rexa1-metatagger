@@ -112,15 +112,14 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         for(int i =0; i<lineInfos.length; i++ )
         {
             ColumnData currentLineColumn  = LayoutUtils.getCurrentLineColumn(lineInfos,i,columns.get(lineInfos[i].page)) ;
-            CompositeSpan lineSpan = (CompositeSpan)data.getLineSpans().get(i);
+            Span lineSpan = (Span)data.getLineSpans().get(i);
             if(currentLineColumn == null)
             {
                 //add "noColumnAssociated" feature
-                lineSpan.setFeatureValue("noColumnAssociated", 1.0);
+                LayoutUtils.setFeatureValue(lineSpan,"noColumnAssociated",1.0);
+//                lineSpan.setFeatureValue("noColumnAssociated", 1.0);
             }
         }
-
-
 
         System.out.print("sorted vertical distances");
 
@@ -148,53 +147,54 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         for(int i =0; i<data.getLineSpans().size(); i++ )
         {
             List<String> lexiconFeatures = new ArrayList<String>();
-            CompositeSpan ls = (CompositeSpan)data.getLineSpans().get(i);
+            Span ls = (Span)data.getLineSpans().get(i);
+
             String currentLineText = ls.getText().trim();
             String squishedLineText = currentLineText.replaceAll("\\s", "");
 
             for (int j = 0; j < nonSectionWords.length; j++) {
                 if (currentLineText.matches(nonSectionWords[j])) {
-                    ls.setFeatureValue("startsNonSectionWord", 1.0);
+                    LayoutUtils.setFeatureValue(ls, "startsNonSectionWord", 1.0);
                     break;
                 }
             }
 
             if(squishedLineText.matches(allCaps))
             {
-                ls.setFeatureValue("allCaps", 1.0);
+                LayoutUtils.setFeatureValue(ls, "allCaps", 1.0);
             }
             if(currentLineText.matches(initCap))
             {
-                ls.setFeatureValue("startsCap", 1.0);
+                LayoutUtils.setFeatureValue(ls, "startsCap", 1.0);
             }
             if(currentLineText.matches(finalDot))
             {
-                ls.setFeatureValue("endsInDot", 1.0);
+                LayoutUtils.setFeatureValue(ls, "endsInDot", 1.0);
             }
 
             if(isUpFlagCount(currentLineText,ptrnLonelyLetters,0.5))
             {
-                ls.setFeatureValue("manyLonelyLetters", 1.0);
+                LayoutUtils.setFeatureValue(ls, "manyLonelyLetters", 1.0);
             }
 
             if(isUpFlagCount(currentLineText,ptrnLonelyNumbers,0.5))
             {
-                ls.setFeatureValue("manyLonelyNumbers", 1.0);
+                LayoutUtils.setFeatureValue(ls, "manyLonelyNumbers", 1.0);
             }
 
             if(currentLineText.matches(firstLevelSection))
             {
-                ls.setFeatureValue("firstLevelSectionPtrn", 1.0);
+                LayoutUtils.setFeatureValue(ls, "firstLevelSectionPtrn", 1.0);
             }
 
             if(currentLineText.matches(secondLevelSection))
             {
-                ls.setFeatureValue("secondLevelSectionPtrn", 1.0);
+                LayoutUtils.setFeatureValue(ls, "secondLevelSectionPtrn", 1.0);
             }
 
             if(currentLineText.matches(thirdLevelSection))
             {
-                ls.setFeatureValue("thirdLevelSectionPtrn", 1.0);
+                LayoutUtils.setFeatureValue(ls, "thirdLevelSectionPtrn", 1.0);
             }
         }
     }

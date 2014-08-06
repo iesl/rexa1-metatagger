@@ -1,6 +1,9 @@
 package edu.umass.cs.rexo.ghuang.segmentation.utils;
 
+import edu.umass.cs.mallet.base.extract.Span;
+import edu.umass.cs.mallet.base.extract.StringSpan;
 import edu.umass.cs.rexo.ghuang.segmentation.LineInfo;
+import org.rexo.span.CompositeSpan;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +17,18 @@ import java.util.Map;
 public class LayoutUtils {
 
 
+
+    public static void setFeatureValue(Span span, String property, double value)
+    {
+        if(span instanceof CompositeSpan)
+        {
+            ((CompositeSpan)span).setFeatureValue(property,value);
+        }
+        else
+        {
+            ((StringSpan)span).setFeatureValue(property,value);
+        }
+    }
 
     public static ColumnData getCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns)
     {
@@ -34,7 +49,7 @@ public class LayoutUtils {
     {
 
         int relaxedColLeft = col.getLeftX() - (int)(((double)col.getWidth())*(errorRatio));
-        int relaxedColRight = col.getRightX() - (int)(((double)col.getWidth())*(errorRatio));
+        int relaxedColRight = col.getRightX() + (int)(((double)col.getWidth())*(errorRatio));
 
         if(leftX > relaxedColLeft && rightX < relaxedColRight)
         {
