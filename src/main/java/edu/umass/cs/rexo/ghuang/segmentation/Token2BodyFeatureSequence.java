@@ -27,7 +27,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
     static Pattern ptrnLonelyNumbers = Pattern.compile(lonelyNumbers);
     static Pattern ptrnLonelyLetters = Pattern.compile(lonelyLetters);
 
-    private static int columnAcceptableError = 3; //pixels of sloppiness within a column accepted
+    private static int columnAcceptableError = 5; //pixels of sloppiness within a column accepted
 
     @Override
     public Instance pipe(Instance carrier) {
@@ -126,18 +126,20 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         for(int i =0; i<lineInfos.length; i++ )
         {
             ColumnData currentLineColumn  = LayoutUtils.getCurrentLineColumn(lineInfos,i,columns.get(lineInfos[i].page),
-                    true, columnAcceptableError) ;
+                    true, columnAcceptableError, lastLineColumn, verticalDistance.get(0).getKey()) ;
             Span lineSpan = (Span)data.getLineSpans().get(i);
             if(currentLineColumn == null)
             {
                 LayoutUtils.setFeatureValue(lineSpan,"noColumnAssociated",1.0);
+
+
             }
             else
             {
                 int vertMarginColumnDiff = 0;
                 if(lineInfos[i].lly<currentLineColumn.getBottomY())
                 {
-                    vertMarginColumnDiff = currentLineColumn.getTopY() - lineInfos[i].lly;
+                    vertMarginColumnDiff = currentLineColumn.getBottomY() - lineInfos[i].lly;
                     LayoutUtils.setFeatureValue(lineSpan,"lineBelowColumn",1.0);
                 }
                 if(lineInfos[i].ury>currentLineColumn.getTopY())

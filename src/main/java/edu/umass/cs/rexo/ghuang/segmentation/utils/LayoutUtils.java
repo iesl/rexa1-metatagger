@@ -51,10 +51,11 @@ public class LayoutUtils {
 
     public static ColumnData getCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns,
                                                  boolean equalsBothMargins, int acceptableMarginError,
-                                                    ColumnData currentColumn, )
+                                                    ColumnData currentColumn, int modeVerticalDistance)
     {
         LineInfo lineInfo = lineInfos[i];
         ColumnData columnData = getColumnData(equalsBothMargins,acceptableMarginError,lineInfos[i]);
+        ColumnData sloppyColumn = null;
         for(ColumnData col:columns)
         {
             boolean doesBelong = doesBelongToColumnStrict(col, columnData);
@@ -62,15 +63,26 @@ public class LayoutUtils {
             {
                 return col;
             }
-            else
+            else if(doesBelongToColumnSloppy(col,columnData) && doesBelongToColumnVert(col, columnData))
             {
-                if(i<lineInfos.length-3)
-                {
-
-                }
+                return col;
             }
+            else if(doesBelongToColumnSloppy(col,columnData))
+            {
+                int distanceFromColumnVert = getVerticalDistanceFromColumn(col,columnData);
+                if(distanceFromColumnVert <= modeVerticalDistance
+                        //at most 2 px bigger than the mode distance
+                        + 2)
+                {
+                    sloppyColumn = col;
+                }
+
+                //
+            }
+            //todo: more else if to take into account more situations
         }
-        return null;
+        return sloppyColumn;
+//        return null;
     }
 
     private static boolean doesBelongToColumnStrict(ColumnData col, ColumnData colToCompare)
@@ -81,8 +93,6 @@ public class LayoutUtils {
     * Steps to detect if sloppily belongs to a column
     * 1- if "newColumn", check the column of the following 2 lines
     * 2- if not "newColumn", check the column worked so far and if it sloppily can belong to that column
-    * 3- take into account the vertical distance too
-    * 4- take into account the vertical column bounds
     * */
     private static boolean doesBelongToColumnSloppy(ColumnData col, ColumnData colToCompare)
     {
@@ -96,6 +106,34 @@ public class LayoutUtils {
         }
         return false;
     }
+
+    private static boolean doesBelongToColumnVert(ColumnData col, ColumnData colToCompare)
+    {
+        if(colToCompare.getBottomY() >= col.getBottomY() &&
+                colToCompare.getTopY() <= col.getTopY())
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+    private static int getVerticalDistanceFromColumn(ColumnData col, ColumnData colToCompare)
+    {
+        if(colToCompare.getBottomY() < col.getBottomY() )
+        {
+            return col.getBottomY() - colToCompare.getBottomY();
+        }
+        else if (colToCompare.getTopY() > col.getTopY())
+        {
+            return colToCompare.getTopY() - col.getTopY();
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
 
     public static List<ColumnData> getColumns(List<Entry<ColumnData>> allSpans, PageData pageData)
     {
