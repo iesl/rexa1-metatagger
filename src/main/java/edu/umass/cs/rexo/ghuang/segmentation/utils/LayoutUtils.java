@@ -30,34 +30,71 @@ public class LayoutUtils {
         }
     }
 
+    public static boolean isActiveFeature(Span span, String property)
+    {
+        if(span instanceof CompositeSpan)
+        {
+            if(((CompositeSpan)span).getFeatureValue(property) == 1.0)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if(((StringSpan)span).getFeatureValue(property) == 1.0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static ColumnData getCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns,
-                                                 boolean equalsBothMargins, int acceptableMarginError)
+                                                 boolean equalsBothMargins, int acceptableMarginError,
+                                                    ColumnData currentColumn, )
     {
         LineInfo lineInfo = lineInfos[i];
         ColumnData columnData = getColumnData(equalsBothMargins,acceptableMarginError,lineInfos[i]);
         for(ColumnData col:columns)
         {
-            boolean doesBelong = doesBelongToColumn(col, columnData);
+            boolean doesBelong = doesBelongToColumnStrict(col, columnData);
             if(doesBelong)
             {
                 return col;
+            }
+            else
+            {
+                if(i<lineInfos.length-3)
+                {
+
+                }
             }
         }
         return null;
     }
 
-    private static boolean doesBelongToColumn(ColumnData col, ColumnData colToCompare)
+    private static boolean doesBelongToColumnStrict(ColumnData col, ColumnData colToCompare)
     {
         return col.equals(colToCompare);
-//        int relaxedColLeft = col.getLeftX() - (int)(((double)col.getWidth())*(errorRatio));
-//
-//        int relaxedColRight = col.getRightX() + (int)(((double)col.getWidth())*(errorRatio));
-//
-//        if(leftX > relaxedColLeft && rightX < relaxedColRight)
-//        {
-//            return true;
-//        }
-//        return false;
+    }
+    /*
+    * Steps to detect if sloppily belongs to a column
+    * 1- if "newColumn", check the column of the following 2 lines
+    * 2- if not "newColumn", check the column worked so far and if it sloppily can belong to that column
+    * 3- take into account the vertical distance too
+    * 4- take into account the vertical column bounds
+    * */
+    private static boolean doesBelongToColumnSloppy(ColumnData col, ColumnData colToCompare)
+    {
+        int relaxedColLeft = col.getLeftX() - col.getErrorMargin();
+
+        int relaxedColRight = col.getRightX() + col.getErrorMargin();
+
+        if(colToCompare.getLeftX() > relaxedColLeft && colToCompare.getRightX() < relaxedColRight)
+        {
+            return true;
+        }
+        return false;
     }
 
     public static List<ColumnData> getColumns(List<Entry<ColumnData>> allSpans, PageData pageData)
@@ -472,6 +509,10 @@ public class LayoutUtils {
         //accepted margin of error (in pixels) when performing equals
         int errorMargin = 0;
 
+        public int getErrorMargin()
+        {
+            return errorMargin;
+        }
         //only used when ColumnData is used as a key to group , to indicate the number of
         //cases when the same-width column lines have contiguous counterpart.
         //It is used to detect lines such as those tabbed to the right that have the same width and leftX and leftY pos
