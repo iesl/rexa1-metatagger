@@ -53,32 +53,37 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         //it can be the case when the first page has one column and the rest of the pages two for example, this is why it is important
         //to have a per-page width stats
         Map<Integer, List<LayoutUtils.Entry<Integer>>> widthLinePerPage = new HashMap <Integer, List<LayoutUtils.Entry<Integer>>>();
-
         Map <Integer, List<LayoutUtils.Entry<ColumnData>>> columnsData = new HashMap<Integer,List<LayoutUtils.Entry<ColumnData>>>();
-
         Map <Integer, List<LayoutUtils.Entry<ColumnData>>> leftMarginsData = new HashMap<Integer,List<LayoutUtils.Entry<ColumnData>>>();
-
         Map <Integer, LayoutUtils.PageData> pagesData = new HashMap<Integer,LayoutUtils.PageData>();
-
         Map <Integer, List<ColumnData>> columns = new HashMap<Integer,List<ColumnData>>();
-
         List<LayoutUtils.Entry<Integer>> lineHeight = new ArrayList<LayoutUtils.Entry<Integer>>();
+
+        int prevPageNum = 0;
 
         //first scan to calculate general statistics of the paper (such as line width, or vertical distances between lines)
         for(int i =0; i<lineInfos.length; i++ )
         {
+            Span lineSpan = (Span)data.getLineSpans().get(i);
+
+
+            if (lineInfos[i].page != prevPageNum) {
+                LayoutUtils.setFeatureValue(lineSpan,"newPage",1.0);
+                prevPageNum = lineInfos[i].page;
+                if (i > 0) {
+                    LayoutUtils.setFeatureValue((Span) data.getLineSpans().get(i - 1), "lastLineOnPage", 1.0);
+                }
+            }
+            else if (i > 0 && (lineInfos[i].llx > lineInfos[i-1].urx && lineInfos[i].lly > lineInfos[i-1].lly)) {
+                lineInfos[i].presentFeatures.add("newColumn");
+            }
+
             LayoutUtils.adjustLineHeight(lineInfos, i, lineHeight);
-
             LayoutUtils.adjustVerticalDistance(lineInfos, i, verticalDistance);
-
             LayoutUtils.adjustLineWidth(lineInfos, i, lineWidth);
-
             LayoutUtils.adjustLineWidthPerPage(lineInfos, i, widthLinePerPage);
-
             LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true, 3);
-
             LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false,0);
-
             LayoutUtils.adjustPageData(lineInfos, i, pagesData);
         }
         Collections.sort(verticalDistance);
@@ -114,6 +119,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             columns.put(page,currentPageCols);
         }
 
+        ColumnData lastLineColumn = null;
         //second scan to calculate more detailed features based on the statistics of the first scan
         for(int i =0; i<lineInfos.length; i++ )
         {
@@ -123,12 +129,74 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(lineSpan,"noColumnAssociated",1.0);
             }
+            else
+            {
+                int vertMarginColumnDiff = 0;
+                if(lineInfos[i].lly<currentLineColumn.getBottomY())
+                {
+                    vertMarginColumnDiff = currentLineColumn.getTopY() - lineInfos[i].lly;
+                    LayoutUtils.setFeatureValue(lineSpan,"lineBelowColumn",1.0);
+                }
+                if(lineInfos[i].ury>currentLineColumn.getTopY())
+                {
+                    vertMarginColumnDiff = lineInfos[i].ury - currentLineColumn.getTopY();
+                    LayoutUtils.setFeatureValue(lineSpan,"lineAboveColumn",1.0);
+                }
+
+                if(vertMarginColumnDiff>0)
+                {
+                    if(vertMarginColumnDiff>=10)
+                    {
+                        LayoutUtils.setFeatureValue(lineSpan,"vertOutsideColumn10px",1.0);
+                    }
+                    if(vertMarginColumnDiff>=20)
+                    {
+                        LayoutUtils.setFeatureValue(lineSpan,"vertOutsideColumn20px",1.0);
+                    }
+                    if(vertMarginColumnDiff>=50)
+                    {
+                        LayoutUtils.setFeatureValue(lineSpan,"vertOutsideColumn50px",1.0);
+                    }
+                    if(vertMarginColumnDiff>=100)
+                    {
+                        LayoutUtils.setFeatureValue(lineSpan,"vertOutsideColumn100px",1.0);
+                    }
+
+                }
+                if(lastLineColumn!=null){
+                    if(!lastLineColumn.equals(currentLineColumn))
+                    {
+                        LayoutUtils.setFeatureValue(lineSpan,"columnLayoutChange",1.0);
+                    }
+                }
+
+                lastLineColumn = currentLineColumn;
+            }
 
             //the following are additional features to implement:
             //- vertical distance outliers
             Integer mostCommonVertDistance = verticalDistance.get(0).getKey();
-            Integer currentVertDistance = LayoutUtils.getCurrentVerticalDistance(lineInfos, i, ... );
-            if(mostCommonVertDistance)
+            Integer currentVertDistance = LayoutUtils.getCurrentVerticalDistance(lineInfos, i);
+            if(currentVertDistance > mostCommonVertDistance+1){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistance2pxGreater", 1.0);
+            }
+
+            if(currentVertDistance > mostCommonVertDistance+3){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistance4pxGreater", 1.0);
+            }
+
+            if(currentVertDistance > mostCommonVertDistance+5){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistance6pxGreater", 1.0);
+            }
+
+            if(currentVertDistance > mostCommonVertDistance+7){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistance8pxGreater", 1.0);
+            }
+
+            if(currentVertDistance > mostCommonVertDistance+9){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistance10pxGreater", 1.0);
+            }
+
 
             //- centered or not
             //- if the left margin is the same as column, but the right margin is to the left.

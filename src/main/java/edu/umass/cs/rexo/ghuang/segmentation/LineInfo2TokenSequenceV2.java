@@ -355,7 +355,6 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
                 if (i > 0)
                     lineInfos[i-1].presentFeatures.add("lastLineOnPage");
             }
-
             else if (i > 0 && (lineInfos[i].llx > lineInfos[i-1].urx && lineInfos[i].lly > lineInfos[i-1].lly))
                 lineInfos[i].presentFeatures.add("newColumn");
             else if (i > 0 && lineInfos[i].llx > lineInfos[i-1].llx && (lineInfos[i].llx - lineInfos[i-1].llx)>2) {
@@ -386,94 +385,15 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
 
 
             LayoutUtils.adjustLineWidth(lineInfos,i,widthLine);
-//            int width = lineInfos[i].urx - lineInfos[i].llx;
-//
-//            Entry<Integer> currentWidthEntry = new Entry<Integer>(width,1);
-//            int iOf = widthLine.indexOf(currentWidthEntry);
-//            if(iOf>-1)
-//            {
-//                Entry actualData = widthLine.get(iOf);
-//                actualData.setQty(actualData.getQty()+1);
-//            }
-//            else
-//            {
-//                widthLine.add(currentWidthEntry);
-//            }
 
 
 
             LayoutUtils.adjustPageData(lineInfos, i, pagesData);
 
-//            PageData pageData = pagesData.get(lineInfos[i].page);
-//            if(pageData==null)
-//            {
-//                pageData = new PageData();
-//                pageData.setBottomY(lineInfos[i].lly);
-//                pageData.setTopY(lineInfos[i].ury);
-//                pageData.setLeftX(lineInfos[i].llx);
-//                pageData.setRightX(lineInfos[i].urx);
-//
-//                pagesData.put(lineInfos[i].page,pageData);
-//            }
-//            else
-//            {
-//                pageData.setBottomY(pageData.getBottomY()>lineInfos[i].lly?lineInfos[i].lly:pageData.getBottomY());
-//                pageData.setTopY(pageData.getTopY()<lineInfos[i].ury?lineInfos[i].ury:pageData.getTopY());
-//                pageData.setLeftX(pageData.getLeftX()>lineInfos[i].llx?lineInfos[i].llx:pageData.getLeftX());
-//                pageData.setRightX(pageData.getRightX()<lineInfos[i].urx?lineInfos[i].urx:pageData.getRightX());
-//            }
 
             LayoutUtils.adjustColumnData(lineInfos,i,columnsData,false,0);
-//            ColumnData columnData = new ColumnData();
-//            columnData.setLeftX(lineInfos[i].llx);
-//            columnData.setRightX(lineInfos[i].urx);
-//            columnData.setTopY(lineInfos[i].ury);
-//            columnData.setBottomY(lineInfos[i].lly);
-//
-//            if(columnsData.get(lineInfos[i].page)==null)
-//            {
-//                List <Entry<ColumnData>> colData = new ArrayList<Entry<ColumnData>>();
-//                colData.add(new Entry<ColumnData>(columnData, 1));
-//                columnsData.put(lineInfos[i].page,colData);
-//            }
-//            else
-//            {
-//                Entry<ColumnData> currEntry = new Entry<ColumnData>(columnData,1);
-//                List entriesInThePage = columnsData.get(lineInfos[i].page);
-//                int iOe = entriesInThePage.indexOf(currEntry);
-//                if(iOe>-1)
-//                {
-//                    Entry<ColumnData> existentEntry = columnsData.get(lineInfos[i].page).get(iOe);
-//                    existentEntry.setQty(existentEntry.getQty()+1);
-//                    if(lineInfos[i].ury>existentEntry.getKey().getTopY()) {
-//                        existentEntry.getKey().setTopY(lineInfos[i].ury);
-//                    }
-//                    if(lineInfos[i].lly<existentEntry.getKey().getBottomY()) {
-//                        existentEntry.getKey().setBottomY(lineInfos[i].lly);
-//                    }
-//                }
-//                else
-//                {
-//                    columnsData.get(lineInfos[i].page).add(currEntry);
-//                }
-//            }
 
             LayoutUtils.adjustVerticalDistance(lineInfos,i,verticalDistance);
-//            if (i+1 < lineInfos.length && lineInfos[i].page == lineInfos[i + 1].page && lineInfos[i].lly > lineInfos[i+1].lly) {
-//                Integer vertDistance = lineInfos[i].lly - lineInfos[i + 1].lly;
-//                Entry<Integer > initialEntry = new Entry<Integer>(vertDistance,1);
-//                iOf = verticalDistance.indexOf(initialEntry);
-//                if(iOf > -1)
-//                {
-//                    //verticalDistance.put(vertDistance,verticalDistance.get(vertDistance)+1);
-//                    Entry<Integer> exEntry = verticalDistance.get(iOf);
-//                    exEntry.setQty(exEntry.getQty()+1);
-//                }
-//                else
-//                {
-//                    verticalDistance.add(initialEntry);
-//                }
-//            }
 
 
             if (lineInfos[i].multibox)
