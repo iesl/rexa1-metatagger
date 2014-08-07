@@ -30,13 +30,14 @@ public class LayoutUtils {
         }
     }
 
-    public static ColumnData getCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns)
+    public static ColumnData getCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns,
+                                                 boolean equalsBothMargins, int acceptableMarginError)
     {
         LineInfo lineInfo = lineInfos[i];
-
+        ColumnData columnData = getColumnData(equalsBothMargins,acceptableMarginError,lineInfos[i]);
         for(ColumnData col:columns)
         {
-            boolean doesBelong = doesBelongToColumn(col, lineInfo.llx, lineInfo.urx, 0.03);
+            boolean doesBelong = doesBelongToColumn(col, columnData);
             if(doesBelong)
             {
                 return col;
@@ -45,17 +46,18 @@ public class LayoutUtils {
         return null;
     }
 
-    private static boolean doesBelongToColumn(ColumnData col, int leftX, int rightX, double errorRatio)
+    private static boolean doesBelongToColumn(ColumnData col, ColumnData colToCompare)
     {
-
-        int relaxedColLeft = col.getLeftX() - (int)(((double)col.getWidth())*(errorRatio));
-        int relaxedColRight = col.getRightX() + (int)(((double)col.getWidth())*(errorRatio));
-
-        if(leftX > relaxedColLeft && rightX < relaxedColRight)
-        {
-            return true;
-        }
-        return false;
+        return col.equals(colToCompare);
+//        int relaxedColLeft = col.getLeftX() - (int)(((double)col.getWidth())*(errorRatio));
+//
+//        int relaxedColRight = col.getRightX() + (int)(((double)col.getWidth())*(errorRatio));
+//
+//        if(leftX > relaxedColLeft && rightX < relaxedColRight)
+//        {
+//            return true;
+//        }
+//        return false;
     }
 
     public static List<ColumnData> getColumns(List<Entry<ColumnData>> allSpans, PageData pageData)

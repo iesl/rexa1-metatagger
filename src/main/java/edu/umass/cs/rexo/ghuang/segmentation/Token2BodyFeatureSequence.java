@@ -27,6 +27,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
     static Pattern ptrnLonelyNumbers = Pattern.compile(lonelyNumbers);
     static Pattern ptrnLonelyLetters = Pattern.compile(lonelyLetters);
 
+    private static int columnAcceptableError = 3; //pixels of sloppiness within a column accepted
+
     @Override
     public Instance pipe(Instance carrier) {
         NewHtmlTokenization data = (NewHtmlTokenization)carrier.getData();
@@ -82,7 +84,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             LayoutUtils.adjustVerticalDistance(lineInfos, i, verticalDistance);
             LayoutUtils.adjustLineWidth(lineInfos, i, lineWidth);
             LayoutUtils.adjustLineWidthPerPage(lineInfos, i, widthLinePerPage);
-            LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true, 3);
+            LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true, columnAcceptableError);
             LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false,0);
             LayoutUtils.adjustPageData(lineInfos, i, pagesData);
         }
@@ -123,7 +125,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         //second scan to calculate more detailed features based on the statistics of the first scan
         for(int i =0; i<lineInfos.length; i++ )
         {
-            ColumnData currentLineColumn  = LayoutUtils.getCurrentLineColumn(lineInfos,i,columns.get(lineInfos[i].page)) ;
+            ColumnData currentLineColumn  = LayoutUtils.getCurrentLineColumn(lineInfos,i,columns.get(lineInfos[i].page),
+                    true, columnAcceptableError) ;
             Span lineSpan = (Span)data.getLineSpans().get(i);
             if(currentLineColumn == null)
             {
@@ -161,7 +164,6 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                     {
                         LayoutUtils.setFeatureValue(lineSpan,"vertOutsideColumn100px",1.0);
                     }
-
                 }
                 if(lastLineColumn!=null){
                     if(!lastLineColumn.equals(currentLineColumn))
