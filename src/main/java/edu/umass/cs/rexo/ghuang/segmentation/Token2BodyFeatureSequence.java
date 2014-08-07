@@ -132,48 +132,58 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(lineSpan,"noColumnAssociated",1.0);
 
+                ColumnData sloppyColumn = LayoutUtils.getClosestCurrentLineColumn(lineInfos, i, columns.get(lineInfos[i].page),
+                        true, columnAcceptableError, true);
+                if(sloppyColumn!=null)
+                {
+                    LayoutUtils.setFeatureValue(lineSpan,"sloppyStrictLeft",1.0);
+                }
+                else
+                {
+                    sloppyColumn = LayoutUtils.getClosestCurrentLineColumn(lineInfos, i, columns.get(lineInfos[i].page),
+                            true, columnAcceptableError, false);
+                    if(sloppyColumn != null)
+                    {
+                        LayoutUtils.setFeatureValue(lineSpan,"onlySloppy",1.0);
+                    }
+                }
 
+                if(sloppyColumn!=null)
+                {
+                    int vertMarginColumnDiff = 0;
+                    if (lineInfos[i].lly < sloppyColumn.getBottomY()) {
+                        vertMarginColumnDiff = sloppyColumn.getBottomY() - lineInfos[i].lly;
+                        LayoutUtils.setFeatureValue(lineSpan, "lineBelowColumn", 1.0);
+                    }
+                    if (lineInfos[i].ury > sloppyColumn.getTopY()) {
+                        vertMarginColumnDiff = lineInfos[i].ury - sloppyColumn.getTopY();
+                        LayoutUtils.setFeatureValue(lineSpan, "lineAboveColumn", 1.0);
+                    }
+
+                    if (vertMarginColumnDiff > 0) {
+                        if (vertMarginColumnDiff >= 10) {
+                            LayoutUtils.setFeatureValue(lineSpan, "vertOutsideColumn10px", 1.0);
+                        }
+                        if (vertMarginColumnDiff >= 20) {
+                            LayoutUtils.setFeatureValue(lineSpan, "vertOutsideColumn20px", 1.0);
+                        }
+                        if (vertMarginColumnDiff >= 50) {
+                            LayoutUtils.setFeatureValue(lineSpan, "vertOutsideColumn50px", 1.0);
+                        }
+                        if (vertMarginColumnDiff >= 100) {
+                            LayoutUtils.setFeatureValue(lineSpan, "vertOutsideColumn100px", 1.0);
+                        }
+                    }
+                }
             }
             else
             {
-                int vertMarginColumnDiff = 0;
-                if(lineInfos[i].lly<currentLineColumn.getBottomY())
-                {
-                    vertMarginColumnDiff = currentLineColumn.getBottomY() - lineInfos[i].lly;
-                    LayoutUtils.setFeatureValue(lineSpan,"lineBelowColumn",1.0);
-                }
-                if(lineInfos[i].ury>currentLineColumn.getTopY())
-                {
-                    vertMarginColumnDiff = lineInfos[i].ury - currentLineColumn.getTopY();
-                    LayoutUtils.setFeatureValue(lineSpan,"lineAboveColumn",1.0);
-                }
-
-                if(vertMarginColumnDiff>0)
-                {
-                    if(vertMarginColumnDiff>=10)
-                    {
-                        LayoutUtils.setFeatureValue(lineSpan,"vertOutsideColumn10px",1.0);
-                    }
-                    if(vertMarginColumnDiff>=20)
-                    {
-                        LayoutUtils.setFeatureValue(lineSpan,"vertOutsideColumn20px",1.0);
-                    }
-                    if(vertMarginColumnDiff>=50)
-                    {
-                        LayoutUtils.setFeatureValue(lineSpan,"vertOutsideColumn50px",1.0);
-                    }
-                    if(vertMarginColumnDiff>=100)
-                    {
-                        LayoutUtils.setFeatureValue(lineSpan,"vertOutsideColumn100px",1.0);
-                    }
-                }
                 if(lastLineColumn!=null){
                     if(!lastLineColumn.equals(currentLineColumn))
                     {
                         LayoutUtils.setFeatureValue(lineSpan,"columnLayoutChange",1.0);
                     }
                 }
-
                 lastLineColumn = currentLineColumn;
             }
 

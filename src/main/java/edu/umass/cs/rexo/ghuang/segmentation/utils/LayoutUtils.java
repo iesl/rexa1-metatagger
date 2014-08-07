@@ -63,11 +63,11 @@ public class LayoutUtils {
             {
                 return col;
             }
-            else if(doesBelongToColumnSloppy(col,columnData) && doesBelongToColumnVert(col, columnData))
+            else if(doesBelongToColumnSloppy(col,columnData,false) && doesBelongToColumnVert(col, columnData))
             {
                 return col;
             }
-            else if(doesBelongToColumnSloppy(col,columnData))
+            else if(doesBelongToColumnSloppy(col,columnData,false))
             {
                 int distanceFromColumnVert = getVerticalDistanceFromColumn(col,columnData);
                 if(distanceFromColumnVert <= modeVerticalDistance
@@ -85,9 +85,25 @@ public class LayoutUtils {
 //        return null;
     }
 
-    public static ColumnData getClosestCurrentLineColumn(...., boolean strictLeft)
+    public static ColumnData getClosestCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns,
+                                                         boolean equalsBothMargins, int acceptableMarginError,
+                                                         boolean strictLeft)
     {
-        ....
+        ColumnData columnData = getColumnData(equalsBothMargins,acceptableMarginError,lineInfos[i]);
+        ColumnData colLeastDistance = null;
+        int distance = -1;
+        for(ColumnData col:columns)
+        {
+            if(doesBelongToColumnSloppy(col, columnData,strictLeft))
+            {
+                int currDistance = getVerticalDistanceFromColumn(col,columnData);
+                if(colLeastDistance==null || distance ==-1 || currDistance < distance)
+                {
+                    colLeastDistance = col;
+                }
+            }
+        }
+        return colLeastDistance;
     }
 
     private static boolean doesBelongToColumnStrict(ColumnData col, ColumnData colToCompare)
@@ -99,34 +115,39 @@ public class LayoutUtils {
     * 1- if "newColumn", check the column of the following 2 lines
     * 2- if not "newColumn", check the column worked so far and if it sloppily can belong to that column
     * */
-    private static boolean doesBelongToColumnSloppy(ColumnData col, ColumnData colToCompare)
+    private static boolean doesBelongToColumnSloppy(ColumnData col, ColumnData colToCompare, boolean strictLeft)
     {
         int relaxedColLeft = col.getLeftX() - col.getErrorMargin();
 
         int relaxedColRight = col.getRightX() + col.getErrorMargin();
 
-        if(colToCompare.getLeftX() > relaxedColLeft && colToCompare.getRightX() < relaxedColRight)
+
+        if(!strictLeft && colToCompare.getLeftX() > relaxedColLeft && colToCompare.getRightX() < relaxedColRight)
         {
             return true;
         }
-        return false;
-    }
-
-    private static boolean doesBelongToColumnSloppyStrictLeft(ColumnData col, ColumnData colToCompare)
-    {
-//        int relaxedColLeft = col.getLeftX() - col.getErrorMargin();
-
-        int relaxedColRight = col.getRightX() + col.getErrorMargin();
-
-        if(
-                //only 1 px of error margin allowed
+        else if(strictLeft && //only 1 px of error margin allowed
                 (colToCompare.getLeftX() >= col.getLeftX()-1 && colToCompare.getLeftX() <= col.getLeftX()+1)
-                    && colToCompare.getRightX() < relaxedColRight)
+                && colToCompare.getRightX() < relaxedColRight)
         {
             return true;
         }
         return false;
     }
+
+//    private static boolean doesBelongToColumnSloppyStrictLeft(ColumnData col, ColumnData colToCompare)
+//    {
+//        int relaxedColRight = col.getRightX() + col.getErrorMargin();
+//
+//        if(
+//                //only 1 px of error margin allowed
+//                (colToCompare.getLeftX() >= col.getLeftX()-1 && colToCompare.getLeftX() <= col.getLeftX()+1)
+//                    && colToCompare.getRightX() < relaxedColRight)
+//        {
+//            return true;
+//        }
+//        return false;
+//    }
 
 
     private static boolean doesBelongToColumnVert(ColumnData col, ColumnData colToCompare)
