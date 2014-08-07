@@ -85,6 +85,11 @@ public class LayoutUtils {
 //        return null;
     }
 
+    public static ColumnData getClosestCurrentLineColumn(...., boolean strictLeft)
+    {
+        ....
+    }
+
     private static boolean doesBelongToColumnStrict(ColumnData col, ColumnData colToCompare)
     {
         return col.equals(colToCompare);
@@ -106,6 +111,23 @@ public class LayoutUtils {
         }
         return false;
     }
+
+    private static boolean doesBelongToColumnSloppyStrictLeft(ColumnData col, ColumnData colToCompare)
+    {
+//        int relaxedColLeft = col.getLeftX() - col.getErrorMargin();
+
+        int relaxedColRight = col.getRightX() + col.getErrorMargin();
+
+        if(
+                //only 1 px of error margin allowed
+                (colToCompare.getLeftX() >= col.getLeftX()-1 && colToCompare.getLeftX() <= col.getLeftX()+1)
+                    && colToCompare.getRightX() < relaxedColRight)
+        {
+            return true;
+        }
+        return false;
+    }
+
 
     private static boolean doesBelongToColumnVert(ColumnData col, ColumnData colToCompare)
     {
