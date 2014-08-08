@@ -1,12 +1,14 @@
 package org.rexo.pipeline.extractors;
 
 import edu.umass.cs.mallet.base.extract.Span;
+import edu.umass.cs.mallet.base.extract.StringSpan;
 import edu.umass.cs.mallet.base.fst.Transducer;
 import edu.umass.cs.mallet.base.types.Sequence;
 import edu.umass.cs.mallet.base.types.Token;
 import edu.umass.cs.mallet.base.types.TokenSequence;
 import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils;
 import org.rexo.extraction.NewHtmlTokenization;
+import org.rexo.span.CompositeSpan;
 
 import java.util.Iterator;
 
@@ -37,12 +39,15 @@ public class BodyRulesTransducer  {
 
 
         Sequence transducedData = new TokenSequence();
-        String label = "";
+//        String label = "";
         boolean currentlyInColumn = false;
         for(int i=0; i<data.getLineSpans().size(); i++)
         {
+            String label = "";
             Span currentSpan = (Span)data.getLineSpans().get(i);
-            boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
+          //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
+
+
 
 
 
@@ -61,10 +66,14 @@ public class BodyRulesTransducer  {
             {
                 label = "column";
             }
+            else
+            {
+                label = "nocolumn";
+            }
 
 
-            ((TokenSequence)transducedData).add(label);
-
+            //((TokenSequence)transducedData).add(label);
+            addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData);
 //            System.out.println("inside loop");
 
         }
@@ -72,4 +81,19 @@ public class BodyRulesTransducer  {
         return transducedData;
     }
 
+
+    public void addLabelToAllSpans(Span span, String label, TokenSequence transducedData)
+    {
+        if(span instanceof CompositeSpan)
+        {
+            for(int i =0; i<((CompositeSpan)span).getSpans().size(); i++)
+            {
+                transducedData.add(label);
+            }
+        }
+        else
+        {
+            transducedData.add(label);
+        }
+    }
 }
