@@ -135,20 +135,29 @@ public class LayoutUtils {
         return false;
     }
 
-//    private static boolean doesBelongToColumnSloppyStrictLeft(ColumnData col, ColumnData colToCompare)
-//    {
-//        int relaxedColRight = col.getRightX() + col.getErrorMargin();
-//
-//        if(
-//                //only 1 px of error margin allowed
-//                (colToCompare.getLeftX() >= col.getLeftX()-1 && colToCompare.getLeftX() <= col.getLeftX()+1)
-//                    && colToCompare.getRightX() < relaxedColRight)
-//        {
-//            return true;
-//        }
-//        return false;
-//    }
+    public static boolean isRightMarginToTheLeft(LineInfo lineInfo, ColumnData columnData, int margin)
+    {
+        if(columnData==null) {
+            return false;
+        }
+        if(lineInfo.urx <= columnData.getRightX()-margin)
+        {
+            return true;
+        }
+        return false;
+    }
 
+    public static boolean isLeftMarginTabbed(LineInfo lineInfo, ColumnData columnData, int margin)
+    {
+        if(columnData==null) {
+            return false;
+        }
+        if(lineInfo.lly >= columnData.getLeftX()+margin)
+        {
+            return true;
+        }
+        return false;
+    }
 
     private static boolean doesBelongToColumnVert(ColumnData col, ColumnData colToCompare)
     {

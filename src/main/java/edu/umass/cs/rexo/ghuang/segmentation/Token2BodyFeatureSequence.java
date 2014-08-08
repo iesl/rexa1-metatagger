@@ -256,8 +256,16 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             }
 
             //- if the left margin is the same as column, but the right margin is to the left.
-            
+            if(LayoutUtils.isRightMarginToTheLeft(lineInfos[i], currentLineColumn!=null?currentLineColumn:sloppyColumn, 10))
+            {
+                LayoutUtils.setFeatureValue(lineSpan, "rightMarginToTheLeft", 1.0);
+            }
+
             //- if the left margin is to the left when the right margin is the same as column.
+            if(LayoutUtils.isLeftMarginTabbed(lineInfos[i], currentLineColumn!=null?currentLineColumn:sloppyColumn, 5))
+            {
+                LayoutUtils.setFeatureValue(lineSpan, "tabbedLeftMargin", 1.0);
+            }
         }
 
         System.out.print("sorted vertical distances");
