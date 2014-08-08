@@ -12,6 +12,7 @@ import edu.umass.cs.mallet.base.fst.CRF4;
 import edu.umass.cs.mallet.base.pipe.Noop;
 import edu.umass.cs.mallet.base.pipe.Pipe;
 import edu.umass.cs.mallet.base.pipe.SerialPipes;
+import edu.umass.cs.mallet.base.types.Instance;
 import edu.umass.cs.mallet.base.types.PropertyHolder;
 import edu.umass.cs.mallet.base.types.Sequence;
 import edu.umass.cs.rexo.ghuang.segmentation.NewHtmlTokenization2LineInfo;
@@ -22,6 +23,7 @@ import org.rexo.extraction.CRFOutputFormatter;
 import org.rexo.extraction.NewHtmlTokenization;
 import org.rexo.extraction.NewHtmlTokenization2TokenSequence;
 import org.rexo.pipeline.components.RxDocument;
+import org.rexo.pipeline.extractors.BodyRulesTransducer;
 import org.rexo.pipeline.extractors.RulesExtractor;
 
 import java.io.*;
@@ -153,9 +155,12 @@ public class BodyExtractionFilter extends AbstractFilter {
 					log.warn( "body tokens had features set before crf extraction" );
 				}
 
-				Extraction extraction = _bodyExtractor.extract( body );
+				_bodyExtractor.extract( body );
+
+                Instance carrier = _bodyExtractor.getCarrier();
+                BodyRulesTransducer bodyRulesTransducer = new BodyRulesTransducer();
 				//log.info("done.");
-				Sequence predictedLabels = extraction.getDocumentExtraction( 0 ).getPredictedLabels();
+				Sequence predictedLabels = bodyRulesTransducer.transduce( (Sequence)carrier.getData() ); //extraction.getDocumentExtraction( 0 ).getPredictedLabels();
 				CRFOutputFormatter crfOutputFormatter = new CRFOutputFormatter();
 				Element element = crfOutputFormatter.toXmlElement( body, predictedLabels, "body" );
 

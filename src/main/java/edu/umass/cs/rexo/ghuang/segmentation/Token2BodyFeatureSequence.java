@@ -41,7 +41,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         computeFeatures((LineInfo [])onlyLines.getData(),data);
 
         return carrier;
-}
+    }
 
 
     private void computeFeatures(LineInfo[] lineInfos, NewHtmlTokenization data)

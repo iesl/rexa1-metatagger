@@ -16,7 +16,7 @@ import edu.umass.cs.mallet.base.types.LabelAlphabet;
  */
 public class RulesExtractor implements Extractor {
     private Pipe featurePipe;
-
+    Instance carrier = null;
     public RulesExtractor (Pipe featurePipe) {
         this.featurePipe = featurePipe;
     }
@@ -52,9 +52,11 @@ public class RulesExtractor implements Extractor {
     }
     public Extraction extract (Tokenization spans)
     {
-        Instance carrier = new Instance (spans, null, null, null, featurePipe);
-
-        System.out.println("extraction on RulesExtractor");
-        return null;
+        carrier = new Instance (spans, null, null, null, featurePipe);
+        return null; 
+    }
+    public Instance getCarrier()
+    {
+        return carrier;
     }
 }

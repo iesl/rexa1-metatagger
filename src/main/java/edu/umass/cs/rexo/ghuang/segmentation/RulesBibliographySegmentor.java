@@ -120,7 +120,6 @@ public class RulesBibliographySegmentor
 //		System.out.println("zzzzzzzz " + lineSpans);
 //		System.out.println("zzzzzzzz " + lineSpans.size() + " " + predictedLabels.size());
 
-		
 		// lineSpans may contain extra StringSpans indicating page breaks or repeating header/footer lines
 		assert (lineSpans.size() >= predictedLabels.size());
 		
