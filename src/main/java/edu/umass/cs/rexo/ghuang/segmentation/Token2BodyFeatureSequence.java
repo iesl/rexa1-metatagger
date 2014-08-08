@@ -40,6 +40,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         Instance onlyLines =  nhtml2LineInfo.pipe(carrier);
         computeFeatures((LineInfo [])onlyLines.getData(),data);
 
+        carrier.setData(data);
+
         return carrier;
     }
 

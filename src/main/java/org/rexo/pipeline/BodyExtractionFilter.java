@@ -12,6 +12,7 @@ import edu.umass.cs.mallet.base.fst.CRF4;
 import edu.umass.cs.mallet.base.pipe.Noop;
 import edu.umass.cs.mallet.base.pipe.Pipe;
 import edu.umass.cs.mallet.base.pipe.SerialPipes;
+import edu.umass.cs.mallet.base.pipe.Target2LabelSequence;
 import edu.umass.cs.mallet.base.types.Instance;
 import edu.umass.cs.mallet.base.types.PropertyHolder;
 import edu.umass.cs.mallet.base.types.Sequence;
@@ -57,6 +58,7 @@ public class BodyExtractionFilter extends AbstractFilter {
         pipes.add(  /*new NewHtmlTokenization2LineInfo()*/ new NewHtmlTokenization2TokenSequence());
 
         pipes.add(new Token2BodyFeatureSequence());
+//        pipes.add(new Target2LabelSequence());
 
         SerialPipes sp = new SerialPipes(pipes);
         _bodyExtractor = new RulesExtractor(sp);
@@ -160,7 +162,7 @@ public class BodyExtractionFilter extends AbstractFilter {
                 Instance carrier = _bodyExtractor.getCarrier();
                 BodyRulesTransducer bodyRulesTransducer = new BodyRulesTransducer();
 				//log.info("done.");
-				Sequence predictedLabels = bodyRulesTransducer.transduce( (Sequence)carrier.getData() ); //extraction.getDocumentExtraction( 0 ).getPredictedLabels();
+				Sequence predictedLabels = bodyRulesTransducer.transduce( (NewHtmlTokenization)carrier.getData() ); //extraction.getDocumentExtraction( 0 ).getPredictedLabels();
 				CRFOutputFormatter crfOutputFormatter = new CRFOutputFormatter();
 				Element element = crfOutputFormatter.toXmlElement( body, predictedLabels, "body" );
 

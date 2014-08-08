@@ -152,7 +152,7 @@ public class LayoutUtils {
         if(columnData==null) {
             return false;
         }
-        if(lineInfo.lly >= columnData.getLeftX()+margin)
+        if(lineInfo.llx >= columnData.getLeftX()+margin)
         {
             return true;
         }
