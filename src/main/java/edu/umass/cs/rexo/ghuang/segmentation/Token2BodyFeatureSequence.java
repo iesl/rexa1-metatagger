@@ -167,8 +167,17 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                         if (vertMarginColumnDiff >= 20) {
                             LayoutUtils.setFeatureValue(lineSpan, "vertOutsideColumn20px", 1.0);
                         }
+                        if (vertMarginColumnDiff >= 30) {
+                            LayoutUtils.setFeatureValue(lineSpan, "vertOutsideColumn30px", 1.0);
+                        }
+                        if (vertMarginColumnDiff >= 40) {
+                            LayoutUtils.setFeatureValue(lineSpan, "vertOutsideColumn40px", 1.0);
+                        }
                         if (vertMarginColumnDiff >= 50) {
                             LayoutUtils.setFeatureValue(lineSpan, "vertOutsideColumn50px", 1.0);
+                        }
+                        if (vertMarginColumnDiff >= 60) {
+                            LayoutUtils.setFeatureValue(lineSpan, "vertOutsideColumn60px", 1.0);
                         }
                         if (vertMarginColumnDiff >= 100) {
                             LayoutUtils.setFeatureValue(lineSpan, "vertOutsideColumn100px", 1.0);
@@ -209,6 +218,9 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
             if(currentVertDistance > mostCommonVertDistance+9){
                 LayoutUtils.setFeatureValue(lineSpan,"verticalDistance10pxGreater", 1.0);
+            }
+            if(currentVertDistance > mostCommonVertDistance+11){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistance12pxGreater", 1.0);
             }
 
 
