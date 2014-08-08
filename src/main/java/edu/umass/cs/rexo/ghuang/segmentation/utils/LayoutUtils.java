@@ -370,7 +370,7 @@ public class LayoutUtils {
 
     public static void adjustLineHeight(LineInfo[] lineInfos, int i, List <Entry<Integer>> lineHeight)
     {
-        int height = lineInfos[i].ury - lineInfos[i].lly;
+        int height =  getCurrentLineHeight(lineInfos, i); //lineInfos[i].ury - lineInfos[i].lly;
         Entry<Integer> currentHeightEntry = new Entry<Integer>(height,1);
         int iOf = lineHeight.indexOf(currentHeightEntry);
         if(iOf>-1)
@@ -382,6 +382,27 @@ public class LayoutUtils {
         {
             lineHeight.add(currentHeightEntry);
         }
+    }
+
+    public static int getCurrentLineHeight(LineInfo[] lineInfos, int i)
+    {
+        return lineInfos[i].ury - lineInfos[i].lly;
+    }
+
+    public static boolean isCentered(LineInfo lineInfo, int columnLeftMargin, int columnRightMargin, int errRatio)
+    {
+        int leftDiff = lineInfo.llx - columnLeftMargin;
+        int rightDiff = columnRightMargin - lineInfo.urx;
+
+        if(
+                //only if there is at least 10 px padding on each of the sides
+                leftDiff>=10 && rightDiff>=10 &&
+                //and if it is centered with the err ratio passed as parameter
+                leftDiff >= rightDiff - errRatio && leftDiff <= rightDiff + errRatio)
+        {
+            return true;
+        }
+        return false;
     }
 
     public static void adjustLineWidth(LineInfo[] lineInfos, int i, List <Entry<Integer>> lineWidth)
@@ -686,9 +707,10 @@ public class LayoutUtils {
                                         ((ColumnData) obj).leftX <= this.leftX + errorMargin)) ||
                         ((((ColumnData) obj).rightX >= this.rightX - errorMargin &&
                                 ((ColumnData) obj).rightX <= this.rightX + errorMargin) &&
-                                ((ColumnData) obj).leftX == this.leftX)
-
-                        ;
+                                ((ColumnData) obj).leftX == this.leftX
+                        //todo: manually added +/- 2px for papers such as 1997Fey_The_affects..., if works well, parametrize
+ //                               (((ColumnData) obj).leftX >= this.leftX-2 && ((ColumnData) obj).leftX <= this.leftX+2)
+                        );
             }
         }
 

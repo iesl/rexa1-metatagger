@@ -24,6 +24,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
     private static String lonelyNumbers = "[1-9][\\.]{0,1}[\\s]+]"; //"[1-9][\\.]{0,1}";
     private static String lonelyLetters = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ][\\.]{0,1}[\\s]+]"; //"[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ][\\.]{0,1}";
 
+
+
     static Pattern ptrnLonelyNumbers = Pattern.compile(lonelyNumbers);
     static Pattern ptrnLonelyLetters = Pattern.compile(lonelyLetters);
 
@@ -128,11 +130,12 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             ColumnData currentLineColumn  = LayoutUtils.getCurrentLineColumn(lineInfos,i,columns.get(lineInfos[i].page),
                     true, columnAcceptableError, lastLineColumn, verticalDistance.get(0).getKey()) ;
             Span lineSpan = (Span)data.getLineSpans().get(i);
+            ColumnData sloppyColumn = null;
             if(currentLineColumn == null)
             {
                 LayoutUtils.setFeatureValue(lineSpan,"noColumnAssociated",1.0);
 
-                ColumnData sloppyColumn = LayoutUtils.getClosestCurrentLineColumn(lineInfos, i, columns.get(lineInfos[i].page),
+                sloppyColumn = LayoutUtils.getClosestCurrentLineColumn(lineInfos, i, columns.get(lineInfos[i].page),
                         true, columnAcceptableError, true);
                 if(sloppyColumn!=null)
                 {
@@ -223,10 +226,38 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(lineSpan,"verticalDistance12pxGreater", 1.0);
             }
 
+            //-height of the line font
+            Integer mostCommonLineHeight = lineHeight.get(0).getKey();
+            Integer currentLineHeight = LayoutUtils.getCurrentLineHeight(lineInfos, i);
+
+            if(currentLineHeight > mostCommonLineHeight+1){
+                LayoutUtils.setFeatureValue(lineSpan,"lineHeight2pxGreater", 1.0);
+            }
+            if(currentLineHeight > mostCommonLineHeight + 3){
+                LayoutUtils.setFeatureValue(lineSpan,"lineHeight4pxGreater", 1.0);
+            }
+            if(currentLineHeight > mostCommonLineHeight + 5){
+                LayoutUtils.setFeatureValue(lineSpan,"lineHeight6pxGreater", 1.0);
+            }
+            if(currentLineHeight > mostCommonLineHeight + 7){
+                LayoutUtils.setFeatureValue(lineSpan,"lineHeight8pxGreater", 1.0);
+            }
+            if(currentLineHeight > mostCommonLineHeight + 9){
+                LayoutUtils.setFeatureValue(lineSpan,"lineHeight10pxGreater", 1.0);
+            }
 
             //- centered or not
+            int leftMarginColumn = currentLineColumn!=null?currentLineColumn.getLeftX():sloppyColumn!=null?sloppyColumn.getLeftX():-1;
+            int rightMarginColumn = currentLineColumn!=null?currentLineColumn.getRightX():sloppyColumn!=null?sloppyColumn.getRightX():-1;
+
+            if(LayoutUtils.isCentered(lineInfos[i],leftMarginColumn,rightMarginColumn,3))
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"centeredLine",1.0);
+            }
+
             //- if the left margin is the same as column, but the right margin is to the left.
-            //-
+            
+            //- if the left margin is to the left when the right margin is the same as column.
         }
 
         System.out.print("sorted vertical distances");
