@@ -81,7 +81,11 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 }
             }
             else if (i > 0 && (lineInfos[i].llx > lineInfos[i-1].urx && lineInfos[i].lly > lineInfos[i-1].lly)) {
-                lineInfos[i].presentFeatures.add("newColumn");
+                LayoutUtils.setFeatureValue(lineSpan,"newColumn",1.0);
+            }
+            else if (i>0 && (lineInfos[i].llx <= lineInfos[i-1].urx && lineInfos[i].lly > lineInfos[i-1].lly))
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"upAndToTheLeft", 1.0);
             }
 
             LayoutUtils.adjustLineHeight(lineInfos, i, lineHeight);
@@ -276,13 +280,15 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
     private static void computeLexiconFeatures(/*LineInfo[] lineInfos,*/ NewHtmlTokenization data) {
         // high correlation with non-bibliographic content
-        String[] nonSectionWords = {"^(Table).*", "^(Figure).*", "^(Fig\\.).*"};
+        String[] tableWords = {"^(Table).*"};
+        String[] figureWords = {"^(Figure).*", "^(Fig\\.).*"};
+
         String allCaps = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ1-9]+";
         String initCap = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ].*";
         String finalDot = "((.*)\\.)$";
-        String firstLevelSection = "^((\\s).*([\\d]+)([\\.]{0,1})([\\s]+).*)";
-        String secondLevelSection = "^((\\s).*([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+).*)";
-        String thirdLevelSection = "^((\\s).*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+).*)";
+        String firstLevelSection = "^((\\s)*([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
+        String secondLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
+        String thirdLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
 
 
 //        String fourthLevelSection = "^((\\s).*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+).*)";
@@ -301,9 +307,16 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             String currentLineText = ls.getText().trim();
             String squishedLineText = currentLineText.replaceAll("\\s", "");
 
-            for (int j = 0; j < nonSectionWords.length; j++) {
-                if (currentLineText.matches(nonSectionWords[j])) {
-                    LayoutUtils.setFeatureValue(ls, "startsNonSectionWord", 1.0);
+            for (int j = 0; j < tableWords.length; j++) {
+                if (currentLineText.matches(tableWords[j])) {
+                    LayoutUtils.setFeatureValue(ls, "startsTableWord", 1.0);
+                    break;
+                }
+            }
+
+            for (int j = 0; j < figureWords.length; j++) {
+                if (currentLineText.matches(figureWords[j])) {
+                    LayoutUtils.setFeatureValue(ls, "startsFigureWord", 1.0);
                     break;
                 }
             }

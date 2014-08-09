@@ -41,59 +41,98 @@ public class BodyRulesTransducer  {
         Sequence transducedData = new TokenSequence();
 //        String label = "";
         boolean currentlyInColumn = false;
+        int tokenId = 0;
         for(int i=0; i<data.getLineSpans().size(); i++)
         {
             String label = "";
+            Span previousSpan = i>0?(Span)data.getLineSpans().get(i-1):null;
             Span currentSpan = (Span)data.getLineSpans().get(i);
+            Span nextSpan = i<data.getLineSpans().size()-1?(Span)data.getLineSpans().get(i+1):null;
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
 
-
-
-
-
-            if(LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated"))
+            if((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
+                    LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn"))
+                    && (!LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated")
+                            || (LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
+                            nextSpan != null && !LayoutUtils.isActiveFeature(nextSpan, "newColumn") &&
+                                !LayoutUtils.isActiveFeature(nextSpan, "newPage") &&
+                                !LayoutUtils.isActiveFeature(nextSpan, "noColumnAssociated"))
+                        ) &&
+                    (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance4pxGreater") || (previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance4pxGreater"))))
             {
-                currentlyInColumn = false;
+                label = "section-marker";
             }
 
-            if(LayoutUtils.isActiveFeature(currentSpan,"columnLayoutChange"))
+            if(label.equals("") && LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
+                    !((!LayoutUtils.isActiveFeature(currentSpan, "newPage") &&
+                            !LayoutUtils.isActiveFeature(currentSpan, "newColumn") &&
+                            !LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
+                                                                    && previousSpan!=null &&
+                            !LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") &&
+                            !LayoutUtils.isActiveFeature(previousSpan, "noColumnAssociated") &&  //&&
+                            !LayoutUtils.isActiveFeature(currentSpan, "columnLayoutChange")
+                    )))
             {
-                label = "column";
-                currentlyInColumn = true;
+                label = "notext";
+            }
+            else if(label.equals(""))
+            {
+                label = "text-inside";
             }
 
-            if(currentlyInColumn)
+            if(LayoutUtils.isActiveFeature(currentSpan,"columnLayoutChange") /*&& !(previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan,"columnLayoutChange"))*/)
             {
-                label = "column";
-            }
-            else
-            {
-                label = "nocolumn";
+                label = "text-begin";
             }
 
+            if(LayoutUtils.isActiveFeature(currentSpan, "startsTableWord") && LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft"))
+            {
+                label = "table-marker";
+            }
 
-            //((TokenSequence)transducedData).add(label);
-            addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData);
-//            System.out.println("inside loop");
+            if(LayoutUtils.isActiveFeature(currentSpan, "startsFigureWord") && LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft"))
+            {
+                label = "figure-marker";
+            }
 
+            tokenId = addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData, data,tokenId);
         }
 
         return transducedData;
     }
 
 
-    public void addLabelToAllSpans(Span span, String label, TokenSequence transducedData)
+    public int addLabelToAllSpans(Span span, String label, TokenSequence transducedData, NewHtmlTokenization data,
+                                   int tokenId)
     {
-        if(span instanceof CompositeSpan)
-        {
-            for(int i =0; i<((CompositeSpan)span).getSpans().size(); i++)
-            {
-                transducedData.add(label);
-            }
-        }
-        else
+
+        span.getEndIdx();
+        Span tok = null;
+//        Token tkn = data.getToken(1);
+//here add to check "column-inside"
+        while(tokenId< data.size() &&  (tok = data.getSpan(tokenId) ) .getEndIdx()<=span.getEndIdx() )
         {
             transducedData.add(label);
+            ++tokenId;
+            if(label.equals("text-begin"))
+            {
+                label = "text-inside";
+            }
         }
+        return tokenId;
+
+//        if(span instanceof CompositeSpan)
+//        {
+//            for(int i =0; i<((CompositeSpan)span).getSpans().size(); i++)
+//            {
+//
+//                transducedData.add(label);
+//            }
+//        }
+//        else
+//        {
+//            transducedData.add(label);
+//        }
+//        return lastTokenId;
     }
 }

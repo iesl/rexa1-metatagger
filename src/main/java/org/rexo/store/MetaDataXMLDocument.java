@@ -333,10 +333,16 @@ public class MetaDataXMLDocument {
 
 
 		//  reconstruct body
-		Element bodyElement = new Element( "body" );
-		String bodyText = bodyTokenization.getFormattedText();
-		bodyElement.setText( bodyText );
-		contentElement.addContent( bodyElement );
+//		Element bodyElement = new Element( "body" );
+//		String bodyText = bodyTokenization.getFormattedText();
+//		bodyElement.setText( bodyText );
+//		contentElement.addContent( bodyElement );
+
+        //bodyElement is the one with sections' information
+		Element bodyElement = (Element)segmentations.get("bodyElement");
+        Element newBdy = (Element)bodyElement.clone();
+        contentElement.addContent(newBdy);
+
 
 		// reconstruct biblio
 		Element biblioElement = new Element( "biblio" );

@@ -44,6 +44,10 @@ public class CRFOutputFormatter {
 			// hack: header/reference related fixes
 			labels = labels.replaceAll( "author-begin", "authors:^author" );
 			labels = labels.replaceAll( "author-inside", "authors:author" );
+            //for body
+            labels = labels.replaceAll( "text-begin", "^text" );
+            labels = labels.replaceAll( "text-inside", "text" );
+
 			String[] labelParts = labels.split( "[:|]" );
             BoxCoordinates bcord = getSpanBoxCoordinates(span);
             //kzaporojets: gets the columns and its coordinates in terms of the width
