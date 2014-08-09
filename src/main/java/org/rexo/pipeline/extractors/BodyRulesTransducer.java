@@ -89,12 +89,21 @@ public class BodyRulesTransducer  {
                 label = "text-begin";
             }
 
-            if(LayoutUtils.isActiveFeature(currentSpan, "startsTableWord") && LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft"))
+            if(LayoutUtils.isActiveFeature(currentSpan, "startsTableWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft") //
+
+            //todo: work on it
+            // ||
+            //        (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance12pxGreater"))
+            ))
             {
                 label = "table-marker";
             }
 
-            if(LayoutUtils.isActiveFeature(currentSpan, "startsFigureWord") && LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft"))
+            if(LayoutUtils.isActiveFeature(currentSpan, "startsFigureWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
+                    //todo: work on it 
+                    // ||
+                    //(previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance12pxGreater"))
+                    ))
             {
                 label = "figure-marker";
             }
