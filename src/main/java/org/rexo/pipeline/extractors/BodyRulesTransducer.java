@@ -39,9 +39,10 @@ public class BodyRulesTransducer  {
 
 
         Sequence transducedData = new TokenSequence();
-//        String label = "";
         boolean currentlyInColumn = false;
         int tokenId = 0;
+
+        boolean previousSectionMarker = false;
         for(int i=0; i<data.getLineSpans().size(); i++)
         {
             String label = "";
@@ -58,7 +59,10 @@ public class BodyRulesTransducer  {
                                 !LayoutUtils.isActiveFeature(nextSpan, "newPage") &&
                                 !LayoutUtils.isActiveFeature(nextSpan, "noColumnAssociated"))
                         ) &&
-                    (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance4pxGreater") || (previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance4pxGreater"))))
+                    (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance4pxGreater") ||
+                            (previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance4pxGreater"))) &&
+                    (previousSpan == null || (LayoutUtils.isActiveFeature(previousSpan, "endsInDot") && !previousSectionMarker) || previousSectionMarker )
+                    )
             {
                 label = "section-marker";
             }
@@ -96,6 +100,15 @@ public class BodyRulesTransducer  {
             }
 
             tokenId = addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData, data,tokenId);
+
+            if(label.equals("section-marker"))
+            {
+                previousSectionMarker = true;
+            }
+            else
+            {
+                previousSectionMarker = false;
+            }
         }
 
         return transducedData;

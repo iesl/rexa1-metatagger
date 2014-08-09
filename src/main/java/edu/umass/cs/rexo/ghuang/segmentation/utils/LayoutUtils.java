@@ -230,7 +230,10 @@ public class LayoutUtils {
 
         //by default, considers that the first column, is the one that appears first in the list of allSpans grouped by qty
         ColumnData firstColumn = allSpans.get(0).getKey();
-        columnList.add(firstColumn);
+        //only columns with width > 50 are considered as columns
+        if(firstColumn.getWidth()>50) {
+            columnList.add(firstColumn);
+        }
 
 //        int widthSoFar = firstColumn.getWidth();
 
@@ -246,8 +249,9 @@ public class LayoutUtils {
             //2- If it overlaps, then at leas one border should be equal
             //3- can not overlap more than 1 column
             //4- the qty >=3?
+            //5- minimum width of 50?
             if(colData.qty >= 3 && contiguousCounterpartRatio(colData,0.8) &&
-                    smartOverlaps(columnList, colData.getKey()))
+                    smartOverlaps(columnList, colData.getKey()) && colData.key.getWidth()>50)
             {
                 //add column
                 columnList.add(colData.getKey());
