@@ -30,6 +30,18 @@ public class LayoutUtils {
         }
     }
 
+    public static boolean isPropertySet(Span span, String property)
+    {
+        if(span instanceof CompositeSpan)
+        {
+            return ((CompositeSpan)span).getNumericProperty (property) == 1.0;
+        }
+        else
+        {
+            return ((StringSpan)span).getNumericProperty(property) == 1.0;
+        }
+    }
+
     public static boolean isActiveFeature(Span span, String property)
     {
         if(span instanceof CompositeSpan)

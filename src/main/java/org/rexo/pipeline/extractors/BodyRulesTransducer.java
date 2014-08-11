@@ -61,7 +61,11 @@ public class BodyRulesTransducer  {
                         ) &&
                     (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance4pxGreater") ||
                             (previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance4pxGreater"))) &&
-                    (previousSpan == null || (LayoutUtils.isActiveFeature(previousSpan, "endsInDot") && !previousSectionMarker) || previousSectionMarker )
+
+                    (!LayoutUtils.isActiveFeature(currentSpan, "endsInDot") &&
+                                    LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft"))
+                    //sometimes doesn't work because pstotext ommits sentences
+                    // (previousSpan == null || (LayoutUtils.isActiveFeature(previousSpan, "endsInDot") && !previousSectionMarker) || previousSectionMarker )
                     )
             {
                 label = "section-marker";
@@ -100,7 +104,7 @@ public class BodyRulesTransducer  {
             }
 
             if(LayoutUtils.isActiveFeature(currentSpan, "startsFigureWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
-                    //todo: work on it 
+                    //todo: work on it
                     // ||
                     //(previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance12pxGreater"))
                     ))

@@ -66,11 +66,15 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         List<LayoutUtils.Entry<Integer>> lineHeight = new ArrayList<LayoutUtils.Entry<Integer>>();
 
         int prevPageNum = 0;
+        int lineSpanCount = -1;
 
         //first scan to calculate general statistics of the paper (such as line width, or vertical distances between lines)
         for(int i =0; i<lineInfos.length; i++ )
         {
-            Span lineSpan = (Span)data.getLineSpans().get(i);
+            lineSpanCount = updateLineSpanCounter(data, lineSpanCount + 1);
+
+//            Span lineSpan = (Span)data.getLineSpans().get(i);
+            Span lineSpan = (Span)data.getLineSpans().get(lineSpanCount);
 
 
             if (lineInfos[i].page != prevPageNum) {
@@ -135,7 +139,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         {
             ColumnData currentLineColumn  = LayoutUtils.getCurrentLineColumn(lineInfos,i,columns.get(lineInfos[i].page),
                     true, columnAcceptableError, lastLineColumn, verticalDistance.get(0).getKey()) ;
-            Span lineSpan = (Span)data.getLineSpans().get(i);
+            lineSpanCount = updateLineSpanCounter(data, lineSpanCount + 1);
+            Span lineSpan = (Span)data.getLineSpans().get(lineSpanCount); // (Span)data.getLineSpans().get(i);
             ColumnData sloppyColumn = null;
             if(currentLineColumn == null)
             {
@@ -201,6 +206,10 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                     {
                         LayoutUtils.setFeatureValue(lineSpan,"columnLayoutChange",1.0);
                     }
+                }
+                else
+                {
+                    LayoutUtils.setFeatureValue(lineSpan,"columnLayoutChange",1.0);
                 }
                 lastLineColumn = currentLineColumn;
             }
@@ -278,7 +287,18 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
     }
 
+    private static int updateLineSpanCounter(NewHtmlTokenization data, int currentCounter)
+    {
+        while(currentCounter < data.getLineSpans().size() &&  LayoutUtils.isPropertySet((Span)data.getLineSpans().get(currentCounter),"isHeaderFooterLine"))
+        {
+            currentCounter++;
+        }
+        return currentCounter;
+    }
+
     private static void computeLexiconFeatures(/*LineInfo[] lineInfos,*/ NewHtmlTokenization data) {
+
+
         // high correlation with non-bibliographic content
         String[] tableWords = {"^(Table).*"};
         String[] figureWords = {"^(Figure).*", "^(Fig\\.).*"};
@@ -291,18 +311,15 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         String thirdLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
 
 
-//        String fourthLevelSection = "^((\\s).*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+).*)";
-
-                /*{ "^[^A-Za-z]*Received[^A-Za-z]",
-                "^[A-Za-z]*Figure(s)?[^A-Za-z]",
-                "^[A-Za-z]*Table(s)?[^A-Za-z]", "^[A-Za-z]*Graph(s)?[^A-Za-z]",
-                "We ", " we ", "She ", " she ", "He ", " he ", "Our ", " our ",
-                "Her ", " her ", "His ", " his ", "These ", " these ", "Acknowledgements" };*/
-
+        int lineSpanCount = -1;
         for(int i =0; i<data.getLineSpans().size(); i++ )
         {
+
+            lineSpanCount = updateLineSpanCounter(data, lineSpanCount + 1);
+
             List<String> lexiconFeatures = new ArrayList<String>();
-            Span ls = (Span)data.getLineSpans().get(i);
+//            Span ls = (Span)data.getLineSpans().get(i);
+            Span ls = (Span)data.getLineSpans().get(lineSpanCount);
 
             String currentLineText = ls.getText().trim();
             String squishedLineText = currentLineText.replaceAll("\\s", "");
