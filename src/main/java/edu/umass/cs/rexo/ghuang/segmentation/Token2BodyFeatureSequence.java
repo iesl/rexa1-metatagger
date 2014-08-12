@@ -73,7 +73,6 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         {
             lineSpanCount = updateLineSpanCounter(data, lineSpanCount + 1);
 
-//            Span lineSpan = (Span)data.getLineSpans().get(i);
             Span lineSpan = (Span)data.getLineSpans().get(lineSpanCount);
 
 
@@ -221,6 +220,22 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             }
 
             //the following are additional features to implement:
+
+            //- if it is near the top of the page
+            Boolean isContentNearTheTop = LayoutUtils.isNearTheTop(lineInfos[i], pagesData.get(lineInfos[i].page), 100);
+
+            if(isContentNearTheTop)
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"nearThe100PxOfTop", 1.0);
+            }
+
+            isContentNearTheTop = LayoutUtils.isNearTheTop(lineInfos[i], pagesData.get(lineInfos[i].page), 150);
+
+            if(isContentNearTheTop)
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"nearThe150PxOfTop", 1.0);
+            }
+
             //- vertical distance outliers
             Integer mostCommonVertDistance = verticalDistance.get(0).getKey();
             Integer currentVertDistance = LayoutUtils.getCurrentVerticalDistance(lineInfos, i);

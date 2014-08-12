@@ -28,6 +28,7 @@ public class BodyRulesTransducer  {
 
         boolean previousSectionMarker = false;
         String figureOrTableMarker = "";
+        boolean debugMe  = false;
         for(int i=0; i<data.getLineSpans().size(); i++)
         {
             String label = "";
@@ -35,6 +36,10 @@ public class BodyRulesTransducer  {
             Span currentSpan = (Span)data.getLineSpans().get(i);
             Span nextSpan = i<data.getLineSpans().size()-1?(Span)data.getLineSpans().get(i+1):null;
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
+            if(!debugMe)
+            {
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 3.0;
+            }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
                     LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn"))
@@ -52,10 +57,18 @@ public class BodyRulesTransducer  {
                     //sometimes doesn't work because pstotext ommits sentences
                     // (previousSpan == null || (LayoutUtils.isActiveFeature(previousSpan, "endsInDot") && !previousSectionMarker) || previousSectionMarker )
                     || // in case the section marker has several lines
-                    (previousSectionMarker && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance4pxGreater"))
-                    )
+                    (previousSectionMarker && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater"))
+            )
             {
-                label = "section-marker";
+                if (LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
+                        LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn"))
+                {
+                    label = "section-marker-begin";
+                }
+                else
+                {
+                    label = "section-marker-inside";
+                }
             }
 
             if(label.equals("") && LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
@@ -90,9 +103,8 @@ public class BodyRulesTransducer  {
 
             if(LayoutUtils.isActiveFeature(currentSpan, "startsTableWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft") //
 
-            //todo: work on it
-            // ||
-            //        (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance12pxGreater"))
+             ||
+                    (LayoutUtils.isActiveFeature(currentSpan, "up") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
             ))
             {
                 label = "table-marker";
@@ -101,7 +113,8 @@ public class BodyRulesTransducer  {
 
             if(LayoutUtils.isActiveFeature(currentSpan, "startsFigureWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
                     //todo: work on it
-                    // ||
+                     ||
+                    (LayoutUtils.isActiveFeature(currentSpan, "up") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
                     //(previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance12pxGreater"))
                     ))
             {
@@ -117,7 +130,7 @@ public class BodyRulesTransducer  {
 
             tokenId = addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData, data,tokenId);
 
-            if(label.equals("section-marker"))
+            if(label.equals("section-marker-begin") || label.equals("section-marker-inside"))
             {
                 previousSectionMarker = true;
             }
@@ -146,6 +159,10 @@ public class BodyRulesTransducer  {
             if(label.equals("text-begin"))
             {
                 label = "text-inside";
+            }
+            if(label.equals("section-marker-begin"))
+            {
+                label = "section-marker-inside";
             }
         }
         return tokenId;

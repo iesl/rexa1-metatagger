@@ -353,6 +353,26 @@ public class LayoutUtils {
         return false;
     }
 
+    public static boolean isNearTheTop(LineInfo lineInfo, PageData page, double percentFromTop)
+    {
+        int diffTops = page.getTopY() - lineInfo.ury;
+        if(((double)diffTops)/((double)page.getHeight())<percentFromTop)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isNearTheTop(LineInfo lineInfo, PageData page, int pixels)
+    {
+        int diffTops = page.getTopY() - lineInfo.ury;
+        if(diffTops<=pixels)
+        {
+            return true;
+        }
+        return false;
+    }
+
     private static boolean isWidthSimilar(List<ColumnData> columns, ColumnData columnToCheck, double errorRatio)
     {
         for(ColumnData col: columns)

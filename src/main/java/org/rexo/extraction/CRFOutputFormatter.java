@@ -48,6 +48,9 @@ public class CRFOutputFormatter {
             labels = labels.replaceAll( "text-begin", "^text" );
             labels = labels.replaceAll( "text-inside", "text" );
 
+            labels = labels.replaceAll( "section-marker-begin", "^section-marker" );
+            labels = labels.replaceAll( "section-marker-inside", "section-marker" );
+
 			String[] labelParts = labels.split( "[:|]" );
             BoxCoordinates bcord = getSpanBoxCoordinates(span);
             //kzaporojets: gets the columns and its coordinates in terms of the width
