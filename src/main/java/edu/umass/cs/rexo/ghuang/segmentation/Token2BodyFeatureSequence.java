@@ -92,6 +92,11 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(lineSpan,"upAndToTheLeft", 1.0);
             }
 
+            if (i>0 && (lineInfos[i].lly > lineInfos[i-1].lly))
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"up", 1.0);
+            }
+
             LayoutUtils.adjustLineHeight(lineInfos, i, lineHeight);
             LayoutUtils.adjustVerticalDistance(lineInfos, i, verticalDistance);
             LayoutUtils.adjustLineWidth(lineInfos, i, lineWidth);

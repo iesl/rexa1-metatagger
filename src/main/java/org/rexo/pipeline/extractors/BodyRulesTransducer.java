@@ -21,28 +21,13 @@ public class BodyRulesTransducer  {
     public Sequence transduce(NewHtmlTokenization data)
     {
 
-/*<body>
-
-  <section>
-    <section-marker> <text page="3" pos="x:30,y:304">2 Experimental </text> </section-.>
-
-    <section>
-      <section-marker> 2.3. Electrochemical measurement </section-marker>
-      <section-text>
-        <text pos...>... for electrochemical measurements, the Fe2P nanoparticle </text><text pos="">>elec-trodes were constructed through mixing the products withcarbonyl nickel powders in a weight ratio of 1:3. The powdermixtures were pressed under 30 MPa pressure into a small pellet of10 mm in diameter. Then, the electrodes were conducted in a threecompartment  cell  using  an  LAND  battery  test  instrument(CT2001A). NiOOH/Ni(OH)2and Hg/HgO were used as the counterelectrode and the referenc
-      </section-text>
-    </section>
-
-  </section>
-
-</body>*/
-
 
         Sequence transducedData = new TokenSequence();
         boolean currentlyInColumn = false;
         int tokenId = 0;
 
         boolean previousSectionMarker = false;
+        String figureOrTableMarker = "";
         for(int i=0; i<data.getLineSpans().size(); i++)
         {
             String label = "";
@@ -94,6 +79,13 @@ public class BodyRulesTransducer  {
                 label = "text-begin";
             }
 
+
+            if((!figureOrTableMarker.equals("") && (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") ||
+                    LayoutUtils.isActiveFeature(currentSpan, "up") || LayoutUtils.isActiveFeature(currentSpan, "newPage") )))
+            {
+                figureOrTableMarker = "";
+            }
+
             if(LayoutUtils.isActiveFeature(currentSpan, "startsTableWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft") //
 
             //todo: work on it
@@ -102,6 +94,7 @@ public class BodyRulesTransducer  {
             ))
             {
                 label = "table-marker";
+                figureOrTableMarker = "table-marker";
             }
 
             if(LayoutUtils.isActiveFeature(currentSpan, "startsFigureWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
@@ -111,7 +104,14 @@ public class BodyRulesTransducer  {
                     ))
             {
                 label = "figure-marker";
+                figureOrTableMarker = "figure-marker";
             }
+
+            if(!figureOrTableMarker.equals("") && !LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater"))
+            {
+                label = figureOrTableMarker;
+            }
+
 
             tokenId = addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData, data,tokenId);
 
