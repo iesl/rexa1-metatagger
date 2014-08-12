@@ -36,7 +36,7 @@ public class BodyRulesTransducer  {
             Span nextSpan = i<data.getLineSpans().size()-1?(Span)data.getLineSpans().get(i+1):null;
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
 
-            if((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
+            if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
                     LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn"))
                     && (!LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated")
                             || (LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
@@ -47,10 +47,12 @@ public class BodyRulesTransducer  {
                     (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance4pxGreater") ||
                             (previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance4pxGreater"))) &&
 
-                    (!LayoutUtils.isActiveFeature(currentSpan, "endsInDot") &&
-                                    LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft"))
+                    (!LayoutUtils.isActiveFeature(currentSpan, "endsInDot") /*&& in papers such as  2010Song_REcent_p... it makes the section markers to be ignored
+                                    LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft")*/))
                     //sometimes doesn't work because pstotext ommits sentences
                     // (previousSpan == null || (LayoutUtils.isActiveFeature(previousSpan, "endsInDot") && !previousSectionMarker) || previousSectionMarker )
+                    || // in case the section marker has several lines
+                    (previousSectionMarker && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance4pxGreater"))
                     )
             {
                 label = "section-marker";
