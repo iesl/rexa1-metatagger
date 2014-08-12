@@ -72,14 +72,15 @@ public class BodyRulesTransducer  {
             }
 
             if(label.equals("") && LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
-                    !((!LayoutUtils.isActiveFeature(currentSpan, "newPage") &&
-                            !LayoutUtils.isActiveFeature(currentSpan, "newColumn") &&
-                            !LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
-                                                                    && previousSpan!=null &&
-                            !LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") &&
-                            !LayoutUtils.isActiveFeature(previousSpan, "noColumnAssociated") &&  //&&
-                            !LayoutUtils.isActiveFeature(currentSpan, "columnLayoutChange")
-                    )))
+                    (LayoutUtils.isActiveFeature(currentSpan, "newPage") ||
+                            LayoutUtils.isActiveFeature(currentSpan, "newColumn") ||
+                            LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
+                                        || (previousSpan==null) ||
+                            LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") ||
+                            LayoutUtils.isActiveFeature(previousSpan, "noColumnAssociated") ||  //&&
+                            LayoutUtils.isActiveFeature(currentSpan, "columnLayoutChange") ||
+                            LayoutUtils.isActiveFeature(currentSpan, "lineHeight30pxGreater")
+                    ))
             {
                 label = "notext";
             }

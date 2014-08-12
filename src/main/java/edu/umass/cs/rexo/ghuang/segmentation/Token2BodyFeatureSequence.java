@@ -134,6 +134,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         }
 
         ColumnData lastLineColumn = null;
+        lineSpanCount = -1;
         //second scan to calculate more detailed features based on the statistics of the first scan
         for(int i =0; i<lineInfos.length; i++ )
         {
@@ -260,6 +261,9 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             if(currentLineHeight > mostCommonLineHeight + 9){
                 LayoutUtils.setFeatureValue(lineSpan,"lineHeight10pxGreater", 1.0);
             }
+            if(currentLineHeight > mostCommonLineHeight + 29){
+                LayoutUtils.setFeatureValue(lineSpan,"lineHeight30pxGreater", 1.0);
+            }
 
             //- centered or not
             int leftMarginColumn = currentLineColumn!=null?currentLineColumn.getLeftX():sloppyColumn!=null?sloppyColumn.getLeftX():-1;
@@ -311,15 +315,15 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         String thirdLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
 
 
-        int lineSpanCount = -1;
+//        int lineSpanCount = -1;
         for(int i =0; i<data.getLineSpans().size(); i++ )
         {
 
-            lineSpanCount = updateLineSpanCounter(data, lineSpanCount + 1);
+//            lineSpanCount = updateLineSpanCounter(data, lineSpanCount + 1);
 
             List<String> lexiconFeatures = new ArrayList<String>();
-//            Span ls = (Span)data.getLineSpans().get(i);
-            Span ls = (Span)data.getLineSpans().get(lineSpanCount);
+            Span ls = (Span)data.getLineSpans().get(i);
+//            Span ls = (Span)data.getLineSpans().get(lineSpanCount);
 
             String currentLineText = ls.getText().trim();
             String squishedLineText = currentLineText.replaceAll("\\s", "");
