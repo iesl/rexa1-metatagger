@@ -245,6 +245,31 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(lineSpan,"nearThe150PxOfTop", 1.0);
             }
 
+            //- the character width
+            int pxlsXCharacter = LayoutUtils.getPixelsPerCharacter(lineInfos, i);
+
+            int mostCommonPxlsXCharacter = pixelsPerCharacter.get(0).getKey();
+            if(pxlsXCharacter > mostCommonPxlsXCharacter)
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"pixelsPerCharacter1pxGreater", 1.0);
+            }
+            if(pxlsXCharacter > mostCommonPxlsXCharacter+1)
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"pixelsPerCharacter2pxGreater", 1.0);
+            }
+            if(pxlsXCharacter > mostCommonPxlsXCharacter+2)
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"pixelsPerCharacter3pxGreater", 1.0);
+            }
+            if(pxlsXCharacter > mostCommonPxlsXCharacter+3)
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"pixelsPerCharacter4pxGreater", 1.0);
+            }
+            if(pxlsXCharacter > mostCommonPxlsXCharacter+4)
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"pixelsPerCharacter5pxGreater", 1.0);
+            }
+
             //- vertical distance outliers
             Integer mostCommonVertDistance = verticalDistance.get(0).getKey();
             Integer currentVertDistance = LayoutUtils.getCurrentVerticalDistance(lineInfos, i);
