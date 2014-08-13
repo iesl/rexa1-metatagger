@@ -55,6 +55,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
     private static void computeLayoutFeatures(LineInfo[] lineInfos, NewHtmlTokenization data) {
         List <LayoutUtils.Entry<Integer>> verticalDistance = new ArrayList<LayoutUtils.Entry<Integer>>();
         List <LayoutUtils.Entry<Integer>> lineWidth = new ArrayList<LayoutUtils.Entry<Integer>>();
+        List <LayoutUtils.Entry<Integer>> pixelsPerCharacter = new ArrayList<LayoutUtils.Entry<Integer>>();
 
         //it can be the case when the first page has one column and the rest of the pages two for example, this is why it is important
         //to have a per-page width stats
@@ -64,6 +65,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         Map <Integer, LayoutUtils.PageData> pagesData = new HashMap<Integer,LayoutUtils.PageData>();
         Map <Integer, List<ColumnData>> columns = new HashMap<Integer,List<ColumnData>>();
         List<LayoutUtils.Entry<Integer>> lineHeight = new ArrayList<LayoutUtils.Entry<Integer>>();
+
 
         int prevPageNum = 0;
         int lineSpanCount = -1;
@@ -96,6 +98,11 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(lineSpan,"up", 1.0);
             }
 
+            if (i>0 && (lineInfos[i].llx > lineInfos[i-1].urx))
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"right", 1.0);
+            }
+
             LayoutUtils.adjustLineHeight(lineInfos, i, lineHeight);
             LayoutUtils.adjustVerticalDistance(lineInfos, i, verticalDistance);
             LayoutUtils.adjustLineWidth(lineInfos, i, lineWidth);
@@ -103,10 +110,12 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true, columnAcceptableError);
             LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false,0);
             LayoutUtils.adjustPageData(lineInfos, i, pagesData);
+            LayoutUtils.adjustPixelsPerCharacter(lineInfos, i, pixelsPerCharacter);
         }
         Collections.sort(verticalDistance);
         Collections.sort(lineHeight);
         Collections.sort(lineWidth);
+        Collections.sort(pixelsPerCharacter);
         for(Integer page: widthLinePerPage.keySet())
         {
             Collections.sort(widthLinePerPage.get(page));
@@ -260,6 +269,10 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             }
             if(currentVertDistance > mostCommonVertDistance+11){
                 LayoutUtils.setFeatureValue(lineSpan,"verticalDistance12pxGreater", 1.0);
+            }
+
+            if(currentVertDistance > mostCommonVertDistance+99){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistance100pxGreater", 1.0);
             }
 
             //-height of the line font

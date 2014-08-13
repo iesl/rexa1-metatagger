@@ -38,7 +38,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 3.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 9.0;
             }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -95,37 +95,45 @@ public class BodyRulesTransducer  {
             }
 
 
-            if((!figureOrTableMarker.equals("") && (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") ||
-                    LayoutUtils.isActiveFeature(currentSpan, "up") || LayoutUtils.isActiveFeature(currentSpan, "newPage") )))
+            if((!figureOrTableMarker.equals("") && (LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") ||
+                    LayoutUtils.isActiveFeature(currentSpan, "up") || LayoutUtils.isActiveFeature(currentSpan, "right") || LayoutUtils.isActiveFeature(currentSpan, "newPage") )))
             {
                 figureOrTableMarker = "";
+            }
+            if(!figureOrTableMarker.equals("") && !LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater"))
+            {
+                label = figureOrTableMarker;
             }
 
             if(LayoutUtils.isActiveFeature(currentSpan, "startsTableWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft") //
 
              ||
                     (LayoutUtils.isActiveFeature(currentSpan, "up") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
+             ||
+                    (LayoutUtils.isActiveFeature(currentSpan, "right") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
+             ||
+                    (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance100pxGreater") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
             ))
             {
-                label = "table-marker";
-                figureOrTableMarker = "table-marker";
+                label = "table-marker-begin";
+                figureOrTableMarker = "table-marker-inside";
             }
 
             if(LayoutUtils.isActiveFeature(currentSpan, "startsFigureWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
                     //todo: work on it
                      ||
                     (LayoutUtils.isActiveFeature(currentSpan, "up") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
-                    //(previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance12pxGreater"))
+                    ||
+                    (LayoutUtils.isActiveFeature(currentSpan, "right") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
+                    ||
+                    (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance100pxGreater") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
                     ))
             {
-                label = "figure-marker";
-                figureOrTableMarker = "figure-marker";
+                label = "figure-marker-begin";
+                figureOrTableMarker = "figure-marker-inside";
             }
 
-            if(!figureOrTableMarker.equals("") && !LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater"))
-            {
-                label = figureOrTableMarker;
-            }
+
 
 
             tokenId = addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData, data,tokenId);
@@ -163,6 +171,14 @@ public class BodyRulesTransducer  {
             if(label.equals("section-marker-begin"))
             {
                 label = "section-marker-inside";
+            }
+            if(label.equals("figure-marker-begin"))
+            {
+                label = "figure-marker-inside";
+            }
+            if(label.equals("table-marker-begin"))
+            {
+                label = "table-marker-inside";
             }
         }
         return tokenId;

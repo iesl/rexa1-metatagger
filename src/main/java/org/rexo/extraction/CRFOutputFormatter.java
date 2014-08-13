@@ -51,7 +51,13 @@ public class CRFOutputFormatter {
             labels = labels.replaceAll( "section-marker-begin", "^section-marker" );
             labels = labels.replaceAll( "section-marker-inside", "section-marker" );
 
-			String[] labelParts = labels.split( "[:|]" );
+            labels = labels.replaceAll( "table-marker-begin", "^table-marker" );
+            labels = labels.replaceAll( "table-marker-inside", "table-marker" );
+
+            labels = labels.replaceAll( "figure-marker-begin", "^figure-marker" );
+            labels = labels.replaceAll( "figure-marker-inside", "figure-marker" );
+
+            String[] labelParts = labels.split( "[:|]" );
             BoxCoordinates bcord = getSpanBoxCoordinates(span);
             //kzaporojets: gets the columns and its coordinates in terms of the width
             if(parentName.equals("reference")) {
@@ -259,10 +265,11 @@ public class CRFOutputFormatter {
                 initCol = elem.getAttribute("initialCol").getIntValue();
             }
 
-            String llxAttr = currentColumn==initCol?"llx":elem.getAttribute("llx")!=null?"llxc" + (Math.abs(currentColumn - initCol)+1):"llx";
-            String llyAttr = currentColumn==initCol?"lly":elem.getAttribute("lly")!=null?"llyc" + (Math.abs(currentColumn - initCol)+1):"lly";
-            String urxAttr = currentColumn==initCol?"urx":elem.getAttribute("urx")!=null?"urxc" + (Math.abs(currentColumn - initCol)+1):"urx";
-            String uryAttr = currentColumn==initCol?"ury":elem.getAttribute("ury")!=null?"uryc" + (Math.abs(currentColumn - initCol)+1):"ury";
+            //todo: see why the commented code fails on  1997Fey_The_affects_of_stoichiometry_and_synthesis_temperature_on_the_preperation_of_the_inverse_spinel_LiNiVO4_and_its_performance_as_a_new_high_voltage_cathod_material.pdf
+            String llxAttr = "llx"; //currentColumn==initCol?"llx":elem.getAttribute("llx")!=null?"llxc" + (Math.abs(currentColumn - initCol)+1):"llx";
+            String llyAttr = "lly"; //currentColumn==initCol?"lly":elem.getAttribute("lly")!=null?"llyc" + (Math.abs(currentColumn - initCol)+1):"lly";
+            String urxAttr = "urx"; //currentColumn==initCol?"urx":elem.getAttribute("urx")!=null?"urxc" + (Math.abs(currentColumn - initCol)+1):"urx";
+            String uryAttr = "ury"; //currentColumn==initCol?"ury":elem.getAttribute("ury")!=null?"uryc" + (Math.abs(currentColumn - initCol)+1):"ury";
 
 
 

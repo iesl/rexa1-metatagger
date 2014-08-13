@@ -85,6 +85,7 @@ public class MetaTagger {
 		.add( new GrantExtractionFilter() )
 		.add( new ReferenceExtractionFilter( refCrf, hdrCrf ) )
         .add( new BodyExtractionFilter())
+
 		// .add( new CitationContextFilter() )
 		// .add( new WriteAnnotatedXMLFilter() )
 		// .add( new MetatagPostconditionTestFilter() )

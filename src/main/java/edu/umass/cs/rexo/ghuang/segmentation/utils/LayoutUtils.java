@@ -450,6 +450,28 @@ public class LayoutUtils {
         return false;
     }
 
+    public static void adjustPixelsPerCharacter(LineInfo[] lineInfos, int i, List <Entry<Integer>> pixelsPerCharacter)
+    {
+        int width = lineInfos[i].urx - lineInfos[i].llx;
+        String text = lineInfos[i].text;
+
+        int pxlsXCharacter = (int) Math.round(((double)width)/((double)text.length()));
+
+        Entry currEntry = new Entry(pxlsXCharacter,1 );
+
+        int iOf = pixelsPerCharacter.indexOf(currEntry);
+        if(iOf>-1)
+        {
+            Entry actualData = pixelsPerCharacter.get(iOf);
+            actualData.setQty(actualData.getQty()+1);
+        }
+        else
+        {
+            pixelsPerCharacter.add(currEntry);
+        }
+
+    }
+
     public static void adjustLineWidth(LineInfo[] lineInfos, int i, List <Entry<Integer>> lineWidth)
     {
         int width = lineInfos[i].urx - lineInfos[i].llx;
