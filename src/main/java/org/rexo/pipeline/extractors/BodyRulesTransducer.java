@@ -10,7 +10,9 @@ import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils;
 import org.rexo.extraction.NewHtmlTokenization;
 import org.rexo.span.CompositeSpan;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by klimzaporojets on 8/4/14.
@@ -28,6 +30,14 @@ public class BodyRulesTransducer  {
 
         boolean previousSectionMarker = false;
         String figureOrTableMarker = "";
+
+        List<String> featuresTableContent = new ArrayList<String>();
+        featuresTableContent.add("pixelsPerCharacter2pxGreater");
+        featuresTableContent.add("pixelsPerCharacterUndefined");
+        featuresTableContent.add("noWordsFromDictionary");
+        featuresTableContent.add("3wordFromDictLess");
+
+
         boolean debugMe  = false;
         for(int i=0; i<data.getLineSpans().size(); i++)
         {
@@ -38,7 +48,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 4.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 9.0;
             }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -123,7 +133,11 @@ public class BodyRulesTransducer  {
             if(LayoutUtils.isActiveFeature(currentSpan, "startsTableWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft") //
 
              ||
-                    (LayoutUtils.isActiveFeature(currentSpan, "up") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
+                    (LayoutUtils.isActiveFeature(currentSpan, "up") &&
+                            LayoutUtils.isAnyOfFeaturesInFuture(data, i, featuresTableContent, 3, 10) /*
+                    && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop")
+
+                    */)
              ||
                     (LayoutUtils.isActiveFeature(currentSpan, "right") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
              ||

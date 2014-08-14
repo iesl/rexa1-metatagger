@@ -3,6 +3,7 @@ package edu.umass.cs.rexo.ghuang.segmentation.utils;
 import edu.umass.cs.mallet.base.extract.Span;
 import edu.umass.cs.mallet.base.extract.StringSpan;
 import edu.umass.cs.rexo.ghuang.segmentation.LineInfo;
+import org.rexo.extraction.NewHtmlTokenization;
 import org.rexo.span.CompositeSpan;
 import org.rexo.util.EnglishDictionary;
 
@@ -14,7 +15,26 @@ import java.util.*;
  */
 public class LayoutUtils {
 
-
+    public static boolean isAnyOfFeaturesInFuture(NewHtmlTokenization data, int i, List<String> features, int minOcurrences, int linesLookForward)
+    {
+        int qtyOcurrences = 0;
+        for (int cnt = i; cnt<i+linesLookForward; cnt++) {
+            if(cnt>=data.getLineSpans().size())
+            {
+                break;
+            }
+            Span lineSpan = (Span) data.getLineSpans().get(cnt);
+            for(String feature:features)
+            {
+                if(isActiveFeature(lineSpan,feature))
+                {
+                    qtyOcurrences++;
+                    break;
+                }
+            }
+        }
+        return qtyOcurrences>=minOcurrences;
+    }
 
     public static void setFeatureValue(Span span, String property, double value)
     {
