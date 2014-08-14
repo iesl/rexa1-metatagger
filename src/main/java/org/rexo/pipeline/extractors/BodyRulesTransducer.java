@@ -48,7 +48,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 12.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 10.0;
             }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -109,7 +109,9 @@ public class BodyRulesTransducer  {
                                     !LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacter2pxGreater") &&
                                     !LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacterUndefined") &&
                                     !LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary") &&
-                                    !LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess")) ||
+                                    !LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess") &&
+                                    !(LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft") && !LayoutUtils.isActiveFeature(currentSpan, "endsInDot"))
+            ) ||
 
 //                                LayoutUtils.isActiveFeature(currentSpan, "up") ||
                                   LayoutUtils.isActiveFeature(currentSpan, "up20PxGreater") ||
@@ -124,17 +126,18 @@ public class BodyRulesTransducer  {
                             LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacter2pxGreater") ||
                             LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacterUndefined") ||
                             LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary") ||
-                            LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess")
+                            LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess")  ||
+                            (LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft") && !LayoutUtils.isActiveFeature(currentSpan, "endsInDot"))
                     ))
             {
                 label = figureOrTableMarker;
             }
-
+            boolean futureLayout = LayoutUtils.isAnyOfFeaturesInFuture(data, i, featuresTableContent, 3, 10);
             if(LayoutUtils.isActiveFeature(currentSpan, "startsTableWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft") //
 
              ||
-                    (LayoutUtils.isActiveFeature(currentSpan, "up") &&
-                            LayoutUtils.isAnyOfFeaturesInFuture(data, i, featuresTableContent, 3, 10) /*
+                    (LayoutUtils.isActiveFeature(currentSpan, "up") && futureLayout
+                             /*
                     && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop")
 
                     */)
@@ -142,6 +145,7 @@ public class BodyRulesTransducer  {
                     (LayoutUtils.isActiveFeature(currentSpan, "right") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
              ||
                     (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance100pxGreater") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
+             ||     (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") && futureLayout)
             ))
             {
                 label = "table-marker-begin";

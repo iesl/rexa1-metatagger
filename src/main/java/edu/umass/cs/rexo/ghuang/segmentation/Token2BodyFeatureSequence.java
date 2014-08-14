@@ -379,10 +379,10 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
     private static void computeLexiconFeatures(/*LineInfo[] lineInfos,*/ NewHtmlTokenization data,  EnglishDictionary dictionary) {
 
-
+        //R(?i:eferences)
         // high correlation with non-bibliographic content
-        String[] tableWords = {"^(Table).*"};
-        String[] figureWords = {"^(Figure).*", "^(Fig\\.).*"};
+        String[] tableWords = {"^T(?i:able).*"};
+        String[] figureWords = {"^F(?i:igure).*", "^F(?:ig\\.).*"};
 
         String allCaps = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ1-9]+";
         String initCap = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ].*";
