@@ -4,6 +4,7 @@ import edu.umass.cs.mallet.base.extract.Span;
 import edu.umass.cs.mallet.base.extract.StringSpan;
 import edu.umass.cs.rexo.ghuang.segmentation.LineInfo;
 import org.rexo.span.CompositeSpan;
+import org.rexo.util.EnglishDictionary;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -448,6 +449,45 @@ public class LayoutUtils {
             return true;
         }
         return false;
+    }
+
+    public static int getWordsInDictionary(String lineOfText, EnglishDictionary dictionary)
+    {
+        String cleanedText = lineOfText.replaceAll("[,\\.\\(\\)\\[\\]]", "");
+        String [] tokenized = cleanedText.split(" ");
+        int cont = 0;
+        for (String word:tokenized)
+        {
+            if (dictionary.contains(word))
+            {
+                cont++;
+            }
+        }
+
+        return cont;
+    }
+    public static void adjustWordsInDictionaryPerLine(String currentLineText,
+                        List <LayoutUtils.Entry<Integer>> wordsInDictionaryPerLine, EnglishDictionary dictionary)
+    {
+        int dictWordsInLine = getWordsInDictionary(currentLineText, dictionary);
+//todo: consider if return when the number of recognized words is 0 in the line
+//        if(dictWordsInLine==0)
+//        {
+//            return;
+//        }
+
+        Entry currEntry = new Entry(dictWordsInLine,1 );
+
+        int iOf = wordsInDictionaryPerLine.indexOf(currEntry);
+        if(iOf>-1)
+        {
+            Entry actualData = wordsInDictionaryPerLine.get(iOf);
+            actualData.setQty(actualData.getQty()+1);
+        }
+        else
+        {
+            wordsInDictionaryPerLine.add(currEntry);
+        }
     }
 
     public static int getPixelsPerCharacter(LineInfo[] lineInfos, int i)

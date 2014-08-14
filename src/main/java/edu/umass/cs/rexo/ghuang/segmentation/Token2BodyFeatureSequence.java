@@ -9,6 +9,7 @@ import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils;
 import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils.ColumnData;
 import org.rexo.extraction.NewHtmlTokenization;
 import org.rexo.span.CompositeSpan;
+import org.rexo.util.EnglishDictionary;
 
 import java.io.Serializable;
 import java.util.*;
@@ -28,17 +29,21 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
     static Pattern ptrnLonelyNumbers = Pattern.compile(lonelyNumbers);
     static Pattern ptrnLonelyLetters = Pattern.compile(lonelyLetters);
+    static List <LayoutUtils.Entry<Integer>> wordsInDictionaryPerLine = new ArrayList<LayoutUtils.Entry<Integer>>();
+
 
     private static int columnAcceptableError = 5; //pixels of sloppiness within a column accepted
 
     @Override
     public Instance pipe(Instance carrier) {
+        wordsInDictionaryPerLine = new ArrayList<LayoutUtils.Entry<Integer>>();
         NewHtmlTokenization data = (NewHtmlTokenization)carrier.getData();
 
-        List<CompositeSpan> lineSpans = data.getLineSpans();
+        //List<CompositeSpan> lineSpans = data.getLineSpans();
         NewHtmlTokenization2LineInfo nhtml2LineInfo = new NewHtmlTokenization2LineInfo();
         Instance onlyLines =  nhtml2LineInfo.pipe(carrier);
-        computeFeatures((LineInfo [])onlyLines.getData(),data);
+        EnglishDictionary dictionary = EnglishDictionary.createDefault();
+        computeFeatures((LineInfo [])onlyLines.getData(),data, dictionary);
 
         carrier.setData(data);
 
@@ -46,9 +51,9 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
     }
 
 
-    private void computeFeatures(LineInfo[] lineInfos, NewHtmlTokenization data)
+    private void computeFeatures(LineInfo[] lineInfos, NewHtmlTokenization data, EnglishDictionary dictionary)
     {
-        computeLexiconFeatures(data);
+        computeLexiconFeatures(data, dictionary);
         computeLayoutFeatures(lineInfos, data);
     }
 
@@ -56,6 +61,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         List <LayoutUtils.Entry<Integer>> verticalDistance = new ArrayList<LayoutUtils.Entry<Integer>>();
         List <LayoutUtils.Entry<Integer>> lineWidth = new ArrayList<LayoutUtils.Entry<Integer>>();
         List <LayoutUtils.Entry<Integer>> pixelsPerCharacter = new ArrayList<LayoutUtils.Entry<Integer>>();
+
 
         //it can be the case when the first page has one column and the rest of the pages two for example, this is why it is important
         //to have a per-page width stats
@@ -86,7 +92,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 }
             }
             else if (i > 0 && (lineInfos[i].llx > lineInfos[i-1].urx && lineInfos[i].lly > lineInfos[i-1].lly)) {
-                LayoutUtils.setFeatureValue(lineSpan,"newColumn",1.0);
+                LayoutUtils.setFeatureValue(lineSpan, "newColumn", 1.0);
             }
             else if (i>0 && (lineInfos[i].llx <= lineInfos[i-1].urx && lineInfos[i].lly > lineInfos[i-1].lly))
             {
@@ -111,6 +117,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false,0);
             LayoutUtils.adjustPageData(lineInfos, i, pagesData);
             LayoutUtils.adjustPixelsPerCharacter(lineInfos, i, pixelsPerCharacter);
+
         }
         Collections.sort(verticalDistance);
         Collections.sort(lineHeight);
@@ -347,6 +354,9 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(lineSpan, "tabbedLeftMargin", 1.0);
             }
+
+
+
         }
 
         System.out.print("sorted vertical distances");
@@ -362,7 +372,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         return currentCounter;
     }
 
-    private static void computeLexiconFeatures(/*LineInfo[] lineInfos,*/ NewHtmlTokenization data) {
+    private static void computeLexiconFeatures(/*LineInfo[] lineInfos,*/ NewHtmlTokenization data,  EnglishDictionary dictionary) {
 
 
         // high correlation with non-bibliographic content
@@ -441,7 +451,14 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(ls, "thirdLevelSectionPtrn", 1.0);
             }
+
+            //- the number of words in dictionary per line
+            LayoutUtils.adjustWordsInDictionaryPerLine(currentLineText, wordsInDictionaryPerLine, dictionary);
+
         }
+        Collections.sort(wordsInDictionaryPerLine);
+        System.out.println("end of lexicon in Token2BodyFeatureSequence");
+
     }
     private static boolean isUpFlagCount(String text, Pattern pattern, Double ratioActivation)
     {
