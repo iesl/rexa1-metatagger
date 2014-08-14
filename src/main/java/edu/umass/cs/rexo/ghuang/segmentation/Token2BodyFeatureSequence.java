@@ -114,7 +114,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             LayoutUtils.adjustLineWidth(lineInfos, i, lineWidth);
             LayoutUtils.adjustLineWidthPerPage(lineInfos, i, widthLinePerPage);
             LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true, columnAcceptableError);
-            LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false,0);
+            LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false, 0);
             LayoutUtils.adjustPageData(lineInfos, i, pagesData);
             LayoutUtils.adjustPixelsPerCharacter(lineInfos, i, pixelsPerCharacter);
 
@@ -387,7 +387,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         String thirdLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
 
 
-//        int lineSpanCount = -1;
+        //firs scan/loop to gather basic lexical statistics in the document
         for(int i =0; i<data.getLineSpans().size(); i++ )
         {
 
@@ -395,7 +395,6 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
             List<String> lexiconFeatures = new ArrayList<String>();
             Span ls = (Span)data.getLineSpans().get(i);
-//            Span ls = (Span)data.getLineSpans().get(lineSpanCount);
 
             String currentLineText = ls.getText().trim();
             String squishedLineText = currentLineText.replaceAll("\\s", "");
@@ -457,8 +456,45 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
         }
         Collections.sort(wordsInDictionaryPerLine);
-        System.out.println("end of lexicon in Token2BodyFeatureSequence");
+//        System.out.println("end of lexicon in Token2BodyFeatureSequence");
 
+        //second scan to compute the properties using statistics gathered in previous loop
+        for(int i =0; i<data.getLineSpans().size(); i++ ) {
+            Span ls = (Span)data.getLineSpans().get(i);
+
+            String currentLineText = ls.getText().trim();
+
+            int mostCommonNumberOfDictWords = wordsInDictionaryPerLine.get(0).getKey();
+            int currLineDictWords = LayoutUtils.getWordsInDictionary(currentLineText, dictionary);
+            if(currLineDictWords==0)
+            {
+                LayoutUtils.setFeatureValue(ls, "noWordsFromDictionary", 1.0);
+            }
+            if(mostCommonNumberOfDictWords>currLineDictWords)
+            {
+                LayoutUtils.setFeatureValue(ls, "1wordFromDictLess", 1.0);
+            }
+
+            if(mostCommonNumberOfDictWords>currLineDictWords+1)
+            {
+                LayoutUtils.setFeatureValue(ls, "2wordFromDictLess", 1.0);
+            }
+
+            if(mostCommonNumberOfDictWords>currLineDictWords+2)
+            {
+                LayoutUtils.setFeatureValue(ls, "3wordFromDictLess", 1.0);
+            }
+
+            if(mostCommonNumberOfDictWords>currLineDictWords+3)
+            {
+                LayoutUtils.setFeatureValue(ls, "4wordFromDictLess", 1.0);
+            }
+
+            if(mostCommonNumberOfDictWords>currLineDictWords+4)
+            {
+                LayoutUtils.setFeatureValue(ls, "5wordFromDictLess", 1.0);
+            }
+        }
     }
     private static boolean isUpFlagCount(String text, Pattern pattern, Double ratioActivation)
     {

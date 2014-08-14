@@ -453,9 +453,14 @@ public class LayoutUtils {
 
     public static int getWordsInDictionary(String lineOfText, EnglishDictionary dictionary)
     {
-        String cleanedText = lineOfText.replaceAll("[,\\.\\(\\)\\[\\]]", "");
+        String cleanedText = lineOfText.replaceAll("[,\\.\\(\\)\\[\\]]", "").toLowerCase();
         String [] tokenized = cleanedText.split(" ");
         int cont = 0;
+        //at least 3 words are expected in the line
+        if(tokenized.length<3)
+        {
+            return -1;
+        }
         for (String word:tokenized)
         {
             if (dictionary.contains(word))
@@ -463,18 +468,21 @@ public class LayoutUtils {
                 cont++;
             }
         }
-
+//        if(cont==0)
+//        {
+//            System.out.println(cleanedText);
+//        }
         return cont;
     }
     public static void adjustWordsInDictionaryPerLine(String currentLineText,
                         List <LayoutUtils.Entry<Integer>> wordsInDictionaryPerLine, EnglishDictionary dictionary)
     {
         int dictWordsInLine = getWordsInDictionary(currentLineText, dictionary);
-//todo: consider if return when the number of recognized words is 0 in the line
-//        if(dictWordsInLine==0)
-//        {
-//            return;
-//        }
+        if(dictWordsInLine==-1)
+        {
+            return;
+        //    System.out.println("zero");
+        }
 
         Entry currEntry = new Entry(dictWordsInLine,1 );
 
