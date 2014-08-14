@@ -38,7 +38,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 2.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 4.0;
             }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -101,7 +101,9 @@ public class BodyRulesTransducer  {
                                     !LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary") &&
                                     !LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess")) ||
 
-                                LayoutUtils.isActiveFeature(currentSpan, "up") ||
+//                                LayoutUtils.isActiveFeature(currentSpan, "up") ||
+                                  LayoutUtils.isActiveFeature(currentSpan, "up20PxGreater") ||
+
                                 /*LayoutUtils.isActiveFeature(currentSpan, "right") ||*/
                                 LayoutUtils.isActiveFeature(currentSpan, "newPage") )))
             {
