@@ -456,7 +456,6 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
         }
         Collections.sort(wordsInDictionaryPerLine);
-//        System.out.println("end of lexicon in Token2BodyFeatureSequence");
 
         //second scan to compute the properties using statistics gathered in previous loop
         for(int i =0; i<data.getLineSpans().size(); i++ ) {
