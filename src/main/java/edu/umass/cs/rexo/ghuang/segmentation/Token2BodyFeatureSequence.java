@@ -270,6 +270,10 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(lineSpan,"pixelsPerCharacter5pxGreater", 1.0);
             }
 
+            if(pxlsXCharacter == -1)
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"pixelsPerCharacterUndefined", 1.0);
+            }
             //- vertical distance outliers
             Integer mostCommonVertDistance = verticalDistance.get(0).getKey();
             Integer currentVertDistance = LayoutUtils.getCurrentVerticalDistance(lineInfos, i);
