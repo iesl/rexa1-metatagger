@@ -38,7 +38,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 9.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 2.0;
             }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -96,21 +96,23 @@ public class BodyRulesTransducer  {
 
 
             if((!figureOrTableMarker.equals("") && ( (LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") &&
-                                    !LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacter3pxGreater") &&
+                                    !LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacter2pxGreater") &&
                                     !LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacterUndefined") &&
-                                    !LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary")) ||
+                                    !LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary") &&
+                                    !LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess")) ||
 
                                 LayoutUtils.isActiveFeature(currentSpan, "up") ||
-                                LayoutUtils.isActiveFeature(currentSpan, "right") ||
+                                /*LayoutUtils.isActiveFeature(currentSpan, "right") ||*/
                                 LayoutUtils.isActiveFeature(currentSpan, "newPage") )))
             {
                 figureOrTableMarker = "";
             }
             if(!figureOrTableMarker.equals("") &&
                     (!LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") ||
-                            LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacter3pxGreater") ||
+                            LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacter2pxGreater") ||
                             LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacterUndefined") ||
-                            LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary")
+                            LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary") ||
+                            LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess")
                     ))
             {
                 label = figureOrTableMarker;
