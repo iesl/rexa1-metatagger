@@ -464,7 +464,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             String currentLineText = ls.getText().trim();
 
             int mostCommonNumberOfDictWords = wordsInDictionaryPerLine.get(0).getKey();
-            int currLineDictWords = LayoutUtils.getWordsInDictionary(currentLineText, dictionary);
+            int currLineDictWords = LayoutUtils.getWordsInDictionary(currentLineText, dictionary, true);
             if(currLineDictWords==0)
             {
                 LayoutUtils.setFeatureValue(ls, "noWordsFromDictionary", 1.0);

@@ -6,10 +6,7 @@ import edu.umass.cs.rexo.ghuang.segmentation.LineInfo;
 import org.rexo.span.CompositeSpan;
 import org.rexo.util.EnglishDictionary;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by klimzaporojets on 8/5/14.
@@ -451,17 +448,25 @@ public class LayoutUtils {
         return false;
     }
 
-    public static int getWordsInDictionary(String lineOfText, EnglishDictionary dictionary)
+    public static int getWordsInDictionary(String lineOfText, EnglishDictionary dictionary, boolean exact)
     {
         String cleanedText = lineOfText.replaceAll("[,\\.\\(\\)\\[\\]]", "").toLowerCase();
         String [] tokenized = cleanedText.split(" ");
+
+        Set<String> tokSet = new HashSet<String>();
+        //to avoid counting twice the same word
+        for(String word:tokenized)
+        {
+            tokSet.add(word.trim());
+        }
         int cont = 0;
         //at least 3 words are expected in the line
-        if(tokenized.length<3)
+        if(tokenized.length<3&&!exact)
         {
             return -1;
         }
-        for (String word:tokenized)
+//        for (String word:tokenized)
+        for(String word:tokSet)
         {
             if (dictionary.contains(word))
             {
@@ -477,7 +482,7 @@ public class LayoutUtils {
     public static void adjustWordsInDictionaryPerLine(String currentLineText,
                         List <LayoutUtils.Entry<Integer>> wordsInDictionaryPerLine, EnglishDictionary dictionary)
     {
-        int dictWordsInLine = getWordsInDictionary(currentLineText, dictionary);
+        int dictWordsInLine = getWordsInDictionary(currentLineText, dictionary, false);
         if(dictWordsInLine==-1)
         {
             return;
