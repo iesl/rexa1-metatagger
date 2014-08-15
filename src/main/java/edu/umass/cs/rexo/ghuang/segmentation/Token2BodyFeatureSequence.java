@@ -289,6 +289,11 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             //- vertical distance outliers
             Integer mostCommonVertDistance = verticalDistance.get(0).getKey();
             Integer currentVertDistance = LayoutUtils.getCurrentVerticalDistance(lineInfos, i);
+
+            if(currentVertDistance > mostCommonVertDistance){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistance1pxGreater", 1.0);
+            }
+
             if(currentVertDistance > mostCommonVertDistance+1){
                 LayoutUtils.setFeatureValue(lineSpan,"verticalDistance2pxGreater", 1.0);
             }
@@ -319,6 +324,10 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             //-height of the line font
             Integer mostCommonLineHeight = lineHeight.get(0).getKey();
             Integer currentLineHeight = LayoutUtils.getCurrentLineHeight(lineInfos, i);
+
+            if(currentLineHeight > mostCommonLineHeight){
+                LayoutUtils.setFeatureValue(lineSpan,"lineHeight1pxGreater", 1.0);
+            }
 
             if(currentLineHeight > mostCommonLineHeight+1){
                 LayoutUtils.setFeatureValue(lineSpan,"lineHeight2pxGreater", 1.0);
