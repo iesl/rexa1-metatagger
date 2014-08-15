@@ -19,6 +19,13 @@ import java.util.List;
  */
 public class BodyRulesTransducer  {
 
+    //class representing the properties of a particular section marker
+    class SectionMarker
+    {
+        private boolean isAllCaps;
+
+    }
+
 
     public Sequence transduce(NewHtmlTokenization data)
     {
@@ -58,7 +65,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 10.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 17.0;
             }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -151,11 +158,9 @@ public class BodyRulesTransducer  {
             if(LayoutUtils.isActiveFeature(currentSpan, "startsTableWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft") //
 
              ||
-                    (LayoutUtils.isActiveFeature(currentSpan, "up") && futureLayout
-                             /*
-                    && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop")
-
-                    */)
+                    (LayoutUtils.isActiveFeature(currentSpan, "up") && futureLayout) ||
+                    (LayoutUtils.isActiveFeature(currentSpan, "up")
+                                && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
              ||
                     (LayoutUtils.isActiveFeature(currentSpan, "right") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
              ||

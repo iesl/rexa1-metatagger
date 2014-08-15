@@ -338,6 +338,13 @@ public class LayoutUtils {
                 {
                     isSmart = isSmart==-1?1:isSmart;
                 }
+                //todo: check if the following else if works:
+                //for some documents such as 1999Fey_Synthesis... (this one, when parsed on MAC), some tables are taken as columns first.
+                //here, the idea is that as long as it doesnt overlap vertically, it is ok, see if works well
+                else if(col.getBottomY()>columnToCheck.getTopY() || columnToCheck.getBottomY()>col.getTopY())
+                {
+                    isSmart = isSmart==-1?1:isSmart;
+                }
                 else
                 {
                     isSmart = 0;

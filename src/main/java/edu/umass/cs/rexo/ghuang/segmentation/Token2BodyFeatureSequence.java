@@ -122,7 +122,6 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false, 0);
             LayoutUtils.adjustPageData(lineInfos, i, pagesData);
             LayoutUtils.adjustPixelsPerCharacter(lineInfos, i, pixelsPerCharacter);
-
         }
         Collections.sort(verticalDistance);
         Collections.sort(lineHeight);
