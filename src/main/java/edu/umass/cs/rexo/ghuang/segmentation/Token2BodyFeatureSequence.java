@@ -381,10 +381,11 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
         //R(?i:eferences)
         // high correlation with non-bibliographic content
-        String[] tableWords = {"^T(?i:able).*"};
+        String[] tableWords = {"^T[\\s]{0,5}(?i:a[\\s]{0,5}b[\\s]{0,5}l[\\s]{0,5}e).*"};
         String[] figureWords = {"^F(?i:igure).*", "^F(?:ig\\.).*"};
 
-        String allCaps = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ1-9]+";
+        //TODO:add more special characters in allCaps if it is necessary
+        String allCaps = "[#\\[\\]\\(\\);:\\.,'\"\\*A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ1-9]+";
         String initCap = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ].*";
         String finalDot = "((.*)\\.)$";
         String firstLevelSection = "^((\\s)*([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
@@ -474,6 +475,11 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(ls, "noWordsFromDictionary", 1.0);
             }
+            if(currLineDictWords==1)
+            {
+                LayoutUtils.setFeatureValue(ls, "oneWordFromDictionary", 1.0);
+            }
+
             if(mostCommonNumberOfDictWords>currLineDictWords)
             {
                 LayoutUtils.setFeatureValue(ls, "1wordFromDictLess", 1.0);

@@ -37,6 +37,12 @@ public class BodyRulesTransducer  {
         featuresTableContent.add("noWordsFromDictionary");
         featuresTableContent.add("3wordFromDictLess");
 
+        List<String> relaxedFeaturesTableContent = new ArrayList<String>();
+        relaxedFeaturesTableContent.add("pixelsPerCharacter2pxGreater");
+        relaxedFeaturesTableContent.add("noWordsFromDictionary");
+        relaxedFeaturesTableContent.add("oneWordFromDictionary");
+
+
 
         boolean debugMe  = false;
         for(int i=0; i<data.getLineSpans().size(); i++)
@@ -44,11 +50,15 @@ public class BodyRulesTransducer  {
             String label = "";
             Span previousSpan = i>0?(Span)data.getLineSpans().get(i-1):null;
             Span currentSpan = (Span)data.getLineSpans().get(i);
+            if(currentSpan==null)
+            {
+                continue;
+            }
             Span nextSpan = i<data.getLineSpans().size()-1?(Span)data.getLineSpans().get(i+1):null;
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 10.0;
+//                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 6.0;
             }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -132,7 +142,7 @@ public class BodyRulesTransducer  {
             {
                 label = figureOrTableMarker;
             }
-            boolean futureLayout = LayoutUtils.isAnyOfFeaturesInFuture(data, i, featuresTableContent, 3, 10);
+            boolean futureLayout = LayoutUtils.isAnyOfFeaturesInFuture(data, i, relaxedFeaturesTableContent, 3, 10);
             if(LayoutUtils.isActiveFeature(currentSpan, "startsTableWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft") //
 
              ||
