@@ -58,11 +58,15 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-//                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 6.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 6.0;
             }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
-                    LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn"))
+                    LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn")
+                    || //normal (without enumeration level) section titles
+                    LayoutUtils.isActiveFeature(currentSpan, "allCaps") //in some papers the titles are in caps
+
+                    )
                     && (!LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated")
                             || (LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
                             nextSpan != null && !LayoutUtils.isActiveFeature(nextSpan, "newColumn") &&
