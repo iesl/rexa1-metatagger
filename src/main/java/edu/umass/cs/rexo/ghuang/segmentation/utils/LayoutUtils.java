@@ -36,6 +36,31 @@ public class LayoutUtils {
         return qtyOcurrences>=minOcurrences;
     }
 
+    public static boolean isFigureInTheFuture(NewHtmlTokenization data, int i, int linesLookForward)
+    {
+        for (int cnt = i; cnt<i+linesLookForward; cnt++) {
+
+            Span previousSpan =null;
+
+            Span lineSpan = (Span) data.getLineSpans().get(cnt);
+            Span nextSpan = null;
+
+            if(cnt+1<data.getLineSpans().size())
+            {
+                nextSpan = (Span)data.getLineSpans().get(cnt+1);
+            }
+            if(cnt > 0)
+            {
+                previousSpan = (Span)data.getLineSpans().get(cnt-1);
+            }
+
+            if (cnt >= data.getLineSpans().size()) {
+                break;
+            }
+        }
+        return false;
+    }
+
     public static void setFeatureValue(Span span, String property, double value)
     {
         if(span instanceof CompositeSpan)
@@ -188,6 +213,48 @@ public class LayoutUtils {
         }
         return false;
     }
+
+    public static boolean isShorterThanPrevious(LineInfo [] lineInfo, int i, int margin)
+    {
+        LineInfo previousLine = null;
+        if(i<=0 || lineInfo[i].page!= lineInfo[i-1].page)
+        {
+            return false;
+        }
+        else
+        {
+            previousLine = lineInfo[i-1];
+        }
+        LineInfo currentLine = lineInfo[i];
+
+        if(previousLine.urx - previousLine.llx - margin > currentLine.urx - currentLine.llx)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isSameLeftMarginAsPrevious(LineInfo [] lineInfo, int i, int errMargin)
+    {
+        LineInfo previousLine = null;
+        if(i<=0 || lineInfo[i].page!= lineInfo[i-1].page)
+        {
+            return false;
+        }
+        else
+        {
+            previousLine = lineInfo[i-1];
+        }
+        LineInfo currentLine = lineInfo[i];
+
+        if(previousLine.llx - errMargin <= currentLine.llx && previousLine.llx + errMargin >= currentLine.llx)
+        {
+            return true;
+        }
+        return false;
+
+    }
+
 
     private static boolean doesBelongToColumnVert(ColumnData col, ColumnData colToCompare)
     {
@@ -600,6 +667,15 @@ public class LayoutUtils {
         }
         return -1;
     }
+
+    public static int getCurrentVerticalDistanceUry(LineInfo[] lineInfos, int i)
+    {
+        if (i+1 < lineInfos.length && lineInfos[i].page == lineInfos[i + 1].page && lineInfos[i].ury > lineInfos[i+1].ury) {
+            return (lineInfos[i].ury - lineInfos[i + 1].ury);
+        }
+        return -1;
+    }
+
     public static void adjustVerticalDistance(LineInfo[] lineInfos, int i,  List<Entry<Integer>> verticalDistance)
     {
 

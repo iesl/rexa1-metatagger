@@ -320,6 +320,26 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(lineSpan,"verticalDistance100pxGreater", 1.0);
             }
 
+            //-vertical distance, but using ury attribute of the line
+            Integer currentVertDistanceUry = LayoutUtils.getCurrentVerticalDistanceUry(lineInfos, i);
+            if(currentVertDistanceUry > mostCommonVertDistance){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistanceUry1pxGreater", 1.0);
+            }
+
+            if(currentVertDistanceUry > mostCommonVertDistance+1){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistanceUry2pxGreater", 1.0);
+            }
+
+            if(currentVertDistanceUry > mostCommonVertDistance+3){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistanceUry4pxGreater", 1.0);
+            }
+
+            if(currentVertDistanceUry > mostCommonVertDistance+5){
+                LayoutUtils.setFeatureValue(lineSpan,"verticalDistanceUry6pxGreater", 1.0);
+            }
+
+
+
             //-height of the line font
             Integer mostCommonLineHeight = lineHeight.get(0).getKey();
             Integer currentLineHeight = LayoutUtils.getCurrentLineHeight(lineInfos, i);
@@ -367,6 +387,18 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(lineSpan, "tabbedLeftMargin", 1.0);
             }
+            //- if the current line is significantly shorter than the previous
+            if(LayoutUtils.isShorterThanPrevious(lineInfos,i,15))
+            {
+                LayoutUtils.setFeatureValue(lineSpan, "shorterThanPreviousLine", 1.0);
+            }
+
+            //- if the current line shares approx the previous line x start position
+            if(LayoutUtils.isSameLeftMarginAsPrevious(lineInfos,i,3))
+            {
+                LayoutUtils.setFeatureValue(lineSpan, "sameLeftMarginAsPreviousLine", 1.0);
+            }
+
 
 
 

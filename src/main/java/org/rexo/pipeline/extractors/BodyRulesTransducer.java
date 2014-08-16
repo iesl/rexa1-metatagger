@@ -65,7 +65,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 17.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 3.0;
             }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -79,17 +79,18 @@ public class BodyRulesTransducer  {
                                 !LayoutUtils.isActiveFeature(nextSpan, "newPage") &&
                                 !LayoutUtils.isActiveFeature(nextSpan, "noColumnAssociated"))
                         ) &&
-                    (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") || /* with "verticalDistance4pxGreater" doesn't work on INTRODUCTION section
+                    ( (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) || /* with "verticalDistance4pxGreater" doesn't work on INTRODUCTION section
                                     of 2014W%F6hlertSynthesis,_Structures paper*/
                             (previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance4pxGreater")) ||
-                            (LayoutUtils.isActiveFeature(currentSpan, "lineHeight2pxGreater"))
+                            (LayoutUtils.isActiveFeature(currentSpan, "lineHeight2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater"))
                     ) &&
                     (!LayoutUtils.isActiveFeature(currentSpan, "endsInDot") /*&& in papers such as  2010Song_REcent_p... it makes the section markers to be ignored
                                     LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft")*/))
                     /*sometimes doesn't work because pstotext ommits sentences*/
                     /* (previousSpan == null || (LayoutUtils.isActiveFeature(previousSpan, "endsInDot") && !previousSectionMarker) || previousSectionMarker )*/
                     ||
-                    (previousSectionMarker && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater")) /* in case the section marker has several lines*/
+                    (previousSectionMarker && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") &&
+                            LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) /* in case the section marker has several lines*/
             )
             {
                 if (LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -164,13 +165,16 @@ public class BodyRulesTransducer  {
              ||
                     (LayoutUtils.isActiveFeature(currentSpan, "right") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
              ||
-                    (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance100pxGreater") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
-             ||     (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") && futureLayout)
+                    (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance100pxGreater") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop") && !!LayoutUtils.isActiveFeature(currentSpan, "newPage"))
+             ||     (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") && futureLayout && !LayoutUtils.isActiveFeature(currentSpan, "newPage"))
             ))
             {
                 label = "table-marker-begin";
                 figureOrTableMarker = "table-marker-inside";
             }
+
+
+            boolean futureFigureLayout = LayoutUtils.isFigureInTheFuture(data, i, 6);
 
             if(LayoutUtils.isActiveFeature(currentSpan, "startsFigureWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
                     //todo: work on it
