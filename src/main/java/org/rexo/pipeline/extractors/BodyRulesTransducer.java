@@ -184,6 +184,8 @@ public class BodyRulesTransducer  {
                     (LayoutUtils.isActiveFeature(currentSpan, "right") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
                     ||
                     (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance100pxGreater") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
+                    ||
+                    futureFigureLayout
                     ))
             {
                 label = "figure-marker-begin";

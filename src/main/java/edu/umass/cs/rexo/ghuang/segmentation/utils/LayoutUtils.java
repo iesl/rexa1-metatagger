@@ -18,7 +18,7 @@ public class LayoutUtils {
     public static boolean isAnyOfFeaturesInFuture(NewHtmlTokenization data, int i, List<String> features, int minOcurrences, int linesLookForward)
     {
         int qtyOcurrences = 0;
-        for (int cnt = i; cnt<i+linesLookForward; cnt++) {
+        for (int cnt = i; cnt<i+linesLookForward && cnt<data.getLineSpans().size(); cnt++) {
             if(cnt>=data.getLineSpans().size())
             {
                 break;
@@ -38,9 +38,11 @@ public class LayoutUtils {
 
     public static boolean isFigureInTheFuture(NewHtmlTokenization data, int i, int linesLookForward)
     {
-        for (int cnt = i; cnt<i+linesLookForward; cnt++) {
+        int linesProcessed = 0;
+        for (int cnt = i; cnt<i+linesLookForward && cnt<data.getLineSpans().size(); cnt++) {
+            linesProcessed++;
 
-            Span previousSpan =null;
+//            Span previousSpan =null;
 
             Span lineSpan = (Span) data.getLineSpans().get(cnt);
             Span nextSpan = null;
@@ -49,13 +51,36 @@ public class LayoutUtils {
             {
                 nextSpan = (Span)data.getLineSpans().get(cnt+1);
             }
-            if(cnt > 0)
-            {
-                previousSpan = (Span)data.getLineSpans().get(cnt-1);
-            }
+//            if(cnt > 0)
+//            {
+//                previousSpan = (Span)data.getLineSpans().get(cnt-1);
+//            }
 
             if (cnt >= data.getLineSpans().size()) {
                 break;
+            }
+
+            if(linesProcessed==1)
+            {
+                if(isActiveFeature(lineSpan, "rightMarginToTheLeft") && (nextSpan==null || isActiveFeature(nextSpan, "up") || isActiveFeature(nextSpan, "right")
+                                  || isActiveFeature(lineSpan, "verticalDistance4pxGreater")))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if(!isActiveFeature(lineSpan, "shorterThanPreviousLine") && (isActiveFeature(nextSpan, "up") || isActiveFeature(nextSpan, "right")
+                        || isActiveFeature(lineSpan, "verticalDistance4pxGreater")))
+                {
+                    return false;
+                }
+                if(isActiveFeature(lineSpan, "sameLeftMarginAsPreviousLine") && isActiveFeature(lineSpan, "shorterThanPreviousLine") &&
+                        (nextSpan == null || isActiveFeature(nextSpan, "up") || isActiveFeature(nextSpan, "right")
+                                          || isActiveFeature(lineSpan, "verticalDistance4pxGreater")))
+                {
+                    return true;
+                }
             }
         }
         return false;

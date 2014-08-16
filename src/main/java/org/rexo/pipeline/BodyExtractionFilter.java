@@ -128,6 +128,7 @@ public class BodyExtractionFilter extends AbstractFilter {
 		}
 		catch (Exception e) {
 			errorCode = ReturnCode.ABORT_PAPER;
+            e.printStackTrace();
 			log.info( "(crf) " + e.getClass().getName() + ": " + e.getMessage() );
 		}
 		return errorCode;
