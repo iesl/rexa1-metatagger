@@ -454,6 +454,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         String allCaps = "[#\\[\\]\\(\\);:\\.,'\"\\*A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ1-9]+";
         String initCap = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ].*";
         String finalDot = "((.*)\\.)$";
+        String noAlphabetical = "^[^A-Za-z]+";
         String firstLevelSection = "^((\\s)*([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
         String secondLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
         String thirdLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
@@ -522,7 +523,10 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(ls, "thirdLevelSectionPtrn", 1.0);
             }
-
+            if(currentLineText.matches(noAlphabetical))
+            {
+                LayoutUtils.setFeatureValue(ls, "noAlphabetic", 1.0);
+            }
             //- the number of words in dictionary per line
             LayoutUtils.adjustWordsInDictionaryPerLine(currentLineText, wordsInDictionaryPerLine, dictionary);
 
