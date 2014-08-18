@@ -201,6 +201,41 @@ public class NewHtmlTokenization extends TokenSequence implements Tokenization {
 				StringSpan paginationToken = new StringSpan( _constructionInfo._docText, lineStartOfs, _constructionInfo.textofs ) ; 
 				
 				paginationToken.setNumericProperty("isHeaderFooterLine", 1);
+                //adds urx, ury, llx and lly coordinates to header-footer, as well as pageNum
+                Iterator tboxI = tboxList.iterator();
+                tboxI = tboxList.iterator();
+                int locUrx = -1;
+                int locUry = -1;
+                int locLlx = -1;
+                int locLly = -1;
+                while (tboxI.hasNext()) {
+                    Element tbox = (Element)tboxI.next();
+                    if(locUrx==-1 || Integer.parseInt( tbox.getAttributeValue( "urx" ) ) > locUrx )
+                    {
+                        locUrx = Integer.parseInt( tbox.getAttributeValue( "urx" ) );
+                    }
+                    if(locUry==-1 || Integer.parseInt( tbox.getAttributeValue( "ury" ) ) > locUry )
+                    {
+                        locUry = Integer.parseInt( tbox.getAttributeValue( "ury" ) );
+                    }
+                    if(locLlx==-1 || Integer.parseInt( tbox.getAttributeValue( "llx" ) ) < locLlx )
+                    {
+                        locLlx = Integer.parseInt( tbox.getAttributeValue( "llx" ) );
+                    }
+
+                    if(locLly==-1 || Integer.parseInt( tbox.getAttributeValue( "lly" ) ) < locLly )
+                    {
+                        locLly = Integer.parseInt( tbox.getAttributeValue( "lly" ) );
+                    }
+
+                }
+                paginationToken.setProperty("llx", Double.valueOf(locLlx));
+                paginationToken.setProperty("lly", Double.valueOf(locLly));
+                paginationToken.setProperty("urx", Double.valueOf(locUrx));
+                paginationToken.setProperty("ury", Double.valueOf(locUry));
+                paginationToken.setProperty("pageNum", Double.valueOf(pageNum));
+
+
 				_lineSpans.add(paginationToken);
 				continue;
 			}

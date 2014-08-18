@@ -15,6 +15,27 @@ import java.util.*;
  */
 public class LayoutUtils {
 
+
+    public static Object getProperty(Object span, String property )
+    {
+        if(span instanceof StringSpan )
+        {
+            return ((StringSpan)span).getProperty(property);
+        }
+        else if(span instanceof CompositeSpan)
+        {
+            return ((CompositeSpan)span).getProperty(property);
+        }
+        else if(span instanceof NewHtmlTokenization)
+        {
+            return ((NewHtmlTokenization)span).getProperty(property);
+        }
+        else
+        {
+            //todo: see what to do here
+            return null;
+        }
+    }
     public static boolean isAnyOfFeaturesInFuture(NewHtmlTokenization data, int i, List<String> features, int minOcurrences, int linesLookForward)
     {
         int qtyOcurrences = 0;
@@ -504,30 +525,33 @@ public class LayoutUtils {
 
     }
 
+    public static void adjustPageData(int urx, int llx, int ury, int lly, int page, Map <Integer, PageData> pagesData)
+    {
+        PageData pageData = pagesData.get(page);
 
+        if(pageData==null)
+        {
+            pageData = new PageData();
+            pageData.setBottomY(lly);
+            pageData.setTopY(ury);
+            pageData.setLeftX(llx);
+            pageData.setRightX(urx);
+            pageData.setPageNumber(page);
+            pagesData.put(page,pageData);
+        }
+        else
+        {
+            pageData.setBottomY(pageData.getBottomY()>lly?lly:pageData.getBottomY());
+            pageData.setTopY(pageData.getTopY()<ury?ury:pageData.getTopY());
+            pageData.setLeftX(pageData.getLeftX()>llx?llx:pageData.getLeftX());
+            pageData.setRightX(pageData.getRightX()<urx?urx:pageData.getRightX());
+        }
+    }
 
 
     public static void adjustPageData(LineInfo[] lineInfos, int i, Map <Integer, PageData> pagesData)
     {
-        PageData pageData = pagesData.get(lineInfos[i].page);
-        if(pageData==null)
-        {
-            pageData = new PageData();
-            pageData.setBottomY(lineInfos[i].lly);
-            pageData.setTopY(lineInfos[i].ury);
-            pageData.setLeftX(lineInfos[i].llx);
-            pageData.setRightX(lineInfos[i].urx);
-            pageData.setPageNumber(lineInfos[i].page);
-            pagesData.put(lineInfos[i].page,pageData);
-        }
-        else
-        {
-            pageData.setBottomY(pageData.getBottomY()>lineInfos[i].lly?lineInfos[i].lly:pageData.getBottomY());
-            pageData.setTopY(pageData.getTopY()<lineInfos[i].ury?lineInfos[i].ury:pageData.getTopY());
-            pageData.setLeftX(pageData.getLeftX()>lineInfos[i].llx?lineInfos[i].llx:pageData.getLeftX());
-            pageData.setRightX(pageData.getRightX()<lineInfos[i].urx?lineInfos[i].urx:pageData.getRightX());
-        }
-
+        adjustPageData(lineInfos[i].urx,lineInfos[i].llx,  lineInfos[i].ury,lineInfos[i].lly, lineInfos[i].page, pagesData );
     }
 
     public static void adjustLineHeight(LineInfo[] lineInfos, int i, List <Entry<Integer>> lineHeight)
@@ -658,7 +682,7 @@ public class LayoutUtils {
 
     public static void adjustLineWidth(LineInfo[] lineInfos, int i, List <Entry<Integer>> lineWidth)
     {
-        int width = lineInfos[i].urx - lineInfos[i].llx;
+        int width = getCurrentLineWidth(lineInfos,i);
         Entry<Integer> currentWidthEntry = new Entry<Integer>(width,1);
         int iOf = lineWidth.indexOf(currentWidthEntry);
         if(iOf>-1)
@@ -670,6 +694,11 @@ public class LayoutUtils {
         {
             lineWidth.add(currentWidthEntry);
         }
+    }
+
+    public static int getCurrentLineWidth(LineInfo[] lineInfos, int i)
+    {
+        return lineInfos[i].urx - lineInfos[i].llx;
     }
 
     public static void adjustLineWidthPerPage(LineInfo[] lineInfos, int i, Map<Integer, List<Entry<Integer>>> widthLinePerPage)

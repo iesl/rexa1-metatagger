@@ -50,10 +50,11 @@ public class BodyRulesTransducer  {
         relaxedFeaturesTableContent.add("oneWordFromDictionary");
 
 
-
+        boolean previousFigure = false;
         boolean debugMe  = false;
         for(int i=0; i<data.getLineSpans().size(); i++)
         {
+            previousFigure = false;
             String label = "";
             Span previousSpan = i>0?(Span)data.getLineSpans().get(i-1):null;
             Span currentSpan = (Span)data.getLineSpans().get(i);
@@ -65,13 +66,15 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 3.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 6.0;
             }
 
             if(((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
                     LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn")
                     ||
                     LayoutUtils.isActiveFeature(currentSpan, "allCaps") /*in some papers the titles are in caps*/
+                    ||
+                    (LayoutUtils.isActiveFeature(currentSpan, "centeredLine"))
                     )
                     && (!LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated")
                             || (LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
@@ -128,7 +131,8 @@ public class BodyRulesTransducer  {
             }
 
 
-            if((!figureOrTableMarker.equals("") && ( (LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") &&
+            if((figureOrTableMarker.contains("table-marker") && ( (LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") &&
+                                     LayoutUtils.isActiveFeature(previousSpan, "verticalDistanceUry2pxGreater") &&
                                     !LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacter2pxGreater") &&
                                     !LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacterUndefined") &&
                                     !LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary") &&
@@ -136,20 +140,43 @@ public class BodyRulesTransducer  {
                                     !(LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft") && !LayoutUtils.isActiveFeature(currentSpan, "endsInDot"))
             ) ||
 
-//                                LayoutUtils.isActiveFeature(currentSpan, "up") ||
+/*                                LayoutUtils.isActiveFeature(currentSpan, "up") ||*/
                                   LayoutUtils.isActiveFeature(currentSpan, "up20PxGreater") ||
+                                    //todo: test well on other documents
+                                  LayoutUtils.isActiveFeature(currentSpan, "lineHeight10pxGreater") ||
 
                                 /*LayoutUtils.isActiveFeature(currentSpan, "right") ||*/
                                 LayoutUtils.isActiveFeature(currentSpan, "newPage") )))
             {
                 figureOrTableMarker = "";
             }
+
+
+            if((figureOrTableMarker.contains("figure-marker") && ( (LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") &&
+                    LayoutUtils.isActiveFeature(previousSpan, "verticalDistanceUry2pxGreater") &&
+                    !(LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft") && !LayoutUtils.isActiveFeature(currentSpan, "endsInDot"))
+            ) ||
+
+/*                                LayoutUtils.isActiveFeature(currentSpan, "up") ||*/
+                    LayoutUtils.isActiveFeature(currentSpan, "up20PxGreater") ||
+                    //todo: test well on other documents
+                    LayoutUtils.isActiveFeature(currentSpan, "lineHeight10pxGreater") ||
+
+                                /*LayoutUtils.isActiveFeature(currentSpan, "right") ||*/
+                    LayoutUtils.isActiveFeature(currentSpan, "newPage") )))
+            {
+                figureOrTableMarker = "";
+                previousFigure=true;
+            }
+
+
             if(!figureOrTableMarker.equals("") &&
                     (!LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") ||
-                            LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacter2pxGreater") ||
-                            LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacterUndefined") ||
-                            LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary") ||
-                            LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess")  ||
+                            !LayoutUtils.isActiveFeature(previousSpan, "verticalDistanceUry2pxGreater") ||
+                            (LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacter2pxGreater")  && figureOrTableMarker.contains("table-marker")) ||
+                            (LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacterUndefined")  && figureOrTableMarker.contains("table-marker")) ||
+                            (LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary")  && figureOrTableMarker.contains("table-marker")) ||
+                            (LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess") && figureOrTableMarker.contains("table-marker") ) ||
                             (LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft") && !LayoutUtils.isActiveFeature(currentSpan, "endsInDot"))
                     ))
             {
@@ -174,7 +201,8 @@ public class BodyRulesTransducer  {
             }
 
 
-            boolean futureFigureLayout = LayoutUtils.isFigureInTheFuture(data, i, 6);
+            boolean futureFigureLayout = LayoutUtils.isFigureInTheFuture(data, i,
+                    LayoutUtils.isActiveFeature(currentSpan,"lineWidth20pxLess")?15:6);
 
             if(LayoutUtils.isActiveFeature(currentSpan, "startsFigureWord") && (LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
                     //todo: work on it
@@ -186,6 +214,7 @@ public class BodyRulesTransducer  {
                     (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance100pxGreater") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
                     ||
                     futureFigureLayout
+                    || (previousFigure && LayoutUtils.isActiveFeature(currentSpan,"lineWidth20pxLess") && previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance12pxGreater"))
                     ))
             {
                 label = "figure-marker-begin";

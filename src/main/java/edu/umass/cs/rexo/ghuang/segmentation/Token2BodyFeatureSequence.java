@@ -76,6 +76,22 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         int prevPageNum = 0;
         int lineSpanCount = -1;
 
+        //the page data is adjusted taking into account the headers and footers too
+        for(int i = 0; i<data.getLineSpans().size(); i++)
+        {
+            Span currentSpan =(Span)data.getLineSpans().get(i);
+            try {
+                int urx = ((Double) LayoutUtils.getProperty(currentSpan, "urx")).intValue();
+                int llx = ((Double) LayoutUtils.getProperty(currentSpan, "llx")).intValue();
+                int ury = ((Double) LayoutUtils.getProperty(currentSpan, "ury")).intValue();
+                int lly = ((Double) LayoutUtils.getProperty(currentSpan, "lly")).intValue();
+                int page = ((Double) LayoutUtils.getProperty(currentSpan, "pageNum")).intValue();
+                LayoutUtils.adjustPageData(urx, llx, ury, lly, page, pagesData);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
         //first scan to calculate general statistics of the paper (such as line width, or vertical distances between lines)
         for(int i =0; i<lineInfos.length; i++ )
         {
@@ -120,7 +136,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             LayoutUtils.adjustLineWidthPerPage(lineInfos, i, widthLinePerPage);
             LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true, columnAcceptableError);
             LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false, 0);
-            LayoutUtils.adjustPageData(lineInfos, i, pagesData);
+//            LayoutUtils.adjustPageData(lineInfos, i, pagesData);
             LayoutUtils.adjustPixelsPerCharacter(lineInfos, i, pixelsPerCharacter);
         }
         Collections.sort(verticalDistance);
@@ -285,9 +301,19 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(lineSpan,"pixelsPerCharacterUndefined", 1.0);
             }
+
+
+            //- line width outliers
+            Integer mostCommonLineWidth = lineWidth.get(0).getKey();
+            Integer currentLineWidth = LayoutUtils.getCurrentLineWidth(lineInfos,i);
+            if(currentLineWidth < mostCommonLineWidth-19){
+                LayoutUtils.setFeatureValue(lineSpan,"lineWidth20pxLess", 1.0);
+            }
+
             //- vertical distance outliers
             Integer mostCommonVertDistance = verticalDistance.get(0).getKey();
             Integer currentVertDistance = LayoutUtils.getCurrentVerticalDistance(lineInfos, i);
+
 
             if(currentVertDistance > mostCommonVertDistance){
                 LayoutUtils.setFeatureValue(lineSpan,"verticalDistance1pxGreater", 1.0);
