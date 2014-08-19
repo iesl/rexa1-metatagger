@@ -133,21 +133,30 @@ public class LayoutUtils {
 
     public static boolean isActiveFeature(Span span, String property)
     {
-        if(span instanceof CompositeSpan)
+        try
         {
-            if(((CompositeSpan)span).getFeatureValue(property) == 1.0)
+
+            if(span instanceof CompositeSpan)
             {
-                return true;
+                if(((CompositeSpan)span).getFeatureValue(property) == 1.0)
+                {
+                    return true;
+                }
             }
+            else
+            {
+                if(((StringSpan)span).getFeatureValue(property) == 1.0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
-        else
+        catch(Exception ex )
         {
-            if(((StringSpan)span).getFeatureValue(property) == 1.0)
-            {
-                return true;
-            }
+            ex.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     public static ColumnData getCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns,
@@ -511,6 +520,16 @@ public class LayoutUtils {
         return false;
     }
 
+    public static boolean isNearTheBottom(LineInfo lineInfo, PageData page, int pixels)
+    {
+        int diffTops = lineInfo.lly - page.getBottomY();
+        if(diffTops<=pixels)
+        {
+            return true;
+        }
+        return false;
+    }
+
     private static boolean isWidthSimilar(List<ColumnData> columns, ColumnData columnToCheck, double errorRatio)
     {
         for(ColumnData col: columns)
@@ -683,6 +702,11 @@ public class LayoutUtils {
     public static void adjustLineWidth(LineInfo[] lineInfos, int i, List <Entry<Integer>> lineWidth)
     {
         int width = getCurrentLineWidth(lineInfos,i);
+        //width should be at least 10 px
+        if(width<=10)
+        {
+            return;
+        }
         Entry<Integer> currentWidthEntry = new Entry<Integer>(width,1);
         int iOf = lineWidth.indexOf(currentWidthEntry);
         if(iOf>-1)

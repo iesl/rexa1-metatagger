@@ -36,6 +36,7 @@ public class BodyRulesTransducer  {
 
         boolean previousSectionMarker = false;
         String figureOrTableMarker = "";
+        String footerMarker = "";
 
         List<String> featuresTableContent = new ArrayList<String>();
         featuresTableContent.add("pixelsPerCharacter2pxGreater");
@@ -49,7 +50,7 @@ public class BodyRulesTransducer  {
         relaxedFeaturesTableContent.add("oneWordFromDictionary");
 
 
-        boolean previousFigure = false;
+        boolean previousFigure;
         boolean debugMe  = false;
         for(int i=0; i<data.getLineSpans().size(); i++)
         {
@@ -65,7 +66,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 4.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 1.0;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -114,8 +115,9 @@ public class BodyRulesTransducer  {
                             LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) /* in case the section marker has several lines*/
 
 
-            )   //any section has to have alphabetic characters and have words in dictionary
-                && (!LayoutUtils.isActiveFeature(currentSpan, "noAlphabetic") && !LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary")))
+            )   //any section has to have alphabetic characters and have words in dictionary (this latter changed by word forms), no words in dict
+                    //in papers such as 2010Song...
+                && (!LayoutUtils.isActiveFeature(currentSpan, "noAlphabetic") && LayoutUtils.isActiveFeature(currentSpan, "1wordFormOrGreater")))
             {
                 if ((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
                         LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn"))
@@ -170,8 +172,8 @@ public class BodyRulesTransducer  {
 
 /*                                LayoutUtils.isActiveFeature(currentSpan, "up") ||*/
                                   LayoutUtils.isActiveFeature(currentSpan, "up20PxGreater") ||
-                                    //todo: test well on other documents
-                                  LayoutUtils.isActiveFeature(currentSpan, "lineHeight10pxGreater") ||
+                                    //todo: test well on other documents, commented because in 1999Fey_Synthesis... didn't work well
+//                                  LayoutUtils.isActiveFeature(currentSpan, "lineHeight10pxGreater") ||
 
                                 /*LayoutUtils.isActiveFeature(currentSpan, "right") ||*/
                                 LayoutUtils.isActiveFeature(currentSpan, "newPage") )))
@@ -250,7 +252,22 @@ public class BodyRulesTransducer  {
                 figureOrTableMarker = "figure-marker-inside";
             }
 
-
+            //for footers
+            if(footerMarker.equals("footer-start") && !LayoutUtils.isActiveFeature(currentSpan,"up"))
+            {
+                label = "notext";
+            }
+            else if (footerMarker.equals("footer-start") && LayoutUtils.isActiveFeature(currentSpan,"up"))
+            {
+                footerMarker="";
+            }
+            else if(previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistanceUry4pxGreater") &&
+                    LayoutUtils.isActiveFeature(currentSpan, "startsEnum") && LayoutUtils.isActiveFeature(currentSpan, "nearThe100PxOfBottom") &&
+                    LayoutUtils.isActiveFeature(currentSpan, "lineHeight1pxLess"))
+            {
+                footerMarker = "footer-start";
+                label = "notext";
+            }
 
 
             tokenId = addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData, data,tokenId);

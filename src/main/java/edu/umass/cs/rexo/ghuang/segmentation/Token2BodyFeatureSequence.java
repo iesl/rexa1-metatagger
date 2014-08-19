@@ -24,11 +24,13 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
     private static String lonelyNumbers = "[1-9][\\.]{0,1}[\\s]+]"; //"[1-9][\\.]{0,1}";
     private static String lonelyLetters = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ][\\.]{0,1}[\\s]+]"; //"[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ][\\.]{0,1}";
-
-
+    //private static String wordForms = "([^\\s]{1,1}([A-Z]{0,1}(([A-Z]{3,99})|([a-z]{3,99})))([\\s$]{1,1}))";
+    private static String wordForms = "(((^)|(\\s))([A-Z]{0,1}(([A-Z]{3,99})|([a-z]{3,99})))(($)|(\\s)))";
 
     static Pattern ptrnLonelyNumbers = Pattern.compile(lonelyNumbers);
     static Pattern ptrnLonelyLetters = Pattern.compile(lonelyLetters);
+    static Pattern ptrnWordForms = Pattern.compile(wordForms);
+
     static List <LayoutUtils.Entry<Integer>> wordsInDictionaryPerLine = new ArrayList<LayoutUtils.Entry<Integer>>();
 
 
@@ -110,10 +112,11 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             else if (i > 0 && (lineInfos[i].llx > lineInfos[i-1].urx && lineInfos[i].lly > lineInfos[i-1].lly)) {
                 LayoutUtils.setFeatureValue(lineSpan, "newColumn", 1.0);
             }
-            else if (i>0 && (lineInfos[i].llx <= lineInfos[i-1].urx && lineInfos[i].lly > lineInfos[i-1].lly))
+            else if (i>0 && (lineInfos[i].llx <= lineInfos[i-1].llx && lineInfos[i].lly > lineInfos[i-1].lly))
             {
                 LayoutUtils.setFeatureValue(lineSpan,"upAndToTheLeft", 1.0);
             }
+
 
             if (i>0 && (lineInfos[i].lly > lineInfos[i-1].lly))
             {
@@ -272,6 +275,15 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(lineSpan,"nearThe150PxOfTop", 1.0);
             }
 
+            //- if it is near the bottom of the page
+            Boolean isContentNearTheBottom = LayoutUtils.isNearTheBottom(lineInfos[i], pagesData.get(lineInfos[i].page), 100);
+
+            if(isContentNearTheBottom)
+            {
+                LayoutUtils.setFeatureValue(lineSpan,"nearThe100PxOfBottom", 1.0);
+            }
+
+
             //- the character width
             int pxlsXCharacter = LayoutUtils.getPixelsPerCharacter(lineInfos, i);
 
@@ -373,6 +385,14 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             Integer mostCommonLineHeight = lineHeight.get(0).getKey();
             Integer currentLineHeight = LayoutUtils.getCurrentLineHeight(lineInfos, i);
 
+
+            if(currentLineHeight < mostCommonLineHeight){
+                LayoutUtils.setFeatureValue(lineSpan,"lineHeight1pxLess", 1.0);
+            }
+            if(currentLineHeight < mostCommonLineHeight-1){
+                LayoutUtils.setFeatureValue(lineSpan,"lineHeight2pxLess", 1.0);
+            }
+
             if(currentLineHeight > mostCommonLineHeight){
                 LayoutUtils.setFeatureValue(lineSpan,"lineHeight1pxGreater", 1.0);
             }
@@ -462,6 +482,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         String firstLevelSection = "^((\\s)*([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
         String secondLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
         String thirdLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
+        String startsEnum = "(([#*])|([1-9]{1,1}(\\s))).*";
 
 
         //firs scan/loop to gather basic lexical statistics in the document
@@ -536,6 +557,15 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(ls, "noAlphabetic", 1.0);
             }
+            if(ptrnWordForms.matcher(currentLineText).find())
+            {
+                LayoutUtils.setFeatureValue(ls, "1wordFormOrGreater", 1.0);
+            }
+            if(currentLineText.matches(startsEnum))
+            {
+                LayoutUtils.setFeatureValue(ls, "startsEnum", 1.0);
+            }
+
             //- the number of words in dictionary per line
             LayoutUtils.adjustWordsInDictionaryPerLine(currentLineText, wordsInDictionaryPerLine, dictionary);
 
