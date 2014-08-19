@@ -65,7 +65,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 5.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 6.0;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -90,10 +90,15 @@ public class BodyRulesTransducer  {
                                 !LayoutUtils.isActiveFeature(nextSpan, "noColumnAssociated"))*/
 
                         ) &&
-                    ( (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) || /* with "verticalDistance4pxGreater" doesn't work on INTRODUCTION section
+                    ( ((LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) || /* with "verticalDistance4pxGreater" doesn't work on INTRODUCTION section
                                     of 2014W%F6hlertSynthesis,_Structures paper*/
                             (previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance4pxGreater")) ||
-                            (LayoutUtils.isActiveFeature(currentSpan, "lineHeight2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater"))
+                            (LayoutUtils.isActiveFeature(currentSpan, "lineHeight2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater")))
+                            /*first section marker always distance above*/
+                            && (previousSectionMarker || LayoutUtils.isActiveFeature(currentSpan, "newColumn") ||
+                                LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") ||
+                                (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistanceUry2pxGreater") && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater")))
+                            /*end first marker always distance above*/
                     ) &&
                     (!LayoutUtils.isActiveFeature(currentSpan, "endsInDot") /*&& in papers such as  2010Song_REcent_p... it makes the section markers to be ignored
                                     LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft")*/)
@@ -106,8 +111,8 @@ public class BodyRulesTransducer  {
                             LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) /* in case the section marker has several lines*/
 
 
-            )   //any section has to have alphabetic characters
-                && (!LayoutUtils.isActiveFeature(currentSpan, "noAlphabetic")))
+            )   //any section has to have alphabetic characters and have words in dictionary
+                && (!LayoutUtils.isActiveFeature(currentSpan, "noAlphabetic") && !LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary")))
             {
                 if ((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
                         LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn"))
