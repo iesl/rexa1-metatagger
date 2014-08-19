@@ -63,19 +63,19 @@ public class LayoutUtils {
         for (int cnt = i; cnt<i+linesLookForward && cnt<data.getLineSpans().size(); cnt++) {
             linesProcessed++;
 
-//            Span previousSpan =null;
 
             Span lineSpan = (Span) data.getLineSpans().get(cnt);
+            if(lineSpan == null)
+            {
+                //todo: check if it is ok to return true in this case
+                return true;
+            }
             Span nextSpan = null;
 
             if(cnt+1<data.getLineSpans().size())
             {
                 nextSpan = (Span)data.getLineSpans().get(cnt+1);
             }
-//            if(cnt > 0)
-//            {
-//                previousSpan = (Span)data.getLineSpans().get(cnt-1);
-//            }
 
             if (cnt >= data.getLineSpans().size()) {
                 break;
@@ -91,7 +91,7 @@ public class LayoutUtils {
             }
             else
             {
-                if(!isActiveFeature(lineSpan, "shorterThanPreviousLine") && (isActiveFeature(nextSpan, "up") || isActiveFeature(nextSpan, "right")
+                if(!isActiveFeature(lineSpan, "shorterThanPreviousLine") && nextSpan!=null && (isActiveFeature(nextSpan, "up") || isActiveFeature(nextSpan, "right")
                         || isActiveFeature(lineSpan, "verticalDistance4pxGreater")))
                 {
                     return false;
