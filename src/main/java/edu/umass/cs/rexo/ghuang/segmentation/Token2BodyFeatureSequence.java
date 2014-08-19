@@ -309,6 +309,9 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             if(currentLineWidth < mostCommonLineWidth-19){
                 LayoutUtils.setFeatureValue(lineSpan,"lineWidth20pxLess", 1.0);
             }
+            if(currentLineWidth > mostCommonLineWidth+9){
+                LayoutUtils.setFeatureValue(lineSpan,"lineWidth10pxGreater", 1.0);
+            }
 
             //- vertical distance outliers
             Integer mostCommonVertDistance = verticalDistance.get(0).getKey();

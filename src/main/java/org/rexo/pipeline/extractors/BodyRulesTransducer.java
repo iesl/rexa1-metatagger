@@ -65,7 +65,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 6.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 4.0;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -99,6 +99,9 @@ public class BodyRulesTransducer  {
                                 LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") ||
                                 (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistanceUry2pxGreater") && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater")))
                             /*end first marker always distance above*/
+                            /*the width never wider than the columns*/
+                            && (!LayoutUtils.isActiveFeature(currentSpan, "lineWidth10pxGreater"))
+                            /*end width never wider than the columns*/
                     ) &&
                     (!LayoutUtils.isActiveFeature(currentSpan, "endsInDot") /*&& in papers such as  2010Song_REcent_p... it makes the section markers to be ignored
                                     LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft")*/)
