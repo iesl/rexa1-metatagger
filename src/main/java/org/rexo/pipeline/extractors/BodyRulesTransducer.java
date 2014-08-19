@@ -22,8 +22,7 @@ public class BodyRulesTransducer  {
     //class representing the properties of a particular section marker
     class SectionMarker
     {
-        private boolean isAllCaps;
-
+        private List features;
     }
 
 
@@ -66,7 +65,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 3.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 5.0;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -75,12 +74,21 @@ public class BodyRulesTransducer  {
                     LayoutUtils.isActiveFeature(currentSpan, "allCaps") /*in some papers the titles are in caps*/
                     ||
                     (LayoutUtils.isActiveFeature(currentSpan, "centeredLine"))
+                    ||
+                    ((LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft") && LayoutUtils.isActiveFeature(currentSpan, "startsCap") &&
+                           !LayoutUtils.isActiveFeature(currentSpan, "tabbedLeftMargin") && !LayoutUtils.isActiveFeature(currentSpan, "endsInDotAndNumber")) ||
+                            (previousSectionMarker && LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft")))
+
                     )
                     && (!LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated")
-                            || (LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
+                            ||
+
+                            columnInFutureWithTitles(i, data, 3)
+                            /*(LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
                             nextSpan != null && !LayoutUtils.isActiveFeature(nextSpan, "newColumn") &&
                                 !LayoutUtils.isActiveFeature(nextSpan, "newPage") &&
-                                !LayoutUtils.isActiveFeature(nextSpan, "noColumnAssociated"))
+                                !LayoutUtils.isActiveFeature(nextSpan, "noColumnAssociated"))*/
+
                         ) &&
                     ( (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) || /* with "verticalDistance4pxGreater" doesn't work on INTRODUCTION section
                                     of 2014W%F6hlertSynthesis,_Structures paper*/
@@ -101,15 +109,22 @@ public class BodyRulesTransducer  {
             )   //any section has to have alphabetic characters
                 && (!LayoutUtils.isActiveFeature(currentSpan, "noAlphabetic")))
             {
-                if (LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
+                if ((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
                         LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn"))
+                     ||
+                        (previousSectionMarker && LayoutUtils.isActiveFeature(previousSpan, "rightMarginToTheLeft") &&
+                                LayoutUtils.isActiveFeature(previousSpan, "verticalDistanceUry2pxGreater") && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater"))
+                        )
                 {
                     label = "section-marker-begin";
                 }
                 else
                 {
+
                     label = "section-marker-inside";
                 }
+
+
             }
 
             if(label.equals("") && LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
@@ -197,7 +212,7 @@ public class BodyRulesTransducer  {
              ||
                     (LayoutUtils.isActiveFeature(currentSpan, "right") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop"))
              ||
-                    (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance100pxGreater") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop") && !!LayoutUtils.isActiveFeature(currentSpan, "newPage"))
+                    (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance100pxGreater") && !LayoutUtils.isActiveFeature(currentSpan, "nearThe150PxOfTop") && !LayoutUtils.isActiveFeature(currentSpan, "newPage"))
              ||     (previousSpan != null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") && futureLayout && !LayoutUtils.isActiveFeature(currentSpan, "newPage"))
             ))
             {
@@ -246,6 +261,64 @@ public class BodyRulesTransducer  {
     }
 
 
+    private boolean columnInFutureWithTitles(int i, NewHtmlTokenization data, int linesInFuture)
+    {
+                            /*(LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
+                            nextSpan != null && !LayoutUtils.isActiveFeature(nextSpan, "newColumn") &&
+                                !LayoutUtils.isActiveFeature(nextSpan, "newPage") &&
+                                !LayoutUtils.isActiveFeature(nextSpan, "noColumnAssociated"))*/
+        for(int cnt = 0; cnt< linesInFuture && cnt+i<data.getLineSpans().size(); cnt++)
+        {
+            Span currentSpan = (Span)data.getLineSpans().get(cnt+i);
+            Span previousSpan = null;
+            if (cnt>0)
+            {
+                previousSpan = (Span)data.getLineSpans().get(cnt + i - 1);
+            }
+            if(cnt>0 && (LayoutUtils.isActiveFeature(currentSpan, "newColumn") || LayoutUtils.isActiveFeature(currentSpan, "newPage")))
+            {
+                return false;
+            }
+            else if(LayoutUtils.isActiveFeature(currentSpan, "columnLayoutChange"))
+            {
+                return true;
+            }
+            else if ((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
+                    LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn")
+                    ||
+                    LayoutUtils.isActiveFeature(currentSpan, "allCaps") /*in some papers the titles are in caps*/
+                    ||
+                    (LayoutUtils.isActiveFeature(currentSpan, "centeredLine"))
+                    ||
+                    (LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft"))
+
+            )
+//                    && (!LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated"))
+                    &&
+                    ( (LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) || /* with "verticalDistance4pxGreater" doesn't work on INTRODUCTION section
+                                    of 2014W%F6hlertSynthesis,_Structures paper*/
+                            (previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance4pxGreater")) ||
+                            (LayoutUtils.isActiveFeature(currentSpan, "lineHeight2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater"))
+                    ) &&
+                    (!LayoutUtils.isActiveFeature(currentSpan, "endsInDot") )
+
+            )
+                    /*sometimes doesn't work because pstotext ommits sentences*/
+                    /* (previousSpan == null || (LayoutUtils.isActiveFeature(previousSpan, "endsInDot") && !previousSectionMarker) || previousSectionMarker )*/
+//                    ||
+//                    (previousSectionMarker && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") &&
+//                            LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) /* in case the section marker has several lines*/
+
+
+            )   //any section has to have alphabetic characters
+                    && (!LayoutUtils.isActiveFeature(currentSpan, "noAlphabetic")))
+            {
+                continue;
+            }
+            return false;
+        }
+        return false;
+    }
     public int addLabelToAllSpans(Span span, String label, TokenSequence transducedData, NewHtmlTokenization data,
                                    int tokenId)
     {

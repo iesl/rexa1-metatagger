@@ -201,7 +201,7 @@ public class NewHtmlTokenization extends TokenSequence implements Tokenization {
 				StringSpan paginationToken = new StringSpan( _constructionInfo._docText, lineStartOfs, _constructionInfo.textofs ) ; 
 				
 				paginationToken.setNumericProperty("isHeaderFooterLine", 1);
-                //adds urx, ury, llx and lly coordinates to header-footer, as well as pageNum
+                //kzaporojets: adding urx, ury, llx and lly coordinates to header-footer, as well as pageNum
                 Iterator tboxI = tboxList.iterator();
                 tboxI = tboxList.iterator();
                 int locUrx = -1;
@@ -234,7 +234,7 @@ public class NewHtmlTokenization extends TokenSequence implements Tokenization {
                 paginationToken.setProperty("urx", Double.valueOf(locUrx));
                 paginationToken.setProperty("ury", Double.valueOf(locUry));
                 paginationToken.setProperty("pageNum", Double.valueOf(pageNum));
-
+                //kzaporojets: end of the change
 
 				_lineSpans.add(paginationToken);
 				continue;

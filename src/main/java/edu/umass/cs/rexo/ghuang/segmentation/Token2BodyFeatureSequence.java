@@ -454,6 +454,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         String allCaps = "[#\\[\\]\\(\\);:\\.,'\"\\*A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ1-9]+";
         String initCap = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ].*";
         String finalDot = "((.*)\\.)$";
+        String finalDotAndNumber ="((.*)\\.[\\s]*[0-9]+[\\s]*)$"; // "((.*)\\.[0-9]+)$";
         String noAlphabetical = "^[^A-Za-z]+";
         String firstLevelSection = "^((\\s)*([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
         String secondLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
@@ -497,6 +498,11 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             if(currentLineText.matches(finalDot))
             {
                 LayoutUtils.setFeatureValue(ls, "endsInDot", 1.0);
+            }
+
+            if(currentLineText.matches(finalDotAndNumber))
+            {
+                LayoutUtils.setFeatureValue(ls, "endsInDotAndNumber", 1.0);
             }
 
             if(isUpFlagCount(currentLineText,ptrnLonelyLetters,0.5))
