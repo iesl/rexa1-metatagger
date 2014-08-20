@@ -26,10 +26,14 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
     private static String lonelyLetters = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ][\\.]{0,1}[\\s]+]"; //"[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ][\\.]{0,1}";
     //private static String wordForms = "([^\\s]{1,1}([A-Z]{0,1}(([A-Z]{3,99})|([a-z]{3,99})))([\\s$]{1,1}))";
     private static String wordForms = "(((^)|(\\s))([A-Z]{0,1}(([A-Z]{3,99})|([a-z]{3,99})))(($)|(\\s)))";
+    private static String wordsWithSubindex = "([A-Z]{1,1}[a-z]{0,1}[\\s]{1,1}[\\d\\.]{1,5})";
 
     static Pattern ptrnLonelyNumbers = Pattern.compile(lonelyNumbers);
     static Pattern ptrnLonelyLetters = Pattern.compile(lonelyLetters);
     static Pattern ptrnWordForms = Pattern.compile(wordForms);
+    static Pattern ptrnWordWithSubindex = Pattern.compile(wordsWithSubindex);
+
+
 
     static List <LayoutUtils.Entry<Integer>> wordsInDictionaryPerLine = new ArrayList<LayoutUtils.Entry<Integer>>();
 
@@ -191,19 +195,36 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(lineSpan,"noColumnAssociated",1.0);
 
                 sloppyColumn = LayoutUtils.getClosestCurrentLineColumn(lineInfos, i, columns.get(lineInfos[i].page),
-                        true, columnAcceptableError, true);
+                        true, columnAcceptableError, true, false, -1);
+
                 if(sloppyColumn!=null)
                 {
                     LayoutUtils.setFeatureValue(lineSpan,"sloppyStrictLeft",1.0);
+
+//                    ColumnData sloppyColumnRightTops = LayoutUtils.getClosestCurrentLineColumn(lineInfos, i, columns.get(lineInfos[i].page),
+//                            true, columnAcceptableError, true, true, 10);
+
+                    if(lineInfos[i].urx >= sloppyColumn.getRightX() - columnAcceptableError &&
+                            lineInfos[i].urx <= sloppyColumn.getRightX() + 10)
+                    {
+                        LayoutUtils.setFeatureValue(lineSpan,"sloppyStrictLeft10PxFromColRight",1.0);
+                    }
+                    if(lineInfos[i].urx >= sloppyColumn.getRightX() - columnAcceptableError &&
+                            lineInfos[i].urx <= sloppyColumn.getRightX() + 15)
+                    {
+                        LayoutUtils.setFeatureValue(lineSpan,"sloppyStrictLeft15PxFromColRight",1.0);
+                    }
+
                 }
                 else
                 {
                     sloppyColumn = LayoutUtils.getClosestCurrentLineColumn(lineInfos, i, columns.get(lineInfos[i].page),
-                            true, columnAcceptableError, false);
+                            true, columnAcceptableError, false, false, -1);
                     if(sloppyColumn != null)
                     {
                         LayoutUtils.setFeatureValue(lineSpan,"onlySloppy",1.0);
                     }
+
                 }
 
                 if(sloppyColumn!=null)
@@ -353,6 +374,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             if(currentVertDistance > mostCommonVertDistance+9){
                 LayoutUtils.setFeatureValue(lineSpan,"verticalDistance10pxGreater", 1.0);
             }
+
             if(currentVertDistance > mostCommonVertDistance+11){
                 LayoutUtils.setFeatureValue(lineSpan,"verticalDistance12pxGreater", 1.0);
             }
@@ -447,10 +469,6 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(lineSpan, "sameLeftMarginAsPreviousLine", 1.0);
             }
-
-
-
-
         }
 
         System.out.print("sorted vertical distances");
@@ -561,6 +579,18 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(ls, "1wordFormOrGreater", 1.0);
             }
+            Matcher mtchrWordWithSubindex = ptrnWordWithSubindex.matcher(currentLineText);
+            int counter = 0;
+            while(mtchrWordWithSubindex.find() )
+            {
+                counter ++;
+            }
+
+            if(counter >=5)
+            {
+                LayoutUtils.setFeatureValue(ls, "wordsWithSubindex5Greater", 1.0);
+            }
+            
             if(currentLineText.matches(startsEnum))
             {
                 LayoutUtils.setFeatureValue(ls, "startsEnum", 1.0);

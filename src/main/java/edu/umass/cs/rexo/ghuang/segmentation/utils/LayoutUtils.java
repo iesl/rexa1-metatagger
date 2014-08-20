@@ -173,11 +173,11 @@ public class LayoutUtils {
             {
                 return col;
             }
-            else if(doesBelongToColumnSloppy(col,columnData,false) && doesBelongToColumnVert(col, columnData))
+            else if(doesBelongToColumnSloppy(col,columnData,false,false,-1) && doesBelongToColumnVert(col, columnData))
             {
                 return col;
             }
-            else if(doesBelongToColumnSloppy(col,columnData,false))
+            else if(doesBelongToColumnSloppy(col,columnData,false,false,-1))
             {
                 int distanceFromColumnVert = getVerticalDistanceFromColumn(col,columnData);
                 if(distanceFromColumnVert <= modeVerticalDistance
@@ -197,14 +197,15 @@ public class LayoutUtils {
 
     public static ColumnData getClosestCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns,
                                                          boolean equalsBothMargins, int acceptableMarginError,
-                                                         boolean strictLeft)
+                                                         boolean strictLeft, boolean rightTops, int acceptableRightTopMarginError)
     {
         ColumnData columnData = getColumnData(equalsBothMargins,acceptableMarginError,lineInfos[i]);
         ColumnData colLeastDistance = null;
         int distance = -1;
+
         for(ColumnData col:columns)
         {
-            if(doesBelongToColumnSloppy(col, columnData,strictLeft))
+            if(doesBelongToColumnSloppy(col, columnData,strictLeft, rightTops, acceptableRightTopMarginError))
             {
                 int currDistance = getVerticalDistanceFromColumn(col,columnData);
                 if(colLeastDistance==null || distance ==-1 || currDistance < distance)
@@ -213,8 +214,32 @@ public class LayoutUtils {
                 }
             }
         }
+
         return colLeastDistance;
     }
+
+//    public static ColumnData getClosestCurrentLineColumnRight(LineInfo[] lineInfos, int i, List<ColumnData> columns,
+//                                                         boolean equalsBothMargins, int acceptableMarginError,
+//                                                         boolean strictLeft)
+//    {
+//        ColumnData columnData = getColumnData(equalsBothMargins,acceptableMarginError,lineInfos[i]);
+//        ColumnData colLeastDistance = null;
+//        int distance = -1;
+//
+//        for(ColumnData col:columns)
+//        {
+//            if(doesBelongToColumnSloppy(col, columnData,strictLeft))
+//            {
+//                int currDistance = getVerticalDistanceFromColumn(col,columnData);
+//                if(colLeastDistance==null || distance ==-1 || currDistance < distance)
+//                {
+//                    colLeastDistance = col;
+//                }
+//            }
+//        }
+//
+//        return colLeastDistance;
+//    }
 
     private static boolean doesBelongToColumnStrict(ColumnData col, ColumnData colToCompare)
     {
@@ -225,20 +250,34 @@ public class LayoutUtils {
     * 1- if "newColumn", check the column of the following 2 lines
     * 2- if not "newColumn", check the column worked so far and if it sloppily can belong to that column
     * */
-    private static boolean doesBelongToColumnSloppy(ColumnData col, ColumnData colToCompare, boolean strictLeft)
+    private static boolean doesBelongToColumnSloppy(ColumnData col, ColumnData colToCompare, boolean strictLeft,
+                                                    boolean rightTops, int acceptableRightTopMarginError)
     {
         int relaxedColLeft = col.getLeftX() - col.getErrorMargin();
 
         int relaxedColRight = col.getRightX() + col.getErrorMargin();
+        int relaxedColRightLeft = col.getRightX() - col.getErrorMargin();
+        int relaxedColRightTops = col.getRightX() + acceptableRightTopMarginError;
 
-
-        if(!strictLeft && colToCompare.getLeftX() > relaxedColLeft && colToCompare.getRightX() < relaxedColRight)
+        if(!strictLeft && !rightTops && colToCompare.getLeftX() > relaxedColLeft && colToCompare.getRightX() < relaxedColRight)
         {
             return true;
         }
-        else if(strictLeft && //only 1 px of error margin allowed
+        else if(strictLeft && !rightTops && //only 1 px of error margin allowed
                 (colToCompare.getLeftX() >= col.getLeftX()-1 && colToCompare.getLeftX() <= col.getLeftX()+1)
                 && colToCompare.getRightX() < relaxedColRight)
+        {
+            return true;
+        }
+        else if(strictLeft && rightTops && //only 1 px of error margin allowed
+                (colToCompare.getLeftX() >= col.getLeftX()-1 && colToCompare.getLeftX() <= col.getLeftX()+1)
+                && colToCompare.getRightX() >= relaxedColRightLeft && colToCompare.getRightX()<=relaxedColRightTops)
+        {
+            return true;
+        }
+        else if(!strictLeft && rightTops && //only 1 px of error margin allowed
+                colToCompare.getLeftX() > relaxedColLeft
+                && colToCompare.getRightX() >= relaxedColRightLeft && colToCompare.getRightX()<=relaxedColRightTops)
         {
             return true;
         }
