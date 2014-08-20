@@ -66,7 +66,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) ==2.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) ==2.0 && currentSpan.getText().contains("EXPERIMENTAL S") ;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -291,6 +291,11 @@ public class BodyRulesTransducer  {
         for(int cnt = 0; cnt< linesInFuture && cnt+i<data.getLineSpans().size(); cnt++)
         {
             Span currentSpan = (Span)data.getLineSpans().get(cnt+i);
+            Span nextSpan = null;
+            if(cnt+i+1<data.getLineSpans().size())
+            {
+                nextSpan = (Span)data.getLineSpans().get(cnt+i+1);
+            }
             Span previousSpan = null;
             if (cnt>0)
             {
@@ -300,7 +305,7 @@ public class BodyRulesTransducer  {
             {
                 return false;
             }
-            else if(LayoutUtils.isActiveFeature(currentSpan, "columnLayoutChange"))
+            else if(LayoutUtils.isActiveFeature(currentSpan, "columnLayoutChange") /*|| LayoutUtils.isActiveFeature(currentSpan, "sloppyStrictLeft")*/)
             {
                 return true;
             }
