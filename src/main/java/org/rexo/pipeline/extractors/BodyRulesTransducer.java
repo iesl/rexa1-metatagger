@@ -66,7 +66,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) ==99.0;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) ==2.0;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -85,11 +85,6 @@ public class BodyRulesTransducer  {
                             ||
 
                             columnInFutureWithTitles(i, data, 3)
-                            /*(LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
-                            nextSpan != null && !LayoutUtils.isActiveFeature(nextSpan, "newColumn") &&
-                                !LayoutUtils.isActiveFeature(nextSpan, "newPage") &&
-                                !LayoutUtils.isActiveFeature(nextSpan, "noColumnAssociated"))*/
-
                         ) &&
                     ( ((LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) || /* with "verticalDistance4pxGreater" doesn't work on INTRODUCTION section
                                     of 2014W%F6hlertSynthesis,_Structures paper*/
@@ -143,9 +138,10 @@ public class BodyRulesTransducer  {
                             LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft")
                                         || (previousSpan==null) ||
                             LayoutUtils.isActiveFeature(previousSpan, "verticalDistance2pxGreater") ||
-                            LayoutUtils.isActiveFeature(previousSpan, "noColumnAssociated") ||  //&&
+                            LayoutUtils.isActiveFeature(previousSpan, "noColumnAssociated") ||
                             LayoutUtils.isActiveFeature(currentSpan, "columnLayoutChange") ||
-                            LayoutUtils.isActiveFeature(currentSpan, "lineHeight30pxGreater")
+                            LayoutUtils.isActiveFeature(currentSpan, "lineHeight30pxGreater") ||
+                            LayoutUtils.isActiveFeature(currentSpan, "up")
                     ))
             {
                 label = "notext";
