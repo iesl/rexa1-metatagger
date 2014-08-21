@@ -391,7 +391,7 @@ public class LineInfo2TokenSequenceV2 extends Pipe implements Serializable
             LayoutUtils.adjustPageData(lineInfos, i, pagesData);
 
 
-            LayoutUtils.adjustColumnData(lineInfos,i,columnsData,false,0);
+            LayoutUtils.adjustColumnData(lineInfos,i,columnsData,false,0, 0, null);
 
             LayoutUtils.adjustVerticalDistance(lineInfos,i,verticalDistance);
 

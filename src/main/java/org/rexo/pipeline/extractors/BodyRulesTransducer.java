@@ -66,7 +66,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) ==2.0 && currentSpan.getText().contains("EXPERIMENTAL S") ;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) ==8.0; // && currentSpan.getText().contains("EXPERIMENTAL S") ;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -89,7 +89,10 @@ public class BodyRulesTransducer  {
                     ( ((LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater")) || /* with "verticalDistance4pxGreater" doesn't work on INTRODUCTION section
                                     of 2014W%F6hlertSynthesis,_Structures paper*/
                             (previousSpan!=null && LayoutUtils.isActiveFeature(previousSpan, "verticalDistance4pxGreater")) ||
-                            (LayoutUtils.isActiveFeature(currentSpan, "lineHeight2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater")))
+                            (LayoutUtils.isActiveFeature(currentSpan, "lineHeight2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater") && LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater")) ||
+
+                            (LayoutUtils.isActiveFeature(currentSpan, "lineHeight2pxGreater") && (LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft"))
+                    ))
                             /*first section marker always distance above*/
                             && (previousSectionMarker || LayoutUtils.isActiveFeature(currentSpan, "newColumn") ||
                                 LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") ||
@@ -112,7 +115,7 @@ public class BodyRulesTransducer  {
 
             )   //any section has to have alphabetic characters and have words in dictionary (this latter changed by word forms), no words in dict
                     //in papers such as 2010Song...
-                && (!LayoutUtils.isActiveFeature(currentSpan, "noAlphabetic") && LayoutUtils.isActiveFeature(currentSpan, "1wordFormOrGreater")))
+                && (!LayoutUtils.isActiveFeature(currentSpan, "noAlphabetic") && LayoutUtils.isActiveFeature(currentSpan, "1wordFormOrGreater") && !LayoutUtils.isActiveFeature(currentSpan, "endsInDot")))
             {
                 if ((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
                         LayoutUtils.isActiveFeature(currentSpan, "thirdLevelSectionPtrn"))
@@ -125,12 +128,15 @@ public class BodyRulesTransducer  {
                 }
                 else
                 {
-
                     label = "section-marker-inside";
                 }
 
 
             }
+
+
+
+
 
             if(label.equals("") && LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
                     (LayoutUtils.isActiveFeature(currentSpan, "newPage") ||
@@ -266,6 +272,23 @@ public class BodyRulesTransducer  {
             }
 
 
+            //for paragraphs
+            if(label.equals("text-inside") || label.equals("text-begin"))
+            {
+                //todo: the last line of text
+                //Span lastTextLineRead = somehow get :P...
+                if(LayoutUtils.isActiveFeature(currentSpan, "tabbedLeftMargin"))
+                {
+                    label = "paragraph-begin";
+                }
+                else
+                {
+                    label = "paragraph-inside";
+                }
+            }
+
+            //end for paragraphs
+
             tokenId = addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData, data,tokenId);
 
             if(label.equals("section-marker-begin") || label.equals("section-marker-inside"))
@@ -372,6 +395,10 @@ public class BodyRulesTransducer  {
             if(label.equals("table-marker-begin"))
             {
                 label = "table-marker-inside";
+            }
+            if(label.equals("paragraph-begin"))
+            {
+                label = "paragraph-inside";
             }
         }
         return tokenId;

@@ -160,11 +160,11 @@ public class LayoutUtils {
     }
 
     public static ColumnData getCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns,
-                                                 boolean equalsBothMargins, int acceptableMarginError,
+                                                 boolean equalsBothMargins, int acceptableMarginErrorLeft, int acceptableMarginErrorRight,
                                                     ColumnData currentColumn, int modeVerticalDistance)
     {
         LineInfo lineInfo = lineInfos[i];
-        ColumnData columnData = getColumnData(equalsBothMargins,acceptableMarginError,lineInfos[i]);
+        ColumnData columnData = getColumnData(equalsBothMargins,acceptableMarginErrorLeft, acceptableMarginErrorRight,lineInfos[i]);
         ColumnData sloppyColumn = null;
         for(ColumnData col:columns)
         {
@@ -196,10 +196,10 @@ public class LayoutUtils {
     }
 
     public static ColumnData getClosestCurrentLineColumn(LineInfo[] lineInfos, int i, List<ColumnData> columns,
-                                                         boolean equalsBothMargins, int acceptableMarginError,
+                                                         boolean equalsBothMargins, int acceptableMarginErrorLeft, int acceptableMarginErrorRight,
                                                          boolean strictLeft, boolean rightTops, int acceptableRightTopMarginError)
     {
-        ColumnData columnData = getColumnData(equalsBothMargins,acceptableMarginError,lineInfos[i]);
+        ColumnData columnData = getColumnData(equalsBothMargins,acceptableMarginErrorLeft, acceptableMarginErrorRight,lineInfos[i]);
         ColumnData colLeastDistance = null;
         int distance = -1;
 
@@ -253,10 +253,10 @@ public class LayoutUtils {
     private static boolean doesBelongToColumnSloppy(ColumnData col, ColumnData colToCompare, boolean strictLeft,
                                                     boolean rightTops, int acceptableRightTopMarginError)
     {
-        int relaxedColLeft = col.getLeftX() - col.getErrorMargin();
+        int relaxedColLeft = col.getLeftX() - col.getErrorMarginLeft();
 
-        int relaxedColRight = col.getRightX() + col.getErrorMargin();
-        int relaxedColRightLeft = col.getRightX() - col.getErrorMargin();
+        int relaxedColRight = col.getRightX() + col.getErrorMarginRight();
+        int relaxedColRightLeft = col.getRightX() - col.getErrorMarginRight();
         int relaxedColRightTops = col.getRightX() + acceptableRightTopMarginError;
 
         if(!strictLeft && !rightTops && colToCompare.getLeftX() > relaxedColLeft && colToCompare.getRightX() < relaxedColRight)
@@ -461,6 +461,7 @@ public class LayoutUtils {
         }
         return columnList;
     }
+
 
     private static boolean isEqualMargin(int margin1, int margin2, int acceptedErr)
     {
@@ -816,23 +817,23 @@ public class LayoutUtils {
 
 
 
-    private static ColumnData getColumnData(boolean equalsBothMargins, int acceptableMarginError,
+    private static ColumnData getColumnData(boolean equalsBothMargins, int acceptableMarginErrorLeft, int acceptableMarginErrorRight,
                                             LineInfo lineInfo)
     {
-        ColumnData columnData = new ColumnData(equalsBothMargins, acceptableMarginError);
+        ColumnData columnData = new ColumnData(equalsBothMargins, acceptableMarginErrorLeft, acceptableMarginErrorRight);
         columnData.setLeftX(lineInfo.llx);
         columnData.setRightX(lineInfo.urx);
         columnData.setTopY(lineInfo.ury);
         columnData.setBottomY(lineInfo.lly);
         return columnData;
     }
-    public static void checkCounterparts(boolean equalsBothMargins, int acceptableMarginError,
+    public static void checkCounterparts(boolean equalsBothMargins, int acceptableMarginErrorLeft, int acceptableMarginErrorRight,
                                          ColumnData columnData, LineInfo[] lineInfos, int i)
     {
         ColumnData columnData1 = null;
         if(i>0)
         {
-            columnData1 = getColumnData(equalsBothMargins, acceptableMarginError, lineInfos[i-1]);
+            columnData1 = getColumnData(equalsBothMargins, acceptableMarginErrorLeft, acceptableMarginErrorRight, lineInfos[i-1]);
             if(columnData.equals(columnData1))
             {
                 columnData.incrementContiguous();
@@ -841,7 +842,7 @@ public class LayoutUtils {
         }
         if(i<lineInfos.length-1)
         {
-            columnData1 = getColumnData(equalsBothMargins, acceptableMarginError, lineInfos[i+1]);
+            columnData1 = getColumnData(equalsBothMargins, acceptableMarginErrorLeft, acceptableMarginErrorRight, lineInfos[i+1]);
             if(columnData.equals(columnData1))
             {
                 columnData.incrementContiguous();
@@ -850,16 +851,23 @@ public class LayoutUtils {
         }
     }
     public static void adjustColumnData(LineInfo[]lineInfos, int i, Map <Integer, List<Entry<ColumnData>>> columnsData, boolean equalsBothMargins,
-                                        int acceptableMarginError)
+                                        int acceptableMarginErrorLeft, int acceptableMarginErrorRight, Span currentSpan)
     {
-        ColumnData columnData = getColumnData(equalsBothMargins, acceptableMarginError, lineInfos[i]);
+        //if lots of subindexes, then pstotext fails to calculate the line width accurately, so increase the margin error for column identification
+//        if(currentSpan != null && isActiveFeature(currentSpan, "wordsWithSubindex5OrMore") && equalsBothMargins)
+//        {
+//            acceptableMarginErrorRight += 10;
+//        }
+
+
+        ColumnData columnData = getColumnData(equalsBothMargins, acceptableMarginErrorLeft, acceptableMarginErrorRight, lineInfos[i]);
 
         if(columnsData.get(lineInfos[i].page)==null)
         {
             List <Entry<ColumnData>> colData = new ArrayList<Entry<ColumnData>>();
             colData.add(new Entry<ColumnData>(columnData, 1));
 
-            checkCounterparts(equalsBothMargins, acceptableMarginError, columnData, lineInfos, i);
+            checkCounterparts(equalsBothMargins, acceptableMarginErrorLeft, acceptableMarginErrorRight, columnData, lineInfos, i);
 
             columnsData.put(lineInfos[i].page,colData);
 
@@ -879,11 +887,11 @@ public class LayoutUtils {
                 if(lineInfos[i].lly<existentEntry.getKey().getBottomY()) {
                     existentEntry.getKey().setBottomY(lineInfos[i].lly);
                 }
-                checkCounterparts(equalsBothMargins, acceptableMarginError, existentEntry.getKey(), lineInfos, i);
+                checkCounterparts(equalsBothMargins, acceptableMarginErrorLeft, acceptableMarginErrorRight, existentEntry.getKey(), lineInfos, i);
             }
             else
             {
-                checkCounterparts(equalsBothMargins, acceptableMarginError, currEntry.getKey(), lineInfos, i);
+                checkCounterparts(equalsBothMargins, acceptableMarginErrorLeft, acceptableMarginErrorRight, currEntry.getKey(), lineInfos, i);
                 columnsData.get(lineInfos[i].page).add(currEntry);
             }
         }
@@ -961,11 +969,16 @@ public class LayoutUtils {
         boolean equalsBothMargins = false;
 
         //accepted margin of error (in pixels) when performing equals
-        int errorMargin = 0;
+        int errorMarginLeft = 0;
+        int errorMarginRight = 0;
 
-        public int getErrorMargin()
+        public int getErrorMarginLeft()
         {
-            return errorMargin;
+            return errorMarginLeft;
+        }
+        public int getErrorMarginRight()
+        {
+            return errorMarginRight;
         }
         //only used when ColumnData is used as a key to group , to indicate the number of
         //cases when the same-width column lines have contiguous counterpart.
@@ -989,10 +1002,11 @@ public class LayoutUtils {
         }
 
 
-        public ColumnData(boolean equalsBothMargins, int errorMargin)
+        public ColumnData(boolean equalsBothMargins, int errorMarginLeft, int errorMarginRight)
         {
             this.equalsBothMargins = equalsBothMargins;
-            this.errorMargin = errorMargin;
+            this.errorMarginLeft = errorMarginLeft;
+            this.errorMarginRight = errorMarginRight;
         }
 
 
@@ -1055,13 +1069,13 @@ public class LayoutUtils {
                 return (((ColumnData)obj).rightX == this.rightX &&
                         ((ColumnData) obj).leftX == this.leftX) ||
                         (((ColumnData)obj).rightX == this.rightX &&
-                                (((ColumnData) obj).leftX >= this.leftX - errorMargin &&
-                                        ((ColumnData) obj).leftX <= this.leftX + errorMargin)) ||
-                        ((((ColumnData) obj).rightX >= this.rightX - errorMargin &&
-                                ((ColumnData) obj).rightX <= this.rightX + errorMargin) &&
-                                ((ColumnData) obj).leftX == this.leftX
-                        //todo: manually added +/- 2px for papers such as 1997Fey_The_affects..., if works well, parametrize
- //                               (((ColumnData) obj).leftX >= this.leftX-2 && ((ColumnData) obj).leftX <= this.leftX+2)
+                                (((ColumnData) obj).leftX >= this.leftX - errorMarginLeft &&
+                                        ((ColumnData) obj).leftX <= this.leftX + errorMarginLeft)) ||
+                        ((((ColumnData) obj).rightX >= this.rightX - errorMarginRight &&
+                                ((ColumnData) obj).rightX <= this.rightX + errorMarginRight) &&
+//                                ((ColumnData) obj).leftX == this.leftX
+                        //todo: manually added +/- 1px for papers such as page 2 of 2014ShenFacile..., if works well, parametrize
+                                (((ColumnData) obj).leftX >= this.leftX-1 && ((ColumnData) obj).leftX <= this.leftX+1)
                         );
             }
         }

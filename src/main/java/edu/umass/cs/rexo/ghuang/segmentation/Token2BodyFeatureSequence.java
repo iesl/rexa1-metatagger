@@ -38,7 +38,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
     static List <LayoutUtils.Entry<Integer>> wordsInDictionaryPerLine = new ArrayList<LayoutUtils.Entry<Integer>>();
 
 
-    private static int columnAcceptableError = 5; //pixels of sloppiness within a column accepted
+    private static int columnAcceptableErrorRight = 5; //pixels of sloppiness within a column accepted
+    private static int columnAcceptableErrorLeft = 3;
 
     @Override
     public Instance pipe(Instance carrier) {
@@ -141,8 +142,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             LayoutUtils.adjustVerticalDistance(lineInfos, i, verticalDistance);
             LayoutUtils.adjustLineWidth(lineInfos, i, lineWidth);
             LayoutUtils.adjustLineWidthPerPage(lineInfos, i, widthLinePerPage);
-            LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true, columnAcceptableError);
-            LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false, 0);
+            LayoutUtils.adjustColumnData(lineInfos, i, columnsData, true, columnAcceptableErrorLeft, columnAcceptableErrorRight, lineSpan);
+            LayoutUtils.adjustColumnData(lineInfos, i, leftMarginsData, false, 0, 0, lineSpan);
 //            LayoutUtils.adjustPageData(lineInfos, i, pagesData);
             LayoutUtils.adjustPixelsPerCharacter(lineInfos, i, pixelsPerCharacter);
         }
@@ -186,7 +187,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         for(int i =0; i<lineInfos.length; i++ )
         {
             ColumnData currentLineColumn  = LayoutUtils.getCurrentLineColumn(lineInfos,i,columns.get(lineInfos[i].page),
-                    true, columnAcceptableError, lastLineColumn, verticalDistance.get(0).getKey()) ;
+                    true, columnAcceptableErrorLeft, columnAcceptableErrorRight, lastLineColumn, verticalDistance.get(0).getKey()) ;
             lineSpanCount = updateLineSpanCounter(data, lineSpanCount + 1);
             Span lineSpan = (Span)data.getLineSpans().get(lineSpanCount); // (Span)data.getLineSpans().get(i);
             ColumnData sloppyColumn = null;
@@ -195,21 +196,18 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(lineSpan,"noColumnAssociated",1.0);
 
                 sloppyColumn = LayoutUtils.getClosestCurrentLineColumn(lineInfos, i, columns.get(lineInfos[i].page),
-                        true, columnAcceptableError, true, false, -1);
+                        true, columnAcceptableErrorLeft, columnAcceptableErrorRight, true, false, -1);
 
                 if(sloppyColumn!=null)
                 {
                     LayoutUtils.setFeatureValue(lineSpan,"sloppyStrictLeft",1.0);
 
-//                    ColumnData sloppyColumnRightTops = LayoutUtils.getClosestCurrentLineColumn(lineInfos, i, columns.get(lineInfos[i].page),
-//                            true, columnAcceptableError, true, true, 10);
-
-                    if(lineInfos[i].urx >= sloppyColumn.getRightX() - columnAcceptableError &&
+                    if(lineInfos[i].urx >= sloppyColumn.getRightX() - columnAcceptableErrorRight &&
                             lineInfos[i].urx <= sloppyColumn.getRightX() + 10)
                     {
                         LayoutUtils.setFeatureValue(lineSpan,"sloppyStrictLeft10PxFromColRight",1.0);
                     }
-                    if(lineInfos[i].urx >= sloppyColumn.getRightX() - columnAcceptableError &&
+                    if(lineInfos[i].urx >= sloppyColumn.getRightX() - columnAcceptableErrorRight &&
                             lineInfos[i].urx <= sloppyColumn.getRightX() + 15)
                     {
                         LayoutUtils.setFeatureValue(lineSpan,"sloppyStrictLeft15PxFromColRight",1.0);
@@ -219,7 +217,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 else
                 {
                     sloppyColumn = LayoutUtils.getClosestCurrentLineColumn(lineInfos, i, columns.get(lineInfos[i].page),
-                            true, columnAcceptableError, false, false, -1);
+                            true, columnAcceptableErrorLeft, columnAcceptableErrorRight, false, false, -1);
                     if(sloppyColumn != null)
                     {
                         LayoutUtils.setFeatureValue(lineSpan,"onlySloppy",1.0);
@@ -588,9 +586,9 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
 
             if(counter >=5)
             {
-                LayoutUtils.setFeatureValue(ls, "wordsWithSubindex5Greater", 1.0);
+                LayoutUtils.setFeatureValue(ls, "wordsWithSubindex5OrMore", 1.0);
             }
-            
+
             if(currentLineText.matches(startsEnum))
             {
                 LayoutUtils.setFeatureValue(ls, "startsEnum", 1.0);
