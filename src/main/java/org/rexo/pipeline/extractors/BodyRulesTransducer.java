@@ -10,9 +10,7 @@ import edu.umass.cs.rexo.ghuang.segmentation.utils.LayoutUtils;
 import org.rexo.extraction.NewHtmlTokenization;
 import org.rexo.span.CompositeSpan;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by klimzaporojets on 8/4/14.
@@ -52,6 +50,9 @@ public class BodyRulesTransducer  {
 
         boolean previousFigure;
         boolean debugMe  = false;
+
+        Map<String, Integer> lastLabelIndexes = new HashMap<String, Integer>();
+
         for(int i=0; i<data.getLineSpans().size(); i++)
         {
             previousFigure = false;
@@ -66,7 +67,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) ==8.0; // && currentSpan.getText().contains("EXPERIMENTAL S") ;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 1.0; // && currentSpan.getText().contains("Acknowledgments") ;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -130,8 +131,6 @@ public class BodyRulesTransducer  {
                 {
                     label = "section-marker-inside";
                 }
-
-
             }
 
 
@@ -276,8 +275,22 @@ public class BodyRulesTransducer  {
             if(label.equals("text-inside") || label.equals("text-begin"))
             {
                 //todo: the last line of text
-                //Span lastTextLineRead = somehow get :P...
-                if(LayoutUtils.isActiveFeature(currentSpan, "tabbedLeftMargin"))
+
+                int lastIndex = getLastIndex(lastLabelIndexes, new String[]
+                                                {"text-begin","text-inside", "paragraph-begin", "paragraph-inside"});
+                Span lastTextLineRead = null;
+                if(lastIndex>-1)
+                {
+                    lastTextLineRead = (Span)data.getLineSpans().get(lastIndex);
+                }
+
+
+                if((LayoutUtils.isActiveFeature(currentSpan, "tabbedLeftMargin") &&
+                                    LayoutUtils.isActiveFeature(currentSpan, "startsCap")) ||
+                        LayoutUtils.isActiveFeature(currentSpan, "newColumn") ||
+                        (lastTextLineRead!=null
+                                && LayoutUtils.isActiveFeature(lastTextLineRead, "rightMarginToTheLeft")
+                                && LayoutUtils.isActiveFeature(lastTextLineRead, "endsInDot")))
                 {
                     label = "paragraph-begin";
                 }
@@ -288,6 +301,8 @@ public class BodyRulesTransducer  {
             }
 
             //end for paragraphs
+
+            lastLabelIndexes.put(label, i);
 
             tokenId = addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData, data,tokenId);
 
@@ -304,7 +319,19 @@ public class BodyRulesTransducer  {
         return transducedData;
     }
 
-
+    private int getLastIndex(Map<String, Integer> indexes, String [] keys)
+    {
+        int lastIndex = -1;
+        for(String key: keys)
+        {
+            Integer kValue = indexes.get(key);
+            if(kValue!=null && kValue>lastIndex)
+            {
+                lastIndex = kValue;
+            }
+        }
+        return lastIndex;
+    }
     private boolean columnInFutureWithTitles(int i, NewHtmlTokenization data, int linesInFuture)
     {
                             /*(LayoutUtils.isActiveFeature(currentSpan, "noColumnAssociated") &&
