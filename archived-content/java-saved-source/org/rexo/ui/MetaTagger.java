@@ -88,6 +88,7 @@ public class MetaTagger {
 		pipeline
 		.add( new GrantExtractionFilter() )
 		.add( new ReferenceExtractionFilter( refCrf, hdrCrf ) )
+
 		// .add( new CitationContextFilter() )
 		// .add( new WriteAnnotatedXMLFilter() )
 		// .add( new MetatagPostconditionTestFilter() )

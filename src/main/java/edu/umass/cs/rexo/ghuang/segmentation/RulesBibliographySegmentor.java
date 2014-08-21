@@ -1,46 +1,115 @@
 package edu.umass.cs.rexo.ghuang.segmentation;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
+import edu.umass.cs.mallet.base.extract.StringSpan;
+import edu.umass.cs.mallet.base.fst.CRF4;
 import edu.umass.cs.mallet.base.pipe.Pipe;
+import edu.umass.cs.mallet.base.pipe.SerialPipes;
+import edu.umass.cs.mallet.base.types.*;
 import org.apache.log4j.Logger;
 import org.rexo.extraction.NewHtmlTokenization;
 
-import edu.umass.cs.mallet.base.extract.StringSpan;
-import edu.umass.cs.mallet.base.fst.CRF4;
-import edu.umass.cs.mallet.base.types.Instance;
-import edu.umass.cs.mallet.base.types.Sequence;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
- * Use a trained CRF to segment references.
+ * Use rules to segment references.
  * 
- * @author ghuang
+ * @author kzaporojets: based on CRF segmentor (CRFBibliographySegmentor)
  * 
  */
-public class CRFBibliographySegmentor
+public class RulesBibliographySegmentor
 {
-	private static Logger log = Logger.getLogger(CRFBibliographySegmentor.class);
-	
-	private CRF4 m_crf;
+	private static Logger log = Logger.getLogger(RulesBibliographySegmentor.class);
+
+//    ArraySequence arraySequence = new ArraySequence();
+
+//	private CRF4 m_crf;
 
 
-	public CRFBibliographySegmentor(CRF4 crf)
-	{
-		m_crf = crf;
-	}
+//	public RulesBibliographySegmentor(CRF4 crf)
+//	{
+//		m_crf = crf;
+//	}
 
-	public Pipe getInputPipe()
+    public RulesBibliographySegmentor(){}
+
+    private Pipe transformFromCrfToRulesPipe(Pipe crfInputPipe)
     {
-        return m_crf.getInputPipe();
+//       edu.umass.cs.rexo.ghuang.segmentation.NewHtmlTokenization2LineInfo@5ef80a07
+
+        List newPipeList = new ArrayList();
+
+
+        for(Object pipe: ((edu.umass.cs.mallet.base.pipe.SerialPipes)crfInputPipe).getPipes())
+        {
+            if(pipe instanceof LineInfo2TokenSequence)
+            {
+                newPipeList.add(new LineInfo2TokenSequenceV2());
+            }
+            else
+            {
+                //((Pipe)pipe).setParent(null);
+                newPipeList.add(pipe);
+            }
+        }
+
+
+        List pipes = new ArrayList();
+        pipes.add(new NewHtmlTokenization2LineInfo());
+        Pipe pli = new LineInfo2TokenSequenceV2();
+        pli.setTargetProcessing(false);
+        pipes.add(pli);
+        SerialPipes serialPipes = new SerialPipes(pipes);
+        //SerialPipes serialPipes = new SerialPipes(newPipeList);
+//        //serialPipes.
+        return serialPipes;
+
+
     }
-	public ReferenceData segmentReferences(NewHtmlTokenization htmlTokenization)
+
+    //here go the rules to identify the references
+    private Sequence transduce(Sequence data)
+    {
+        Sequence transducedData = new TokenSequence();
+        Iterator iter = ((TokenSequence)data).iterator();
+        String label;
+        for(int i=0; i<((TokenSequence)data).size(); i++)
+        {
+            Token tkn = (Token)(((TokenSequence)data).get(i));
+            if (tkn.getText().toUpperCase().trim().equals("REFERENCES"))
+            {
+                label = "biblioPrologue";
+            }
+            else if(tkn.getFeatures().hasProperty("possibleInit")
+            //tkn.getFeatures().hasProperty("samePatternAsInFirst")
+            /*tkn.getFeatures().hasProperty("beginNumericBrackets") || tkn.getFeatures().hasProperty("beginsNumberCapital")*/)
+            {
+                label = "biblio-B";
+            }
+            else if(tkn.getFeatures().hasProperty("ignore"))
+            {
+                label = "junk";
+            }
+            else
+            {
+                label = "biblio-I";
+            }
+
+            ((TokenSequence)transducedData).add(label);
+        }
+
+        return transducedData;
+    }
+	public ReferenceData segmentReferences(NewHtmlTokenization htmlTokenization, Pipe crfInputPipe)
 	{
-		Instance inst = new Instance(htmlTokenization, null, null, null, m_crf.getInputPipe());
+
+        Pipe rulesInputPipe = transformFromCrfToRulesPipe(crfInputPipe);
+		Instance inst = new Instance(htmlTokenization, null, null, null, rulesInputPipe);
         //todo: kzaporojets: here another instance with LineInfo2TokenSequence pipe, adding also data such as
         //average line width
-		Sequence predictedLabels = m_crf.transduce ((Sequence) inst.getData());
+		Sequence predictedLabels = transduce((Sequence)inst.getData()); // m_crf.transduce ((Sequence) inst.getData());
 
 
 		ReferenceData ret = new ReferenceData();
@@ -51,7 +120,6 @@ public class CRFBibliographySegmentor
 //		System.out.println("zzzzzzzz " + lineSpans);
 //		System.out.println("zzzzzzzz " + lineSpans.size() + " " + predictedLabels.size());
 
-		
 		// lineSpans may contain extra StringSpans indicating page breaks or repeating header/footer lines
 		assert (lineSpans.size() >= predictedLabels.size());
 		
@@ -62,7 +130,7 @@ public class CRFBibliographySegmentor
 		}
 		
 		return ret;
-}
+	}
 
 	
 	// NOTE: argument "result" is modified

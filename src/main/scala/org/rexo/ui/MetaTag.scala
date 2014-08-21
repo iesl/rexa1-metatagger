@@ -11,11 +11,8 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.log4j.Logger
 import org.rexo.extraction.NewHtmlTokenization;
-import org.rexo.pipeline.ErrorLogFilter;
-import org.rexo.pipeline.GrantExtractionFilter;
-import org.rexo.pipeline.InfoLogFilter;
-import org.rexo.pipeline.PipelineMetricsFilter;
-import org.rexo.pipeline.ReferenceExtractionFilter;
+import org.rexo.pipeline._
+;
 import org.rexo.pipeline.components.{RxPipeline, RxDocument}
 
 import org.rexo.util.EnglishDictionary;
@@ -65,7 +62,8 @@ object MetaTag extends Logger("MetaTag") {
 
 		pipeline
 		.add( new GrantExtractionFilter() )
-		.add( new ReferenceExtractionFilter( refCrf, hdrCrf ) )
+		.add( new ReferenceExtractionFilter( refCrf, hdrCrf ))
+    .add( new BodyExtractionFilter())
 		// .add( new CitationContextFilter() )
 		// .add( new WriteAnnotatedXMLFilter() )
 		// .add( new MetatagPostconditionTestFilter() )

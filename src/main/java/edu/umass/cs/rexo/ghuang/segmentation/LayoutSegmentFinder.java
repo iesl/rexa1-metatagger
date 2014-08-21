@@ -29,19 +29,24 @@ public class LayoutSegmentFinder
 	static final private Pattern BIBLIOGRAPHY_PATTERN;
 	
 	CRFBibliographySegmentor m_crfBibSegmentor;
-	
+
+    RulesBibliographySegmentor m_rulesBibSegmentor;
 	
 	static {
 		INTRODUCTION_PATTERN = Pattern.compile("^[#iIvVxX\\s\\.\\d]*I(?i:ntroduction)");
 		ABSTRACT_PATTERN = Pattern.compile("^[\\s]*((A(?i:bstract))|((abstract)[\\s]*$))");
 		BIBLIOGRAPHY_PATTERN = Pattern
 				.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited))\\s*$");
+                //just temporary to make it work with 2010Song_...
+            //.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited)|A(?i:cknowledgements))\\s*$");
 	}
+
 
 	
 	public LayoutSegmentFinder(CRFBibliographySegmentor crfBibSegmentor)
 	{
 		m_crfBibSegmentor = crfBibSegmentor;
+        m_rulesBibSegmentor = new RulesBibliographySegmentor();
 	}
 	
 	/* Partition element 'contentElement' into segments. */
@@ -134,10 +139,7 @@ public class LayoutSegmentFinder
 		subsections.put("headerTokenization", header);
 
 		//***** Find body ****
-//        for(Object s: lineSpans)
-//        {
-//            System.out.println(s.toString());
-//        }
+
 		ArrayList bodyLines = new ArrayList();
 		subList = findMatchingLines(lineSpans, NULL_PATTERN,
 				BIBLIOGRAPHY_PATTERN, /*lineCountMax=*/Integer.MAX_VALUE, /*pageCountMax=*/
@@ -150,12 +152,6 @@ public class LayoutSegmentFinder
 					BIBLIOGRAPHY_PATTERN, /*lineCountMax=*/Integer.MAX_VALUE, /*pageCountMax=*/
 					Integer.MAX_VALUE);
 		}
-
-
-//        for(Object s: lineSpans)
-//        {
-//            System.out.println(s.toString());
-//        }
 
 		if (!bodyLines.isEmpty()) {
 			// Create body element
@@ -170,10 +166,11 @@ public class LayoutSegmentFinder
 		// Extract References
 
 		long[] biblioBoundaries= lineListBoundaries(lineSpans);
-//        System.out.println(Arrays.toString(biblioBoundaries));
 		NewHtmlTokenization biblio = tokenization.getSubspanTokenization((int)biblioBoundaries[0], (int)biblioBoundaries[1]);
-//        System.out.println(Arrays.toString(biblio.getLineSpans().toArray()));
 		CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
+//uncomment to use rule-based approach
+//        RulesBibliographySegmentor.ReferenceData referenceData = m_rulesBibSegmentor.segmentReferences(biblio, m_crfBibSegmentor.getInputPipe());
+
 
 		// Create biblioPrologue element
 		if (!referenceData.prologueList.isEmpty()) {
@@ -195,7 +192,7 @@ public class LayoutSegmentFinder
 			NewHtmlTokenization reference = tokenization
 					.getSubspanTokenization((int) referenceTokenBoundaries[0],
 							(int) referenceTokenBoundaries[1]);
-			refTokenizationList.add(reference);
+			refTokenizationList.add(reference); //here adds ALL, junk included (ex: [70] in paper2_1.pdf), todo: improve it so it ignores "junk" part
 
 		}
 		subsections.put("referenceList", refTokenizationList);
