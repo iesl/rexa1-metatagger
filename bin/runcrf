@@ -1,4 +1,3 @@
 #!/bin/bash
 
 exec ./sbt  "runMain org.rexo.ui.MetaTagger --data-dir data/"
-

@@ -76,3 +76,4 @@ eclipse
 *.iws
 .ensime*
 /.sbtopts-common
+/README.html

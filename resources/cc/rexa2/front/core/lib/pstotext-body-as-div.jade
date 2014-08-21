@@ -1,0 +1,20 @@
+-import cc.rexa2.front.core.lib.pstotext.{XmlToHtmlFormatter=>fmt}
+-import fmt.{Page, Font, Document}
+-@ val document: Document
+
+.document
+  -var pageOffset:Float = 0 
+
+  -for(page <- document.pages)  
+    .page
+      -for(line <- page.lines)
+        .line
+          -for(tbox <- line.tboxes)
+            -val adjHeight = math.min(tbox.font.h, tbox.box.height)
+            span(style="font-size:#{adjHeight.toString}px;font-family:Times;")
+              .tbox(xpath="#{document.id + page.id + line.id + tbox.id}" style="position:absolute;top:#{(page.box.height * 1.10 - tbox.box.ury + pageOffset + page.box.lly).toString}px;left:#{(tbox.box.llx).toString}px;")
+                nobr
+                  |#{tbox.text}
+    
+    -pageOffset = pageOffset + (page.box.height * 1.10).toInt
+
