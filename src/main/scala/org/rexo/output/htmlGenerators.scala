@@ -1,3 +1,6 @@
+package org.rexo.output
+
+
 object htmlGenerators {
   // pstotext body as div
   import org.rexo.output.XmlToHtmlFormatter._
@@ -6,16 +9,16 @@ object htmlGenerators {
   import scalatags.Text.{attrs => a, styles => s, _}
   import scalatags.Text.tags._
 
-  object cls {
-    import scalatags.Text.short._
-    val documentCls = "document".cls
-
-  }
-  def generateAsDiv(document: Document): String = {
-    div(a.`class` := "document")(
-
-    )
-
+  //object cls {
+  //  import scalatags.Text.short._
+  //  val documentCls = "document".cls
+  // 
+  //}
+  //def generateAsDiv(document: Document): String = {
+  //  div(a.`class` := "document")(
+  // 
+  //  )
+  // 
   //.document
   //  -var pageOffset:Float = 0
   //
@@ -31,9 +34,7 @@ object htmlGenerators {
   //                  |#{tbox.text}
   //
   //    -pageOffset = pageOffset + (page.box.height * 1.10).toInt
-
-    "TODO"
-}
+  // }
 
 
   // pstotext body as html

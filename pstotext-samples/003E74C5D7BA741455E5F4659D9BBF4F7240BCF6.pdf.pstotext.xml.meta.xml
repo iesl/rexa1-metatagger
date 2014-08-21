@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <content>
+    <headers initialCol="1" llx="63.0" lly="97.0" urx="550.0" ury="746.0" pageNum="1" headerID="p1x114.0y720.0">
+      <title initialCol="1" llx="114.0" lly="720.0" urx="532.0" ury="742.0" pageNum="1">Flexibility: Bringing the one constant factor into projects</title>
+      <authors initialCol="1" llx="275.0" lly="707.0" urx="365.0" ury="724.0" pageNum="1">
+        <author initialCol="1" llx="275.0" lly="707.0" urx="365.0" ury="724.0" pageNum="1">
+          <author-first initialCol="1" llx="275.0" lly="707.0" urx="365.0" ury="724.0" pageNum="1">Jan</author-first>
+          <author-last initialCol="1" llx="275.0" lly="707.0" urx="365.0" ury="724.0" pageNum="1">Jrging</author-last>
+        </author>
+      </authors>
+      <institution initialCol="1" llx="205.0" lly="692.0" urx="435.0" ury="709.0" pageNum="1">Industrieseminar, University of Mannheim</institution>
+      <address initialCol="1" llx="237.0" lly="678.0" urx="403.0" ury="694.0" pageNum="1">Schloss, D-68131 Mannheim</address>
+      <phone initialCol="1" llx="249.0" lly="649.0" urx="390.0" ury="680.0" pageNum="1">Tel.: +49 621 181-1750 Fax: +49 181-1579</phone>
+      <email initialCol="1" llx="204.0" lly="634.0" urx="436.0" ury="650.0" pageNum="1">E-Mail: juerging@is.bwl.uni-mannheim.de</email>
+      <abstract initialCol="1" llx="63.0" lly="97.0" urx="550.0" ury="621.0" pageNum="1">Abstract Despite the significant research carried out in project management a review by Morris and Hough (1987), a benchmark by Reichelt and Lyneis (1999), etc. reveal that most projects' performance cannot meet their expectations. System Dynamics has been applied intensively in project management models, and most successfully in `post mortem' analysises to identify the factors responsible for schedule and budget overruns. The paper intends to point out the flexibility's ability making a project system more stable and resistant to external influences. Extended Abstract The concept of flexibility enriching the traditional strategic success factors, which make up the magic triangle, has been coming up in the recent years. The flexibility's influence on the existing factors is not quite so clear yet. Does flexibility make it a square with four equally weighted factors, or is it rather a pyramid, where flexibility might influence cost, time, and quality with equal or different weight? In the area of manufacturing a lot of research regarding this topic already has been undertaken - in contrast to project management. It will be shown that project management still sticks to the traditional strategic success factors and that flexibility and project management so far have not been brought into a context. First, it is roughly presented what the findings in manufacturing are and analyzed whether the concept of flexibility can be transferred into project management. Flexibility in manufacturing In Manufacturing the relevance of the strategic success factors time, cost, and quality has changed over the time (Stalk, Hout, 1990). Between 1960 and 1970 firms tried to dominate markets by holding or gaining a dominant cost position. The quality area has followed these years and firms focused their efforts towards quality aspects of their product. Still the quality aspect is one of the most important strategic measurements, but a move towards a time-based competition has occurred and cycle times or product development times are more important than ever. Figure 1 shows the development of the emphasis given to the usual success factors. Figure 1: The changing role of success factors (Milling et al. 2000) Traditionally it was believed that one can not avoid trading off one capability for another. Empirical studies revealed that there are manufacturer who seem to have been able to defy that (Ferdows, De Meyer, 1990). A solution why this was possible might be flexibility. There are several examples where manufacturer could gain a competitive advantage through the one or the other version of flexibility (Upton, 1994). Indeed, the findings in manufacturing should be applicable to project management. The traditional performance measurements are here still the same. In project management the three performance measurements by now still are (i) being on schedule, (ii) below budget and (iii) delivering a product meeting the needed quality (Turner, 1999). But what is the answer to do well in all three categories? A definition of flexibility, one among others, given by Upton (1994), might help: "flexibility is the ability to change or react with little penalty time, effort, cost or performance" This implies that flexibility in the context of project management describes the capability to cope with changes in the project definition or scope and compensate them with little influences on schedule (time), costs and quality by appropriate management policies and actions. Following this definition flexibility is the factor that keeps projects on track regarding the success factors that make up the magic triangle. Literature review In contrast to traditional project management techniques the System Dynamics approach to project management takes a holistic view on the project and identifies the feedback structures within the project system. Realizing the dynamic nature of projects it seems obvious that System Dynamics can be used to understand and improve complex project systems. Lyneis (Lyneis, 2000) state that "In fact, without doubt project management applications have been the most extensive and successful use of system dynamics". A first model in this context was developed by Roberts (1964). Here the basic dynamics of R&amp;D projects were analyzed and the concept of perceived progress and real progress were introduced. This model was improved in order to manage concurrent projects. Probably the first time System Dynamics Model that has been successfully applied in project management was a shipbuilding claim against the US Navy (Cooper, 1980; Sterman, 2000) and it is important to note most of the major applications in practice refer to such dispute resolutions. The novelty in Cooper's work was the introduction of the rework cycle, a structure which copes with undiscovered rework, time to discover rework, work quality and varying working productivity. A summary of the basic feedback structures can be found in the model by Richardson and Pugh (1981). This R&amp;D project model focuses on the trade-off between hiring more staff and allowing</abstract>
+      <keyword initialCol="1" llx="122.0" lly="602.0" urx="478.0" ury="746.0" pageNum="2">quality time cost quality time cost quality time cost time</keyword>
+    </headers>
+    <body initialCol="1" llx="63.0" lly="100.0" urx="550.0" ury="738.0" pageNum="3" bodyID="p3x63.0y722.0">
+      <text initialCol="1" llx="63.0" lly="678.0" urx="549.0" ury="738.0" pageNum="3">a schedule slippage. These were only a few milestones and a lot more applications have been developed, for example by Abdel-Hamid and Madnick (1991), Homer et al. (1993), Ford and Sterman (1998), and Rodrigues and Williams (1998). A very good overview and a comparison with traditional management techniques are given by Rodrigues and Bowers (1996).</text>
+      <section-marker initialCol="1" llx="140.0" lly="649.0" urx="473.0" ury="665.0" pageNum="3">The dynamic effects resulting from client changes and delays</section-marker>
+      <text initialCol="1" llx="63.0" lly="415.0" urx="550.0" ury="650.0" pageNum="3">Typical project life-cycle diagrams shown in project-management textbooks, such as the `waterfall' model, assume that the client's role is confined to specifying the requirements, and the approving the final product. In practice the client frequently takes an essential part in the project, often by necessity, for example by approving sub-project milestones. The client can also require changes to the projects scope or the product definition. Such contract amendments can set up positive feed-back loops. Imagine for example a client demanding a high progress report. This will reduce the contractor's work productivity and cause the schedule to fall behind. This again will discomfort the client and end up in an even higher progress report demand. The single impact of a client change is straightforward to analyze, but when many client changes have to be considered the picture is a different. Quite often, effects combined together result in an even greater effect than the sum of their individual effects. This is sometimes called the portfolio effect (Eden, 2000). System Dynamics models have been used to identify and quantify the full impact of disturbances introduced by the client. In particular, this includes delays in approving in design documents and requirement changes after the project has been initiated. Rodrigues (1998) identifies the key `vicious circles', which are shown in Figure 2.</text>
+      <figure-marker initialCol="1" llx="191.0" lly="100.0" urx="438.0" ury="114.0" pageNum="3">Figure 2: Vicious circles in Projects (Rodrigues, 1998)</figure-marker>
+      <notext initialCol="1" llx="98.0" lly="135.0" urx="492.0" ury="407.0" pageNum="3">Workscope changes/increases Delays in approving design documents Perceived Schedule Slippage Demand on progress reports Intolerance in delaying milestones Total extra effort perceived needed Schedule adjustments Schedule pressure Accept further changes Client trust in project team productivity Understanding about system functionality (trust in the requirements) Error generation Work out of sequence QA Effectivness (error detection) + + + + + + + + + - + + + -</notext>
+      <text initialCol="1" llx="63.0" lly="140.0" urx="549.0" ury="738.0" pageNum="0">- - Rework needed in testing  stages+  + The bold balancing loop in the middle represents, how normally changes with the client are negotiated, which is based on the negotiated perceived extra costs. Secondary effects are represented by the dashed lines, which are in the long run the reasons for over-runs. Having to do work out of the normal sequence is the first major effect, which can be brought about by client side delays in approving system design documents. Staff under schedule pressure tend to direct their efforts to system areas, which they believe are more stable. A direct increase in the number of errors made is going along with out of sequence work. As those errors are revealed in areas</text>
+      <section-marker initialCol="1" llx="63.0" lly="619.0" urx="532.0" ury="636.0" pageNum="4">supposed to be stable the staff is loosing trust in the system's requirements. This will arouse a</section-marker>
+      <text initialCol="1" llx="63.0" lly="430.0" urx="549.0" ury="621.0" pageNum="4">lower productivity. Poorer understanding of the system associated with schedule pressure causes the effectiveness of QA activities to deteriorate. A lower productivity and more flaws passing the QA will delay the schedule even more, which will lessen the client's tolerance accepting schedule adjustments and demand a higher progress reporting, which will keep the staff away from their real work. Often, the only way of getting the client to approve a schedule slippage is by allowing more changes for no extra costs. The square boxes in the diagram represent secondary ripple effects in which the clients play a major role. Flexibility in project management System Dynamics models have been used to identify and quantify the full impact of disturbances introduced by the client. Having already identified so many dynamics in project management - by a lot of `post mortem' applications - it might be very helpful to apply System Dynamics while the project is in progress. Resuming the given definition of flexibility it seems</text>
+      <notext initialCol="1" llx="63.0" lly="328.0" urx="549.0" ury="432.0" pageNum="4">obvious that client side introduced disturbances (changes, delays, etc.) and flexibility can be used synonymously in the context of project management. It will be a great challenge to achieve comparable results as manufacturing did by exploring and implementing flexibility to their field. Project management has the potential to gain a lot by handling disturbances in a better way, because these are the challenges project managers are confronted with on a daily basis. But it is not a hopeless venture, because the findings for the `post mortem' analysis of projects are so far developed. Cooper (1997) assumes that the number of changes correlate to their impact by a</notext>
+      <text initialCol="1" llx="63.0" lly="313.0" urx="514.0" ury="330.0" pageNum="4">nonlinear function, so that a hypothetical graph shown in Figure 3 might represent the reality.</text>
+      <figure-marker initialCol="1" llx="100.0" lly="104.0" urx="468.0" ury="305.0" pageNum="4">Figure 3: Correlation of the number of changes to their impact # of changes impact Normal</figure-marker>
+      <text initialCol="1" llx="63.0" lly="158.0" urx="550.0" ury="738.0" pageNum="4">behavior Behavior caused by increased flexibility The more flexible project will lower the impact's gradient in Figure 3 and shift the graph (dashed line) towards the abscissa. Following the above mentioned definition of flexibility the results of such a model should provide management policies to procure complex projects with a higher level of flexibility. Those policies will shift the graph towards the abscissa and projects will perform better regarding time, quality and cost. The outline of the paper is as follows. Firstly, a System Dynamics model is elaborated, which picks up the dynamics of client behavior impacting the project's performance. Preliminary results are retrieved from that model. Management policies that build up a flexible project will be examined. Examples are planning in appropriate time buffers for the changes, which will reduce the out of sequence work, or having, in a multi project organization, a stock of people working as firefighters. Another major issue when changes occur is the growing requirement of coordination (Ford, Sterman, 1998). By now it is not quite clear how to reduce these, and the presentation will concludes with more aspects of future research needed.</text>
+    </body>
+    <biblio>
+      <reference initialCol="1" llx="63.0" lly="459.0" urx="549.0" ury="490.0" pageNum="5" refID="p5x63.0y474.0">
+        <authors initialCol="1" llx="63.0" lly="474.0" urx="279.0" ury="490.0" pageNum="5">
+          <author initialCol="1" llx="63.0" lly="474.0" urx="279.0" ury="490.0" pageNum="5">
+            <author-last initialCol="1" llx="63.0" lly="474.0" urx="279.0" ury="490.0" pageNum="5">Abdel-Hamid,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="474.0" urx="279.0" ury="490.0" pageNum="5">T.</author-first>
+          </author>
+          and
+          <author initialCol="1" llx="63.0" lly="474.0" urx="279.0" ury="490.0" pageNum="5">
+            <author-first initialCol="1" llx="63.0" lly="474.0" urx="279.0" ury="490.0" pageNum="5">S.</author-first>
+            <author-middle initialCol="1" llx="63.0" lly="474.0" urx="279.0" ury="490.0" pageNum="5">E.</author-middle>
+            <author-last initialCol="1" llx="63.0" lly="474.0" urx="279.0" ury="490.0" pageNum="5">Madnick:</author-last>
+          </author>
+        </authors>
+        <booktitle initialCol="1" llx="255.0" lly="474.0" urx="549.0" ury="490.0" pageNum="5">Software Project Dynamics: An Integrated Approach.</booktitle>
+        <publisher initialCol="1" llx="90.0" lly="459.0" urx="184.0" ury="475.0" pageNum="5">Prentice Hall:</publisher>
+        <address initialCol="1" llx="158.0" lly="459.0" urx="319.0" ury="475.0" pageNum="5">Englewood Cliffs NJ,</address>
+        <date initialCol="1" llx="244.0" lly="459.0" urx="319.0" ury="475.0" pageNum="5">1991.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="415.0" urx="549.0" ury="461.0" pageNum="5" refID="p5x63.0y444.0">
+        <authors initialCol="1" llx="63.0" lly="444.0" urx="229.0" ury="461.0" pageNum="5">
+          <author initialCol="1" llx="63.0" lly="444.0" urx="229.0" ury="461.0" pageNum="5">
+            <author-last initialCol="1" llx="63.0" lly="444.0" urx="173.0" ury="461.0" pageNum="5">Cooper,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="444.0" urx="173.0" ury="461.0" pageNum="5">Kenneth</author-first>
+            <author-middle initialCol="1" llx="147.0" lly="444.0" urx="229.0" ury="461.0" pageNum="5">G.:</author-middle>
+          </author>
+        </authors>
+        <title initialCol="1" llx="147.0" lly="444.0" urx="482.0" ury="461.0" pageNum="5">System Dynamics methods in complex project management.</title>
+        <booktitle initialCol="1" llx="90.0" lly="430.0" urx="549.0" ury="461.0" pageNum="5">In: Managing and Modeling Complex Projects</booktitle>
+        <editor initialCol="1" llx="90.0" lly="415.0" urx="549.0" ury="446.0" pageNum="5">(Ed. T.M. Williams), NATO ASI Series, Dordrecht, the Netherlands,</editor>
+        <publisher initialCol="1" llx="90.0" lly="415.0" urx="318.0" ury="432.0" pageNum="5">Kluwer Academic Publisher,</publisher>
+        <date initialCol="1" llx="291.0" lly="415.0" urx="347.0" ury="432.0" pageNum="5">1997.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="386.0" urx="549.0" ury="417.0" pageNum="5" refID="p5x63.0y401.0">
+        <authors initialCol="1" llx="63.0" lly="401.0" urx="549.0" ury="417.0" pageNum="5">
+          <author initialCol="1" llx="63.0" lly="401.0" urx="549.0" ury="417.0" pageNum="5">
+            <author-last initialCol="1" llx="63.0" lly="401.0" urx="549.0" ury="417.0" pageNum="5">Cooper,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="401.0" urx="549.0" ury="417.0" pageNum="5">Kenneth</author-first>
+            <author-middle initialCol="1" llx="63.0" lly="401.0" urx="549.0" ury="417.0" pageNum="5">G.:</author-middle>
+          </author>
+        </authors>
+        <title initialCol="1" llx="63.0" lly="401.0" urx="549.0" ury="417.0" pageNum="5">Naval Ship Production: A claim settled and a framework build,</title>
+        <journal initialCol="1" llx="63.0" lly="386.0" urx="549.0" ury="417.0" pageNum="5">in: Interfaces Vol.</journal>
+        <volume initialCol="1" llx="163.0" lly="386.0" urx="224.0" ury="402.0" pageNum="5">10</volume>
+        <date initialCol="1" llx="163.0" lly="386.0" urx="287.0" ury="402.0" pageNum="5">(6), 1980:</date>
+        <pages initialCol="1" llx="197.0" lly="386.0" urx="287.0" ury="402.0" pageNum="5">20-36.</pages>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="342.0" urx="549.0" ury="388.0" pageNum="5" refID="p5x63.0y371.0">
+        <authors initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">
+          <author initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">
+            <author-last initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">Eden,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">C.,</author-first>
+          </author>
+          <author initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">
+            <author-first initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">T.</author-first>
+            <author-last initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">Williams,</author-last>
+          </author>
+          <author initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">
+            <author-first initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">F.</author-first>
+            <author-last initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">Ackermann,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">
+            <author-first initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">S.</author-first>
+            <author-last initialCol="1" llx="63.0" lly="371.0" urx="549.0" ury="388.0" pageNum="5">Howick:</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="63.0" lly="357.0" urx="549.0" ury="388.0" pageNum="5">The role of feedback dynamics in disruption and delay on the nature of disruption and delay (D&amp;D) in major projects, in:</title>
+        <journal initialCol="1" llx="90.0" lly="342.0" urx="330.0" ury="359.0" pageNum="5">Journal of the Operational Research Society,</journal>
+        <volume initialCol="1" llx="303.0" lly="342.0" urx="371.0" ury="359.0" pageNum="5">Vol. 51,</volume>
+        <date initialCol="1" llx="344.0" lly="342.0" urx="445.0" ury="359.0" pageNum="5">2000:</date>
+        <pages initialCol="1" llx="344.0" lly="342.0" urx="445.0" ury="359.0" pageNum="5">291-300.</pages>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="313.0" urx="549.0" ury="344.0" pageNum="5" refID="p5x63.0y328.0">
+        <authors initialCol="1" llx="63.0" lly="328.0" urx="319.0" ury="344.0" pageNum="5">
+          <author initialCol="1" llx="63.0" lly="328.0" urx="187.0" ury="344.0" pageNum="5">
+            <author-last initialCol="1" llx="63.0" lly="328.0" urx="149.0" ury="344.0" pageNum="5">Ford,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="328.0" urx="149.0" ury="344.0" pageNum="5">David</author-first>
+            <author-middle initialCol="1" llx="123.0" lly="328.0" urx="187.0" ury="344.0" pageNum="5">N.,</author-middle>
+          </author>
+          and
+          <author initialCol="1" llx="161.0" lly="328.0" urx="319.0" ury="344.0" pageNum="5">
+            <author-first initialCol="1" llx="161.0" lly="328.0" urx="227.0" ury="344.0" pageNum="5">John</author-first>
+            <author-middle initialCol="1" llx="161.0" lly="328.0" urx="227.0" ury="344.0" pageNum="5">D.</author-middle>
+            <author-last initialCol="1" llx="201.0" lly="328.0" urx="319.0" ury="344.0" pageNum="5">Sterman:</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="201.0" lly="328.0" urx="549.0" ury="344.0" pageNum="5">Dynamic modeling of product development processes, in:</title>
+        <journal initialCol="1" llx="90.0" lly="313.0" urx="270.0" ury="330.0" pageNum="5">System Dynamics Review,</journal>
+        <volume initialCol="1" llx="178.0" lly="313.0" urx="304.0" ury="330.0" pageNum="5">Vol. 14</volume>
+        <number initialCol="1" llx="243.0" lly="313.0" urx="304.0" ury="330.0" pageNum="5">(1),</number>
+        <date initialCol="1" llx="278.0" lly="313.0" urx="367.0" ury="330.0" pageNum="5">1998:</date>
+        <pages initialCol="1" llx="278.0" lly="313.0" urx="367.0" ury="330.0" pageNum="5">31-68.</pages>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="269.0" urx="549.0" ury="315.0" pageNum="5" refID="p5x63.0y298.0">
+        <authors initialCol="1" llx="63.0" lly="298.0" urx="415.0" ury="315.0" pageNum="5">
+          <author initialCol="1" llx="63.0" lly="298.0" urx="142.0" ury="315.0" pageNum="5">
+            <author-last initialCol="1" llx="63.0" lly="298.0" urx="142.0" ury="315.0" pageNum="5">Homer,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="298.0" urx="142.0" ury="315.0" pageNum="5">J.,</author-first>
+          </author>
+          <author initialCol="1" llx="117.0" lly="298.0" urx="212.0" ury="315.0" pageNum="5">
+            <author-first initialCol="1" llx="117.0" lly="298.0" urx="212.0" ury="315.0" pageNum="5">J.</author-first>
+            <author-middle initialCol="1" llx="117.0" lly="298.0" urx="212.0" ury="315.0" pageNum="5">D.</author-middle>
+            <author-last initialCol="1" llx="117.0" lly="298.0" urx="212.0" ury="315.0" pageNum="5">Sterman,</author-last>
+          </author>
+          <author initialCol="1" llx="187.0" lly="298.0" urx="289.0" ury="315.0" pageNum="5">
+            <author-first initialCol="1" llx="187.0" lly="298.0" urx="289.0" ury="315.0" pageNum="5">B.</author-first>
+            <author-last initialCol="1" llx="187.0" lly="298.0" urx="289.0" ury="315.0" pageNum="5">Greenwood,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="264.0" lly="298.0" urx="415.0" ury="315.0" pageNum="5">
+            <author-first initialCol="1" llx="264.0" lly="298.0" urx="326.0" ury="315.0" pageNum="5">A.</author-first>
+            <author-last initialCol="1" llx="302.0" lly="298.0" urx="415.0" ury="315.0" pageNum="5">Perkola:</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="90.0" lly="284.0" urx="549.0" ury="315.0" pageNum="5">Delivery time reduction in pulp and paper mill construction projects: a dynamic analysis of alternatives,</title>
+        <conference initialCol="1" llx="90.0" lly="269.0" urx="549.0" ury="300.0" pageNum="5">International System Dynamics Conference</conference>
+        <date initialCol="1" llx="198.0" lly="269.0" urx="254.0" ury="286.0" pageNum="5">1993.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="226.0" urx="550.0" ury="271.0" pageNum="5" refID="p5x63.0y255.0">
+        <authors initialCol="1" llx="63.0" lly="255.0" urx="383.0" ury="271.0" pageNum="5">
+          <author initialCol="1" llx="63.0" lly="255.0" urx="223.0" ury="271.0" pageNum="5">
+            <author-last initialCol="1" llx="63.0" lly="255.0" urx="159.0" ury="271.0" pageNum="5">Lyneis,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="255.0" urx="159.0" ury="271.0" pageNum="5">James</author-first>
+            <author-middle initialCol="1" llx="134.0" lly="255.0" urx="223.0" ury="271.0" pageNum="5">M.,</author-middle>
+          </author>
+          <author initialCol="1" llx="134.0" lly="255.0" urx="280.0" ury="271.0" pageNum="5">
+            <author-first initialCol="1" llx="134.0" lly="255.0" urx="223.0" ury="271.0" pageNum="5">Kenneth</author-first>
+            <author-middle initialCol="1" llx="198.0" lly="255.0" urx="280.0" ury="271.0" pageNum="5">G.</author-middle>
+            <author-last initialCol="1" llx="198.0" lly="255.0" urx="280.0" ury="271.0" pageNum="5">Cooper,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="254.0" lly="255.0" urx="383.0" ury="271.0" pageNum="5">
+            <author-first initialCol="1" llx="254.0" lly="255.0" urx="345.0" ury="271.0" pageNum="5">Shannon</author-first>
+            <author-middle initialCol="1" llx="320.0" lly="255.0" urx="383.0" ury="271.0" pageNum="5">A.</author-middle>
+            <author-last initialCol="1" llx="320.0" lly="255.0" urx="383.0" ury="271.0" pageNum="5">Els:</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="90.0" lly="240.0" urx="550.0" ury="271.0" pageNum="5">Strategic management of complex projects: a case study using system dynamics, in:</title>
+        <journal initialCol="1" llx="331.0" lly="240.0" urx="513.0" ury="257.0" pageNum="5">System Dynamics Review,</journal>
+        <volume initialCol="1" llx="421.0" lly="240.0" urx="549.0" ury="257.0" pageNum="5">Vol. 17</volume>
+        <number initialCol="1" llx="488.0" lly="240.0" urx="549.0" ury="257.0" pageNum="5">(3),</number>
+        <date initialCol="1" llx="90.0" lly="226.0" urx="192.0" ury="242.0" pageNum="5">2001:</date>
+        <pages initialCol="1" llx="90.0" lly="226.0" urx="192.0" ury="242.0" pageNum="5">237-260.</pages>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="167.0" urx="550.0" ury="227.0" pageNum="5" refID="p5x63.0y211.0">
+        <authors initialCol="1" llx="63.0" lly="211.0" urx="354.0" ury="227.0" pageNum="5">
+          <author initialCol="1" llx="63.0" lly="211.0" urx="191.0" ury="227.0" pageNum="5">
+            <author-last initialCol="1" llx="63.0" lly="211.0" urx="157.0" ury="227.0" pageNum="5">Milling,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="211.0" urx="157.0" ury="227.0" pageNum="5">Peter</author-first>
+            <author-middle initialCol="1" llx="131.0" lly="211.0" urx="191.0" ury="227.0" pageNum="5">M.,</author-middle>
+          </author>
+          <author initialCol="1" llx="131.0" lly="211.0" urx="277.0" ury="227.0" pageNum="5">
+            <author-first initialCol="1" llx="131.0" lly="211.0" urx="191.0" ury="227.0" pageNum="5">U.</author-first>
+            <author-last initialCol="1" llx="165.0" lly="211.0" urx="277.0" ury="227.0" pageNum="5">Schwellbach,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="250.0" lly="211.0" urx="354.0" ury="227.0" pageNum="5">
+            <author-first initialCol="1" llx="250.0" lly="211.0" urx="302.0" ury="227.0" pageNum="5">J.</author-first>
+            <author-middle initialCol="1" llx="250.0" lly="211.0" urx="302.0" ury="227.0" pageNum="5">H.</author-middle>
+            <author-last initialCol="1" llx="275.0" lly="211.0" urx="354.0" ury="227.0" pageNum="5">Thun:</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="275.0" lly="211.0" urx="526.0" ury="227.0" pageNum="5">The Role of Speed in Manufacturing,</title>
+        <editor initialCol="1" llx="90.0" lly="196.0" urx="550.0" ury="227.0" pageNum="5">in: JosA. D. Machuca und Tomislav Mandakovic (Ed.):</editor>
+        <title initialCol="1" llx="90.0" lly="182.0" urx="550.0" ury="213.0" pageNum="5">POM Facing the New Millennium Evaluating the past, leading with the present and planning the future of Operations,</title>
+        <conference initialCol="1" llx="430.0" lly="182.0" urx="550.0" ury="198.0" pageNum="5">Sevilla</conference>
+        <date initialCol="1" llx="90.0" lly="167.0" urx="146.0" ury="184.0" pageNum="5">2000.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="138.0" urx="549.0" ury="169.0" pageNum="5" refID="p5x63.0y153.0">
+        <authors initialCol="1" llx="63.0" lly="153.0" urx="326.0" ury="169.0" pageNum="5">
+          <author initialCol="1" llx="63.0" lly="153.0" urx="209.0" ury="169.0" pageNum="5">
+            <author-last initialCol="1" llx="63.0" lly="153.0" urx="155.0" ury="169.0" pageNum="5">Morris,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="153.0" urx="155.0" ury="169.0" pageNum="5">Peter</author-first>
+            <author-middle initialCol="1" llx="130.0" lly="153.0" urx="209.0" ury="169.0" pageNum="5">W.G.,</author-middle>
+          </author>
+          and
+          <author initialCol="1" llx="184.0" lly="153.0" urx="326.0" ury="169.0" pageNum="5">
+            <author-first initialCol="1" llx="184.0" lly="153.0" urx="264.0" ury="169.0" pageNum="5">George</author-first>
+            <author-middle initialCol="1" llx="184.0" lly="153.0" urx="264.0" ury="169.0" pageNum="5">H.</author-middle>
+            <author-last initialCol="1" llx="239.0" lly="153.0" urx="326.0" ury="169.0" pageNum="5">Hough:</author-last>
+          </author>
+        </authors>
+        <booktitle initialCol="1" llx="239.0" lly="153.0" urx="549.0" ury="169.0" pageNum="5">The Anatomy of Major Projects, Chichester,</booktitle>
+        <publisher initialCol="1" llx="90.0" lly="138.0" urx="549.0" ury="169.0" pageNum="5">John Wiley &amp; Sons,</publisher>
+        <date initialCol="1" llx="134.0" lly="138.0" urx="218.0" ury="154.0" pageNum="5">1987.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="109.0" urx="549.0" ury="140.0" pageNum="5" refID="p5x63.0y123.0">
+        <authors initialCol="1" llx="63.0" lly="123.0" urx="263.0" ury="140.0" pageNum="5">
+          <author initialCol="1" llx="63.0" lly="123.0" urx="263.0" ury="140.0" pageNum="5">
+            <author-last initialCol="1" llx="63.0" lly="123.0" urx="263.0" ury="140.0" pageNum="5">Reichelt,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="123.0" urx="263.0" ury="140.0" pageNum="5">K.</author-first>
+            <author-middle initialCol="1" llx="63.0" lly="123.0" urx="263.0" ury="140.0" pageNum="5">S.,</author-middle>
+          </author>
+          and
+          <author initialCol="1" llx="63.0" lly="123.0" urx="263.0" ury="140.0" pageNum="5">
+            <author-first initialCol="1" llx="63.0" lly="123.0" urx="263.0" ury="140.0" pageNum="5">J.</author-first>
+            <author-middle initialCol="1" llx="63.0" lly="123.0" urx="263.0" ury="140.0" pageNum="5">M.</author-middle>
+            <author-last initialCol="1" llx="63.0" lly="123.0" urx="263.0" ury="140.0" pageNum="5">Lyneis:</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="90.0" lly="109.0" urx="549.0" ury="140.0" pageNum="5">The dynamics of project performance: benchmarking the drivers of cost and schedule overrun, in:</title>
+        <journal initialCol="1" llx="267.0" lly="109.0" urx="461.0" ury="125.0" pageNum="5">European Management Journal,</journal>
+        <volume initialCol="1" llx="434.0" lly="109.0" urx="499.0" ury="125.0" pageNum="5">Vol. 17</volume>
+        <date initialCol="1" llx="473.0" lly="109.0" urx="548.0" ury="125.0" pageNum="5">(2), 1999.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="707.0" urx="549.0" ury="738.0" pageNum="6" refID="p6x63.0y722.0">
+        <authors initialCol="1" llx="63.0" lly="722.0" urx="549.0" ury="738.0" pageNum="6">
+          <author initialCol="1" llx="63.0" lly="722.0" urx="549.0" ury="738.0" pageNum="6">
+            <author-last initialCol="1" llx="63.0" lly="722.0" urx="549.0" ury="738.0" pageNum="6">Ridchardson,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="722.0" urx="549.0" ury="738.0" pageNum="6">G.</author-first>
+            <author-middle initialCol="1" llx="63.0" lly="722.0" urx="549.0" ury="738.0" pageNum="6">P.,</author-middle>
+          </author>
+          and
+          <author initialCol="1" llx="63.0" lly="722.0" urx="549.0" ury="738.0" pageNum="6">
+            <author-first initialCol="1" llx="63.0" lly="722.0" urx="549.0" ury="738.0" pageNum="6">A.</author-first>
+            <author-middle initialCol="1" llx="63.0" lly="722.0" urx="549.0" ury="738.0" pageNum="6">L.</author-middle>
+            <author-last initialCol="1" llx="63.0" lly="722.0" urx="549.0" ury="738.0" pageNum="6">Pugh:</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="63.0" lly="707.0" urx="549.0" ury="738.0" pageNum="6">Introduction to the System Dynamics Modeling with DYNAMO,</title>
+        <address initialCol="1" llx="90.0" lly="707.0" urx="279.0" ury="723.0" pageNum="6">Cambridge MA,</address>
+        <publisher initialCol="1" llx="204.0" lly="707.0" urx="339.0" ury="723.0" pageNum="6">MIT Press,</publisher>
+        <date initialCol="1" llx="253.0" lly="707.0" urx="339.0" ury="723.0" pageNum="6">1981.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="692.0" urx="524.0" ury="709.0" pageNum="6" refID="p6x63.0y692.0">
+        <authors initialCol="1" llx="63.0" lly="692.0" urx="148.0" ury="709.0" pageNum="6">
+          <author initialCol="1" llx="63.0" lly="692.0" urx="148.0" ury="709.0" pageNum="6">
+            <author-last initialCol="1" llx="63.0" lly="692.0" urx="148.0" ury="709.0" pageNum="6">Roberts,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="692.0" urx="148.0" ury="709.0" pageNum="6">E.:</author-first>
+          </author>
+        </authors>
+        <booktitle initialCol="1" llx="121.0" lly="692.0" urx="364.0" ury="709.0" pageNum="6">The dynamics of Research and Development,</booktitle>
+        <address initialCol="1" llx="338.0" lly="692.0" urx="524.0" ury="709.0" pageNum="6">New York, Harper &amp; Row,</address>
+        <date initialCol="1" llx="440.0" lly="692.0" urx="524.0" ury="709.0" pageNum="6">1964.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="649.0" urx="549.0" ury="694.0" pageNum="6" refID="p6x63.0y678.0">
+        <authors initialCol="1" llx="63.0" lly="678.0" urx="549.0" ury="694.0" pageNum="6">
+          <author initialCol="1" llx="63.0" lly="678.0" urx="549.0" ury="694.0" pageNum="6">
+            <author-last initialCol="1" llx="63.0" lly="678.0" urx="549.0" ury="694.0" pageNum="6">Rodrigues,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="678.0" urx="549.0" ury="694.0" pageNum="6">Alexander</author-first>
+            <author-middle initialCol="1" llx="63.0" lly="678.0" urx="549.0" ury="694.0" pageNum="6">G.,</author-middle>
+          </author>
+          and
+          <author initialCol="1" llx="63.0" lly="678.0" urx="549.0" ury="694.0" pageNum="6">
+            <author-first initialCol="1" llx="63.0" lly="678.0" urx="549.0" ury="694.0" pageNum="6">John</author-first>
+            <author-last initialCol="1" llx="63.0" lly="678.0" urx="549.0" ury="694.0" pageNum="6">Bowers:</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="63.0" lly="663.0" urx="549.0" ury="694.0" pageNum="6">System Dynamics in project management: a comparative analysis with traditional methods, in:</title>
+        <journal initialCol="1" llx="332.0" lly="663.0" urx="514.0" ury="680.0" pageNum="6">System Dynamics Review,</journal>
+        <volume initialCol="1" llx="421.0" lly="663.0" urx="549.0" ury="680.0" pageNum="6">Vol. 12</volume>
+        <number initialCol="1" llx="488.0" lly="663.0" urx="549.0" ury="680.0" pageNum="6">(2),</number>
+        <date initialCol="1" llx="90.0" lly="649.0" urx="192.0" ury="665.0" pageNum="6">1996:</date>
+        <pages initialCol="1" llx="90.0" lly="649.0" urx="192.0" ury="665.0" pageNum="6">121-139.</pages>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="605.0" urx="550.0" ury="650.0" pageNum="6" refID="p6x63.0y634.0">
+        <authors initialCol="1" llx="63.0" lly="634.0" urx="338.0" ury="650.0" pageNum="6">
+          <author initialCol="1" llx="63.0" lly="634.0" urx="238.0" ury="650.0" pageNum="6">
+            <author-last initialCol="1" llx="63.0" lly="634.0" urx="197.0" ury="650.0" pageNum="6">Rodrigues,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="634.0" urx="197.0" ury="650.0" pageNum="6">Alexander</author-first>
+            <author-middle initialCol="1" llx="173.0" lly="634.0" urx="238.0" ury="650.0" pageNum="6">G.,</author-middle>
+          </author>
+          and
+          <author initialCol="1" llx="214.0" lly="634.0" urx="338.0" ury="650.0" pageNum="6">
+            <author-first initialCol="1" llx="214.0" lly="634.0" urx="338.0" ury="650.0" pageNum="6">Terry</author-first>
+            <author-middle initialCol="1" llx="214.0" lly="634.0" urx="338.0" ury="650.0" pageNum="6">M.</author-middle>
+            <author-last initialCol="1" llx="214.0" lly="634.0" urx="338.0" ury="650.0" pageNum="6">Williams:</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="90.0" lly="619.0" urx="550.0" ury="650.0" pageNum="6">System Dynamics in project management: assessing the impact of client behavior on project performance,</title>
+        <conference initialCol="1" llx="90.0" lly="605.0" urx="550.0" ury="636.0" pageNum="6">in: Journal of the Operational Research Society,</conference>
+        <volume initialCol="1" llx="195.0" lly="605.0" urx="320.0" ury="621.0" pageNum="6">Vol. 49</volume>
+        <number initialCol="1" llx="259.0" lly="605.0" urx="320.0" ury="621.0" pageNum="6">(1),</number>
+        <date initialCol="1" llx="293.0" lly="605.0" urx="377.0" ury="621.0" pageNum="6">1998:</date>
+        <pages initialCol="1" llx="293.0" lly="605.0" urx="377.0" ury="621.0" pageNum="6">2-15.</pages>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="576.0" urx="550.0" ury="607.0" pageNum="6" refID="p6x63.0y590.0">
+        <authors initialCol="1" llx="63.0" lly="590.0" urx="550.0" ury="607.0" pageNum="6">
+          <author initialCol="1" llx="63.0" lly="590.0" urx="550.0" ury="607.0" pageNum="6">
+            <author-last initialCol="1" llx="63.0" lly="590.0" urx="550.0" ury="607.0" pageNum="6">Stalk,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="590.0" urx="550.0" ury="607.0" pageNum="6">G.,</author-first>
+          </author>
+          and
+          <author initialCol="1" llx="63.0" lly="590.0" urx="550.0" ury="607.0" pageNum="6">
+            <author-first initialCol="1" llx="63.0" lly="590.0" urx="550.0" ury="607.0" pageNum="6">T.</author-first>
+            <author-middle initialCol="1" llx="63.0" lly="590.0" urx="550.0" ury="607.0" pageNum="6">M.</author-middle>
+            <author-last initialCol="1" llx="63.0" lly="590.0" urx="550.0" ury="607.0" pageNum="6">Hout:</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="63.0" lly="576.0" urx="550.0" ury="607.0" pageNum="6">Competing Against Time -- How Time-based Competition is Reshaping Global Markets,</title>
+        <publisher initialCol="1" llx="178.0" lly="576.0" urx="324.0" ury="592.0" pageNum="6">The Free Press,</publisher>
+        <address initialCol="1" llx="297.0" lly="576.0" urx="379.0" ury="592.0" pageNum="6">New York,</address>
+        <date initialCol="1" llx="352.0" lly="576.0" urx="408.0" ury="592.0" pageNum="6">1991.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="547.0" urx="549.0" ury="578.0" pageNum="6" refID="p6x63.0y561.0">
+        <authors initialCol="1" llx="63.0" lly="561.0" urx="224.0" ury="578.0" pageNum="6">
+          <author initialCol="1" llx="63.0" lly="561.0" urx="224.0" ury="578.0" pageNum="6">
+            <author-last initialCol="1" llx="63.0" lly="561.0" urx="160.0" ury="578.0" pageNum="6">Sterman,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="561.0" urx="160.0" ury="578.0" pageNum="6">John</author-first>
+            <author-middle initialCol="1" llx="135.0" lly="561.0" urx="224.0" ury="578.0" pageNum="6">D.:</author-middle>
+          </author>
+        </authors>
+        <title initialCol="1" llx="135.0" lly="561.0" urx="549.0" ury="578.0" pageNum="6">Business Dynamics: Systems Thinking and Modeling for a Complex World,</title>
+        <address initialCol="1" llx="90.0" lly="547.0" urx="226.0" ury="563.0" pageNum="6">Boston, McGraw-Hill,</address>
+        <date initialCol="1" llx="199.0" lly="547.0" urx="255.0" ury="563.0" pageNum="6">2000.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="532.0" urx="543.0" ury="548.0" pageNum="6" refID="p6x63.0y532.0">
+        <authors initialCol="1" llx="63.0" lly="532.0" urx="201.0" ury="548.0" pageNum="6">
+          <author initialCol="1" llx="63.0" lly="532.0" urx="201.0" ury="548.0" pageNum="6">
+            <author-last initialCol="1" llx="63.0" lly="532.0" urx="166.0" ury="548.0" pageNum="6">Turner,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="532.0" urx="166.0" ury="548.0" pageNum="6">Rodney</author-first>
+            <author-middle initialCol="1" llx="140.0" lly="532.0" urx="201.0" ury="548.0" pageNum="6">J.:</author-middle>
+          </author>
+        </authors>
+        <booktitle initialCol="1" llx="140.0" lly="532.0" urx="401.0" ury="548.0" pageNum="6">The Handbook of Project-Based Management,</booktitle>
+        <publisher initialCol="1" llx="375.0" lly="532.0" urx="514.0" ury="548.0" pageNum="6">London, McGraw-Hill,</publisher>
+        <date initialCol="1" llx="487.0" lly="532.0" urx="543.0" ury="548.0" pageNum="6">1999.</date>
+      </reference>
+      <reference initialCol="1" llx="63.0" lly="503.0" urx="549.0" ury="534.0" pageNum="6" refID="p6x63.0y517.0">
+        <authors initialCol="1" llx="63.0" lly="517.0" urx="204.0" ury="534.0" pageNum="6">
+          <author initialCol="1" llx="63.0" lly="517.0" urx="204.0" ury="534.0" pageNum="6">
+            <author-last initialCol="1" llx="63.0" lly="517.0" urx="159.0" ury="534.0" pageNum="6">Upton,</author-last>
+            <author-first initialCol="1" llx="63.0" lly="517.0" urx="159.0" ury="534.0" pageNum="6">David</author-first>
+            <author-middle initialCol="1" llx="135.0" lly="517.0" urx="204.0" ury="534.0" pageNum="6">M.:</author-middle>
+          </author>
+        </authors>
+        <title initialCol="1" llx="135.0" lly="517.0" urx="430.0" ury="534.0" pageNum="6">The management of manufacturing flexibility, in:</title>
+        <journal initialCol="1" llx="90.0" lly="503.0" urx="549.0" ury="534.0" pageNum="6">California Management Review,</journal>
+        <volume initialCol="1" llx="90.0" lly="503.0" urx="216.0" ury="519.0" pageNum="6">Vol. 36</volume>
+        <number initialCol="1" llx="155.0" lly="503.0" urx="216.0" ury="519.0" pageNum="6">(2),</number>
+        <date initialCol="1" llx="190.0" lly="503.0" urx="279.0" ury="519.0" pageNum="6">1994:</date>
+        <pages initialCol="1" llx="190.0" lly="503.0" urx="279.0" ury="519.0" pageNum="6">72-90.</pages>
+      </reference>
+    </biblio>
+  </content>
+  <CitationContexts />
+  <grants />
+</document>
+

@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <content>
+    <headers initialCol="1" llx="48.0" lly="327.0" urx="473.0" ury="735.0" pageNum="1" headerID="p1x165.0y714.0">
+      <title initialCol="1" llx="165.0" lly="694.0" urx="461.0" ury="735.0" pageNum="1">Improved Single-Round Protocols for Remote File Synchronization</title>
+      <authors initialCol="1" llx="186.0" lly="664.0" urx="436.0" ury="679.0" pageNum="1">
+        <author initialCol="1" llx="186.0" lly="664.0" urx="259.0" ury="679.0" pageNum="1">
+          <author-first initialCol="1" llx="186.0" lly="664.0" urx="259.0" ury="679.0" pageNum="1">Utku</author-first>
+          <author-last initialCol="1" llx="186.0" lly="664.0" urx="259.0" ury="679.0" pageNum="1">Irmak</author-last>
+        </author>
+        <author initialCol="1" llx="262.0" lly="664.0" urx="356.0" ury="679.0" pageNum="1">
+          <author-first initialCol="1" llx="262.0" lly="664.0" urx="356.0" ury="679.0" pageNum="1">Svilen</author-first>
+          <author-last initialCol="1" llx="262.0" lly="664.0" urx="356.0" ury="679.0" pageNum="1">Mihaylov</author-last>
+        </author>
+        <author initialCol="1" llx="359.0" lly="664.0" urx="436.0" ury="679.0" pageNum="1">
+          <author-first initialCol="1" llx="359.0" lly="664.0" urx="436.0" ury="679.0" pageNum="1">Torsten</author-first>
+          <author-last initialCol="1" llx="359.0" lly="664.0" urx="436.0" ury="679.0" pageNum="1">Suel</author-last>
+        </author>
+      </authors>
+      <institution initialCol="1" llx="254.0" lly="629.0" urx="367.0" ury="655.0" pageNum="1">CIS Department Polytechnic University</institution>
+      <address initialCol="1" llx="257.0" lly="616.0" urx="364.0" ury="629.0" pageNum="1">Brooklyn, NY 11201</address>
+      <email initialCol="1" llx="145.0" lly="604.0" urx="473.0" ury="614.0" pageNum="1">uirmak@cis.poly.edu, smihay01@utopia.poly.edu, suel@poly.edu</email>
+      <abstract initialCol="1" llx="48.0" lly="327.0" urx="311.0" ury="579.0" pageNum="1">Abstract--- Given two versions of a file, a current version located on one machine and an outdated version known only to another machine, the remote file synchronization problem is how to update the outdated version over a network with a minimal amount of communication. In particular, when the versions are very similar, the total data transmitted should be significantly smaller than the file size. File synchronization problems arise in many application scenarios such as web site mirroring, file system backup and replication, and web access over slow links. An open source tool for this problem, called rsync and included in many Linux distributions, is widely used in such scenarios. rsync uses a single round of messages between the two machines. While recent research has shown that significant additional savings in bandwidth consumption are possible through the use of optimized multi-round protocols, there are many scenarios where multiple rounds are undesirable. In this paper, we study single-round protocols for file synchronization that offer significant improvements over rsync.Our main contribution is a new approach to file synchronization based on the use of erasure codes. Using this approach, we design a single-round protocol that is provably efficient with respect to common measures of file distance, and another optimized practical protocol that shows promising improvements over rsync on our data sets. In addition, we show how to obtain moderate improvements by engineering the rsync approach.</abstract>
+    </headers>
+    <body initialCol="1" llx="47.0" lly="65.0" urx="576.0" ury="739.0" pageNum="1" bodyID="p1x134.0y302.0">
+      <section-marker initialCol="1" llx="134.0" lly="302.0" urx="223.0" ury="314.0" pageNum="1">I. INTRODUCTION</section-marker>
+      <text initialCol="1" llx="48.0" lly="66.0" urx="309.0" ury="295.0" pageNum="1">Consider the problem of maintaining replicated collections of files, such as user files, web pages, or documents, over a slow network. In particular, assume that we have two machines, A and B, that each hold a copy of the files, and that files may have been updated at one of the machines. Periodically, a machine may initiate a synchronization operation that updates all its replicas to the latest version. This operation involves identifying all files that have changed, deciding which version of the file is the latest one (if files can be changed at either location), and finally updating any outdated files. Or alternatively, when a particular file is accessed, a machine may have to update its local version of the file. If the file or file collection is large or the network fairly slow, then it is desirable to perform this synchronization with a minimum amount of communication over the network. The above scenario arises in a number of applications, such as synchronization of user files between different machines, distributed file systems, remote backups, mirroring of large web and ftp sites, content distribution networks, or web access,</text>
+      <text initialCol="1" llx="311.0" lly="110.0" urx="573.0" ury="580.0" pageNum="1">to name just a few. In many cases, updated files differ only slightly from their previous version; for example, updated web pages usually change only in a few places. In this case, instead of sending the entire updated version over the network, it would be desirable to perform the update by sending only an amount of data proportional to the degree of change between the two versions. In this paper, we focus on this problem of updating files in a bandwidth efficient manner; we refer to this as the remote file synchronization problem. We note that there is a very widely used open source software tool called rsync, included in many Linux distributions, that addresses this problem and that is based on the rsync algorithm and protocol described in [39], [41]. Another popular tool called unison [28] also uses the same basic algorithm. Our goal is to derive new algorithms that achieve significant savings over the rsync algorithm in the case of slow networks. We focus on approaches that exchange only a single round of messages between the machines holding the outdated and current version of a file; such approaches are preferable in a number of scenarios as discussed later. Before continuing, we point out a few assumptions. We assume that collections consist of unstructured files that may be modified in arbitrary ways, including insertion and deletion operations that change line and page alignments between different versions. Thus, approaches that identify changed disk pages or bit positions or that assume fixed record boundaries do not work -- though some of them are potentially useful for identifying those files that have been changed and need to be synchronized. We note that the problem would also be easier if all update operations to the files are saved in an update log that can be transmitted to the other machine, or if the machine holding the current version has a copy of the outdated version. However, in many scenarios this is not the case. We are not concerned with issues of consistency in between synchronization steps, and with the question of how to resolve conflicts if changes are simultaneously performed at several locations (see [3], [29] for a discussion). We assume a simple two-party scenario where it is known which files need to be updated and which is the current version of a file.</text>
+      <notext initialCol="1" llx="48.0" lly="676.0" urx="310.0" ury="735.0" pageNum="2">A. Applications We now discuss the most common application scenarios for file synchronization techniques. . Synchronization of user files: Both the rsync and</notext>
+      <text initialCol="1" llx="68.0" lly="632.0" urx="309.0" ury="680.0" pageNum="2">unison tools are widely used to synchronize personal files between different machines, say between a machine at home and one at work, that may only be connected over a slow network such as a modem.</text>
+      <notext initialCol="1" llx="59.0" lly="616.0" urx="309.0" ury="633.0" pageNum="2">. Web and ftp site mirroring: rsync is widely used to</notext>
+      <text initialCol="1" llx="68.0" lly="561.0" urx="309.0" ury="620.0" pageNum="2">mirror busy web and ftp sites, including sites distributing new versions of software. In this case, there may be significant similarities between successive versions of a software package that allow a mirror to efficiently update to the newest release.</text>
+      <notext initialCol="1" llx="59.0" lly="544.0" urx="309.0" ury="561.0" pageNum="2">. Content distribution networks: Several companies in</notext>
+      <text initialCol="1" llx="68.0" lly="477.0" urx="309.0" ury="549.0" pageNum="2">the CDN space have studied and deployed file synchronization techniques similar to rsync. We are not aware of any published work in this direction, but file synchronization techniques are a natural approach for updating content replicated at the network edge or at several location of a company intranet.</text>
+      <notext initialCol="1" llx="59.0" lly="460.0" urx="309.0" ury="477.0" pageNum="2">. Web access over slow links: A user revisiting a web</notext>
+      <text initialCol="1" llx="68.0" lly="393.0" urx="309.0" ury="465.0" pageNum="2">page may already have a previous version of the page in the browser cache, and it would be desirable to avoid transmission of the entire updated version. This idea is, e.g., implemented in the rproxy system [40], which uses the rsync algorithm to efficiently update pages that are being revisited.</text>
+      <text initialCol="1" llx="48.0" lly="331.0" urx="309.0" ury="391.0" pageNum="2">In addition, there are several other scenarios where the techniques could be employed, such as replication of content in a P2P or grid environment, sharing of large web page archives for mining and web search, distributed backup, or wide-area distributed file systems.</text>
+      <section-marker initialCol="1" llx="48.0" lly="313.0" urx="165.0" ury="325.0" pageNum="2">B. Problem Formalization</section-marker>
+      <text initialCol="1" llx="47.0" lly="66.0" urx="310.0" ury="308.0" pageNum="2">The setup for the file synchronization problem is as follows. We have two files (strings) f new ,f old # # # over some alphabet # (most methods are character/byte oriented), and two machines C (the client) and S (the server) connected by a communication link. We also refer to f old as the outdated file and to f new as the current file. We assume that C only has a copy of f old and S only has a copy of f new . Our goal is to design a protocol between the two parties that results in C holding a copy of f new , while minimizing the communication cost. We limit ourselves to a single round of messages between client and server, and measure communication cost in terms of the total number of bits exchanged between the two parties. For a file f,weusef [i] to denote the ith symbol of f , 0 # i&lt;|f |, and f [i, j] to denote the block of symbols from i up to (and including) j. We assume that each symbol consists of a constant number of bits. All logarithms are with base 2, and we use #p# 2 and #p# 2 to denote the next larger and next smaller power of 2 of a number p. The communication cost incurred by the protocol should depend on the degree of similarity between the two files.</text>
+      <text initialCol="1" llx="311.0" lly="224.0" urx="573.0" ury="735.0" pageNum="2">Similarity is usually defined in terms of one of a number of edit distance measures that have been proposed. Some of the most common ones are: . The Hamming distance between two files f,f # of equal length is defined as the number of positions i with f [i] #= f # [i]. Hamming distance is not a good model for unstructured files (as opposed to record-based data) since inserting a symbol at the beginning and deleting one at the end would result in a very large distance due to alignment issues. . The edit distance (also called Levenshtein distance) is the smallest number of insertions, deletions, and changes of single symbols needed to transform one file into the other. . The edit distance with block moves is the smallest number of insertions, deletions, and changes of single symbols or moves of blocks of symbols needed to transform one file into the other. For technical reasons, we assume that each block move operation adds 3 to the distance, while other operations add 1. There are a number of other distance measures that have been proposed; see [8], [7], [10] for example. We focus mainly on the edit distance with block moves, which seems powerful enough to be used as a reasonable model of file similarity, but still simple enough to work with. We note that even more powerful models, such as models allowing block copies and deletions of blocks, are much harder to analyze and known upper bounds for these cases are often significantly worse [8], [7], [10]. We call a file synchronization protocol feasible if it can be implemented with a polynomial amount of computation (including the cost of decoding the current file at the receiver). A protocol is communication-efficient if it communicates at most O(k lg c (n)) bits, for some constant c, where k is the distance between the two files according to some distance measure and n is the length of the current file. (An upper bound for k may or may not be known at the start of the protocol.) We note that a lower bound of #(k lg n)) bits holds for all of the above distance measures. We assume that both machines have access to a random hash function, and we are interested in protocols that succeed with some fairly high probability p.</text>
+      <section-marker initialCol="1" llx="311.0" lly="204.0" urx="399.0" ury="216.0" pageNum="2">C. State of the Art</section-marker>
+      <text initialCol="1" llx="311.0" lly="66.0" urx="573.0" ury="199.0" pageNum="2">We now briefly summarize the current state of the art in file synchronization techniques; some additional discussion of related work is provided in Section IV. There are several very strong theoretical results on the communication complexity of the file synchronization problem (sometimes also called the document exchange or correlated files problem), which establish the existence of asymptotically optimal protocols consisting of one or two rounds [24], [25], [8], [7]. Some of the results model file similarity using a very general framework based on bipartite graphs [24], while others assume various edit distance measures. However, the</text>
+      <text initialCol="1" llx="48.0" lly="71.0" urx="310.0" ury="735.0" pageNum="3">proposed algorithms are not implementable in practice, as they assume that the receiver can invert a hash function over a large domain in order to decode the current version of the file; this assumption appears to be fundamental to the approach. Within this framework, Orlitsky and Viswanathan [26] also showed a relationship between Error Correcting Codes for noisy channels and file synchronization that may be on some level related to our erasure-based approach. The already mentioned rsync algorithm uses a single round of communication, consisting of a request by the machine holding the outdated copy, and the encoded reply from the machine holding the current copy. A more detailed description is given in Section II. As rsync is widely used, it clearly provides a useful improvement over the alternative of transmitting the entire file. However, rsync does not guarantee any strong performance bounds with respect to common file distance measures. A number of authors have proposed multi-round algorithms for file synchronization based on divide-and-conquer approaches. The earliest such result in [33] in fact predates rsync, and subsequently a number of such algorithms have been proposed and analyzed [8], [7], [10], [25], [15], [37], [22]. The algorithms can be efficiently implemented (i.e., do not require inverting a hash function), and most can be shown to be communication-efficient with respect to one of the common file distance measures. A simple example of such an algorithm and its analysis is given in Section III. A recent study of an optimized implementation of multiround synchronization in [37] shows that such approaches can achieve significant improvements in bandwidth use over rsync, often by a factor of 2 to 3. However, none of these algorithms appear to be currently implemented in any widely used tools. Very recent and independent work by Chauhan and Trachtenberg [6] has proposed an approach for file synchronization based on a reduction to the set reconciliation problem. The algorithm works in two rounds and achieves provable bounds with respect to certain graph-based measures, but it is not communication-efficient according to the above definition in the worst case. Thus, the rsync algorithm appears to be the best singleround algorithm currently known, but there is significant room for improvements in its bandwidth use. Multi-round protocols are suitable when dealing with large files, or with large collections of files since the multiple communication rounds are not incurred on a per-file basis but can be overlapped for different files. However, single-round protocols are preferable in many scenarios involving small files or large latencies, for example the web access application where a single HTML page is retrieved over a high-latency modem connection. In addition, single-round protocols can be more easily integrated into existing tools currently relying on rsync, and multi-round protocols can introduce other complications due to state that may have to be kept at the server for best performance [22]. Finally, multi-round protocols tend to have higher overhead at the endpoints as they may take multiple passes over the input.</text>
+      <section-marker initialCol="1" llx="311.0" lly="723.0" urx="447.0" ury="735.0" pageNum="3">D. Contributions of this Paper</section-marker>
+      <text initialCol="1" llx="311.0" lly="175.0" urx="573.0" ury="714.0" pageNum="3">In this paper, we study single-round protocols for file synchronization. Our goal is to achieve significant improvements in practice over rsync, which is currently still the best singleround protocol. Our contributions are: (1) We explore several techniques for optimizing and tuning the rsync approach, in particular use of delta compression, tuning of the hash value bit strength, use of content-dependent block boundaries, and multiple alignments of block boundaries. Our study shows that some gains over the current rsync implementation are possible. (2) We describe a new approach to single-round file synchronization based on the use of erasure codes. Using this approach, we derive a protocol that communicates at most O(k lg(n)lg(n/k)) bits on files with edit distance with block moves of at most k. To our knowledge this is the first single-round protocol that is both feasible and communication-efficient. (3) Using the same approach, we derive another algorithm and an optimized implementation that achieves very promising improvements over rsync on a range of test data. The results are still preliminary and we expect additional improvements in the final version of this paper. Throughout this paper, we focus on optimizing bandwidth consumption. Communication latency is not an issue in our case since all algorithms operate in a single round. However, there are two other types of overhead that may also be significant in certain cases: (a) CPU cost due to hash computation and data structure insertions and lookups, and (b) the cost of scanning the file system and retrieving files. The latter cost, which can be very significant when synchronizing large directory trees with few changes, is the same for all discussed methods. (A significant reduction in this cost might be possible through maintenance of check sum hashes for files and directories to allow efficient identification of updated files, and is outside the scope of this paper.) The CPU cost is moderate for all our methods, but a detailed comparison using optimized data structures and hash computations remains to be done. In the next section, we describe the rsync algorithm and evaluate some possible optimizations. Section III proposes and evaluates our new approach to file synchronization based on erasure codes. Finally, Section IV discusses related work, and Section V contains concluding remarks.</text>
+      <section-marker initialCol="1" llx="356.0" lly="140.0" urx="528.0" ury="152.0" pageNum="3">II. OPTIMIZING THE rsync APPROACH</section-marker>
+      <text initialCol="1" llx="311.0" lly="66.0" urx="573.0" ury="126.0" pageNum="3">In this section, we describe the rsync algorithm and then discuss and evaluate a few ideas for tuning the performance of the approach. Our conclusion is that while moderate improvements are possible, more significant ones probably require a different approach.</text>
+      <section-marker initialCol="1" llx="48.0" lly="723.0" urx="156.0" ury="735.0" pageNum="4">A. The rsync Algorithm</section-marker>
+      <text initialCol="1" llx="48.0" lly="574.0" urx="309.0" ury="717.0" pageNum="4">The basic approach in rsync, as well as most other file synchronization algorithms, is to split a file into blocks and use hash functions to compute hashes or "fingerprints" of the blocks. These hashes are then sent to the other machine, where the recipient attempts to find matching blocks in its own file. One issue is the lack of alignment between matching blocks in the two files; this is addressed by comparing received hashes not just with the corresponding block in the other file, but with all substrings of the same size. For efficiency, hashes are composed from two different hash functions, a fast but unreliable one, and a very reliable one that is more expensive to compute. The steps in rsync are as follows:</text>
+      <figure-marker initialCol="1" llx="48.0" lly="338.0" urx="308.0" ury="391.0" pageNum="4">Figure II.1.Thersync algorithm on a small example. The client sends a set of hashes while the server replies with a stream of literals and indices identifying hashes. 1. At the client:</figure-marker>
+      <notext initialCol="1" llx="48.0" lly="68.0" urx="572.0" ury="736.0" pageNum="4">(a) Partition f old into blocks B i = f old [ib, (i +1)b - 1] of some block size b. (b) For each block B i , compute two hashes, u i = h u (B i ) and r i = h r (B i ), and communicate them to the server. Here, h u is a heuristic but fast hash function, and h r is a reliable but expensive hash. 2. At the server: (a) For each pair of received hashes (u i ,r i ), insert an entry (u i ,r i ,i) into a dictionary, using u i as key. (b) Perform a pass through f new , starting at position j =0, and involving the following steps: (i) Compute the unreliable hash h u (f new [j, j +b-1]) on the block starting at j. (ii) Check the dictionary for any block with matching unreliable hash. (iii) If found, and if the reliable hashes match, transmit the index i of the matching block in f old to the client, advance j by b positions, and continue. (iv) If none found, or if the reliable hash did not match, transmit symbol f new [j] to the client, advance j by one position, and continue. 3. At the client: (a) Use the incoming stream of symbols and indices of hashes in f old to reconstruct f new .</notext>
+      <text initialCol="1" llx="311.0" lly="523.0" urx="573.0" ury="690.0" pageNum="4">The process is illustrated in Figure II.1. All symbols and indices sent from server to client in steps (iii) and (iv) are also compressed using an algorithm similar to gzip. A checksum on the entire file is used to detect the (fairly unlikely) failure of both checksums, in which case the algorithm could be repeated with different hashes, or we simply transfer the entire file in compressed form. The reliable checksum is implemented using MD4 (128 bits), but only two bytes of the MD4 hash are used since this provides sufficient power for most file sizes. The unreliable checksum is implemented as a 32-bit "rolling checksum" that allows efficient sliding of the block boundaries by one character, i.e., the checksum for f [j +1,j+ b] can be computed in constant time from f [j, j + b - 1]. Thus, 6 bytes per block are transmitted from client to server.</text>
+      <section-marker initialCol="1" llx="311.0" lly="495.0" urx="470.0" ury="507.0" pageNum="4">B. Discussion of rsync Performance</section-marker>
+      <text initialCol="1" llx="311.0" lly="66.0" urx="573.0" ury="487.0" pageNum="4">Clearly, the choice of block size is critical to the performance of the algorithm, but the best choice depends on the degree of similarity between the two files. Moreover, the location of changes in the file is also important. If a single character is changed in each block of f old , then no match will be found by the server and rsync will be completely ineffective; on the other hand, if all changes are clustered in a few areas of the file, rsync will do well even with a large block size. Given these observations, some basic performance bounds based on block size and number and size of file modifications can be shown. However, rsync does not have any good performance bounds with respect to common file distance measures. In practice, rsync uses a default block size of 700 bytes except for very large files where a block size of # n is used. Decreasing the block size to 100 bytes or less is usually not practical: if one out of three hashes finds a match, this means that 18 bytes of hashes are transmitted for each discovered match, while simply applying gzip to the unmatched blocks might result in a reduction to about 25 bytes on average. We note that it is not difficult to find settings for the block size that perform significantly better than the rsync default size on particular data sets, but this by itself cannot be claimed as an improvement over rsync unless we get gains over a significant range. Another way to improve performance without adding extra round-trips is to use fewer bits per hash. However, a version of the birthday paradox provides a limit to this approach: Given two files of length n, where n/b hash values are compared to the hashes of all n - b +1 blocks of size b in the other file, we need about lg(n)+lg(n/b) bits per hash in order to have an even chance of not having any false match, while approximately lg(n)+lg(n/b)+d bits are needed to get a probability less than 1/2 d of having any false match between the files. (We state approximate bounds here for simplicity.)</text>
+      <section-marker initialCol="1" llx="48.0" lly="723.0" urx="275.0" ury="735.0" pageNum="5">C. Some Basic Optimizations and their Performance</section-marker>
+      <text initialCol="1" llx="48.0" lly="66.0" urx="310.0" ury="718.0" pageNum="5">We now explore a few possible optimizations of the rsync approach. We start with two fairly obvious ones: (1) use of a better compressor for literals, and (2) a better choice of the number of bits per hash. In the first optimization, we replace the gzip algorithm used for the transmission of the unmatched literals and the match tokens in rsync with an optimized delta compressor. A delta compressor is a tool that compresses one file called target file with respect to another, usually similar, file called reference file. The resulting delta is essentially a description of the differences between target and reference file, with the property that the target file can be reconstructed from the delta and the reference file. In our modification of rsync, the server creates a reference file from the contents of all matched blocks, then compresses the current file with respect to this reference file, and transmits the resulting delta to the client. In addition, the server sends a (possibly compressed) bit vector telling the client which of its hash values has found a match, allowing the client to create the same reference file and then decode the current file. Use of a delta compressor has two advantages: First, it exploits redundancies between unmatched and matched parts of the current file; we note that the idea of exploiting this redundancy was already discussed by Tridgell [39]. Second, an optimized delta compressor may provide a more efficient way to encode offsets and indices than the tokens in rsync. (This also simplifies implementation and evaluation of our various methods by allowing us to sidestep the issue of how to optimize the representation and compression of these tokens.) We used the zdelta delta compressor [38], available at http://cis.poly.edu/zdelta/, which is highly efficient and achieves particularly good compression for small to medium size files. For large files beyond a few megabytes, a compressor such as vcdiff [13], which can capture global reorderings of substrings, would be preferable. The second optimization chooses the number of bits in the hashes as a function of the file size (for the moment, assume both files are of similar size). In particular, we assume some upper bound on the probability of a collision, say 1/2 d for some d, and then use lg(n)+lg(n/b)+d bits per hash. Of those bits, up to 32 are chosen from the weak but fast hash, and the rest from the slow hash. We now compare basic rsync with a version using zdelta and with a version using both zdelta and shorter hash values for d =10. For the experiments, we used the gcc and emacs data sets also used in [11], [37], consisting of versions 2.7.0 and 2.7.1 of gcc and 19.28 and 19.29 of emacs. The newer versions of gcc and emacs consist of 1002 and 1286 files, and each collection has a size of around 27 MB. In each case we measured the cost of updating all files in the older version to the newer one. Total communication cost is divided into two parts: the read size is the data sent from client to server (mostly hashes), while the write size is the data sent from server to client (mostly the delta).</text>
+      <figure-marker initialCol="1" llx="311.0" lly="555.0" urx="571.0" ury="574.0" pageNum="5">Figure II.2. Results of the first two optimizations on the gcc collection, for various block sizes.</figure-marker>
+      <figure-marker initialCol="1" llx="311.0" lly="351.0" urx="571.0" ury="371.0" pageNum="5">Figure II.3. Results of the first two optimizations on the emacs collection, for various block sizes.</figure-marker>
+      <text initialCol="1" llx="311.0" lly="66.0" urx="576.0" ury="330.0" pageNum="5">The results are shown in Figures II.2 and II.3. We note that gcc has a much larger degree of similarity between the different versions than emacs. As a result, there are fairly few unmatched literals in gcc even with fairly large block sizes, and it is not profitable to spend extra bits on sending hashes for a smaller block size. The best block size for gcc is close to the default size of 700 bytes in rsync.Foremacs,the best block size is fairly small, between 100 and 200,asthis results in many additional matches that are not caught with larger block sizes. In general, the results show that there is no one optimal block size, and that the choice depends on the data. However, we see consistent improvements due to the two optimizations. We see improvements of 10% to 15% across the various block sizes, with improvements due to shorter hashes more prominent for small block sizes, since in this case the cost of the hashes is relatively higher. Next, we look at the actual rate of collisions that we encounter with the shorter hash values, and their impact on performance. As in rsync, we assume that a 16-byte hash of the entire current file is transmitted to the client in order to detect any corruption due to false matches; in case of corruption the entire file is retransmitted encoded by gzip. We look at</text>
+      <text initialCol="1" llx="63.0" lly="600.0" urx="294.0" ury="739.0" pageNum="6">d % match file coll coll size gzip(coll) total 5 92.15 3.00 3.79 283909 997797 6 92.15 1.40 1.66 126869 846825 7 92.15 0.40 0.17 14845 740626 8 92.15 0.30 0.11 8998 740536 9 92.15 0.10 0.01 1627 738821 10 92.15 0.00 0.00 0 742971 5 92.14 0.20 0.24 19274 734323 6 92.13 0.00 0.00 0 720828 7 92.13 0.00 0.00 0 726476 8 92.13 0.00 0.00 0 732233 9 92.13 0.00 0.00 0 737889 10 92.13 0.00 0.00 0 743666</text>
+      <notext initialCol="1" llx="52.0" lly="513.0" urx="302.0" ury="595.0" pageNum="6">Table II.1 TOTAL PERCENTAGE OF FILE SIZE COVERED BY MATCHES, PERCENTAGE OF CORRUPTED FILES DUE TO HASH COLLISIONS, SIZEOFCORRUPTED FILES AS PERCENTAGE OF COLLECTION, COST OF RETRANSMISSIONS USING gzip, AND TOTAL COST OF THE ALGORITHM IN BYTES, FOR gcc WITH VARIOUS CHOICES OF d.THE FIRST 6 ROWS ARE FOR "NO-SKIP" AND THE OTHERS FOR "SKIP". THE BLOCK SIZE IS 600 BYTES.</notext>
+      <text initialCol="1" llx="48.0" lly="344.0" urx="309.0" ury="489.0" pageNum="6">two different implementations of the match discovery process at the server: "skip" is the implementation currently used in rsync where after each matched block we move our window to the end of the block, thus disallowing overlapping matches in the current file, while "no-skip" also looks for overlapping matches. The results are shown in Table II.1. We see that as expected "skip" has significantly fewer collisions and file corruptions than "no-skip" and also fewer than predicted by our choice of k since it does not compare to all blocks in the current file. Thus, "skip" is the better option also in terms of bandwidth as it allows use of shorter hashes.</text>
+      <section-marker initialCol="1" llx="48.0" lly="323.0" urx="156.0" ury="335.0" pageNum="6">D. Variable-Size Blocks</section-marker>
+      <text initialCol="1" llx="48.0" lly="65.0" urx="313.0" ury="318.0" pageNum="6">Our next idea for improving performance is to use variablesize instead of fixed-size blocks. In particular, we evaluate the use of Karp-Rabin fingerprints [12] to determine the block boundaries, inspired by recent work [30], [34], [21], [9] that uses these techniques in other scenarios. This is done by moving a small window (e.g., of size 20 bytes) over each file. For each byte position of the window, we hash the content using a simple random hash function (not identical to the block hash). If the hash value is 0modb (say, b = 256), then we introduce a block boundary at the end of the current window. We use this technique to partition both f old and f new .The purpose of the small window is to define block boundaries in a content-dependent manner. Thus, when a substring in one file contains a block boundary, then if the same substring also appears in another file, it will also contain the same block boundary. The advantage of this technique for file synchronization is that we do not have to compare each hash from f old to all alignments in f new , but only to those corresponding to blocks in f new . Thus, the number of bits per hash can be reduced by lg(b) to a total of 2lg(n/b)+d for expected block size b. Since b is typically a few hundred bytes,</text>
+      <notext initialCol="1" llx="332.0" lly="652.0" urx="525.0" ury="721.0" pageNum="6">hash block 1 block 3 block 2 abacabcadabcbbdadacbacddaccb ... xxx1562057121245623037214652 ...</notext>
+      <figure-marker initialCol="1" llx="311.0" lly="565.0" urx="571.0" ury="620.0" pageNum="6">Figure II.4. Use of Karp-Rabin fingerprints to partition a file into blocks. In this case, a window of size four bytes is moved over the file and at each position a hash h() of the window is computed. Hash values are in the range {0,...,7}, and a block ends whenever we have a hash value of 0mod8. Thus, the expected block size is 8 bytes unless there are repetitive patterns in the file.</figure-marker>
+      <text initialCol="1" llx="311.0" lly="409.0" urx="573.0" ury="542.0" pageNum="6">this can result in nontrivial reductions in the cost of sending the hashes. We experimented with two implementations. In one, we defined block boundaries as above, by introducing a block boundary at the end of the current window if the window hashes to 0modb. In the second implementation, we use overlapping blocks by including both the boundary window to the right and to the left in each block. We also experimented with an alternative partitioning rule proposed in [32] that guarantees a lower variation in block sizes, but this did not result in any improvements.</text>
+      <section-marker initialCol="1" llx="311.0" lly="384.0" urx="481.0" ury="396.0" pageNum="6">E. Matches with Half-Block Alignment</section-marker>
+      <text initialCol="1" llx="311.0" lly="66.0" urx="573.0" ury="378.0" pageNum="6">We studied one other optimization that goes a little beyond the standard rsync framework. The goal is to try to address two common shortcomings in rsync: (1) Suppose we have hashes for two consecutive blocks that do not find a match at the server, but if we had a hash for a block of the same size that goes from the middle of the first block to the middle of the second block, it might be possible to find a match. In general, we would like to be able to find matches of large enough size that go across the block boundaries, at least for a selected set of alignments. (2) Having identified a match of one block, we should be able to efficiently extend such a match, say, into one half of the neighboring block, even if the whole neighboring block does not find a match. This is basically the idea behind the continuation hashes proposed in [37], that far fewer bits are needed if a hash is only compared to one block position in the other file, in this case the position adjacent to a known match. However, implementing these ideas in a single round is tricky, and we can not get everything we want. We take the following approach: We partition the client file into blocks of fairly small size b # (say, half the size b that we would usually select under rsync), but send far fewer bits per hash (only about half as many). At the server, we look for matches in the other file, but we only accept matches that are part of a sequence of at least 2 consecutive matches. The reason is that the number of hash bits per single block is not large enough to identify</text>
+      <text initialCol="1" llx="48.0" lly="508.0" urx="310.0" ury="735.0" pageNum="7">isolated matches with confidence. To get a probability of less than 1/2 d of a false match in the file, we need to satisfy two conditions on the number of hash bits h per block: 2h # lg(n)+lg(n/b)+d and h # lg(n/b)+d. The first condition assures that two consecutive block matches suffice to identify a valid match, while the second condition assures that we can extend a match by single blocks to the left and right without too much danger of a false match. We note that instead of choosing blocks of half the usual size, other settings are possible to recognize various other alignments not exploited by rsync, but we did not find significant benefits in this. The above algorithm, which we refer to as half-block alignment, is basically a fairly crude way to exploit the fact that matches in files are clustered and that adjacent blocks in one file are more likely to match with adjacent blocks in the other file than with blocks that are far away from each other. We implemented this method for d =10and also checked that the frequency of false matches is as expected.</text>
+      <section-marker initialCol="1" llx="48.0" lly="488.0" urx="228.0" ury="500.0" pageNum="7">F. Performance of the Two Optimizations</section-marker>
+      <text initialCol="1" llx="48.0" lly="388.0" urx="310.0" ury="484.0" pageNum="7">In Figure II.5 and II.6, we compare the performance of halfblock alignment and of the approach using variable size blocks against rsync and the optimized version from the previous subsection, on a range of block sizes. For the methods with variable block size, we show the expected block size and for half-block alignment we show twice the size b # of the small blocks in the figure (since the small blocks are half the "normal" size b to capture half-block alignments).</text>
+      <figure-marker initialCol="1" llx="48.0" lly="184.0" urx="308.0" ury="213.0" pageNum="7">Figure II.5. Results for basic rsync, the optimized rsync from the previous subsection, the variable block size approach without and with overlap, and the half-block alignment protocol on the gcc collection, for various block sizes b.</figure-marker>
+      <text initialCol="1" llx="48.0" lly="66.0" urx="309.0" ury="173.0" pageNum="7">We observe that the variable block-size methods do very well for small blocks. The reason is that these methods use shorter hashes, and thus benefit when the size of the hashes is significant compared to the total cost. On the other hand, methods with variable blocks tend to result in more unmatched literals, mainly due to variations in the block sizes, that dominate the savings in hash bits for larger block sizes. As suggested in [21], [30], we enforce certain minimum and maximum block sizes to deal with regular patterns in the data,</text>
+      <figure-marker initialCol="1" llx="311.0" lly="530.0" urx="571.0" ury="567.0" pageNum="7">Figure II.6. Results for basic rsync, the optimized rsync from the previous subsection, the variable block size approach without and with overlap, and the half-block alignment protocol on the emacs collection, for various block sizes b.</figure-marker>
+      <text initialCol="1" llx="311.0" lly="243.0" urx="573.0" ury="508.0" pageNum="7">but even with optimum choice of these parameters the block sizes are distributed over a certain range, and large blocks are more likely to not find a match. Moreover, we note that the savings in bits per hash for variable-size blocks are only compared to the "no-skip" version of the fixed-size method, and as seen in Table II.1 we could actually use fewer bits per hash when using the "skip" method. We observe that there is at most a very slight benefit in using overlapping instead of non-overlapping blocks. The half-block alignment approach outperforms the other methods on most block sizes, with the notable exception of gcc for block size 100 where the second condition on the number of hash bits stated above results in a fairly high cost for the hashes. Note that this block size is not a good choice for gcc under any method, and is far away from the default size of 700 for rsync or any suitable default size. On emacs, we see an improvement of 5% to 10% over the next best method, and overall we see an improvement of 15% to 25% over the basic rsync method across the different blocks sizes, including the default size. Similar results were also obtained on several other data sets. Thus, some moderate improvements are possible through careful tuning of the rsync approach.</text>
+      <section-marker initialCol="1" llx="334.0" lly="218.0" urx="550.0" ury="230.0" pageNum="7">III. AN APPROACH BASED ON ERASURE CODES</section-marker>
+      <text initialCol="1" llx="311.0" lly="66.0" urx="573.0" ury="211.0" pageNum="7">In this section, we provide the main result of this paper, a new approach to single-round file synchronization based on the use of erasure code. Using this approach, we design two algorithms, one primarily of theoretical interest and another one that performs well in practice. The basic idea underlying the new approach is quite simple: essentially, erasure codes are used to convert certain multi-round protocols into single-round protocols with similar communication cost. We start by describing a simple multi-round protocol. Subsection III-B contains the theoretical result obtained by converting the multi-round protocol, and Subsection III-C describes and evaluates the practical protocol.</text>
+      <section-marker initialCol="1" llx="48.0" lly="723.0" urx="201.0" ury="735.0" pageNum="8">A. A Simple Multi-Round Protocol</section-marker>
+      <text initialCol="1" llx="48.0" lly="247.0" urx="310.0" ury="719.0" pageNum="8">We now describe a simple multi-round protocol for file synchronization, which we refer to as the basic multi-round protocol. The protocol is not new and variations of it have previously appeared in [33], [8], [25], [37]. (The multi-round protocols in [15], [22] are also similar, but send hashes from client to server.) The protocol runs in a number of rounds, starting with a block size of b max and then decreasing the block size by a factor of 2 in each round until reaching a block size of b min . In the first round, the server holding the current version partitions the file into blocks of size b max , and sends a hash value for each block to the client. The client attempts to match the received hashes to all possible alignments in the outdated file, and then responds with a bit vector containing a "1" for each hash that found a match, and a "0" for all other hashes. By doing so, the client notifies the server which of the hashes were "understood" by the client, and which hashes could not be decoded by looking for a match in its file. Next the server partitions each block whose hash did not find a match into two halves, and sends hashes for these smaller blocks to the client. The client again replies with a bit vector, and the server further splits any unmatched blocks. Once block size b min is reached, the server simply sends all unmatched blocks as literals. Figure III.1 illustrates the protocol on a small example. cxefghij klmnopxr stuvwxyz 01zz2345 cxefghijklmnopxr stuvwxyz01zz2345 cxefghijklmnopxrstuvwxyz01zz2345 gh kl mn st uv wx yz 23 45 ij ef op 01 cx xr zz 01zz 2345 opxr klmn ghij cxef stuv wxyz new The file F at the server abcdefghijklmnopqrstuvwxyz012345 old The file F at the client</text>
+      <figure-marker initialCol="1" llx="48.0" lly="184.0" urx="310.0" ury="230.0" pageNum="8">Figure III.1. The basic multi-round protocol on a small example file pair. Shown in bold outlines are blocks in the server file that find a match at the client, while blocks that have a matched ancestors are shaded. Hashes for the latter blocks are not communicated in the basic multi-round protocol,but would be communicated in the complete multi-round protocol.</figure-marker>
+      <text initialCol="1" llx="48.0" lly="65.0" urx="314.0" ury="174.0" pageNum="8">Suppose we choose b max = #n/k# 2 , b min =lg(n), and use hashes of size, say, 4lgn bits. Then it can be shown that given two files with edit distance with block moves of k, the algorithm transmits at most O(k lg(n)lg(n/k)) bits and correctly updates the file with probability at least 1 - 1 n .In particular, on the first level we have at most 2k blocks for which hashes are sent. There are at most lg(n/k) levels. On each level at most k of the hashes that are sent do not find a match at the client, and thus again at most 2k hash values</text>
+      <text initialCol="1" llx="311.0" lly="456.0" urx="573.0" ury="735.0" pageNum="8">are sent at the next level, as implied by the following simple lemma. Lemma 3.1: Let f new and f old be two files with edit distance with block moves at most k, where each move operation is counted as a distance of 3. If we partition f new into some number m of disjoint blocks s 0 to s m-1 , then at most k of these blocks do not occur in f old . We only sketch the proof of the lemma, which is not really new. Consider a sequence of k edit operations that transforms f old into f new . Imagine that f old is printed on a long piece of paper, and that each edit operation may require us to cut the piece of paper in order to insert, delete, or change a character at a particular position, or to move a block from one position to another. Each single-character operation increases the number of pieces of the old file by at most one, while each move operation may require up to three cuts and thus increases the number of pieces by at most three. Any substring s i that is completely within one of the at most k pieces clearly also occurs in f old , giving the result. There are several possible practical optimizations to this algorithm [37], but this is not our concern. In the following, we show how to convert this algorithm into a single-round protocol with the same complexity.</text>
+      <section-marker initialCol="1" llx="311.0" lly="436.0" urx="478.0" ury="448.0" pageNum="8">B. An Efficient Single-Round Protocol</section-marker>
+      <text initialCol="1" llx="311.0" lly="93.0" urx="573.0" ury="431.0" pageNum="8">First, we define the complete multi-round protocol as the variation of the basic multi-round protocol from the previous subsection where in each round, we split all blocks in half and send hashes for all the resulting smaller blocks, including those whose ancestors have already found matches on a higher level. (Obviously, this is not a communication-efficient algorithm.) Due to the above lemma, both variations have the property that on each level at most k hashes do not find a match. Our second required ingredient is a systematic erasure code, which we now discuss briefly. We refer to [31] for a more detailed discussion. In an erasure code,wearegivenm source data items of some fixed size s each, which are encoded into m # }mencoded data items of the same size s, such that if any m # -m of the encoded data items are lost during transmission, they can be recovered from the m correctly received encoded data items. Note that it is assumed here that a receiver knows which items have been correctly received and which are lost. A systematic erasure code is one where the encoded data items consist of the m source data items plus m # - m additional items. In our application, which requires a systematic erasure code, the source data items are hashes, and we refer to the m # -m additional items as erasure hashes. Our algorithm is essentially a communication-efficient single-round simulation of the complete multi-round algorithm. Suppose we know an upper bound k on the edit distance with block moves between the files. Then on each level, we can simulate the complete multi-round algorithm according to the following rules:</text>
+      <notext initialCol="1" llx="48.0" lly="66.0" urx="572.0" ury="735.0" pageNum="8">. Any hash value sent in the complete multi-round protocol that would not be sent in the basic multi-round protocol (since it corresponds to a block whose ancestor has already found a match) is not transmitted, as it can be recreated at the client by evaluating the hash function on the corresponding part of the match. . Any hash value that would be sent by the basic multiround algorithm (since it corresponds to a block with no matched ancestors) is also not sent to the client, but considered lost. . Since on each level there can be at most 2k such blocks that are declared lost, we can recreate the entire level of hashes at the client by sending 2k extra erasure hashes, computed with a systematic erasure code from all hashes on a level, and then recovering the lost hashes. To summarize, the algorithm works as follows: (1) The server partitions f new recursively into blocks from size b max down to b min , and for each level computes all block hashes. (2) The server applies a systematic erasure code to each level of hashes except the top level, and computes 2k erasure hashes for each level. (3) In one message, the servers sends all hashes at the highest level to the client, plus the 2k erasure hashes for each level. (4) The client, upon receiving the message, recovers the hashes on all levels in a top-down manner, by first matching the top-level hashes. Then on the next level, the hash function is applied to all children of blocks that were already matched on a higher level in order to compute their hashes, and the 2k erasure hashes are used to recover the hashes of the at most 2k blocks with no matched ancestors. (5) At the bottom level with block size b min , we assume that the hash is simply the content of the block, and thus we can recover the current file at the client. Assuming no hash collisions, the algorithm correctly simulates the complete multi-round algorithm. Choosing as before b max = #n/k# 2 , b min =lg(n), and hashes of size 4lgn bits, we get the following result: Theorem 1: Given a bound k on the edit distance with block moves between f old and f new , the erasure-based file synchronization algorithm correctly updates f old to f new with probability at least 1 - 1 n , using a single message of O(k lg(n)lg(n/k)) bits. We note that there are highly efficient single-message protocols for estimating file distances according to a variety of edit distance measures; see [8]. These results imply that the above bound can be achieved by a single-round protocol even if there is no a-priori known bound on the file distance k, if the request message from client to server is used to estimate k. To our knowledge, this result is the first feasible single-round protocol for file synchronization that is provably communication-efficient with respect to edit distance with block moves, or any distance measure allowing for block operations. Another interesting property of the protocol is that by broadcasting a single message, the current version can be communicated to many clients holding different outdated versions. C. A Practical Protocol Based on Erasure Codes While the protocol from the previous subsection is efficiently implementable and has reasonable performance, it does suffer from two main shortcomings that make it inferior to rsync and other existing protocols in practice. . The protocol requires us to estimate an upper bound</notext>
+      <text initialCol="1" llx="331.0" lly="551.0" urx="572.0" ury="623.0" pageNum="9">on the file distance k. This adds complexity to the implementation, and while there are efficient protocols for this, we need to make sure that we do not underestimate, since otherwise the client is unable to recover the current file. Thus, to be sure we may have to send more than needed.</text>
+      <notext initialCol="1" llx="322.0" lly="535.0" urx="572.0" ury="551.0" pageNum="9">. More importantly, the algorithm does not support</notext>
+      <text initialCol="1" llx="331.0" lly="432.0" urx="573.0" ury="539.0" pageNum="9">compression of unmatched literals but essentially sends them in raw form as hashes. The performance of rsync and other protocols such as [37] is significantly improved through the use of compression for literals. There are some tricks that one can use to integrate compression into the algorithm, but this seems to lead either to variablesize data items in the erasure coding at the leaf level, or to severely reduced compression if we force all items to be of the same size.</text>
+      <notext initialCol="1" llx="311.0" lly="232.0" urx="573.0" ury="428.0" pageNum="9">To address these problems we design another erasure-based algorithm that works better in practice. The main change is that now, as in rsync, hashes are sent from client to server as part of the request, while the server uses the hashes to identify common blocks and then sends the unmatched literals in compressed form. In fact, similar to the way the first algorithm was obtained from the basic and complete multiround algorithms by adding erasure hashes, the new algorithm can be obtained by adding erasure hashes to a multi-round algorithm similar to those in [15], [22] that sends hashes from client to server. (These algorithms are essentially multiround versions of rsync, which explains the similarity of our algorithm below to rsync.) In the following description, note that the first three steps are identical to the previous algorithm but with the roles of client and server exchanged. (1) The client partitions f old recursively into blocks from size</notext>
+      <text initialCol="1" llx="313.0" lly="65.0" urx="573.0" ury="233.0" pageNum="9">b max down to b min , and for each level computes all block hashes. (2) The client applies a systematic erasure code to each level i of hashes except the top level, and computes m i erasure hashes for each level, for some appropriate m i discussed later. (3) In one message, the client sends all hashes at the highest level to the server, plus the m i erasure hashes for each level i. (4) The server, upon receiving the message, attempts to recover the hashes on all levels in a top-down manner, by first matching the top-level hashes. Then on the next level i, if the number of blocks without any matched ancestor is at most m i , the hash function is applied to</text>
+      <notext initialCol="1" llx="68.0" lly="711.0" urx="309.0" ury="735.0" pageNum="10">all blocks that do have a matched ancestor, and the m i erasure hashes are used to recover the hashes of the other</notext>
+      <text initialCol="1" llx="47.0" lly="66.0" urx="310.0" ury="712.0" pageNum="10">blocks. Otherwise, we stop at the previous level of hashes. (5) We now use the hashes on the lowest level that was successfully decoded, in exactly the same way they are used in rsync or in our variations of rsync. Thus, common blocks are identified and all unmatched literals are sent in compressed form to the client. If we set the parameters as in the theoretical algorithm, we can show that this algorithm achieves the same performance bounds, assuming an upper bound on the file distance k that can be used to choose appropriate m i (and making the reasonable assumption that compression does not significantly increase the size of the literals). However, even if we do not have an upper bound on k, the algorithm degrades more gracefully: While the previous algorithm fails to transmit f new if not enough erasure hashes are available, this algorithm, like rsync, will still correctly transmit f new though possibly at increased cost. In the worst case, when not enough erasure hashes are available to encode any of the lower levels, the algorithm will achieve the same performance as rsync on block size b max . In practice, we will usually choose b max to be similar to or slightly larger than the default block size of 700 used by rsync, and then use a smaller value of b min maybe around 100 to 200 bytes. The m i for the different levels are determined as a fraction r i of the total number of hashes on a particular block. For example, if we have 50 blocks on the second highest level (i =2), we might choose r 2 =0.2 which means that we use m 2 = r 2 50 = 10 erasure hashes on this level. Then we will be able to decode this second level successfully provided that at most 20% of the hashes on the highest level did not find a match in f old . Thus, by assuming some minimum rate of matches on the higher levels we can decrease the cost of hashes at the lower levels and hence afford to go to smaller block sizes on very similar files. We experimented with a number of choices of b max , b min , and the r i . We implemented the algorithm based on an implementation of systematic erasure codes by Rizzo, available at http://info.iet.unipi.it/#luigi/fec.html. The erasure code implementation is based on Vandermonde matrices, and achieves encoding and decoding rates of several MB per second. Given that the hashes are much smaller than the actual files, this translates to a file processing speed of tens to hundreds of MB/s. Thus, we do not expect coding to be a bottleneck in most cases. We chose the number of bits per hash as lg(n)+lg(y)+k for k =10, where y is the total number of hashes (top-level and erasure hashes) sent from client to server. We integrated two additional optimizations into the implementation, both of which are completely orthogonal to the erasure coding approach and very simple to add. First, we integrated decomposable hashes, first proposed in [33] and recently rediscovered in [37], which allow the hash of a child block to be computed from the hashes of its parent and its</text>
+      <text initialCol="1" llx="311.0" lly="640.0" urx="573.0" ury="735.0" pageNum="10">sibling, halving the number of hashes transmitted on all except the top level. In particular, we apply erasure coding only to left siblings and compute the hashes of the right siblings at the server after decoding left siblings. Second, we added the halfblock alignment approach from Subsection II-E. Alternatively, we could also integrate continuation hashes [37] instead of half-block alignments to get additional minor improvements, but this has not been implemented yet.</text>
+      <figure-marker initialCol="1" llx="311.0" lly="403.0" urx="571.0" ury="467.0" pageNum="10">Figure III.2. Results on gcc data with the best possible parameter settings for the following methods (from left to right): rsync, the optimized rsync from Subsection II-C, the erasure-code approach with decomposable hashes, the half-block alignment approach, the erasure-code approach with decomposable hashes and half-block alignment, and the optimized multi-round approach from [37]. Results on the left are for all files, while results on the right are only for changed files in the collection.</figure-marker>
+      <figure-marker initialCol="1" llx="311.0" lly="147.0" urx="571.0" ury="220.0" pageNum="10">Figure III.3. Results on emacs data with the best possible parameter settings for the following methods (from left to right): rsync, the optimized rsync from Subsection II-C, the erasure-code approach with decomposable hashes, the half-block alignment approach, the erasure-code approach with decomposable hashes and half-block alignment, and the optimized multi-round approach from [37]. Results on the left are for all files, while results on the right are only for changed files in the collection. Note that the y-axis starts from 2000 KB.</figure-marker>
+      <text initialCol="1" llx="311.0" lly="66.0" urx="573.0" ury="138.0" pageNum="10">In Figures III.2 and III.3 we show experimental results comparing the erasure-code approach to the various optimized methods discussed in this paper. For each method, we show the best result that we obtained. The result from [37] essentially provides a upper bound on what we can realistically hope to gain with a single-round approach, barring further</text>
+      <text initialCol="1" llx="48.0" lly="73.0" urx="310.0" ury="735.0" pageNum="11">breakthroughs in techniques. We see that the erasure-code based approach does about 10% better than the other approaches on gcc, but provides only negligible improvements on emacs. Recall that the two versions of gcc are more similar to each other than the emacs versions. The best block size for gcc was fairly large, around 700% bytes, since most matches were already found at such large block sizes and the cost of using smaller blocks would outweigh any benefits due to additional matches. The erasure-code approach allows us to effectively use smaller blocks in gcc without paying the full cost of each block, since many matches already occur at higher levels. We also show results for both collections were we only consider files that differ in the two versions. The motivation for this is that even in scenarios that use a single-round protocol, there is often an extra initial round of communication where client and server exchange lists of file names, last modification dates, and possibly file checksums in order to identify the files that need to be synchronized. As we see the results are not substantially different for this case. We note that one problem with the erasure-based approach is how to select the optimum setting of the parameters, i.e., the block sizes and the thresholds r i . We used for each method the best setting that we could find for each collection; this maybe gives erasure coding an advantage since there are more parameters and thus more knobs that we can tweak to optimize performance. It is an open problem to come up with good rules for choosing parameters, and possibly one could use an extra initial round to exchange statistics that allow a good choice of parameters for each file. The erasure-based approach presented here allows for a number of additional optimizations and could be used to design other new algorithms. For example, one could design protocols with two or more round-trips that first send a very small number of erasure hashes, and then send additional erasure hashes in the next round if needed to successfully decode the lower levels. Thus, instead of processing one level of blocks in each round, as the previous multi-round approaches do, this approach would simultaneously add redundancy to several levels until decoding succeeds on the other side. This idea could potentially also be generalized into a digital fountain approach [5] for broadcasting updated content to clients that may have different old versions. One could also try to combine erasure coding with error correcting codes where the positions of corrupted symbols are unknown to the decoder. The current algorithm chooses the bit strength of the hashes such that it is unlikely that there are any false matches at all in the entire file. This could be relaxed to a bit strength such that most matches are correct (even though there are likely to be some false matches in a larger file), if we use an error correcting code that can correct a few corrupted hashes due to false matches at the parent level. Thus, in this scenario a number of hashes would be known to be lost (erasure case), while a few others in unknown positions would be corrupted (ECC case). We believe there are other interesting protocols that can be designed with our approach.</text>
+      <section-marker initialCol="1" llx="392.0" lly="723.0" urx="492.0" ury="735.0" pageNum="11">IV. RELATED WORK</section-marker>
+      <text initialCol="1" llx="311.0" lly="162.0" urx="573.0" ury="719.0" pageNum="11">In the following, we give a brief summary of related work. The rsync algorithm proposed by Tridgell and MacKerras is described in [39], [41], and is the basis of the very widely used rsync open source tool. There are a number of theoretical studies of the file synchronization problem [8], [7], [23], [24]. In particular, Orlitsky [23], [24] presents almost tight bounds for the problem with varying numbers of communication phases, under some assumptions about the assumed file distance metric. As explained, these results typically require exponential time for decoding; while this is allowable under the standard model for communication complexity [14], it makes the algorithms impractical. Within this framework, [26] discusses a relationship between Error Correcting Codes and file synchronization. Various practical multi-round algorithms are proposed in [33], [8], [7], [10], [25], [15], [37], [22]. These algorithms are based on recursive partitioning of unmatched blocks, mostly in a breadth-first manner with the exception of [10]. The algorithms in [15], [22] send hashes from client to server, while the others send hashes in the other direction. Experimental results for multi-round algorithms are provided in [15], [25], [37], [22]. Some available open source tools for delta compression are described in [13], [16], [38], and an overview of delta compression and file synchronization techniques and their applications is given in [36]. Note that delta compression can be seen as a special case of file synchronization where the outdated file is known to the encoder. A number of authors have studied problems related to identifying disk pages, files, or data records that have been changed or added or deleted, or that differ between two or more replicas; see, e.g., [1], [4], [17], [18], [19], [20], [27], [33]. Common approaches for these problems are based on hashing or coding techniques. The problem setup differs from ours in that data is assumed to be partitioned into fixed units such as pages, records, or files, that are treated as atomic. Recent work on the set reconciliation problem in [20], [2], [35] also falls into this category. Very recent independent work by Chauhan and Trachtenberg [6] shows how to use set reconciliation techniques for file synchronization. Hash-based techniques similar to rsync have been explored by the OS and Systems community for purposes such as compression of network traffic [34], distributed file systems [21], distributed backup [9], and web caching [30]. These techniques use string fingerprinting techniques [12] to partition a data stream into blocks, as we did in Subsection II-D.</text>
+      <section-marker initialCol="1" llx="348.0" lly="142.0" urx="536.0" ury="154.0" pageNum="11">V. CONCLUSIONS AND OPEN QUESTIONS</section-marker>
+      <text initialCol="1" llx="311.0" lly="66.0" urx="573.0" ury="138.0" pageNum="11">In this paper, we have studied single-round protocols for file synchronization. Our main contribution has been a new approach based on the use of erasure codes. Using this approach, we have derived a single-round protocol that is feasible and communication-efficient with respect to a common file distance measure, and another protocol that shows promising</text>
+      <text initialCol="1" llx="48.0" lly="495.0" urx="309.0" ury="735.0" pageNum="12">improvements over rsync in experiments. We expect additional slight gains once we fully optimize the implementation and parameter settings. We hope to make a stable and highperformance version of the new practical algorithm available in the near future, as part of a library of file synchronization operations. We expect that our approach can be used to derive other interesting single- and multi-round protocols. It would be interesting to explore the trade-off between bandwidth consumption and the number of round-trips. We suspect that an approach with two or three rounds might do significantly better than the single-round approaches in this paper. Closely related to this problem is how to adaptively choose the best algorithm and parameter setting for a given pair of files, say by exchanging samples or other statistics at the start of the synchronization. In addition, there are a number of interesting open theoretical questions on file synchronization problems. The current communication bounds for feasible protocols are still a logarithmic factor from the lower bounds for most interesting distance metrics, even for multi-round protocols.</text>
+      <section-marker initialCol="1" llx="127.0" lly="474.0" urx="230.0" ury="486.0" pageNum="12">ACKNOWLEDGMENTS</section-marker>
+      <text initialCol="1" llx="48.0" lly="422.0" urx="309.0" ury="470.0" pageNum="12">This work was supported by NSF CAREER Award CCR0093400, NSF ITR Awards CNS-0325777 and IDM-0205647, and the Wireless Internet Center for Advanced Technology (WICAT) at Polytechnic University.</text>
+    </body>
+    <biblio>
+      <reference initialCol="1" llx="52.0" lly="369.0" urx="308.0" ury="397.0" pageNum="12" refID="p12x52.0y387.0">
+        <ref-marker initialCol="1" llx="52.0" lly="387.0" urx="307.0" ury="397.0" pageNum="12">[1]</ref-marker>
+        <authors initialCol="1" llx="52.0" lly="387.0" urx="307.0" ury="397.0" pageNum="12">
+          <author initialCol="1" llx="52.0" lly="387.0" urx="307.0" ury="397.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="387.0" urx="307.0" ury="397.0" pageNum="12">K.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="387.0" urx="307.0" ury="397.0" pageNum="12">Abdel-Ghaffar</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="52.0" lly="387.0" urx="307.0" ury="397.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="387.0" urx="307.0" ury="397.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="387.0" urx="307.0" ury="397.0" pageNum="12">El Abbadi.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="52.0" lly="378.0" urx="307.0" ury="397.0" pageNum="12">An optimal strategy for comparing file copies.</title>
+        <journal initialCol="1" llx="110.0" lly="378.0" urx="308.0" ury="388.0" pageNum="12">IEEE Transactions on Parallel and Distributed Systems,</journal>
+        <volume initialCol="1" llx="66.0" lly="369.0" urx="160.0" ury="379.0" pageNum="12">5</volume>
+        <number initialCol="1" llx="66.0" lly="369.0" urx="160.0" ury="379.0" pageNum="12">(1):</number>
+        <pages initialCol="1" llx="66.0" lly="369.0" urx="160.0" ury="379.0" pageNum="12">87--93,</pages>
+        <date initialCol="1" llx="66.0" lly="369.0" urx="160.0" ury="379.0" pageNum="12">January 1994.</date>
+      </reference>
+      <reference initialCol="1" llx="52.0" lly="333.0" urx="308.0" ury="370.0" pageNum="12" refID="p12x52.0y360.0">
+        <ref-marker initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">[2]</ref-marker>
+        <authors initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">
+          <author initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">S.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">Agarwal,</author-last>
+          </author>
+          <author initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">D.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">Starobinski,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="360.0" urx="308.0" ury="370.0" pageNum="12">Trachtenberg.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="52.0" lly="351.0" urx="308.0" ury="370.0" pageNum="12">On the scalability of data synchronization protocols for PDAs and mobile devices.</title>
+        <conference initialCol="1" llx="66.0" lly="333.0" urx="308.0" ury="361.0" pageNum="12">IEEE Network Magazine, special issue on Scalability in Communication Networks,</conference>
+        <date initialCol="1" llx="101.0" lly="333.0" urx="144.0" ury="343.0" pageNum="12">July 2002.</date>
+      </reference>
+      <reference initialCol="1" llx="52.0" lly="307.0" urx="308.0" ury="334.0" pageNum="12" refID="p12x52.0y324.0">
+        <ref-marker initialCol="1" llx="52.0" lly="324.0" urx="288.0" ury="334.0" pageNum="12">[3]</ref-marker>
+        <authors initialCol="1" llx="52.0" lly="324.0" urx="288.0" ury="334.0" pageNum="12">
+          <author initialCol="1" llx="52.0" lly="324.0" urx="288.0" ury="334.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="324.0" urx="288.0" ury="334.0" pageNum="12">S.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="324.0" urx="288.0" ury="334.0" pageNum="12">Balasubramaniam</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="52.0" lly="324.0" urx="288.0" ury="334.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="324.0" urx="288.0" ury="334.0" pageNum="12">B.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="324.0" urx="288.0" ury="334.0" pageNum="12">Pierce.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="52.0" lly="324.0" urx="288.0" ury="334.0" pageNum="12">What is a file synchronizer?</title>
+        <conference initialCol="1" llx="52.0" lly="315.0" urx="308.0" ury="334.0" pageNum="12">In Proc. of the ACM/IEEE MOBICOM</conference>
+        <date initialCol="1" llx="66.0" lly="315.0" urx="227.0" ury="325.0" pageNum="12">'98</date>
+        <conference initialCol="1" llx="66.0" lly="315.0" urx="227.0" ury="325.0" pageNum="12">Conference,</conference>
+        <pages initialCol="1" llx="222.0" lly="315.0" urx="307.0" ury="325.0" pageNum="12">pages 98--108,</pages>
+        <date initialCol="1" llx="66.0" lly="307.0" urx="307.0" ury="325.0" pageNum="12">October 1998.</date>
+      </reference>
+      <reference initialCol="1" llx="52.0" lly="280.0" urx="308.0" ury="307.0" pageNum="12" refID="p12x52.0y298.0">
+        <ref-marker initialCol="1" llx="52.0" lly="298.0" urx="307.0" ury="307.0" pageNum="12">[4]</ref-marker>
+        <authors initialCol="1" llx="52.0" lly="298.0" urx="307.0" ury="307.0" pageNum="12">
+          <author initialCol="1" llx="52.0" lly="298.0" urx="307.0" ury="307.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="298.0" urx="307.0" ury="307.0" pageNum="12">D.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="298.0" urx="307.0" ury="307.0" pageNum="12">Barbara</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="52.0" lly="298.0" urx="307.0" ury="307.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="298.0" urx="307.0" ury="307.0" pageNum="12">R.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="298.0" urx="307.0" ury="307.0" pageNum="12">Lipton.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="52.0" lly="289.0" urx="307.0" ury="307.0" pageNum="12">A class of randomized strategies for lowcost comparison of file copies.</title>
+        <journal initialCol="1" llx="66.0" lly="280.0" urx="308.0" ury="298.0" pageNum="12">IEEE Transactions on Parallel and Distributed Systems,</journal>
+        <volume initialCol="1" llx="135.0" lly="280.0" urx="229.0" ury="290.0" pageNum="12">2</volume>
+        <number initialCol="1" llx="135.0" lly="280.0" urx="229.0" ury="290.0" pageNum="12">(2):</number>
+        <pages initialCol="1" llx="135.0" lly="280.0" urx="229.0" ury="290.0" pageNum="12">160--170,</pages>
+        <date initialCol="1" llx="135.0" lly="280.0" urx="229.0" ury="290.0" pageNum="12">April 1991.</date>
+      </reference>
+      <reference initialCol="1" llx="52.0" lly="253.0" urx="308.0" ury="281.0" pageNum="12" refID="p12x52.0y271.0">
+        <ref-marker initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">[5]</ref-marker>
+        <authors initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">
+          <author initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">J.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">Byers,</author-last>
+          </author>
+          <author initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">M.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">Luby,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">M.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="271.0" urx="213.0" ury="281.0" pageNum="12">Mitzenmacher.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="66.0" lly="262.0" urx="307.0" ury="281.0" pageNum="12">A digital fountain approach to the reliable distribution of bulk data.</title>
+        <journal initialCol="1" llx="66.0" lly="253.0" urx="308.0" ury="271.0" pageNum="12">IEEE Journal on Selected Areas in Communications,</journal>
+        <pages initialCol="1" llx="134.0" lly="253.0" urx="250.0" ury="263.0" pageNum="12">pages 1528--1540,</pages>
+        <date initialCol="1" llx="134.0" lly="253.0" urx="250.0" ury="263.0" pageNum="12">October 2002.</date>
+      </reference>
+      <reference initialCol="1" llx="52.0" lly="235.0" urx="308.0" ury="254.0" pageNum="12" refID="p12x52.0y244.0">
+        <ref-marker initialCol="1" llx="52.0" lly="244.0" urx="186.0" ury="254.0" pageNum="12">[6]</ref-marker>
+        <authors initialCol="1" llx="52.0" lly="244.0" urx="186.0" ury="254.0" pageNum="12">
+          <author initialCol="1" llx="52.0" lly="244.0" urx="186.0" ury="254.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="244.0" urx="186.0" ury="254.0" pageNum="12">V.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="244.0" urx="186.0" ury="254.0" pageNum="12">Chauhan</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="52.0" lly="244.0" urx="186.0" ury="254.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="244.0" urx="186.0" ury="254.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="244.0" urx="186.0" ury="254.0" pageNum="12">Trachtenberg.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="182.0" lly="244.0" urx="278.0" ury="254.0" pageNum="12">Reconciliation puzzles.</title>
+        <conference initialCol="1" llx="66.0" lly="235.0" urx="308.0" ury="254.0" pageNum="12">In Proc. of the IEEE GlobeCom Conference,</conference>
+        <date initialCol="1" llx="178.0" lly="235.0" urx="275.0" ury="245.0" pageNum="12">November 2004.</date>
+        <note initialCol="1" llx="178.0" lly="235.0" urx="275.0" ury="245.0" pageNum="12">to appear.</note>
+      </reference>
+      <reference initialCol="1" llx="52.0" lly="217.0" urx="308.0" ury="236.0" pageNum="12" refID="p12x52.0y226.0">
+        <ref-marker initialCol="1" llx="52.0" lly="226.0" urx="117.0" ury="236.0" pageNum="12">[7]</ref-marker>
+        <authors initialCol="1" llx="52.0" lly="226.0" urx="117.0" ury="236.0" pageNum="12">
+          <author initialCol="1" llx="52.0" lly="226.0" urx="117.0" ury="236.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="226.0" urx="117.0" ury="236.0" pageNum="12">G.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="226.0" urx="117.0" ury="236.0" pageNum="12">Cormode.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="114.0" lly="226.0" urx="229.0" ury="236.0" pageNum="12">Sequence Distance Embeddings.</title>
+        <thesis initialCol="1" llx="225.0" lly="226.0" urx="308.0" ury="236.0" pageNum="12">PhD thesis,</thesis>
+        <institution initialCol="1" llx="66.0" lly="217.0" urx="308.0" ury="236.0" pageNum="12">University of Warwick,</institution>
+        <date initialCol="1" llx="66.0" lly="217.0" urx="163.0" ury="227.0" pageNum="12">January 2003.</date>
+      </reference>
+      <reference initialCol="1" llx="52.0" lly="190.0" urx="308.0" ury="218.0" pageNum="12" refID="p12x52.0y208.0">
+        <ref-marker initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">[8]</ref-marker>
+        <authors initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">
+          <author initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">G.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">Cormode,</author-last>
+          </author>
+          <author initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">M.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">Paterson,</author-last>
+          </author>
+          <author initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">S.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">Sahinalp,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">U.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="208.0" urx="307.0" ury="218.0" pageNum="12">Vishkin.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="52.0" lly="199.0" urx="307.0" ury="218.0" pageNum="12">Communication complexity of document exchange.</title>
+        <conference initialCol="1" llx="66.0" lly="190.0" urx="308.0" ury="209.0" pageNum="12">In Proc. of the ACM--SIAM Symp. on Discrete Algorithms,</conference>
+        <date initialCol="1" llx="147.0" lly="190.0" urx="201.0" ury="200.0" pageNum="12">January 2000.</date>
+      </reference>
+      <reference initialCol="1" llx="52.0" lly="163.0" urx="308.0" ury="191.0" pageNum="12" refID="p12x52.0y181.0">
+        <ref-marker initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">[9]</ref-marker>
+        <authors initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">
+          <author initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">L.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">Cox,</author-last>
+          </author>
+          <author initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">C.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">Murray,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">
+            <author-first initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">B.</author-first>
+            <author-last initialCol="1" llx="52.0" lly="181.0" urx="307.0" ury="191.0" pageNum="12">Noble.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="52.0" lly="172.0" urx="307.0" ury="191.0" pageNum="12">Pastiche: Making backup cheap and easy.</title>
+        <conference initialCol="1" llx="66.0" lly="163.0" urx="308.0" ury="182.0" pageNum="12">In Proc. of the 5th Symp. on Operating System Design and Implementation,</conference>
+        <date initialCol="1" llx="121.0" lly="163.0" urx="183.0" ury="173.0" pageNum="12">December 2002.</date>
+      </reference>
+      <reference initialCol="1" llx="48.0" lly="136.0" urx="308.0" ury="164.0" pageNum="12" refID="p12x48.0y154.0">
+        <ref-marker initialCol="1" llx="48.0" lly="154.0" urx="307.0" ury="164.0" pageNum="12">[10]</ref-marker>
+        <authors initialCol="1" llx="48.0" lly="154.0" urx="307.0" ury="164.0" pageNum="12">
+          <author initialCol="1" llx="48.0" lly="154.0" urx="307.0" ury="164.0" pageNum="12">
+            <author-first initialCol="1" llx="48.0" lly="154.0" urx="307.0" ury="164.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="48.0" lly="154.0" urx="307.0" ury="164.0" pageNum="12">Evfimievski.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="48.0" lly="145.0" urx="307.0" ury="164.0" pageNum="12">A probabilistic algorithm for updating files over a communication link.</title>
+        <conference initialCol="1" llx="66.0" lly="136.0" urx="308.0" ury="155.0" pageNum="12">In Proc. of the 9th Annual ACM-SIAM Symposium on Discrete Algorithms,</conference>
+        <pages initialCol="1" llx="147.0" lly="136.0" urx="254.0" ury="146.0" pageNum="12">pages 300--305,</pages>
+        <date initialCol="1" llx="147.0" lly="136.0" urx="254.0" ury="146.0" pageNum="12">January 1998.</date>
+      </reference>
+      <reference initialCol="1" llx="48.0" lly="118.0" urx="308.0" ury="137.0" pageNum="12" refID="p12x48.0y127.0">
+        <ref-marker initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">[11]</ref-marker>
+        <authors initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">
+          <author initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">
+            <author-first initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">J.</author-first>
+            <author-last initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">Hunt,</author-last>
+          </author>
+          <author initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">
+            <author-first initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">K.-P.</author-first>
+            <author-last initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">Vo,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">
+            <author-first initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">W.</author-first>
+            <author-last initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">Tichy.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="48.0" lly="127.0" urx="307.0" ury="137.0" pageNum="12">Delta algorithms: An empirical analysis.</title>
+        <journal initialCol="1" llx="66.0" lly="118.0" urx="279.0" ury="128.0" pageNum="12">ACM Transactions on Software Engineering and Methodology,</journal>
+        <volume initialCol="1" llx="273.0" lly="118.0" urx="308.0" ury="128.0" pageNum="12">7,</volume>
+        <date initialCol="1" llx="273.0" lly="118.0" urx="308.0" ury="128.0" pageNum="12">1998.</date>
+      </reference>
+      <reference initialCol="1" llx="48.0" lly="91.0" urx="308.0" ury="119.0" pageNum="12" refID="p12x48.0y109.0">
+        <ref-marker initialCol="1" llx="48.0" lly="109.0" urx="307.0" ury="119.0" pageNum="12">[12]</ref-marker>
+        <authors initialCol="1" llx="48.0" lly="109.0" urx="307.0" ury="119.0" pageNum="12">
+          <author initialCol="1" llx="48.0" lly="109.0" urx="307.0" ury="119.0" pageNum="12">
+            <author-first initialCol="1" llx="48.0" lly="109.0" urx="307.0" ury="119.0" pageNum="12">R.</author-first>
+            <author-last initialCol="1" llx="48.0" lly="109.0" urx="307.0" ury="119.0" pageNum="12">Karp</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="48.0" lly="109.0" urx="307.0" ury="119.0" pageNum="12">
+            <author-first initialCol="1" llx="48.0" lly="109.0" urx="307.0" ury="119.0" pageNum="12">M.</author-first>
+            <author-last initialCol="1" llx="48.0" lly="109.0" urx="307.0" ury="119.0" pageNum="12">Rabin.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="48.0" lly="100.0" urx="307.0" ury="119.0" pageNum="12">Efficient randomized pattern-matching algorithms.</title>
+        <journal initialCol="1" llx="96.0" lly="100.0" urx="254.0" ury="110.0" pageNum="12">IBM Journal of Research and Development,</journal>
+        <volume initialCol="1" llx="250.0" lly="100.0" urx="308.0" ury="110.0" pageNum="12">31</volume>
+        <number initialCol="1" llx="250.0" lly="100.0" urx="308.0" ury="110.0" pageNum="12">(2):</number>
+        <pages initialCol="1" llx="250.0" lly="100.0" urx="308.0" ury="110.0" pageNum="12">249--260,</pages>
+        <date initialCol="1" llx="66.0" lly="91.0" urx="93.0" ury="101.0" pageNum="12">1987.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="706.0" urx="571.0" ury="734.0" pageNum="12" refID="p12x311.0y724.0">
+        <ref-marker initialCol="1" llx="311.0" lly="724.0" urx="571.0" ury="734.0" pageNum="12">[13]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="724.0" urx="571.0" ury="734.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="724.0" urx="571.0" ury="734.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="724.0" urx="571.0" ury="734.0" pageNum="12">D.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="724.0" urx="571.0" ury="734.0" pageNum="12">Korn</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="724.0" urx="571.0" ury="734.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="724.0" urx="571.0" ury="734.0" pageNum="12">K.-P.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="724.0" urx="571.0" ury="734.0" pageNum="12">Vo.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="715.0" urx="571.0" ury="734.0" pageNum="12">Engineering a differencing and compression data format.</title>
+        <conference initialCol="1" llx="329.0" lly="715.0" urx="571.0" ury="725.0" pageNum="12">In Proceedings of the Usenix Annual Technical Conference,</conference>
+        <pages initialCol="1" llx="329.0" lly="706.0" urx="427.0" ury="716.0" pageNum="12">pages 219--228,</pages>
+        <date initialCol="1" llx="329.0" lly="706.0" urx="427.0" ury="716.0" pageNum="12">June 2002.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="688.0" urx="571.0" ury="707.0" pageNum="12" refID="p12x311.0y697.0">
+        <ref-marker initialCol="1" llx="311.0" lly="697.0" urx="433.0" ury="707.0" pageNum="12">[14]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="697.0" urx="433.0" ury="707.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="697.0" urx="433.0" ury="707.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="697.0" urx="433.0" ury="707.0" pageNum="12">E.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="697.0" urx="433.0" ury="707.0" pageNum="12">Kushilevitz</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="697.0" urx="433.0" ury="707.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="697.0" urx="433.0" ury="707.0" pageNum="12">N.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="697.0" urx="433.0" ury="707.0" pageNum="12">Nisan.</author-last>
+          </author>
+        </authors>
+        <booktitle initialCol="1" llx="430.0" lly="697.0" urx="530.0" ury="707.0" pageNum="12">Communication Complexity.</booktitle>
+        <publisher initialCol="1" llx="329.0" lly="688.0" urx="571.0" ury="707.0" pageNum="12">Cambridge University Press,</publisher>
+        <date initialCol="1" llx="329.0" lly="688.0" urx="413.0" ury="698.0" pageNum="12">1997.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="679.0" urx="571.0" ury="689.0" pageNum="12" refID="p12x311.0y679.0">
+        <ref-marker initialCol="1" llx="311.0" lly="679.0" urx="571.0" ury="689.0" pageNum="12">[15]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="679.0" urx="571.0" ury="689.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="679.0" urx="571.0" ury="689.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="679.0" urx="571.0" ury="689.0" pageNum="12">J.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="679.0" urx="571.0" ury="689.0" pageNum="12">Langford.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="679.0" urx="571.0" ury="689.0" pageNum="12">Multiround rsync.</title>
+        <date initialCol="1" llx="311.0" lly="679.0" urx="571.0" ury="689.0" pageNum="12">January 2001.</date>
+        <note initialCol="1" llx="311.0" lly="679.0" urx="571.0" ury="689.0" pageNum="12">Unpublished manuscript.</note>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="661.0" urx="570.0" ury="680.0" pageNum="12" refID="p12x311.0y670.0">
+        <ref-marker initialCol="1" llx="311.0" lly="670.0" urx="385.0" ury="680.0" pageNum="12">[16]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="670.0" urx="385.0" ury="680.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="670.0" urx="385.0" ury="680.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="670.0" urx="385.0" ury="680.0" pageNum="12">J.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="670.0" urx="385.0" ury="680.0" pageNum="12">MacDonald.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="381.0" lly="670.0" urx="570.0" ury="680.0" pageNum="12">File system support for delta compression.</title>
+        <thesis initialCol="1" llx="381.0" lly="670.0" urx="570.0" ury="680.0" pageNum="12">MS Thesis,</thesis>
+        <institution initialCol="1" llx="329.0" lly="661.0" urx="420.0" ury="671.0" pageNum="12">UC Berkeley,</institution>
+        <date initialCol="1" llx="329.0" lly="661.0" urx="420.0" ury="671.0" pageNum="12">May 2000.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="634.0" urx="571.0" ury="662.0" pageNum="12" refID="p12x311.0y652.0">
+        <ref-marker initialCol="1" llx="311.0" lly="652.0" urx="571.0" ury="662.0" pageNum="12">[17]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="652.0" urx="571.0" ury="662.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="652.0" urx="571.0" ury="662.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="652.0" urx="571.0" ury="662.0" pageNum="12">T.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="652.0" urx="571.0" ury="662.0" pageNum="12">Madej.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="652.0" urx="571.0" ury="662.0" pageNum="12">An application of group testing to the file comparison problem.</title>
+        <conference initialCol="1" llx="329.0" lly="643.0" urx="550.0" ury="653.0" pageNum="12">In Proc. of the 9th Int. Conf. on Distributed Computing Systems,</conference>
+        <pages initialCol="1" llx="329.0" lly="634.0" urx="571.0" ury="653.0" pageNum="12">pages 237--243,</pages>
+        <date initialCol="1" llx="329.0" lly="634.0" urx="406.0" ury="644.0" pageNum="12">June 1989.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="616.0" urx="570.0" ury="635.0" pageNum="12" refID="p12x311.0y625.0">
+        <ref-marker initialCol="1" llx="311.0" lly="625.0" urx="570.0" ury="635.0" pageNum="12">[18]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="625.0" urx="570.0" ury="635.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="625.0" urx="570.0" ury="635.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="625.0" urx="570.0" ury="635.0" pageNum="12">J.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="625.0" urx="570.0" ury="635.0" pageNum="12">Metzner.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="616.0" urx="570.0" ury="635.0" pageNum="12">A parity structure for large remotely located replicated data files.</title>
+        <journal initialCol="1" llx="348.0" lly="616.0" urx="468.0" ury="626.0" pageNum="12">IEEE Transactions on Computers,</journal>
+        <volume initialCol="1" llx="463.0" lly="616.0" urx="567.0" ury="626.0" pageNum="12">32</volume>
+        <number initialCol="1" llx="463.0" lly="616.0" urx="567.0" ury="626.0" pageNum="12">(8):</number>
+        <pages initialCol="1" llx="463.0" lly="616.0" urx="567.0" ury="626.0" pageNum="12">727--730,</pages>
+        <date initialCol="1" llx="463.0" lly="616.0" urx="567.0" ury="626.0" pageNum="12">August 1983.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="598.0" urx="571.0" ury="617.0" pageNum="12" refID="p12x311.0y607.0">
+        <ref-marker initialCol="1" llx="311.0" lly="607.0" urx="519.0" ury="617.0" pageNum="12">[19]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="607.0" urx="519.0" ury="617.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="607.0" urx="519.0" ury="617.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="607.0" urx="519.0" ury="617.0" pageNum="12">J.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="607.0" urx="519.0" ury="617.0" pageNum="12">Metzner.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="607.0" urx="519.0" ury="617.0" pageNum="12">Efficient replicated remote file comparison.</title>
+        <journal initialCol="1" llx="329.0" lly="598.0" urx="571.0" ury="617.0" pageNum="12">IEEE Transactions on Computers,</journal>
+        <volume initialCol="1" llx="398.0" lly="598.0" urx="494.0" ury="608.0" pageNum="12">40</volume>
+        <number initialCol="1" llx="398.0" lly="598.0" urx="494.0" ury="608.0" pageNum="12">(5):</number>
+        <pages initialCol="1" llx="398.0" lly="598.0" urx="494.0" ury="608.0" pageNum="12">651--659,</pages>
+        <date initialCol="1" llx="398.0" lly="598.0" urx="494.0" ury="608.0" pageNum="12">May 1991.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="571.0" urx="571.0" ury="599.0" pageNum="12" refID="p12x311.0y589.0">
+        <ref-marker initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">[20]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">Y.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">Minsky,</author-last>
+          </author>
+          <author initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">Trachtenberg,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">R.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="589.0" urx="571.0" ury="599.0" pageNum="12">Zippel.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="580.0" urx="571.0" ury="599.0" pageNum="12">Set reconciliation with almost optimal communication complexity.</title>
+        <tech initialCol="1" llx="329.0" lly="571.0" urx="571.0" ury="590.0" pageNum="12">Technical Report TR20001813,</tech>
+        <institution initialCol="1" llx="329.0" lly="571.0" urx="441.0" ury="581.0" pageNum="12">Cornell University,</institution>
+        <date initialCol="1" llx="329.0" lly="571.0" urx="441.0" ury="581.0" pageNum="12">2000.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="544.0" urx="571.0" ury="572.0" pageNum="12" refID="p12x311.0y562.0">
+        <ref-marker initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">[21]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">Muthitacharoen,</author-last>
+          </author>
+          <author initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">B.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">Chen,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">D.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="562.0" urx="502.0" ury="572.0" pageNum="12">Mazi` eres.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="329.0" lly="553.0" urx="571.0" ury="572.0" pageNum="12">A low-bandwidth network file system.</title>
+        <conference initialCol="1" llx="329.0" lly="544.0" urx="571.0" ury="563.0" pageNum="12">In Proc. of the 18th ACM Symp. on Operating Systems Principles,</conference>
+        <pages initialCol="1" llx="395.0" lly="544.0" urx="503.0" ury="554.0" pageNum="12">pages 174--187,</pages>
+        <date initialCol="1" llx="395.0" lly="544.0" urx="503.0" ury="554.0" pageNum="12">October 2001.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="526.0" urx="571.0" ury="545.0" pageNum="12" refID="p12x311.0y535.0">
+        <ref-marker initialCol="1" llx="311.0" lly="535.0" urx="571.0" ury="545.0" pageNum="12">[22]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="535.0" urx="571.0" ury="545.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="535.0" urx="571.0" ury="545.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="535.0" urx="571.0" ury="545.0" pageNum="12">P.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="535.0" urx="571.0" ury="545.0" pageNum="12">Noel.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="535.0" urx="571.0" ury="545.0" pageNum="12">An efficient algorithm for file synchronization.</title>
+        <thesis initialCol="1" llx="311.0" lly="535.0" urx="571.0" ury="545.0" pageNum="12">Master's thesis,</thesis>
+        <institution initialCol="1" llx="329.0" lly="526.0" urx="434.0" ury="536.0" pageNum="12">Polytechnic University,</institution>
+        <date initialCol="1" llx="329.0" lly="526.0" urx="434.0" ury="536.0" pageNum="12">2004.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="500.0" urx="571.0" ury="527.0" pageNum="12" refID="p12x311.0y518.0">
+        <ref-marker initialCol="1" llx="311.0" lly="518.0" urx="571.0" ury="527.0" pageNum="12">[23]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="518.0" urx="571.0" ury="527.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="518.0" urx="571.0" ury="527.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="518.0" urx="571.0" ury="527.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="518.0" urx="571.0" ury="527.0" pageNum="12">Orlitsky.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="509.0" urx="571.0" ury="527.0" pageNum="12">Worst-case interactive communication II: Two messages are not optimal.</title>
+        <journal initialCol="1" llx="370.0" lly="509.0" urx="515.0" ury="518.0" pageNum="12">IEEE Transactions on Information Theory,</journal>
+        <volume initialCol="1" llx="509.0" lly="509.0" urx="571.0" ury="518.0" pageNum="12">37</volume>
+        <number initialCol="1" llx="509.0" lly="509.0" urx="571.0" ury="518.0" pageNum="12">(4):</number>
+        <pages initialCol="1" llx="509.0" lly="509.0" urx="571.0" ury="518.0" pageNum="12">995--1005,</pages>
+        <date initialCol="1" llx="329.0" lly="500.0" urx="372.0" ury="509.0" pageNum="12">July 1991.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="482.0" urx="570.0" ury="501.0" pageNum="12" refID="p12x311.0y491.0">
+        <ref-marker initialCol="1" llx="311.0" lly="491.0" urx="570.0" ury="501.0" pageNum="12">[24]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="491.0" urx="570.0" ury="501.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="491.0" urx="570.0" ury="501.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="491.0" urx="570.0" ury="501.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="491.0" urx="570.0" ury="501.0" pageNum="12">Orlitsky.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="482.0" urx="570.0" ury="501.0" pageNum="12">Interactive communication of balanced distributions and of correlated files.</title>
+        <journal initialCol="1" llx="383.0" lly="482.0" urx="497.0" ury="491.0" pageNum="12">SIAM Journal of Discrete Math,</journal>
+        <volume initialCol="1" llx="491.0" lly="482.0" urx="566.0" ury="492.0" pageNum="12">6</volume>
+        <number initialCol="1" llx="491.0" lly="482.0" urx="566.0" ury="492.0" pageNum="12">(4):</number>
+        <pages initialCol="1" llx="491.0" lly="482.0" urx="566.0" ury="492.0" pageNum="12">548--564,</pages>
+        <date initialCol="1" llx="491.0" lly="482.0" urx="566.0" ury="492.0" pageNum="12">1993.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="464.0" urx="571.0" ury="483.0" pageNum="12" refID="p12x311.0y473.0">
+        <ref-marker initialCol="1" llx="311.0" lly="473.0" urx="448.0" ury="483.0" pageNum="12">[25]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="473.0" urx="448.0" ury="483.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="473.0" urx="448.0" ury="483.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="473.0" urx="448.0" ury="483.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="473.0" urx="448.0" ury="483.0" pageNum="12">Orlitsky</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="473.0" urx="448.0" ury="483.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="473.0" urx="448.0" ury="483.0" pageNum="12">K.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="473.0" urx="448.0" ury="483.0" pageNum="12">Viswanathan.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="329.0" lly="464.0" urx="570.0" ury="483.0" pageNum="12">Practical algorithms for interactive communication.</title>
+        <conference initialCol="1" llx="329.0" lly="464.0" urx="533.0" ury="474.0" pageNum="12">In IEEE Int. Symp. on Information Theory,</conference>
+        <date initialCol="1" llx="527.0" lly="464.0" urx="571.0" ury="474.0" pageNum="12">June 2001.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="437.0" urx="571.0" ury="465.0" pageNum="12" refID="p12x311.0y455.0">
+        <ref-marker initialCol="1" llx="311.0" lly="455.0" urx="571.0" ury="465.0" pageNum="12">[26]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="455.0" urx="571.0" ury="465.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="455.0" urx="571.0" ury="465.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="455.0" urx="571.0" ury="465.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="455.0" urx="571.0" ury="465.0" pageNum="12">Orlitsky</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="455.0" urx="571.0" ury="465.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="455.0" urx="571.0" ury="465.0" pageNum="12">K.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="455.0" urx="571.0" ury="465.0" pageNum="12">Viswanathan.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="446.0" urx="571.0" ury="465.0" pageNum="12">One-way communication and errorcorrecting codes.</title>
+        <conference initialCol="1" llx="329.0" lly="446.0" urx="571.0" ury="456.0" pageNum="12">In Proc. of the</conference>
+        <date initialCol="1" llx="398.0" lly="446.0" urx="571.0" ury="456.0" pageNum="12">2002</date>
+        <conference initialCol="1" llx="329.0" lly="437.0" urx="571.0" ury="456.0" pageNum="12">IEEE Int. Symp. on Information Theory,</conference>
+        <pages initialCol="1" llx="357.0" lly="437.0" urx="435.0" ury="447.0" pageNum="12">page 394,</pages>
+        <date initialCol="1" llx="357.0" lly="437.0" urx="435.0" ury="447.0" pageNum="12">June 2002.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="410.0" urx="571.0" ury="438.0" pageNum="12" refID="p12x311.0y428.0">
+        <ref-marker initialCol="1" llx="311.0" lly="428.0" urx="571.0" ury="438.0" pageNum="12">[27]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="428.0" urx="571.0" ury="438.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="428.0" urx="571.0" ury="438.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="428.0" urx="571.0" ury="438.0" pageNum="12">C.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="428.0" urx="571.0" ury="438.0" pageNum="12">Park</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="428.0" urx="571.0" ury="438.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="428.0" urx="571.0" ury="438.0" pageNum="12">J.</author-first>
+            <author-middle initialCol="1" llx="311.0" lly="428.0" urx="571.0" ury="438.0" pageNum="12">J.</author-middle>
+            <author-last initialCol="1" llx="311.0" lly="428.0" urx="571.0" ury="438.0" pageNum="12">Metzner.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="419.0" urx="571.0" ury="438.0" pageNum="12">Efficient location of discrepancies in multiple replicated large files.</title>
+        <journal initialCol="1" llx="329.0" lly="410.0" urx="571.0" ury="429.0" pageNum="12">IEEE Transactions on Parallel and Distributed Systems,</journal>
+        <volume initialCol="1" llx="359.0" lly="410.0" urx="455.0" ury="420.0" pageNum="12">13</volume>
+        <number initialCol="1" llx="359.0" lly="410.0" urx="455.0" ury="420.0" pageNum="12">(6):</number>
+        <pages initialCol="1" llx="359.0" lly="410.0" urx="455.0" ury="420.0" pageNum="12">597--610,</pages>
+        <date initialCol="1" llx="359.0" lly="410.0" urx="455.0" ury="420.0" pageNum="12">June 2002.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="392.0" urx="571.0" ury="411.0" pageNum="12" refID="p12x311.0y401.0">
+        <ref-marker initialCol="1" llx="311.0" lly="401.0" urx="345.0" ury="411.0" pageNum="12">[28]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="401.0" urx="571.0" ury="411.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="401.0" urx="571.0" ury="411.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="401.0" urx="345.0" ury="411.0" pageNum="12">B.</author-first>
+            <author-last initialCol="1" llx="358.0" lly="401.0" urx="571.0" ury="411.0" pageNum="12">Pierce.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="358.0" lly="401.0" urx="571.0" ury="411.0" pageNum="12">Unison file synchronizer.</title>
+        <web initialCol="1" llx="331.0" lly="392.0" urx="539.0" ury="401.0" pageNum="12">http://www.cis.upenn.edu/#bcpierce/unison/.</web>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="365.0" urx="571.0" ury="393.0" pageNum="12" refID="p12x311.0y383.0">
+        <ref-marker initialCol="1" llx="311.0" lly="383.0" urx="571.0" ury="393.0" pageNum="12">[29]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="383.0" urx="571.0" ury="393.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="383.0" urx="571.0" ury="393.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="383.0" urx="571.0" ury="393.0" pageNum="12">N.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="383.0" urx="571.0" ury="393.0" pageNum="12">Ramsey</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="383.0" urx="571.0" ury="393.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="383.0" urx="571.0" ury="393.0" pageNum="12">E.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="383.0" urx="571.0" ury="393.0" pageNum="12">Csirmaz.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="374.0" urx="571.0" ury="393.0" pageNum="12">An algebraic approach to file synchronization.</title>
+        <conference initialCol="1" llx="329.0" lly="365.0" urx="571.0" ury="384.0" pageNum="12">In Proc. of the 9th ACM Int. Symp. on Foundations of Software Engineering,</conference>
+        <pages initialCol="1" llx="374.0" lly="365.0" urx="453.0" ury="375.0" pageNum="12">pages 175--185,</pages>
+        <date initialCol="1" llx="374.0" lly="365.0" urx="453.0" ury="375.0" pageNum="12">2001.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="347.0" urx="571.0" ury="366.0" pageNum="12" refID="p12x311.0y356.0">
+        <ref-marker initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">[30]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">S.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">Rhea,</author-last>
+          </author>
+          <author initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">K.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">Liang,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">E.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="356.0" urx="451.0" ury="366.0" pageNum="12">Brewer.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="447.0" lly="356.0" urx="551.0" ury="366.0" pageNum="12">Value-based web caching.</title>
+        <conference initialCol="1" llx="329.0" lly="347.0" urx="571.0" ury="366.0" pageNum="12">In Proc. of the 12th Int. World Wide Web Conference,</conference>
+        <date initialCol="1" llx="480.0" lly="347.0" urx="523.0" ury="357.0" pageNum="12">May 2003.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="329.0" urx="571.0" ury="348.0" pageNum="12" refID="p12x311.0y338.0">
+        <ref-marker initialCol="1" llx="311.0" lly="338.0" urx="571.0" ury="348.0" pageNum="12">[31]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="338.0" urx="571.0" ury="348.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="338.0" urx="571.0" ury="348.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="338.0" urx="571.0" ury="348.0" pageNum="12">L.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="338.0" urx="571.0" ury="348.0" pageNum="12">Rizzo.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="329.0" urx="571.0" ury="348.0" pageNum="12">Effective erasure codes for reliable computer communication protocols.</title>
+        <journal initialCol="1" llx="365.0" lly="329.0" urx="486.0" ury="339.0" pageNum="12">Computer Communication Review,</journal>
+        <date initialCol="1" llx="481.0" lly="329.0" urx="527.0" ury="339.0" pageNum="12">April 1997.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="302.0" urx="571.0" ury="330.0" pageNum="12" refID="p12x311.0y320.0">
+        <ref-marker initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">[32]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">S.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">Schleimer,</author-last>
+          </author>
+          <author initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">D.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">Wilkerson,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="320.0" urx="571.0" ury="330.0" pageNum="12">Aiken.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="311.0" urx="571.0" ury="330.0" pageNum="12">Winnowing: Local algorithms for document fingerprinting.</title>
+        <conference initialCol="1" llx="329.0" lly="302.0" urx="571.0" ury="321.0" pageNum="12">In Proc. of the 2003 ACM SIGMOD Int. Conf. on Management of Data,</conference>
+        <pages initialCol="1" llx="434.0" lly="302.0" urx="506.0" ury="312.0" pageNum="12">pages 76--85,</pages>
+        <date initialCol="1" llx="434.0" lly="302.0" urx="506.0" ury="312.0" pageNum="12">2003.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="275.0" urx="571.0" ury="303.0" pageNum="12" refID="p12x311.0y293.0">
+        <ref-marker initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">[33]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">T.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">Schwarz,</author-last>
+          </author>
+          <author initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">R.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">Bowdidge,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">W.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="293.0" urx="486.0" ury="303.0" pageNum="12">Burkhard.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="329.0" lly="284.0" urx="571.0" ury="303.0" pageNum="12">Low cost comparison of file copies.</title>
+        <conference initialCol="1" llx="329.0" lly="275.0" urx="571.0" ury="294.0" pageNum="12">In Proc. of the 10th Int. Conf. on Distributed Computing Systems,</conference>
+        <pages initialCol="1" llx="359.0" lly="275.0" urx="439.0" ury="285.0" pageNum="12">pages 196--202,</pages>
+        <date initialCol="1" llx="359.0" lly="275.0" urx="439.0" ury="285.0" pageNum="12">1990.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="249.0" urx="571.0" ury="276.0" pageNum="12" refID="p12x311.0y266.0">
+        <ref-marker initialCol="1" llx="311.0" lly="266.0" urx="571.0" ury="276.0" pageNum="12">[34]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="266.0" urx="571.0" ury="276.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="266.0" urx="571.0" ury="276.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="266.0" urx="571.0" ury="276.0" pageNum="12">N.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="266.0" urx="571.0" ury="276.0" pageNum="12">Spring</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="266.0" urx="571.0" ury="276.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="266.0" urx="571.0" ury="276.0" pageNum="12">D.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="266.0" urx="571.0" ury="276.0" pageNum="12">Wetherall.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="258.0" urx="571.0" ury="276.0" pageNum="12">A protocol independent technique for eliminating redundant network traffic.</title>
+        <conference initialCol="1" llx="329.0" lly="249.0" urx="571.0" ury="267.0" pageNum="12">In Proc. of the ACM SIGCOMM Conference,</conference>
+        <date initialCol="1" llx="371.0" lly="249.0" urx="397.0" ury="258.0" pageNum="12">2000.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="231.0" urx="571.0" ury="249.0" pageNum="12" refID="p12x311.0y240.0">
+        <ref-marker initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">[35]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">D.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">Starobinski,</author-last>
+          </author>
+          <author initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">Trachtenberg,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">S.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="240.0" urx="570.0" ury="249.0" pageNum="12">Agarwal.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="231.0" urx="570.0" ury="249.0" pageNum="12">Efficient PDA synchronization.</title>
+        <journal initialCol="1" llx="386.0" lly="231.0" urx="532.0" ury="240.0" pageNum="12">IEEE Transactions on Mobile Computing,</journal>
+        <volume initialCol="1" llx="526.0" lly="231.0" urx="571.0" ury="240.0" pageNum="12">2</volume>
+        <number initialCol="1" llx="526.0" lly="231.0" urx="571.0" ury="240.0" pageNum="12">(1),</number>
+        <date initialCol="1" llx="526.0" lly="231.0" urx="571.0" ury="240.0" pageNum="12">2003.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="204.0" urx="571.0" ury="232.0" pageNum="12" refID="p12x311.0y222.0">
+        <ref-marker initialCol="1" llx="311.0" lly="222.0" urx="571.0" ury="232.0" pageNum="12">[36]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="222.0" urx="571.0" ury="232.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="222.0" urx="571.0" ury="232.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="222.0" urx="571.0" ury="232.0" pageNum="12">T.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="222.0" urx="571.0" ury="232.0" pageNum="12">Suel</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="222.0" urx="571.0" ury="232.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="222.0" urx="571.0" ury="232.0" pageNum="12">N.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="222.0" urx="571.0" ury="232.0" pageNum="12">Memon.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="213.0" urx="571.0" ury="232.0" pageNum="12">Algorithms for delta compression and remote file synchronization.</title>
+        <editor initialCol="1" llx="329.0" lly="213.0" urx="495.0" ury="223.0" pageNum="12">In Khalid Sayood, editor,</editor>
+        <booktitle initialCol="1" llx="329.0" lly="204.0" urx="571.0" ury="222.0" pageNum="12">Lossless Compression Handbook.</booktitle>
+        <publisher initialCol="1" llx="367.0" lly="204.0" urx="450.0" ury="214.0" pageNum="12">Academic Press,</publisher>
+        <date initialCol="1" llx="367.0" lly="204.0" urx="450.0" ury="214.0" pageNum="12">2002.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="177.0" urx="571.0" ury="205.0" pageNum="12" refID="p12x311.0y195.0">
+        <ref-marker initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">[37]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">T.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">Suel,</author-last>
+          </author>
+          <author initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">P.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">Noel,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">D.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="195.0" urx="571.0" ury="205.0" pageNum="12">Trendafilov.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="186.0" urx="571.0" ury="205.0" pageNum="12">Improved file synchronization techniques for maintaining large replicated collections over slow networks.</title>
+        <conference initialCol="1" llx="329.0" lly="177.0" urx="493.0" ury="187.0" pageNum="12">In Proc. of the Int. Conf. on Data Engineering,</conference>
+        <date initialCol="1" llx="488.0" lly="177.0" urx="538.0" ury="187.0" pageNum="12">March 2004.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="150.0" urx="571.0" ury="178.0" pageNum="12" refID="p12x311.0y168.0">
+        <ref-marker initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">[38]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">D.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">Trendafilov,</author-last>
+          </author>
+          <author initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">N.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">Memon,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">T.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="168.0" urx="571.0" ury="178.0" pageNum="12">Suel.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="159.0" urx="571.0" ury="178.0" pageNum="12">zdelta: a simple delta compression tool.</title>
+        <tech initialCol="1" llx="329.0" lly="159.0" urx="571.0" ury="169.0" pageNum="12">Technical Report TR-CIS-2002-02,</tech>
+        <institution initialCol="1" llx="329.0" lly="150.0" urx="571.0" ury="169.0" pageNum="12">Polytechnic University, CIS Department,</institution>
+        <date initialCol="1" llx="329.0" lly="150.0" urx="431.0" ury="160.0" pageNum="12">June 2002.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="132.0" urx="574.0" ury="151.0" pageNum="12" refID="p12x311.0y141.0">
+        <ref-marker initialCol="1" llx="311.0" lly="141.0" urx="376.0" ury="151.0" pageNum="12">[39]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="141.0" urx="376.0" ury="151.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="141.0" urx="376.0" ury="151.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="141.0" urx="376.0" ury="151.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="141.0" urx="376.0" ury="151.0" pageNum="12">Tridgell.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="371.0" lly="141.0" urx="574.0" ury="151.0" pageNum="12">Efficient Algorithms for Sorting and Synchronization.</title>
+        <thesis initialCol="1" llx="329.0" lly="132.0" urx="574.0" ury="151.0" pageNum="12">PhD thesis,</thesis>
+        <institution initialCol="1" llx="329.0" lly="132.0" urx="502.0" ury="142.0" pageNum="12">Australian National University,</institution>
+        <date initialCol="1" llx="329.0" lly="132.0" urx="502.0" ury="142.0" pageNum="12">April 2000.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="114.0" urx="571.0" ury="133.0" pageNum="12" refID="p12x311.0y123.0">
+        <ref-marker initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">[40]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">Tridgell,</author-last>
+          </author>
+          <author initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">P.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">Barker,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">P.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">MacKerras.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="123.0" urx="531.0" ury="133.0" pageNum="12">rsync in http.</title>
+        <conference initialCol="1" llx="311.0" lly="114.0" urx="571.0" ury="133.0" pageNum="12">In Conference of Australian Linux Users,</conference>
+        <date initialCol="1" llx="419.0" lly="114.0" urx="445.0" ury="124.0" pageNum="12">1999.</date>
+      </reference>
+      <reference initialCol="1" llx="311.0" lly="96.0" urx="571.0" ury="115.0" pageNum="12" refID="p12x311.0y105.0">
+        <ref-marker initialCol="1" llx="311.0" lly="105.0" urx="571.0" ury="115.0" pageNum="12">[41]</ref-marker>
+        <authors initialCol="1" llx="311.0" lly="105.0" urx="571.0" ury="115.0" pageNum="12">
+          <author initialCol="1" llx="311.0" lly="105.0" urx="571.0" ury="115.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="105.0" urx="571.0" ury="115.0" pageNum="12">A.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="105.0" urx="571.0" ury="115.0" pageNum="12">Tridgell</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="311.0" lly="105.0" urx="571.0" ury="115.0" pageNum="12">
+            <author-first initialCol="1" llx="311.0" lly="105.0" urx="571.0" ury="115.0" pageNum="12">P.</author-first>
+            <author-last initialCol="1" llx="311.0" lly="105.0" urx="571.0" ury="115.0" pageNum="12">MacKerras.</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="311.0" lly="105.0" urx="571.0" ury="115.0" pageNum="12">The rsync algorithm.</title>
+        <tech initialCol="1" llx="311.0" lly="96.0" urx="571.0" ury="115.0" pageNum="12">Technical Report TR-CS-96-05,</tech>
+        <institution initialCol="1" llx="329.0" lly="96.0" urx="525.0" ury="106.0" pageNum="12">Australian National University,</institution>
+        <date initialCol="1" llx="329.0" lly="96.0" urx="525.0" ury="106.0" pageNum="12">June 1996.</date>
+      </reference>
+    </biblio>
+  </content>
+  <CitationContexts />
+  <grants>
+    <grant-sentence>
+      <grant-record>
+        <grant-institution>ACKNOWLEDGMENTS This</grant-institution>
+      </grant-record>
+      <grant-background>work was supported by</grant-background>
+      <grant-record>
+        <grant-institution>NSF CAREER Award CCR</grant-institution>
+        <grant-number>0093400,</grant-number>
+      </grant-record>
+      <grant-record>
+        <grant-institution>NSF ITR Awards</grant-institution>
+        <grant-number>CNS-0325777</grant-number>
+        <grant-background>and</grant-background>
+        <grant-number>IDM-0205647,</grant-number>
+      </grant-record>
+      <grant-background>and the</grant-background>
+      <grant-record>
+        <grant-institution>Wireless Internet Center for Advanced Technology (WICAT) at Polytechnic University.</grant-institution>
+      </grant-record>
+    </grant-sentence>
+  </grants>
+</document>
+
