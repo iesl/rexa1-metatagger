@@ -426,12 +426,11 @@ public class LayoutUtils {
             columnList.add(firstColumn);
         }
 
-//        int widthSoFar = firstColumn.getWidth();
-
-        if(firstColumn.getWidth()>((double)pageData.getWidth())/2.0)
-        {
-            return columnList;
-        }
+//todo: see if by commenting the first page in 2009Jugovic works, also check other docs
+//        if(firstColumn.getWidth()>((double)pageData.getWidth())/2.0)
+//        {
+//            return columnList;
+//        }
 
         for(Entry<ColumnData> colData:allSpans)
         {

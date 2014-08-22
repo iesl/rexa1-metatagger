@@ -493,13 +493,14 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         String allCaps = "[#\\[\\]\\(\\);:\\.,'\"\\*A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ1-9]+";
         String initCap = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ].*";
         String finalDot = "((.*)\\.)$";
-        String finalDotAndNumber ="((.*)\\.[\\s]*[0-9]+[\\s]*)$"; // "((.*)\\.[0-9]+)$";
+        String finalDotAndNumber ="((.*)\\.[\\s]*[0-9,]+[\\s]*)$"; // "((.*)\\.[0-9]+)$";
         String noAlphabetical = "^[^A-Za-z]+";
         String firstLevelSection = "^((\\s)*([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
         String secondLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
         String thirdLevelSection = "^((\\s)*([\\d]+)(\\.)([\\d]+)(\\.)([\\d]+)([\\.]{0,1})([\\s]+)[A-Z0-9].*)";
         String startsEnum = "(([#*])|([1-9]{1,1}(\\s))).*";
-
+        String contentsPattern = "^C(?i:ontents)$";
+        String indexLinePattern = ".*[\\.]{5,999}[\\s]{0,5}[\\d]+";
 
         //firs scan/loop to gather basic lexical statistics in the document
         for(int i =0; i<data.getLineSpans().size(); i++ )
@@ -531,6 +532,17 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
             {
                 LayoutUtils.setFeatureValue(ls, "allCaps", 1.0);
             }
+
+            if(currentLineText.matches(contentsPattern))
+            {
+                //not used in rule-based transducer, but may be worth trying in ML approach
+                LayoutUtils.setFeatureValue(ls, "contentsPattern", 1.0);
+            }
+            if(currentLineText.matches(indexLinePattern))
+            {
+                LayoutUtils.setFeatureValue(ls, "indexLinePattern", 1.0);
+            }
+
             if(currentLineText.matches(initCap))
             {
                 LayoutUtils.setFeatureValue(ls, "startsCap", 1.0);

@@ -36,9 +36,9 @@ public class LayoutSegmentFinder
 		INTRODUCTION_PATTERN = Pattern.compile("^[#iIvVxX\\s\\.\\d]*I(?i:ntroduction)");
 		ABSTRACT_PATTERN = Pattern.compile("^[\\s]*((A(?i:bstract))|((abstract)[\\s]*$))");
 		BIBLIOGRAPHY_PATTERN = Pattern
-				.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited))\\s*$");
+			//	.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited))\\s*$");
                 //just temporary to make it work with 2010Song_...
-            //.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited)|A(?i:cknowledgements))\\s*$");
+            .compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited)|A(?i:cknowledgements))\\s*$");
 	}
 
 

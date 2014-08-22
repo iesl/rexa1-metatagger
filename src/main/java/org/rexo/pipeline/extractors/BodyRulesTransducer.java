@@ -67,7 +67,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 2.0; // && currentSpan.getText().contains("Acknowledgments") ;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 1.0; // && currentSpan.getText().contains("Acknowledgments") ;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -146,7 +146,8 @@ public class BodyRulesTransducer  {
                             LayoutUtils.isActiveFeature(previousSpan, "noColumnAssociated") ||
                             LayoutUtils.isActiveFeature(currentSpan, "columnLayoutChange") ||
                             LayoutUtils.isActiveFeature(currentSpan, "lineHeight30pxGreater") ||
-                            LayoutUtils.isActiveFeature(currentSpan, "up")
+                            LayoutUtils.isActiveFeature(currentSpan, "up") ||
+                            LayoutUtils.isActiveFeature(currentSpan, "indexLinePattern")
                     ))
             {
                 label = "notext";
@@ -255,8 +256,8 @@ public class BodyRulesTransducer  {
                 figureOrTableMarker = "figure-marker-inside";
             }
 
-            //for footers
-            if(footerMarker.equals("footer-start") && !LayoutUtils.isActiveFeature(currentSpan,"up"))
+            //for footers and indexes
+            if((footerMarker.equals("footer-start") && !LayoutUtils.isActiveFeature(currentSpan,"up")) || LayoutUtils.isActiveFeature(currentSpan, "indexLinePattern"))
             {
                 label = "notext";
             }
@@ -294,17 +295,26 @@ public class BodyRulesTransducer  {
 
                 if((LayoutUtils.isActiveFeature(currentSpan, "tabbedLeftMargin") && (lastTextLineRead == null || LayoutUtils.isActiveFeature(lastTextLineRead, "endsInDot"))
                                     && LayoutUtils.isActiveFeature(currentSpan, "startsCap") ) ||
-                        LayoutUtils.isActiveFeature(currentSpan, "newColumn") ||
+                        LayoutUtils.isActiveFeature(currentSpan, "newColumn") || LayoutUtils.isActiveFeature(currentSpan, "newPage") ||
+                        LayoutUtils.isActiveFeature(currentSpan, "upAndToTheLeft") ||
                         (lastTextLineRead!=null
                                 && LayoutUtils.isActiveFeature(lastTextLineRead, "rightMarginToTheLeft")
-                                /*&& LayoutUtils.isActiveFeature(lastTextLineRead, "endsInDot")*/)
+                                    //in papers such as  2010Song_REcent_progress... it is important to make sure previous line ends in dot
+                                && (LayoutUtils.isActiveFeature(lastTextLineRead, "endsInDot")|| LayoutUtils.isActiveFeature(lastTextLineRead, "endsInDotAndNumber")))
                         || //in case previous line is possible formula, then start paragraph again
-                        (LayoutUtils.isActiveFeature(lastTextLineRead, "noWordsFromDictionary") &&
+                        (lastTextLineRead!=null && LayoutUtils.isActiveFeature(lastTextLineRead, "noWordsFromDictionary") &&
                                 LayoutUtils.isActiveFeature(lastTextLineRead, "verticalDistance2pxGreater") &&
                                 LayoutUtils.isActiveFeature(lastTextLineRead, "verticalDistanceUry2pxGreater"))
                         )
                 {
-                    label = "paragraph-begin";
+                    //if previous line is formula, and the current line is formula too, then all in the same paragraph
+                    if(isPossibleFormula(lastTextLineRead) && isPossibleFormula(currentSpan))
+                    {
+                        label = "paragraph-inside";
+                    }
+                    else {
+                        label = "paragraph-begin";
+                    }
                 }
                 else
                 {
@@ -331,6 +341,14 @@ public class BodyRulesTransducer  {
         return transducedData;
     }
 
+    private boolean isPossibleFormula(Span currentSpan)
+    {
+        if(currentSpan!=null && LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary") && !LayoutUtils.isActiveFeature(currentSpan,"1wordFormOrGreater"))
+        {
+            return true;
+        }
+        return false;
+    }
     private int getLastIndex(Map<String, Integer> indexes, String [] keys)
     {
         int lastIndex = -1;
