@@ -67,7 +67,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 1.0; // && currentSpan.getText().contains("Acknowledgments") ;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 2.0; // && currentSpan.getText().contains("Acknowledgments") ;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -168,6 +168,7 @@ public class BodyRulesTransducer  {
                                     !LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacterUndefined") &&
                                     !LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary") &&
                                     !LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess") &&
+                                    !LayoutUtils.isActiveFeature(currentSpan, "lineHeight1pxLess") &&
                                     !(LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft") && !LayoutUtils.isActiveFeature(currentSpan, "endsInDot"))
             ) ||
 
@@ -208,6 +209,7 @@ public class BodyRulesTransducer  {
                             (LayoutUtils.isActiveFeature(currentSpan, "pixelsPerCharacterUndefined")  && figureOrTableMarker.contains("table-marker")) ||
                             (LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary")  && figureOrTableMarker.contains("table-marker")) ||
                             (LayoutUtils.isActiveFeature(currentSpan, "3wordFromDictLess") && figureOrTableMarker.contains("table-marker") ) ||
+                            (LayoutUtils.isActiveFeature(currentSpan, "lineHeight1pxLess") && figureOrTableMarker.contains("table-marker") ) ||
                             (LayoutUtils.isActiveFeature(currentSpan, "rightMarginToTheLeft") && !LayoutUtils.isActiveFeature(currentSpan, "endsInDot"))
                     ))
             {
@@ -272,7 +274,12 @@ public class BodyRulesTransducer  {
 
 
             //for paragraphs
-            if(label.equals("text-inside") || label.equals("text-begin"))
+            if(label.equals("text-inside") || label.equals("text-begin")
+                    || ((label.equals("section-marker-begin") || label.equals("section-marker-inside")) &&
+                            !LayoutUtils.isActiveFeature(currentSpan,"rightMarginToTheLeft") &&
+                        (!LayoutUtils.isActiveFeature(currentSpan, "verticalDistance2pxGreater") ||
+                                !LayoutUtils.isActiveFeature(currentSpan, "verticalDistanceUry2pxGreater"))
+                    ))
             {
                 //todo: the last line of text
 
@@ -285,12 +292,17 @@ public class BodyRulesTransducer  {
                 }
 
 
-                if((LayoutUtils.isActiveFeature(currentSpan, "tabbedLeftMargin") &&
-                                    LayoutUtils.isActiveFeature(currentSpan, "startsCap")) ||
+                if((LayoutUtils.isActiveFeature(currentSpan, "tabbedLeftMargin") && (lastTextLineRead == null || LayoutUtils.isActiveFeature(lastTextLineRead, "endsInDot"))
+                                    && LayoutUtils.isActiveFeature(currentSpan, "startsCap") ) ||
                         LayoutUtils.isActiveFeature(currentSpan, "newColumn") ||
                         (lastTextLineRead!=null
                                 && LayoutUtils.isActiveFeature(lastTextLineRead, "rightMarginToTheLeft")
-                                && LayoutUtils.isActiveFeature(lastTextLineRead, "endsInDot")))
+                                /*&& LayoutUtils.isActiveFeature(lastTextLineRead, "endsInDot")*/)
+                        || //in case previous line is possible formula, then start paragraph again
+                        (LayoutUtils.isActiveFeature(lastTextLineRead, "noWordsFromDictionary") &&
+                                LayoutUtils.isActiveFeature(lastTextLineRead, "verticalDistance2pxGreater") &&
+                                LayoutUtils.isActiveFeature(lastTextLineRead, "verticalDistanceUry2pxGreater"))
+                        )
                 {
                     label = "paragraph-begin";
                 }
