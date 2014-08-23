@@ -501,6 +501,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         String startsEnum = "(([#*])|([1-9]{1,1}(\\s))).*";
         String contentsPattern = "^C(?i:ontents)$";
         String indexLinePattern = ".*[\\.]{5,999}[\\s]{0,5}[\\d]+";
+        //this one is for detecting formulas for example, some formulas end in number in brackets or parenthesis such as (1) or [1]
+        String endsInEnum = ".*((\\([\\d]+\\))|(\\[[\\d]+\\])|(\\([\\d]+\\.[\\d]\\))|(\\[[\\d]+\\.[\\d]\\]))$";
 
         //firs scan/loop to gather basic lexical statistics in the document
         for(int i =0; i<data.getLineSpans().size(); i++ )
@@ -533,6 +535,10 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(ls, "allCaps", 1.0);
             }
 
+            if(currentLineText.matches(endsInEnum))
+            {
+                LayoutUtils.setFeatureValue(ls, "endsInEnum", 1.0);
+            }
             if(currentLineText.matches(contentsPattern))
             {
                 //not used in rule-based transducer, but may be worth trying in ML approach
