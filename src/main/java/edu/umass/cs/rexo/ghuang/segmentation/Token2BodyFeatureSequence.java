@@ -25,7 +25,7 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
     private static String lonelyNumbers = "[1-9][\\.]{0,1}[\\s]+]"; //"[1-9][\\.]{0,1}";
     private static String lonelyLetters = "[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ][\\.]{0,1}[\\s]+]"; //"[A-ZÁÉÍÓÚÀÈÌÒÙÇÑÏÜ][\\.]{0,1}";
     //private static String wordForms = "([^\\s]{1,1}([A-Z]{0,1}(([A-Z]{3,99})|([a-z]{3,99})))([\\s$]{1,1}))";
-    private static String wordForms = "(((^)|(\\s))([A-Z]{0,1}(([A-Z]{3,99})|([a-z]{3,99})))(($)|(\\s)))";
+    private static String wordForms = "(((^)|(\\s))([A-Z]{0,1}(([A-Z]{3,99})|([a-z]{3,99})))(($)|([\\s:\\.,]{0,1})))";
     private static String wordsWithSubindex = "([A-Z]{1,1}[a-z]{0,1}[\\s]{1,1}[\\d\\.]{1,5})";
 
     static Pattern ptrnLonelyNumbers = Pattern.compile(lonelyNumbers);
@@ -503,6 +503,8 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
         String indexLinePattern = ".*[\\.]{5,999}[\\s]{0,5}[\\d]+";
         //this one is for detecting formulas for example, some formulas end in number in brackets or parenthesis such as (1) or [1]
         String endsInEnum = ".*((\\([\\d]+\\))|(\\[[\\d]+\\])|(\\([\\d]+\\.[\\d]\\))|(\\[[\\d]+\\.[\\d]\\]))$";
+        //this also can be useful for detecting the beginning of formulas
+        String endsInColon = ".*:$";
 
         //firs scan/loop to gather basic lexical statistics in the document
         for(int i =0; i<data.getLineSpans().size(); i++ )
@@ -535,10 +537,16 @@ public class Token2BodyFeatureSequence  extends Pipe implements Serializable {
                 LayoutUtils.setFeatureValue(ls, "allCaps", 1.0);
             }
 
+            if(currentLineText.matches(endsInColon))
+            {
+                LayoutUtils.setFeatureValue(ls, "endsInColon", 1.0);
+            }
+
             if(currentLineText.matches(endsInEnum))
             {
                 LayoutUtils.setFeatureValue(ls, "endsInEnum", 1.0);
             }
+
             if(currentLineText.matches(contentsPattern))
             {
                 //not used in rule-based transducer, but may be worth trying in ML approach

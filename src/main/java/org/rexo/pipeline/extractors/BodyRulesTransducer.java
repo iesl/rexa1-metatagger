@@ -51,6 +51,8 @@ public class BodyRulesTransducer  {
         boolean previousFigure;
         boolean debugMe  = false;
 
+        int paragraphId = 0;
+
         Map<String, Integer> lastLabelIndexes = new HashMap<String, Integer>();
 
         for(int i=0; i<data.getLineSpans().size(); i++)
@@ -67,7 +69,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 1.0; // && currentSpan.getText().contains("Acknowledgments") ;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 6.0; // && currentSpan.getText().contains("Acknowledgments") ;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -301,6 +303,10 @@ public class BodyRulesTransducer  {
                                 && LayoutUtils.isActiveFeature(lastTextLineRead, "rightMarginToTheLeft")
                                     //in papers such as  2010Song_REcent_progress... it is important to make sure previous line ends in dot
                                 && (LayoutUtils.isActiveFeature(lastTextLineRead, "endsInDot")|| LayoutUtils.isActiveFeature(lastTextLineRead, "endsInDotAndNumber")))
+                        ||
+                        (lastTextLineRead!=null
+                                && LayoutUtils.isActiveFeature(lastTextLineRead, "endsInColon") &&
+                                LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary"))
                         || //in case previous line is possible formula, then start paragraph again
                         (lastTextLineRead!=null && LayoutUtils.isActiveFeature(lastTextLineRead, "noWordsFromDictionary") &&
                                 LayoutUtils.isActiveFeature(lastTextLineRead, "verticalDistance2pxGreater") &&
@@ -313,12 +319,21 @@ public class BodyRulesTransducer  {
                         label = "paragraph-inside";
                     }
                     else {
+                        paragraphId++;
                         label = "paragraph-begin";
                     }
                 }
                 else
                 {
-                    label = "paragraph-inside";
+                    if(isPossibleFormula(lastTextLineRead) && !isPossibleFormula(currentSpan) &&
+                            (LayoutUtils.isActiveFeature(lastTextLineRead,"verticalDistance2pxGreater") || LayoutUtils.isActiveFeature(lastTextLineRead,"verticalDistanceUry2pxGreater")))
+                    {
+                        paragraphId++;
+                        label = "paragraph-begin";
+                    }
+                    else {
+                        label = "paragraph-inside";
+                    }
                 }
             }
 
@@ -453,10 +468,12 @@ public class BodyRulesTransducer  {
             {
                 label = "table-marker-inside";
             }
-            if(label.equals("paragraph-begin"))
-            {
-                label = "paragraph-inside";
-            }
+
+            label = label.replaceAll("paragraph\\-begin", "paragraph-inside");
+//            if(label.equals("paragraph-begin"))
+//            {
+//                label = "paragraph-inside";
+//            }
         }
         return tokenId;
 
