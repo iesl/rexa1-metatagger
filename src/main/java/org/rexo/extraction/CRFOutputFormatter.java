@@ -241,7 +241,23 @@ public class CRFOutputFormatter {
 
             if ((child = lastChild( parent )) == null || labelPart.startsWith( "^" ) || !labelPart.equals( child.getName() )) {
                 labelPart = labelPart.replaceFirst( "^\\^", "" );
+                String extraAttrs[]=null;
+                if(labelPart.indexOf("--_--")>-1) {
+                    extraAttrs = labelPart.substring(labelPart.indexOf("--_--")).replace("--_--","").split(";");
+                    labelPart = labelPart.replace(labelPart.substring(labelPart.indexOf("--_--")),"");
+                }
                 child = new Element( labelPart );
+
+                if(extraAttrs!=null && extraAttrs.length>0)
+                {
+                    for(String currAttr:extraAttrs)
+                    {
+                        String attr = currAttr.substring(0,currAttr.indexOf("="));
+                        String value = currAttr.substring(currAttr.indexOf("=")+1,currAttr.length());
+                        child.setAttribute(attr, value);
+                    }
+                }
+
                 parent.addContent( child );
             }
             List tails = Arrays.asList( labelParts ).subList( 1, labelParts.length );
@@ -256,6 +272,14 @@ public class CRFOutputFormatter {
         }
     }
 
+//    private void setParagraphAttributes(Element child)
+//    {
+//        if(child.getName().equals("paragraph"))
+//        {
+//            System.out.println("paragraph met");
+//        }
+//    }
+
     //adjust the position
     private void adjustPosition(Element elem, BoxCoordinates pos, int currentColumn)
     {
@@ -263,10 +287,11 @@ public class CRFOutputFormatter {
             //if suddenly all the attributes change abruptly, and we are in references section, don't change them:
             //probably its just a new column. Won't deel with it for now.
             int initCol = 1;
-            if(elem.getAttribute("initialCol")!=null)
-            {
-                initCol = elem.getAttribute("initialCol").getIntValue();
-            }
+//todo: see if initialCol attr is really necessary
+//            if(elem.getAttribute("initialCol")!=null)
+//            {
+//                initCol = elem.getAttribute("initialCol").getIntValue();
+//            }
 
             //todo: see why the commented code fails on  1997Fey_The_affects_of_stoichiometry_and_synthesis_temperature_on_the_preperation_of_the_inverse_spinel_LiNiVO4_and_its_performance_as_a_new_high_voltage_cathod_material.pdf
             String llxAttr = "llx"; //currentColumn==initCol?"llx":elem.getAttribute("llx")!=null?"llxc" + (Math.abs(currentColumn - initCol)+1):"llx";
@@ -286,10 +311,11 @@ public class CRFOutputFormatter {
                 }
             }
             //inserts the number of column with respect to which the llxc_ is calculated
-            if(llxAttr.equals("llx") && elem.getAttribute("initialCol")==null)
-            {
-                elem.setAttribute("initialCol",String.valueOf(currentColumn));
-            }
+//todo: see if initialCol attr is really necessary
+//            if(llxAttr.equals("llx") && elem.getAttribute("initialCol")==null)
+//            {
+//                elem.setAttribute("initialCol",String.valueOf(currentColumn));
+//            }
 
             if (elem.getAttribute(llxAttr) == null || elem.getAttribute(llxAttr).getDoubleValue() > pos.getLlx()) {
                 elem.setAttribute(llxAttr, String.valueOf(pos.getLlx()));

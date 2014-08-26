@@ -69,7 +69,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 6.0; // && currentSpan.getText().contains("Acknowledgments") ;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 99.0; // && currentSpan.getText().contains("Acknowledgments") ;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -320,7 +320,7 @@ public class BodyRulesTransducer  {
                     }
                     else {
                         paragraphId++;
-                        label = "paragraph-begin";
+                        label = "paragraph-begin--_--" + "id=" + paragraphId;
                     }
                 }
                 else
@@ -329,7 +329,7 @@ public class BodyRulesTransducer  {
                             (LayoutUtils.isActiveFeature(lastTextLineRead,"verticalDistance2pxGreater") || LayoutUtils.isActiveFeature(lastTextLineRead,"verticalDistanceUry2pxGreater")))
                     {
                         paragraphId++;
-                        label = "paragraph-begin";
+                        label = "paragraph-begin--_--" + "id=" + paragraphId;
                     }
                     else {
                         label = "paragraph-inside";
@@ -339,7 +339,7 @@ public class BodyRulesTransducer  {
 
             //end for paragraphs
 
-            lastLabelIndexes.put(label, i);
+            lastLabelIndexes.put(label.contains("paragraph-begin")?"paragraph-begin":label, i);
 
             tokenId = addLabelToAllSpans(currentSpan, label, (TokenSequence)transducedData, data,tokenId);
 
@@ -469,7 +469,7 @@ public class BodyRulesTransducer  {
                 label = "table-marker-inside";
             }
 
-            label = label.replaceAll("paragraph\\-begin", "paragraph-inside");
+            label = label.replaceAll("paragraph\\-begin.*", "paragraph-inside");
 //            if(label.equals("paragraph-begin"))
 //            {
 //                label = "paragraph-inside";
