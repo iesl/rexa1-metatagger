@@ -69,7 +69,7 @@ public class BodyRulesTransducer  {
           //  boolean isNoCollumnAssociated = LayoutUtils.isActiveFeature(currentSpan,"noColumnAssociated");
             if(!debugMe)
             {
-                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 99.0; // && currentSpan.getText().contains("Acknowledgments") ;
+                debugMe = currentSpan instanceof CompositeSpan && ((Double)((CompositeSpan) currentSpan).getProperty("pageNum")) == 2.0; // && currentSpan.getText().contains("Acknowledgments") ;
             }
 
             if((((LayoutUtils.isActiveFeature(currentSpan, "firstLevelSectionPtrn") || LayoutUtils.isActiveFeature(currentSpan, "secondLevelSectionPtrn") ||
@@ -288,6 +288,9 @@ public class BodyRulesTransducer  {
 
                 int lastIndex = getLastIndex(lastLabelIndexes, new String[]
                                                 {"text-begin","text-inside", "paragraph-begin", "paragraph-inside"});
+
+                int lastSectionIndex = getLastIndex(lastLabelIndexes, new String[]
+                                                {"section-marker-begin", "section-marker-inside"});
                 Span lastTextLineRead = null;
                 if(lastIndex>-1)
                 {
@@ -311,6 +314,7 @@ public class BodyRulesTransducer  {
                         (lastTextLineRead!=null && LayoutUtils.isActiveFeature(lastTextLineRead, "noWordsFromDictionary") &&
                                 LayoutUtils.isActiveFeature(lastTextLineRead, "verticalDistance2pxGreater") &&
                                 LayoutUtils.isActiveFeature(lastTextLineRead, "verticalDistanceUry2pxGreater"))
+                        || (lastSectionIndex == i-1)
                         )
                 {
                     //if previous line is formula, and the current line is formula too, then all in the same paragraph
@@ -319,20 +323,29 @@ public class BodyRulesTransducer  {
                         label = "paragraph-inside";
                     }
                     else {
-                        paragraphId++;
+                        if(isNewParagraph(lastTextLineRead, currentSpan)) {
+                            paragraphId++;
+                        }
                         label = "paragraph-begin--_--" + "id=" + paragraphId;
                     }
                 }
                 else
                 {
                     if(isPossibleFormula(lastTextLineRead) && !isPossibleFormula(currentSpan) &&
-                            (LayoutUtils.isActiveFeature(lastTextLineRead,"verticalDistance2pxGreater") || LayoutUtils.isActiveFeature(lastTextLineRead,"verticalDistanceUry2pxGreater")))
+                            (LayoutUtils.isActiveFeature(lastTextLineRead,"verticalDistance2pxGreater") ||
+                                    LayoutUtils.isActiveFeature(lastTextLineRead,"verticalDistanceUry2pxGreater")))
                     {
                         paragraphId++;
                         label = "paragraph-begin--_--" + "id=" + paragraphId;
                     }
                     else {
-                        label = "paragraph-inside";
+                        if (lastIndex < i-1)
+                        {
+                            label = "paragraph-begin--_--" + "id=" + paragraphId;
+                        }
+                        else {
+                            label = "paragraph-inside";
+                        }
                     }
                 }
             }
@@ -356,6 +369,16 @@ public class BodyRulesTransducer  {
         return transducedData;
     }
 
+    private boolean isNewParagraph(Span previousLineSpan, Span currentLineSpan)
+    {
+        if((LayoutUtils.isActiveFeature(currentLineSpan, "newColumn") || LayoutUtils.isActiveFeature(currentLineSpan, "newPage") || LayoutUtils.isActiveFeature(currentLineSpan, "upAndToTheLeft")) &&
+                        (!LayoutUtils.isActiveFeature(previousLineSpan, "endsInDot") || !LayoutUtils.isActiveFeature(previousLineSpan, "startsCap") &&
+                         (!LayoutUtils.isActiveFeature(previousLineSpan, "rightMarginToTheLeft") && (!LayoutUtils.isActiveFeature(currentLineSpan, "tabbedLeftMargin")))))
+        {
+            return false;
+        }
+        return true;
+    }
     private boolean isPossibleFormula(Span currentSpan)
     {
         if(currentSpan!=null && LayoutUtils.isActiveFeature(currentSpan, "noWordsFromDictionary") && !LayoutUtils.isActiveFeature(currentSpan,"1wordFormOrGreater"))
