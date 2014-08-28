@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
   <content>
-    <headers headerID="p1x118.0y720.0">
-      <title>Transition of Ground State of Boson-Fermion Model and Renormalizable Field Theory</title>
-      <authors>
-        <author>
-          <author-first>Masao</author-first>
-          <author-last>Hirokawa</author-last>
+    <headers initialCol="1" llx="72.0" lly="641.0" urx="496.0" ury="738.0" pageNum="1" headerID="p1x118.0y720.0">
+      <title initialCol="1" llx="118.0" lly="698.0" urx="496.0" ury="738.0" pageNum="1">Transition of Ground State of Boson-Fermion Model and Renormalizable Field Theory</title>
+      <authors initialCol="1" llx="257.0" lly="670.0" urx="352.0" ury="683.0" pageNum="1">
+        <author initialCol="1" llx="257.0" lly="670.0" urx="352.0" ury="683.0" pageNum="1">
+          <author-first initialCol="1" llx="257.0" lly="670.0" urx="352.0" ury="683.0" pageNum="1">Masao</author-first>
+          <author-last initialCol="1" llx="257.0" lly="670.0" urx="352.0" ury="683.0" pageNum="1">Hirokawa</author-last>
         </author>
       </authors>
-      <institution>Department of Mathematics, Faculty of Science, Okayama University,</institution>
-      <address>Okayama 700-8530, Japan</address>
-      <email>e-mail: hirokawa@math.okayama-u.ac.jp</email>
+      <institution initialCol="1" llx="72.0" lly="653.0" urx="438.0" ury="662.0" pageNum="1">Department of Mathematics, Faculty of Science, Okayama University,</institution>
+      <address initialCol="1" llx="72.0" lly="653.0" urx="438.0" ury="662.0" pageNum="1">Okayama 700-8530, Japan</address>
+      <email initialCol="1" llx="72.0" lly="641.0" urx="229.0" ury="650.0" pageNum="1">e-mail: hirokawa@math.okayama-u.ac.jp</email>
     </headers>
     <body>1 Introduction 
 Recently, mathematical techniques for non-perturbative way to analyze models in quantum 
@@ -1108,282 +1108,282 @@ Is the existence of |# grd i caused by the Rabi flopping? If it is correct, the 
 by revival with very small |k| after they are disordered by the Cummings collapse in the Rabi flopping. 
 Namely, are there any relation between superradiant ground state by Preparata and the Rabi flopping?</body>
     <biblio>
-      <reference refID="p14x70.0y601.0">
-        <ref-marker>[Ar00]</ref-marker>
-        <reference-hlabeled>Arai A 2000</reference-hlabeled>
-        <journal>J. Math. Anal. Appl.</journal>
-        <volume>246</volume>
-        <pages>p189</pages>
+      <reference initialCol="1" llx="70.0" lly="601.0" urx="315.0" ury="614.0" pageNum="14" refID="p14x70.0y601.0">
+        <ref-marker initialCol="1" llx="70.0" lly="601.0" urx="170.0" ury="614.0" pageNum="14">[Ar00]</ref-marker>
+        <reference-hlabeled initialCol="1" llx="70.0" lly="601.0" urx="170.0" ury="614.0" pageNum="14">Arai A 2000</reference-hlabeled>
+        <journal initialCol="1" llx="169.0" lly="601.0" urx="272.0" ury="614.0" pageNum="14">J. Math. Anal. Appl.</journal>
+        <volume initialCol="1" llx="262.0" lly="601.0" urx="293.0" ury="614.0" pageNum="14">246</volume>
+        <pages initialCol="1" llx="283.0" lly="601.0" urx="315.0" ury="614.0" pageNum="14">p189</pages>
       </reference>
-      <reference refID="p14x70.0y581.0">
-        <ref-marker>[AH97]</ref-marker>
-        <title>Arai A and Hirokawa M 1997</title>
-        <journal>J. Funct. Anal.</journal>
-        <volume>151</volume>
-        <pages>p455</pages>
+      <reference initialCol="1" llx="70.0" lly="581.0" urx="370.0" ury="594.0" pageNum="14" refID="p14x70.0y581.0">
+        <ref-marker initialCol="1" llx="70.0" lly="581.0" urx="222.0" ury="594.0" pageNum="14">[AH97]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="581.0" urx="249.0" ury="594.0" pageNum="14">Arai A and Hirokawa M 1997</title>
+        <journal initialCol="1" llx="248.0" lly="581.0" urx="327.0" ury="594.0" pageNum="14">J. Funct. Anal.</journal>
+        <volume initialCol="1" llx="317.0" lly="581.0" urx="347.0" ury="594.0" pageNum="14">151</volume>
+        <pages initialCol="1" llx="338.0" lly="581.0" urx="370.0" ury="594.0" pageNum="14">p455</pages>
       </reference>
-      <reference refID="p14x70.0y561.0">
-        <ref-marker>[AH00]</ref-marker>
-        <title>Arai A and Hirokawa M 2000</title>
-        <journal>Rev. Math. Phys.</journal>
-        <volume>12</volume>
-        <pages>p1085</pages>
+      <reference initialCol="1" llx="70.0" lly="561.0" urx="378.0" ury="574.0" pageNum="14" refID="p14x70.0y561.0">
+        <ref-marker initialCol="1" llx="70.0" lly="561.0" urx="222.0" ury="574.0" pageNum="14">[AH00]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="561.0" urx="249.0" ury="574.0" pageNum="14">Arai A and Hirokawa M 2000</title>
+        <journal initialCol="1" llx="248.0" lly="561.0" urx="336.0" ury="574.0" pageNum="14">Rev. Math. Phys.</journal>
+        <volume initialCol="1" llx="326.0" lly="561.0" urx="351.0" ury="574.0" pageNum="14">12</volume>
+        <pages initialCol="1" llx="341.0" lly="561.0" urx="378.0" ury="574.0" pageNum="14">p1085</pages>
       </reference>
-      <reference refID="p14x70.0y541.0">
-        <ref-marker>[AH01]</ref-marker>
-        <title>Arai A and Hirokawa M 2001</title>
-        <journal>Rev. Math. Phys.</journal>
-        <volume>13</volume>
-        <pages>p513</pages>
+      <reference initialCol="1" llx="70.0" lly="541.0" urx="373.0" ury="554.0" pageNum="14" refID="p14x70.0y541.0">
+        <ref-marker initialCol="1" llx="70.0" lly="541.0" urx="222.0" ury="554.0" pageNum="14">[AH01]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="541.0" urx="249.0" ury="554.0" pageNum="14">Arai A and Hirokawa M 2001</title>
+        <journal initialCol="1" llx="248.0" lly="541.0" urx="336.0" ury="554.0" pageNum="14">Rev. Math. Phys.</journal>
+        <volume initialCol="1" llx="326.0" lly="541.0" urx="351.0" ury="554.0" pageNum="14">13</volume>
+        <pages initialCol="1" llx="341.0" lly="541.0" urx="373.0" ury="554.0" pageNum="14">p513</pages>
       </reference>
-      <reference refID="p14x70.0y521.0">
-        <ref-marker>[AE]</ref-marker>
-        <title>Avron J E and Elgart A `998</title>
-        <journal>Phys. Rev. A</journal>
-        <volume>58</volume>
-        <pages>p4300</pages>
+      <reference initialCol="1" llx="70.0" lly="521.0" urx="351.0" ury="534.0" pageNum="14" refID="p14x70.0y521.0">
+        <ref-marker initialCol="1" llx="70.0" lly="521.0" urx="142.0" ury="534.0" pageNum="14">[AE]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="521.0" urx="240.0" ury="534.0" pageNum="14">Avron J E and Elgart A `998</title>
+        <journal initialCol="1" llx="240.0" lly="521.0" urx="309.0" ury="534.0" pageNum="14">Phys. Rev. A</journal>
+        <volume initialCol="1" llx="299.0" lly="521.0" urx="324.0" ury="534.0" pageNum="14">58</volume>
+        <pages initialCol="1" llx="314.0" lly="521.0" urx="351.0" ury="534.0" pageNum="14">p4300</pages>
       </reference>
-      <reference refID="p14x70.0y501.0">
-        <ref-marker>[Bi98]</ref-marker>
-        <reference-hlabeled>Billionnet C 1998 Ann. Inst. Henri Poincar68</reference-hlabeled>
-        <note>p1</note>
+      <reference initialCol="1" llx="70.0" lly="501.0" urx="345.0" ury="514.0" pageNum="14" refID="p14x70.0y501.0">
+        <ref-marker initialCol="1" llx="70.0" lly="501.0" urx="165.0" ury="514.0" pageNum="14">[Bi98]</ref-marker>
+        <reference-hlabeled initialCol="1" llx="70.0" lly="501.0" urx="333.0" ury="514.0" pageNum="14">Billionnet C 1998 Ann. Inst. Henri Poincar68</reference-hlabeled>
+        <note initialCol="1" llx="323.0" lly="501.0" urx="345.0" ury="514.0" pageNum="14">p1</note>
       </reference>
-      <reference refID="p14x70.0y481.0">
-        <ref-marker>[Bi01]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Billionnet</author-last>
-            <author-first>C</author-first>
+      <reference initialCol="1" llx="70.0" lly="481.0" urx="237.0" ury="495.0" pageNum="14" refID="p14x70.0y481.0">
+        <ref-marker initialCol="1" llx="70.0" lly="481.0" urx="165.0" ury="495.0" pageNum="14">[Bi01]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="481.0" urx="165.0" ury="495.0" pageNum="14">
+          <author initialCol="1" llx="70.0" lly="481.0" urx="165.0" ury="495.0" pageNum="14">
+            <author-last initialCol="1" llx="70.0" lly="481.0" urx="165.0" ury="495.0" pageNum="14">Billionnet</author-last>
+            <author-first initialCol="1" llx="70.0" lly="481.0" urx="165.0" ury="495.0" pageNum="14">C</author-first>
           </author>
         </authors>
-        <date>2001 preprint</date>
+        <date initialCol="1" llx="160.0" lly="481.0" urx="237.0" ury="495.0" pageNum="14">2001 preprint</date>
       </reference>
-      <reference refID="p14x70.0y461.0">
-        <ref-marker>[Di]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Dicke</author-last>
-            <author-first>R</author-first>
-            <author-middle>H</author-middle>
+      <reference initialCol="1" llx="70.0" lly="461.0" urx="271.0" ury="475.0" pageNum="14" refID="p14x70.0y461.0">
+        <ref-marker initialCol="1" llx="70.0" lly="461.0" urx="181.0" ury="475.0" pageNum="14">[Di]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="461.0" urx="181.0" ury="475.0" pageNum="14">
+          <author initialCol="1" llx="70.0" lly="461.0" urx="181.0" ury="475.0" pageNum="14">
+            <author-last initialCol="1" llx="70.0" lly="461.0" urx="181.0" ury="475.0" pageNum="14">Dicke</author-last>
+            <author-first initialCol="1" llx="70.0" lly="461.0" urx="181.0" ury="475.0" pageNum="14">R</author-first>
+            <author-middle initialCol="1" llx="70.0" lly="461.0" urx="181.0" ury="475.0" pageNum="14">H</author-middle>
           </author>
         </authors>
-        <date>1954</date>
-        <journal>Phys. Rev.</journal>
-        <volume>93</volume>
-        <pages>p99</pages>
+        <date initialCol="1" llx="70.0" lly="461.0" urx="181.0" ury="475.0" pageNum="14">1954</date>
+        <journal initialCol="1" llx="180.0" lly="461.0" urx="239.0" ury="475.0" pageNum="14">Phys. Rev.</journal>
+        <volume initialCol="1" llx="229.0" lly="461.0" urx="254.0" ury="474.0" pageNum="14">93</volume>
+        <pages initialCol="1" llx="244.0" lly="461.0" urx="271.0" ury="475.0" pageNum="14">p99</pages>
       </reference>
-      <reference refID="p14x70.0y442.0">
-        <ref-marker>[DEH]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Dittrich</author-last>
-            <author-first>J,</author-first>
+      <reference initialCol="1" llx="70.0" lly="442.0" urx="426.0" ury="455.0" pageNum="14" refID="p14x70.0y442.0">
+        <ref-marker initialCol="1" llx="70.0" lly="442.0" urx="287.0" ury="455.0" pageNum="14">[DEH]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="442.0" urx="287.0" ury="455.0" pageNum="14">
+          <author initialCol="1" llx="70.0" lly="442.0" urx="287.0" ury="455.0" pageNum="14">
+            <author-last initialCol="1" llx="70.0" lly="442.0" urx="287.0" ury="455.0" pageNum="14">Dittrich</author-last>
+            <author-first initialCol="1" llx="70.0" lly="442.0" urx="287.0" ury="455.0" pageNum="14">J,</author-first>
           </author>
         </authors>
-        <title>Exner P, and Hirokawa M 2000 preprint mp_</title>
-        <pages>arc 00-442.</pages>
+        <title initialCol="1" llx="70.0" lly="442.0" urx="426.0" ury="455.0" pageNum="14">Exner P, and Hirokawa M 2000 preprint mp_</title>
+        <pages initialCol="1" llx="349.0" lly="442.0" urx="426.0" ury="453.0" pageNum="14">arc 00-442.</pages>
       </reference>
-      <reference refID="p14x70.0y422.0">
-        <ref-marker>[Dy]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Dyson</author-last>
-            <author-first>F.</author-first>
-            <author-middle>J.</author-middle>
+      <reference initialCol="1" llx="70.0" lly="422.0" urx="279.0" ury="435.0" pageNum="14" refID="p14x70.0y422.0">
+        <ref-marker initialCol="1" llx="70.0" lly="422.0" urx="156.0" ury="435.0" pageNum="14">[Dy]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="422.0" urx="156.0" ury="435.0" pageNum="14">
+          <author initialCol="1" llx="70.0" lly="422.0" urx="156.0" ury="435.0" pageNum="14">
+            <author-last initialCol="1" llx="70.0" lly="422.0" urx="156.0" ury="435.0" pageNum="14">Dyson</author-last>
+            <author-first initialCol="1" llx="70.0" lly="422.0" urx="156.0" ury="435.0" pageNum="14">F.</author-first>
+            <author-middle initialCol="1" llx="70.0" lly="422.0" urx="156.0" ury="435.0" pageNum="14">J.</author-middle>
           </author>
         </authors>
-        <date>1949</date>
-        <journal>Phys. Rev</journal>
-        <volume>75</volume>
-        <pages>p1736</pages>
+        <date initialCol="1" llx="151.0" lly="422.0" urx="183.0" ury="435.0" pageNum="14">1949</date>
+        <journal initialCol="1" llx="182.0" lly="422.0" urx="237.0" ury="435.0" pageNum="14">Phys. Rev</journal>
+        <volume initialCol="1" llx="227.0" lly="422.0" urx="252.0" ury="435.0" pageNum="14">75</volume>
+        <pages initialCol="1" llx="242.0" lly="422.0" urx="279.0" ury="435.0" pageNum="14">p1736</pages>
       </reference>
-      <reference refID="p14x70.0y402.0">
-        <ref-marker>[En]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Enz</author-last>
-            <author-first>C.</author-first>
+      <reference initialCol="1" llx="70.0" lly="402.0" urx="296.0" ury="415.0" pageNum="14" refID="p14x70.0y402.0">
+        <ref-marker initialCol="1" llx="70.0" lly="402.0" urx="134.0" ury="415.0" pageNum="14">[En]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="402.0" urx="134.0" ury="415.0" pageNum="14">
+          <author initialCol="1" llx="70.0" lly="402.0" urx="134.0" ury="415.0" pageNum="14">
+            <author-last initialCol="1" llx="70.0" lly="402.0" urx="134.0" ury="415.0" pageNum="14">Enz</author-last>
+            <author-first initialCol="1" llx="70.0" lly="402.0" urx="134.0" ury="415.0" pageNum="14">C.</author-first>
           </author>
         </authors>
-        <title>P 1997</title>
-        <journal>Helv. Phys. Acta</journal>
-        <volume>70</volume>
-        <pages>p141</pages>
+        <title initialCol="1" llx="130.0" lly="402.0" urx="174.0" ury="415.0" pageNum="14">P 1997</title>
+        <journal initialCol="1" llx="174.0" lly="402.0" urx="259.0" ury="415.0" pageNum="14">Helv. Phys. Acta</journal>
+        <volume initialCol="1" llx="249.0" lly="402.0" urx="274.0" ury="415.0" pageNum="14">70</volume>
+        <pages initialCol="1" llx="264.0" lly="402.0" urx="296.0" ury="415.0" pageNum="14">p141</pages>
       </reference>
-      <reference refID="p14x70.0y382.0">
-        <ref-marker>[G]</ref-marker>
-        <title>Grard C 2000</title>
-        <journal>Ann. Henri Poincar</journal>
-        <volume>1</volume>
-        <pages>p443</pages>
+      <reference initialCol="1" llx="70.0" lly="382.0" urx="307.0" ury="395.0" pageNum="14" refID="p14x70.0y382.0">
+        <ref-marker initialCol="1" llx="70.0" lly="382.0" urx="145.0" ury="395.0" pageNum="14">[G]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="382.0" urx="172.0" ury="395.0" pageNum="14">Grard C 2000</title>
+        <journal initialCol="1" llx="171.0" lly="382.0" urx="275.0" ury="395.0" pageNum="14">Ann. Henri Poincar</journal>
+        <volume initialCol="1" llx="265.0" lly="382.0" urx="284.0" ury="395.0" pageNum="14">1</volume>
+        <pages initialCol="1" llx="274.0" lly="382.0" urx="307.0" ury="395.0" pageNum="14">p443</pages>
       </reference>
-      <reference refID="p14x70.0y362.0">
-        <ref-marker>[GLL]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Griesemer</author-last>
-            <author-first>M,</author-first>
+      <reference initialCol="1" llx="70.0" lly="362.0" urx="418.0" ury="375.0" pageNum="14" refID="p14x70.0y362.0">
+        <ref-marker initialCol="1" llx="70.0" lly="362.0" urx="272.0" ury="375.0" pageNum="14">[GLL]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="362.0" urx="272.0" ury="375.0" pageNum="14">
+          <author initialCol="1" llx="70.0" lly="362.0" urx="272.0" ury="375.0" pageNum="14">
+            <author-last initialCol="1" llx="70.0" lly="362.0" urx="272.0" ury="375.0" pageNum="14">Griesemer</author-last>
+            <author-first initialCol="1" llx="70.0" lly="362.0" urx="272.0" ury="375.0" pageNum="14">M,</author-first>
           </author>
-          <author>
-            <author-last>Lieb</author-last>
-            <author-first>E</author-first>
-            <author-middle>H,</author-middle>
-          </author>
-        </authors>
-        <title>and Loss M 2000</title>
-        <note>to appear in Invent.</note>
-        <address>Math.</address>
-      </reference>
-      <reference refID="p14x70.0y342.0">
-        <ref-marker>[Hi]</ref-marker>
-        <title>Hirokawa M 2001</title>
-        <journal>Rev. Math. Phys.</journal>
-        <volume>13</volume>
-        <pages>p221</pages>
-      </reference>
-      <reference refID="p14x70.0y322.0">
-        <ref-marker>[HS]</ref-marker>
-        <title>Hiroshima F and Spohn H 2001 "Enhanced Binding Through Coupling to a Quantum Field"</title>
-        <note>(preprint)</note>
-      </reference>
-      <reference refID="p14x70.0y290.0">
-        <ref-marker>[HT]</ref-marker>
-        <title>Henly E M and Thirring W 1962 "Elementary Quantum Field Theory" McGraw-Hill</title>
-      </reference>
-      <reference refID="p14x70.0y270.0">
-        <ref-marker>[KP]</ref-marker>
-        <title>Klln G and Pauli W 1955</title>
-        <journal>Dan. Mat. Fys. Medd.</journal>
-        <volume>30</volume>
-        <pages>p3</pages>
-      </reference>
-      <reference refID="p14x70.0y250.0">
-        <ref-marker>[Le]</ref-marker>
-        <title>Lee T D 1954</title>
-        <journal>Phys. Rev.</journal>
-        <volume>95</volume>
-        <pages>p1329</pages>
-      </reference>
-      <reference refID="p14x70.0y230.0">
-        <ref-marker>[LL]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Lieb</author-last>
-            <author-first>E</author-first>
+          <author initialCol="1" llx="70.0" lly="362.0" urx="272.0" ury="375.0" pageNum="14">
+            <author-last initialCol="1" llx="70.0" lly="362.0" urx="272.0" ury="375.0" pageNum="14">Lieb</author-last>
+            <author-first initialCol="1" llx="70.0" lly="362.0" urx="272.0" ury="375.0" pageNum="14">E</author-first>
+            <author-middle initialCol="1" llx="70.0" lly="362.0" urx="272.0" ury="375.0" pageNum="14">H,</author-middle>
           </author>
         </authors>
-        <title>H and Loss M 1999 Confrence MoschFlato</title>
-        <date>1999 1</date>
-        <pages>p327</pages>
+        <title initialCol="1" llx="70.0" lly="362.0" urx="418.0" ury="375.0" pageNum="14">and Loss M 2000</title>
+        <note initialCol="1" llx="267.0" lly="362.0" urx="418.0" ury="375.0" pageNum="14">to appear in Invent.</note>
+        <address initialCol="1" llx="267.0" lly="362.0" urx="418.0" ury="375.0" pageNum="14">Math.</address>
       </reference>
-      <reference refID="p14x70.0y210.0">
-        <ref-marker>[LY]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Lieb</author-last>
-            <author-first>E</author-first>
+      <reference initialCol="1" llx="70.0" lly="342.0" urx="306.0" ury="355.0" pageNum="14" refID="p14x70.0y342.0">
+        <ref-marker initialCol="1" llx="70.0" lly="342.0" urx="155.0" ury="355.0" pageNum="14">[Hi]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="342.0" urx="182.0" ury="355.0" pageNum="14">Hirokawa M 2001</title>
+        <journal initialCol="1" llx="181.0" lly="342.0" urx="268.0" ury="355.0" pageNum="14">Rev. Math. Phys.</journal>
+        <volume initialCol="1" llx="258.0" lly="342.0" urx="283.0" ury="355.0" pageNum="14">13</volume>
+        <pages initialCol="1" llx="274.0" lly="342.0" urx="306.0" ury="355.0" pageNum="14">p221</pages>
+      </reference>
+      <reference initialCol="1" llx="70.0" lly="310.0" urx="536.0" ury="335.0" pageNum="14" refID="p14x70.0y322.0">
+        <ref-marker initialCol="1" llx="70.0" lly="322.0" urx="215.0" ury="335.0" pageNum="14">[HS]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="322.0" urx="536.0" ury="335.0" pageNum="14">Hiroshima F and Spohn H 2001 "Enhanced Binding Through Coupling to a Quantum Field"</title>
+        <note initialCol="1" llx="90.0" lly="310.0" urx="145.0" ury="323.0" pageNum="14">(preprint)</note>
+      </reference>
+      <reference initialCol="1" llx="70.0" lly="290.0" urx="497.0" ury="303.0" pageNum="14" refID="p14x70.0y290.0">
+        <ref-marker initialCol="1" llx="70.0" lly="290.0" urx="329.0" ury="303.0" pageNum="14">[HT]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="290.0" urx="497.0" ury="303.0" pageNum="14">Henly E M and Thirring W 1962 "Elementary Quantum Field Theory" McGraw-Hill</title>
+      </reference>
+      <reference initialCol="1" llx="70.0" lly="270.0" urx="367.0" ury="283.0" pageNum="14" refID="p14x70.0y270.0">
+        <ref-marker initialCol="1" llx="70.0" lly="270.0" urx="205.0" ury="283.0" pageNum="14">[KP]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="270.0" urx="231.0" ury="283.0" pageNum="14">Klln G and Pauli W 1955</title>
+        <journal initialCol="1" llx="231.0" lly="270.0" urx="340.0" ury="283.0" pageNum="14">Dan. Mat. Fys. Medd.</journal>
+        <volume initialCol="1" llx="330.0" lly="270.0" urx="355.0" ury="283.0" pageNum="14">30</volume>
+        <pages initialCol="1" llx="345.0" lly="270.0" urx="367.0" ury="283.0" pageNum="14">p3</pages>
+      </reference>
+      <reference initialCol="1" llx="70.0" lly="250.0" urx="272.0" ury="263.0" pageNum="14" refID="p14x70.0y250.0">
+        <ref-marker initialCol="1" llx="70.0" lly="250.0" urx="173.0" ury="263.0" pageNum="14">[Le]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="250.0" urx="173.0" ury="263.0" pageNum="14">Lee T D 1954</title>
+        <journal initialCol="1" llx="172.0" lly="250.0" urx="230.0" ury="263.0" pageNum="14">Phys. Rev.</journal>
+        <volume initialCol="1" llx="220.0" lly="250.0" urx="245.0" ury="263.0" pageNum="14">95</volume>
+        <pages initialCol="1" llx="235.0" lly="250.0" urx="272.0" ury="263.0" pageNum="14">p1329</pages>
+      </reference>
+      <reference initialCol="1" llx="70.0" lly="230.0" urx="412.0" ury="244.0" pageNum="14" refID="p14x70.0y230.0">
+        <ref-marker initialCol="1" llx="70.0" lly="230.0" urx="193.0" ury="244.0" pageNum="14">[LL]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="230.0" urx="193.0" ury="244.0" pageNum="14">
+          <author initialCol="1" llx="70.0" lly="230.0" urx="193.0" ury="244.0" pageNum="14">
+            <author-last initialCol="1" llx="70.0" lly="230.0" urx="193.0" ury="244.0" pageNum="14">Lieb</author-last>
+            <author-first initialCol="1" llx="70.0" lly="230.0" urx="193.0" ury="244.0" pageNum="14">E</author-first>
           </author>
         </authors>
-        <title>H and Yamazaki K 1958</title>
-        <journal>Phys. Rev.</journal>
-        <volume>111</volume>
-        <pages>p728</pages>
+        <title initialCol="1" llx="70.0" lly="230.0" urx="380.0" ury="244.0" pageNum="14">H and Loss M 1999 Confrence MoschFlato</title>
+        <date initialCol="1" llx="234.0" lly="230.0" urx="390.0" ury="244.0" pageNum="14">1999 1</date>
+        <pages initialCol="1" llx="380.0" lly="230.0" urx="412.0" ury="244.0" pageNum="14">p327</pages>
       </reference>
-      <reference refID="p14x70.0y191.0">
-        <ref-marker>[MS]</ref-marker>
-        <title>Meystre P and Sargent III M 1991 "Elements of Quantum Optics"</title>
-        <publisher>Springer-Verlag,</publisher>
-        <address>Berlin Heidelberg berg</address>
-      </reference>
-      <reference refID="p14x70.0y159.0">
-        <ref-marker>[Mi]</ref-marker>
-        <title>Milonni P 1994 The Quantum Vacuum: An Introduction to Quantum Electrodynamics</title>
-        <publisher>(Academic Press)</publisher>
-      </reference>
-      <reference refID="p14x70.0y127.0">
-        <ref-marker>[Pr90]</ref-marker>
-        <title>Preparata G Quantum Field Theory of Superradiance in Problems in Fundamental Modern Physics,</title>
-        <editor>(eds. R. Cherubini, P. Dalpiaz and B. Minetti,</editor>
-        <publisher>World Scientific,</publisher>
-        <address>Singapore,</address>
-        <date>1990)</date>
-      </reference>
-      <reference refID="p14x70.0y95.0">
-        <ref-marker>[Pr95]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Preparata</author-last>
-            <author-first>G</author-first>
+      <reference initialCol="1" llx="70.0" lly="210.0" urx="348.0" ury="224.0" pageNum="14" refID="p14x70.0y210.0">
+        <ref-marker initialCol="1" llx="70.0" lly="210.0" urx="221.0" ury="224.0" pageNum="14">[LY]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="210.0" urx="221.0" ury="224.0" pageNum="14">
+          <author initialCol="1" llx="70.0" lly="210.0" urx="221.0" ury="224.0" pageNum="14">
+            <author-last initialCol="1" llx="70.0" lly="210.0" urx="221.0" ury="224.0" pageNum="14">Lieb</author-last>
+            <author-first initialCol="1" llx="70.0" lly="210.0" urx="221.0" ury="224.0" pageNum="14">E</author-first>
           </author>
         </authors>
-        <date>1995</date>
-        <booktitle>QED Coherence in Matter,</booktitle>
-        <publisher>(World Scientific,</publisher>
-        <address>Singapore)</address>
+        <title initialCol="1" llx="70.0" lly="210.0" urx="247.0" ury="224.0" pageNum="14">H and Yamazaki K 1958</title>
+        <journal initialCol="1" llx="247.0" lly="210.0" urx="305.0" ury="224.0" pageNum="14">Phys. Rev.</journal>
+        <volume initialCol="1" llx="295.0" lly="210.0" urx="326.0" ury="223.0" pageNum="14">111</volume>
+        <pages initialCol="1" llx="316.0" lly="210.0" urx="348.0" ury="224.0" pageNum="14">p728</pages>
       </reference>
-      <reference refID="p15x70.0y763.0">
-        <ref-marker>[RS2]</ref-marker>
-        <title>Reed M and Simon B Method of Modern Mathematical Physics Vol.</title>
-        <booktitle>II,</booktitle>
-        <publisher>Academic Press,</publisher>
-        <address>New York,</address>
-        <date>1975</date>
+      <reference initialCol="1" llx="70.0" lly="179.0" urx="535.0" ury="204.0" pageNum="14" refID="p14x70.0y191.0">
+        <ref-marker initialCol="1" llx="70.0" lly="191.0" urx="535.0" ury="204.0" pageNum="14">[MS]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="191.0" urx="535.0" ury="204.0" pageNum="14">Meystre P and Sargent III M 1991 "Elements of Quantum Optics"</title>
+        <publisher initialCol="1" llx="70.0" lly="191.0" urx="535.0" ury="204.0" pageNum="14">Springer-Verlag,</publisher>
+        <address initialCol="1" llx="70.0" lly="179.0" urx="535.0" ury="204.0" pageNum="14">Berlin Heidelberg berg</address>
       </reference>
-      <reference refID="p15x70.0y731.0">
-        <ref-marker>[Sa]</ref-marker>
-        <title>Salam A 1951</title>
-        <journal>Phys. Rev</journal>
-        <volume>82</volume>
-        <pages>p216</pages>
+      <reference initialCol="1" llx="70.0" lly="147.0" urx="535.0" ury="172.0" pageNum="14" refID="p14x70.0y159.0">
+        <ref-marker initialCol="1" llx="70.0" lly="159.0" urx="147.0" ury="172.0" pageNum="14">[Mi]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="159.0" urx="482.0" ury="172.0" pageNum="14">Milonni P 1994 The Quantum Vacuum: An Introduction to Quantum Electrodynamics</title>
+        <publisher initialCol="1" llx="90.0" lly="147.0" urx="535.0" ury="172.0" pageNum="14">(Academic Press)</publisher>
       </reference>
-      <reference refID="p15x70.0y712.0">
-        <ref-marker>[Sk]</ref-marker>
-        <title>Skibsted E 1998</title>
-        <journal>Rev. Math. Phys.</journal>
-        <volume>10</volume>
-        <pages>p989</pages>
+      <reference initialCol="1" llx="70.0" lly="115.0" urx="536.0" ury="140.0" pageNum="14" refID="p14x70.0y127.0">
+        <ref-marker initialCol="1" llx="70.0" lly="127.0" urx="156.0" ury="140.0" pageNum="14">[Pr90]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="115.0" urx="536.0" ury="140.0" pageNum="14">Preparata G Quantum Field Theory of Superradiance in Problems in Fundamental Modern Physics,</title>
+        <editor initialCol="1" llx="129.0" lly="115.0" urx="494.0" ury="128.0" pageNum="14">(eds. R. Cherubini, P. Dalpiaz and B. Minetti,</editor>
+        <publisher initialCol="1" llx="129.0" lly="115.0" urx="494.0" ury="128.0" pageNum="14">World Scientific,</publisher>
+        <address initialCol="1" llx="129.0" lly="115.0" urx="494.0" ury="128.0" pageNum="14">Singapore,</address>
+        <date initialCol="1" llx="129.0" lly="115.0" urx="494.0" ury="128.0" pageNum="14">1990)</date>
       </reference>
-      <reference refID="p15x70.0y692.0">
-        <ref-marker>[Ta]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Takahashi</author-last>
-            <author-first>Y</author-first>
+      <reference initialCol="1" llx="70.0" lly="95.0" urx="454.0" ury="108.0" pageNum="14" refID="p14x70.0y95.0">
+        <ref-marker initialCol="1" llx="70.0" lly="95.0" urx="197.0" ury="108.0" pageNum="14">[Pr95]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="95.0" urx="197.0" ury="108.0" pageNum="14">
+          <author initialCol="1" llx="70.0" lly="95.0" urx="197.0" ury="108.0" pageNum="14">
+            <author-last initialCol="1" llx="70.0" lly="95.0" urx="197.0" ury="108.0" pageNum="14">Preparata</author-last>
+            <author-first initialCol="1" llx="70.0" lly="95.0" urx="197.0" ury="108.0" pageNum="14">G</author-first>
           </author>
         </authors>
-        <date>1984</date>
-        <title>Quantum field theory I for condensed matter physicists (</title>
-        <conference>in Japanese),</conference>
-        <address>Baihukan, Tokyo.</address>
+        <date initialCol="1" llx="70.0" lly="95.0" urx="197.0" ury="108.0" pageNum="14">1995</date>
+        <booktitle initialCol="1" llx="196.0" lly="95.0" urx="326.0" ury="108.0" pageNum="14">QED Coherence in Matter,</booktitle>
+        <publisher initialCol="1" llx="317.0" lly="95.0" urx="454.0" ury="108.0" pageNum="14">(World Scientific,</publisher>
+        <address initialCol="1" llx="317.0" lly="95.0" urx="454.0" ury="108.0" pageNum="14">Singapore)</address>
       </reference>
-      <reference refID="p15x70.0y660.0">
-        <ref-marker>[WM]</ref-marker>
-        <institution>Walls D F and Milburn G J</institution>
-        <date>1994</date>
-        <booktitle>Quantum Optics,</booktitle>
-        <publisher>Springer-Verlag,</publisher>
-        <address>Berlin Heiderberg.</address>
+      <reference initialCol="1" llx="70.0" lly="751.0" urx="535.0" ury="777.0" pageNum="15" refID="p15x70.0y763.0">
+        <ref-marker initialCol="1" llx="70.0" lly="763.0" urx="207.0" ury="777.0" pageNum="15">[RS2]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="763.0" urx="437.0" ury="777.0" pageNum="15">Reed M and Simon B Method of Modern Mathematical Physics Vol.</title>
+        <booktitle initialCol="1" llx="208.0" lly="763.0" urx="437.0" ury="777.0" pageNum="15">II,</booktitle>
+        <publisher initialCol="1" llx="428.0" lly="763.0" urx="535.0" ury="777.0" pageNum="15">Academic Press,</publisher>
+        <address initialCol="1" llx="90.0" lly="751.0" urx="535.0" ury="777.0" pageNum="15">New York,</address>
+        <date initialCol="1" llx="90.0" lly="751.0" urx="149.0" ury="765.0" pageNum="15">1975</date>
       </reference>
-      <reference refID="p15x70.0y640.0">
-        <ref-marker>[Wa]</ref-marker>
-        <authors>
-          <author>
-            <author-last>Ward</author-last>
-            <author-first>J</author-first>
-            <author-middle>C</author-middle>
+      <reference initialCol="1" llx="70.0" lly="731.0" urx="258.0" ury="745.0" pageNum="15" refID="p15x70.0y731.0">
+        <ref-marker initialCol="1" llx="70.0" lly="731.0" urx="140.0" ury="745.0" pageNum="15">[Sa]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="731.0" urx="167.0" ury="745.0" pageNum="15">Salam A 1951</title>
+        <journal initialCol="1" llx="166.0" lly="731.0" urx="221.0" ury="745.0" pageNum="15">Phys. Rev</journal>
+        <volume initialCol="1" llx="211.0" lly="731.0" urx="236.0" ury="744.0" pageNum="15">82</volume>
+        <pages initialCol="1" llx="226.0" lly="731.0" urx="258.0" ury="745.0" pageNum="15">p216</pages>
+      </reference>
+      <reference initialCol="1" llx="70.0" lly="712.0" urx="300.0" ury="725.0" pageNum="15" refID="p15x70.0y712.0">
+        <ref-marker initialCol="1" llx="70.0" lly="712.0" urx="176.0" ury="725.0" pageNum="15">[Sk]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="712.0" urx="176.0" ury="725.0" pageNum="15">Skibsted E 1998</title>
+        <journal initialCol="1" llx="176.0" lly="712.0" urx="263.0" ury="725.0" pageNum="15">Rev. Math. Phys.</journal>
+        <volume initialCol="1" llx="253.0" lly="712.0" urx="278.0" ury="724.0" pageNum="15">10</volume>
+        <pages initialCol="1" llx="268.0" lly="712.0" urx="300.0" ury="725.0" pageNum="15">p989</pages>
+      </reference>
+      <reference initialCol="1" llx="70.0" lly="680.0" urx="535.0" ury="705.0" pageNum="15" refID="p15x70.0y692.0">
+        <ref-marker initialCol="1" llx="70.0" lly="692.0" urx="183.0" ury="705.0" pageNum="15">[Ta]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="692.0" urx="183.0" ury="705.0" pageNum="15">
+          <author initialCol="1" llx="70.0" lly="692.0" urx="183.0" ury="705.0" pageNum="15">
+            <author-last initialCol="1" llx="70.0" lly="692.0" urx="183.0" ury="705.0" pageNum="15">Takahashi</author-last>
+            <author-first initialCol="1" llx="70.0" lly="692.0" urx="183.0" ury="705.0" pageNum="15">Y</author-first>
           </author>
         </authors>
-        <date>1951</date>
-        <journal>Phys. Rev</journal>
-        <volume>845</volume>
-        <pages>p897</pages>
+        <date initialCol="1" llx="70.0" lly="692.0" urx="183.0" ury="705.0" pageNum="15">1984</date>
+        <title initialCol="1" llx="180.0" lly="692.0" urx="535.0" ury="705.0" pageNum="15">Quantum field theory I for condensed matter physicists (</title>
+        <conference initialCol="1" llx="417.0" lly="692.0" urx="535.0" ury="705.0" pageNum="15">in Japanese),</conference>
+        <address initialCol="1" llx="90.0" lly="680.0" urx="535.0" ury="705.0" pageNum="15">Baihukan, Tokyo.</address>
       </reference>
-      <reference refID="p15x70.0y620.0">
-        <ref-marker>[WW]</ref-marker>
-        <title>Weisskopf V F and Wigner E P 1930</title>
-        <journal>Z. Phys.</journal>
-        <volume>63</volume>
-        <pages>p54</pages>
+      <reference initialCol="1" llx="70.0" lly="660.0" urx="505.0" ury="673.0" pageNum="15" refID="p15x70.0y660.0">
+        <ref-marker initialCol="1" llx="70.0" lly="660.0" urx="146.0" ury="673.0" pageNum="15">[WM]</ref-marker>
+        <institution initialCol="1" llx="70.0" lly="660.0" urx="237.0" ury="673.0" pageNum="15">Walls D F and Milburn G J</institution>
+        <date initialCol="1" llx="232.0" lly="660.0" urx="263.0" ury="673.0" pageNum="15">1994</date>
+        <booktitle initialCol="1" llx="263.0" lly="660.0" urx="349.0" ury="673.0" pageNum="15">Quantum Optics,</booktitle>
+        <publisher initialCol="1" llx="340.0" lly="660.0" urx="505.0" ury="673.0" pageNum="15">Springer-Verlag,</publisher>
+        <address initialCol="1" llx="340.0" lly="660.0" urx="505.0" ury="673.0" pageNum="15">Berlin Heiderberg.</address>
+      </reference>
+      <reference initialCol="1" llx="70.0" lly="640.0" urx="273.0" ury="653.0" pageNum="15" refID="p15x70.0y640.0">
+        <ref-marker initialCol="1" llx="70.0" lly="640.0" urx="176.0" ury="653.0" pageNum="15">[Wa]</ref-marker>
+        <authors initialCol="1" llx="70.0" lly="640.0" urx="176.0" ury="653.0" pageNum="15">
+          <author initialCol="1" llx="70.0" lly="640.0" urx="176.0" ury="653.0" pageNum="15">
+            <author-last initialCol="1" llx="70.0" lly="640.0" urx="176.0" ury="653.0" pageNum="15">Ward</author-last>
+            <author-first initialCol="1" llx="70.0" lly="640.0" urx="176.0" ury="653.0" pageNum="15">J</author-first>
+            <author-middle initialCol="1" llx="70.0" lly="640.0" urx="176.0" ury="653.0" pageNum="15">C</author-middle>
+          </author>
+        </authors>
+        <date initialCol="1" llx="70.0" lly="640.0" urx="176.0" ury="653.0" pageNum="15">1951</date>
+        <journal initialCol="1" llx="175.0" lly="640.0" urx="230.0" ury="653.0" pageNum="15">Phys. Rev</journal>
+        <volume initialCol="1" llx="220.0" lly="640.0" urx="251.0" ury="653.0" pageNum="15">845</volume>
+        <pages initialCol="1" llx="241.0" lly="640.0" urx="273.0" ury="653.0" pageNum="15">p897</pages>
+      </reference>
+      <reference initialCol="1" llx="70.0" lly="620.0" urx="358.0" ury="633.0" pageNum="15" refID="p15x70.0y620.0">
+        <ref-marker initialCol="1" llx="70.0" lly="620.0" urx="244.0" ury="633.0" pageNum="15">[WW]</ref-marker>
+        <title initialCol="1" llx="70.0" lly="620.0" urx="284.0" ury="633.0" pageNum="15">Weisskopf V F and Wigner E P 1930</title>
+        <journal initialCol="1" llx="277.0" lly="620.0" urx="325.0" ury="633.0" pageNum="15">Z. Phys.</journal>
+        <volume initialCol="1" llx="315.0" lly="620.0" urx="340.0" ury="633.0" pageNum="15">63</volume>
+        <pages initialCol="1" llx="331.0" lly="620.0" urx="358.0" ury="633.0" pageNum="15">p54</pages>
       </reference>
     </biblio>
   </content>

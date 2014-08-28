@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <content>
+    <headers initialCol="1" llx="72.0" lly="368.0" urx="497.0" ury="731.0" pageNum="1" headerID="p1x121.0y706.0">
+      <title initialCol="1" llx="121.0" lly="684.0" urx="497.0" ury="731.0" pageNum="1">Threshold Selection for Correlation-Based Watermark Detection</title>
+      <authors initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">
+        <author initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">
+          <author-first initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">A.</author-first>
+          <author-last initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">Piva,</author-last>
+        </author>
+        <author initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">
+          <author-first initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">M.</author-first>
+          <author-last initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">Barni,</author-last>
+        </author>
+        <author initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">
+          <author-first initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">F.</author-first>
+          <author-last initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">Bartolini,</author-last>
+        </author>
+        <author initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">
+          <author-first initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">V.</author-first>
+          <author-last initialCol="1" llx="182.0" lly="656.0" urx="426.0" ury="670.0" pageNum="1">Cappellini</author-last>
+        </author>
+      </authors>
+      <institution initialCol="1" llx="164.0" lly="629.0" urx="443.0" ury="641.0" pageNum="1">Dipartimento di Ingegneria Elettronica, Universitdi Firenze,</institution>
+      <address initialCol="1" llx="146.0" lly="614.0" urx="462.0" ury="627.0" pageNum="1">via S. Marta 3, 50139, Firenze, Italy</address>
+      <headers-hlabeled initialCol="1" llx="146.0" lly="614.0" urx="462.0" ury="627.0" pageNum="1">--- e-mail piva@cosimo.die.unifi.it</headers-hlabeled>
+      <phone initialCol="1" llx="200.0" lly="601.0" urx="408.0" ury="614.0" pageNum="1">Phone +39 55 4796380 -- Fax: +39 55 494569</phone>
+      <abstract initialCol="1" llx="72.0" lly="368.0" urx="305.0" ury="573.0" pageNum="1">Abstract In this paper, the problem of how a decision threshold for a correlation-based watermark detection algorithm can be properly chosen is addressed; it is demonstrated that, if a watermarked image is attacked through signal processing techniques, the statistic of the correlation values changes, resulting in an higher false negative error probability than was expected. To cope with this effect, a new threshold based on a fixed constraint on the maximum probability of false positive errors is proposed. Results confirm the robustness of the decoder against various kinds of attacks.</abstract>
+    </headers>
+    <body initialCol="1" llx="0.0" lly="-443.0" urx="536.0" ury="758.0" pageNum="1" bodyID="p1x72.0y328.0">
+      <notext initialCol="1" llx="72.0" lly="86.0" urx="305.0" ury="345.0" pageNum="1">1 Introduction Digital watermarking represents an effective solution to the increasing demand for copyright protection mechanisms. A codemark is indissolubly embedded into the image to be protected, to allow the identification of its creator, owner, authorized author, and so on. Several systems have been proposed which hide some information in the spatial domain [5, 7] or in a transformed domain of the image [1, 3, 4, 6, 8], trying to fulfill the contrasting requirements of robustness and unobtrusiveness. In this paper, the problem of how a decision threshold for a correlation-based watermark detection system [1] can be selected, is discussed; the threshold is chosen according to a fixed constraint on the maximum probability of false positive errors in watermark detection.</notext>
+      <text initialCol="1" llx="304.0" lly="86.0" urx="536.0" ury="558.0" pageNum="1">Here, the watermark consists of a set of n normally distributed samples fx 1 ; x 2 ; : : : ; x n g which are used to modify a selected set V of full-frame DCT coefficients. In particular, the coefficients from the (k + 1)th to the (k + n)th in the zig-zag ordering of the DCT spectrum are selected and modified, according to the following rule: v X;i = v i + ffjv i jx i ; (1) where v i is the original DCT coefficient, x i the watermark sample, v X;i the modified coefficients, and ff is a properly chosen parameter tuning the watermark energy: the higher the ff, the more robust and the more visible the watermark. By denoting the component by component multiplication of vectors X and V by XV , equation 1 can be put in the more compact form VX = V + ffXjV j. During detection, the correlation between the marked and possibly corrupted coefficients V 0 and the watermark itself is computed and used as a measure of the presence of a given mark X. More precisely, given a mark X and a set of possibly corrupted and watermarked DCT coefficients V 0 , the correlation ae(X; V 0 ) between X and V 0 , defined as ae(X; V 0 ) = X \Delta V 0 n = 1 n n X i=1 x i v 0 i ; (2) can be used to determine whether a given mark is present or not, by simply comparing it to a predefined threshold.</text>
+      <text initialCol="1" llx="72.0" lly="86.0" urx="307.0" ury="758.0" pageNum="2">2 Statistical analysis for threshold selection It is important for a correct behaviour of the watermark detection system, to properly choose the decision threshold. Let us consider a scenario in which the decoder is presented a grey level image and it is asked to decide whether a given mark X is embedded in the image. Only one of the following situations is possible: Hp.A: V 0 = V i.e. the image is not marked; Hp.B: V 0 = V + ffY jV j i.e. a mark Y 6= X is present; Hp.C: V 0 = V + ffXjV j i.e. the mark X is present. For the present application, i. e. to decide whether the mark X has been embedded in the image or not, hypothesis A and B are equivalent, and can be grouped together: Hp.0 = Hp.A or Hp.B: the image is not marked with X; Hp.1 = Hp.C: the image is marked with X. To discriminate between Hp:0 and Hp:1, the decoder computes ae(X; V 0 ) and compares it with a threshold T ae , if ae(X; V 0 ) is lower than T ae then the decoder decides the image is not marked with X, whereas if ae(X; V 0 ) is above the threshold, the decoder assumes the image is marked with X. To determine the value of T ae , the decoder error probability can be taken into account. The error probability P e , i.e. the probability of deciding for the wrong hypothesis, can be written as: P e = P (0j1)P (1) + P (1j0)P (0); (3) where P (0j1) is the probability of missing the presence of the mark (false negative), and P (1j0) the probability of revealing the presence of X when X is not actually present (false positive), P (0) and P (1) the a priori probability</text>
+      <notext initialCol="1" llx="304.0" lly="86.0" urx="536.0" ury="755.0" pageNum="2">of Hp:0 and Hp:1. By assuming that Hp:0 and Hp:1 are equiprobable, and by taking into account the particular decoding strategy, eq.(3) can be put in the form: P e = 1 2 h P (ae ! T ae j1) + P (ae ? T ae j0) i : (4) where ae = ae(X; V 0 ). To go on with the computation of P e , the statistic of ae(X; V 0 ) must be considered. Let us note first that by invoking the central limit theorem, ae can be assumed to be normally distributed. It is possible to demonstrate [1] that, when ff 2 1, if hypothesis Hp:0 holds aejHp:0 = 0 (5) and oe 2 aejHp:0 = (1 + ff 2 ) oe 2 v n (6) and if hypothesis Hp:1 holds, we set aejHp:1 = ff jvj (7) and oe 2 aejHp:1 = (1 + 2ff 2 ) oe 2 v n + ff 2 oe 2 jvj n (8) where jvj = 1 n n X i=1 E[jv i j] (9) is the average value of jv i j over the set of marked coefficients, and oe 2 v = 1 n n X i=1 E[v 2 i ] (10) is the average value of oe 2 v i over the set of marked coefficients. If ff 2 1, we can write: oe 2 aejHp:0 ' oe 2 aejHp:1 ' oe 2 v n , oe 2 ae : (11) In fig.1 the pdf's of ae under hypotheses 0 and 1 are shown. In order to minimize the error probability, a threshold T ae has to be chosen such that P (0j1) + P (1j0) is minimum. Under the condition ff 1, P (0j1) = P (1j0), so that</notext>
+      <figure-marker initialCol="1" llx="72.0" lly="601.0" urx="304.0" ury="629.0" pageNum="3">Figure 1: The pdf's of ae under hypotheses 0 and 1. Attacks are not considered.</figure-marker>
+      <figure-marker initialCol="1" llx="72.0" lly="450.0" urx="304.0" ury="478.0" pageNum="3">Figure 2: The pdf's of ae under hypotheses 0 and 1. Attacks are now considered.</figure-marker>
+      <notext initialCol="1" llx="72.0" lly="86.0" urx="305.0" ury="434.0" pageNum="3">the optimum threshold is midway between zero and aejHp:1 , that is T ae = ff 2 jvj (12) For the above analysis to be successfully applied to practical situations, two considerations are in order. On the basis of statistical analysis [2], we have assumed jvj = 0:7; however, if an image is attacked this value can be considerably different so that an error is likely to occur when comparing ae(X; V 0 ) with T ae . In practical applications, then, it is better for the decoder to use a threshold T ae which is estimated on the marked image, i.e. we assume jvj ' 1 n n X i=1 jv 0 i j (13) The second consideration concerns the choice of T ae when the image has been corrupted by intentional or unintentional attacks. In such a case, the analysis carried out so far is no longer valid, since both the mean value and the variance of ae(X; V 0 ) may be altered because of attacks. In general, it can be</notext>
+      <text initialCol="1" llx="304.0" lly="583.0" urx="536.0" ury="755.0" pageNum="3">stated that in presence of attacks the oe ae(X;V ) and oe ae(X;V Y ) should remain approximately the same, whereas oe ae(X;V X ) is likely to increase significantly. Therefore, we can say that because of attacks, two gaussians are still present, but the one centered in jvj has now a significantly larger variance. This suggested that T ae should be set closer to zero, instead of midway between zero and jvj (see fig.2), so that T ae has been fixed [1] to T ae = ff 3 jvj (14)</text>
+      <section-marker initialCol="1" llx="304.0" lly="553.0" urx="524.0" ury="570.0" pageNum="3">3 A new threshold selection</section-marker>
+      <text initialCol="1" llx="304.0" lly="311.0" urx="536.0" ury="542.0" pageNum="3">However, experimental results have shown that when the watermarked image is attacked the proposed threshold leads to a higher watermark missing rate than was expected. In particular, the probability of missing an embedded watermark results to be considerably higher than the probability of false positive detection, i.e. the probability to detect a watermark which is not really present in the image. This can be explained by the fact that under attacks it usually happens that aejHp:1 ! ff jvj (see fig.3). To solve this problem, a different approach for threshold selection has been found. In this case, instead of trying to minimize the error probability P e , it is chosen to fix a constrain on the maximum false positive probability (e.g.</text>
+      <notext initialCol="1" llx="0.0" lly="-289.0" urx="536.0" ury="326.0" pageNum="3">10\Gamma 6 ), so that the threshold is moved</notext>
+      <text initialCol="1" llx="304.0" lly="277.0" urx="536.0" ury="312.0" pageNum="3">leftmost (see again fig.3). In particular, given P f = P (ae ? T ae j0) = 1 2 erfc( T ae p 2oe 2 ae ) =</text>
+      <notext initialCol="1" llx="0.0" lly="-443.0" urx="536.0" ury="297.0" pageNum="3">10\Gamma 6 ,</notext>
+      <text initialCol="1" llx="304.0" lly="222.0" urx="447.0" ury="280.0" pageNum="3">the following relation holds: T ae q 2oe 2 ae</text>
+      <notext initialCol="1" llx="315.0" lly="194.0" urx="536.0" ury="249.0" pageNum="3">3:3 (15) in such a way that a new threshold is</notext>
+      <text initialCol="1" llx="304.0" lly="137.0" urx="496.0" ury="195.0" pageNum="3">obtained: T ae = 3:3 q 2oe ae 2 = 3:3 s 2(1 + ff 2 )oe v 2 n</text>
+      <notext initialCol="1" llx="507.0" lly="144.0" urx="536.0" ury="159.0" pageNum="3">(16)</notext>
+      <text initialCol="1" llx="304.0" lly="85.0" urx="536.0" ury="127.0" pageNum="3">Once again, the threshold can be evaluated directly on the watermarked and possibly corrupted image: the value (1 + ff 2 )oe v 2</text>
+      <notext initialCol="1" llx="72.0" lly="697.0" urx="304.0" ury="755.0" pageNum="4">corresponds, in fact, to oe v 0 2 so that we have: T ae = 3:3 s 2oe v 0 2 n (17)</notext>
+      <figure-marker initialCol="1" llx="72.0" lly="510.0" urx="305.0" ury="552.0" pageNum="4">Figure 3: The new choice for the threshold, based on a constrain on the maximum false positive probability.</figure-marker>
+      <notext initialCol="1" llx="72.0" lly="316.0" urx="305.0" ury="485.0" pageNum="4">4 Experimental results In the following, experimental results will be shown proving that the new threshold choice improves the characteristics of robustness against attacks of the proposed watermarking system, and confirming the aforementioned analysis. In particular, the thresholds T ae = ff 3 jv 0 j and T 0 ae = 3:3 q 2oe v 0 2 n will be compared, highlighting the improvement of performance of the system with respect to the correct detection of the watermark. The standard</notext>
+      <figure-marker initialCol="1" llx="103.0" lly="88.0" urx="274.0" ury="102.0" pageNum="4">Figure 4: Original image `Lenna'.</figure-marker>
+      <figure-marker initialCol="1" llx="304.0" lly="522.0" urx="536.0" ury="550.0" pageNum="4">Figure 5: Watermarked image `Lenna' with parameter ff=0.2, k=16000 and n=16000.</figure-marker>
+      <text initialCol="1" llx="304.0" lly="126.0" urx="536.0" ury="497.0" pageNum="4">image "Lenna" in Figure 4 was signed with parameter ff = 0.2, with a watermarking random sequence of length n = 16000, and skipping the first k = 16000 coefficients in the zig-zag scan, to obtain a watermarked copy shown in Figure 5. The detector was applied to this copy: as shown in Figure 6, the new threshold T 0 ae is lower than the old threshold T ae , but much higher again with respect to the responses to the other watermarks, so that no false positive watermark detection could happen. To verify the effectiveness of the new threshold in the watermark detection of attacked images, some modifications of "Lenna" were carried out: first, a JPEG compression with quality factor of 5% was applied; the results of the decoder are shown in Figure 7: the new threshold T 0 ae is lower than the correct response, whereas the old threshold T ae is higher than the response, so that using T ae a missed detection would occur. Then, the sequence of JPEG compression with quality factor of 15%, despeckle filtering, and dithering to only 4 grey levels, was applied, obtaining the image in Figure 8. Once again, by using the threshold T 0 ae the embedded watermark is correctly detected, whereas by using T ae it would be missed (see</text>
+      <figure-marker initialCol="1" llx="304.0" lly="86.0" urx="536.0" ury="127.0" pageNum="4">Figure 9). Similar results were obtained also carrying out other attacks, like median and low pass filtering, sharpening, blurring.</figure-marker>
+      <notext initialCol="1" llx="72.0" lly="358.0" urx="536.0" ury="757.0" pageNum="5">-0.01 0 0.01 0.02 0.03 0.04 0.05 0 100 200 300 400 500 600 700 800 900 1000 Detector Response Watermarks Tr T' r Figure 6: Detector response of the watermaked image in Figure 5 to 1000 randomly generated watermarks. Only watermark number 100 matches that embedded. As shown, the new threshold T 0 ae is lower than the old threshold T ae , but still much higher with respect to the responses of the other watermarks. -0.01 -0.005 0 0.005 0.01 0.015 0.02 0 100 200 300 400 500 600 700 800 900 1000 Watermarks Detector Response T' r Tr</notext>
+      <figure-marker initialCol="1" llx="72.0" lly="285.0" urx="536.0" ury="347.0" pageNum="5">Figure 7: Detector response of the watermaked image in Figure 5 after a JPEG compression with quality factor of 5%. 5 Conclusions</figure-marker>
+      <text initialCol="1" llx="72.0" lly="86.0" urx="305.0" ury="263.0" pageNum="5">In this paper, the problem of how a decision threshold for a correlation-based watermark detection algorithm can be properly chosen is addressed; to determine whether a given watermark is present or not, the correlation ae(X; V ) between the watermark X and a set of selected DCT coefficients is computed, and compared to a threshold T ae . It has been demonstrated that, if a watermarked image is attacked through signal processing techniques, the statistic of the correlation changes, resulting in an higher false negative error probability than was expected. To cope with this effect, a new threshold based</text>
+      <notext initialCol="1" llx="158.0" lly="86.0" urx="536.0" ury="757.0" pageNum="5">on a fixed constraint on the maximum probability of false positive errors is proposed. Results confirm the robustness of the decoder against the attacks. Acknowledgments This work was partially supported by the "Progetto Finalizzato Beni Culturali" (Finalized Project for Cultural Heritage) of the Italian National Research Council (CNR). -0.01 -0.005 0 0.005 0.01 0.015 0.02 0 100 200 300 400 500 600 700 800 900 1000 Watermarks Detector Response Tr T' r</notext>
+      <figure-marker initialCol="1" llx="72.0" lly="552.0" urx="536.0" ury="580.0" pageNum="6">Figure 9: Detector response of the watermaked image in Figure 5 after JPEG compression of 15%, despeckle filtering and dithering with reduction to 4 grey levels.</figure-marker>
+      <figure-marker initialCol="1" llx="72.0" lly="286.0" urx="304.0" ury="328.0" pageNum="6">Figure 8: Watermarked image `Lenna' after JPEG compression of 15%, despeckle filtering and dithering with reduction to 4 grey levels.</figure-marker>
+    </body>
+    <biblio>
+      <reference initialCol="1" llx="78.0" lly="182.0" urx="305.0" ury="237.0" pageNum="6" refID="p6x78.0y223.0">
+        <ref-marker initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">[1]</ref-marker>
+        <authors initialCol="1" llx="78.0" lly="209.0" urx="305.0" ury="237.0" pageNum="6">
+          <author initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">
+            <author-first initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">M.</author-first>
+            <author-last initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">Barni,</author-last>
+          </author>
+          <author initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">
+            <author-first initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">F.</author-first>
+            <author-last initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">Bartolini,</author-last>
+          </author>
+          <author initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">
+            <author-first initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">V.</author-first>
+            <author-last initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">Cappellini,</author-last>
+          </author>
+          <author initialCol="1" llx="78.0" lly="209.0" urx="305.0" ury="237.0" pageNum="6">
+            <author-first initialCol="1" llx="78.0" lly="223.0" urx="304.0" ury="237.0" pageNum="6">A.</author-first>
+            <author-last initialCol="1" llx="95.0" lly="209.0" urx="305.0" ury="224.0" pageNum="6">Piva,</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="95.0" lly="196.0" urx="305.0" ury="224.0" pageNum="6">"A DCT-domain system for robust image watermarking",</title>
+        <journal initialCol="1" llx="208.0" lly="196.0" urx="302.0" ury="208.0" pageNum="6">Signal Processing,</journal>
+        <volume initialCol="1" llx="95.0" lly="182.0" urx="279.0" ury="197.0" pageNum="6">vol.66,</volume>
+        <number initialCol="1" llx="95.0" lly="182.0" urx="279.0" ury="197.0" pageNum="6">no.3,</number>
+        <pages initialCol="1" llx="95.0" lly="182.0" urx="279.0" ury="197.0" pageNum="6">pp. 357--372,</pages>
+        <date initialCol="1" llx="95.0" lly="182.0" urx="279.0" ury="197.0" pageNum="6">May 1998.</date>
+      </reference>
+      <reference initialCol="1" llx="78.0" lly="86.0" urx="305.0" ury="168.0" pageNum="6" refID="p6x78.0y154.0">
+        <ref-marker initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">[2]</ref-marker>
+        <authors initialCol="1" llx="78.0" lly="140.0" urx="304.0" ury="168.0" pageNum="6">
+          <author initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">
+            <author-first initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">M.</author-first>
+            <author-last initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">Barni,</author-last>
+          </author>
+          <author initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">
+            <author-first initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">F.</author-first>
+            <author-last initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">Bartolini,</author-last>
+          </author>
+          <author initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">
+            <author-first initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">A.</author-first>
+            <author-last initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">Piva</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="78.0" lly="140.0" urx="304.0" ury="168.0" pageNum="6">
+            <author-first initialCol="1" llx="78.0" lly="154.0" urx="304.0" ury="168.0" pageNum="6">F.</author-first>
+            <author-last initialCol="1" llx="95.0" lly="140.0" urx="304.0" ury="154.0" pageNum="6">Rigacci,</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="95.0" lly="126.0" urx="304.0" ury="154.0" pageNum="6">"Statistical Modelling of Full Frame DCT Coefficients",</title>
+        <note initialCol="1" llx="95.0" lly="126.0" urx="304.0" ury="141.0" pageNum="6">to appear in</note>
+        <conference initialCol="1" llx="95.0" lly="100.0" urx="302.0" ury="125.0" pageNum="6">Proc. European Signal Processing Conference EUSIPCO</conference>
+        <date initialCol="1" llx="95.0" lly="100.0" urx="210.0" ury="112.0" pageNum="6">98,</date>
+        <institution initialCol="1" llx="208.0" lly="99.0" urx="305.0" ury="114.0" pageNum="6">Island of Rhodes,</institution>
+        <address initialCol="1" llx="95.0" lly="86.0" urx="249.0" ury="100.0" pageNum="6">Greece,</address>
+        <date initialCol="1" llx="95.0" lly="86.0" urx="249.0" ury="100.0" pageNum="6">September 8-11, 1998.</date>
+      </reference>
+      <reference initialCol="1" llx="310.0" lly="465.0" urx="536.0" ury="533.0" pageNum="6" refID="p6x310.0y519.0">
+        <ref-marker initialCol="1" llx="310.0" lly="519.0" urx="536.0" ury="533.0" pageNum="6">[3]</ref-marker>
+        <authors initialCol="1" llx="310.0" lly="519.0" urx="536.0" ury="533.0" pageNum="6">
+          <author initialCol="1" llx="310.0" lly="519.0" urx="536.0" ury="533.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="519.0" urx="536.0" ury="533.0" pageNum="6">A.</author-first>
+            <author-last initialCol="1" llx="310.0" lly="519.0" urx="536.0" ury="533.0" pageNum="6">Bors</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="310.0" lly="519.0" urx="536.0" ury="533.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="519.0" urx="536.0" ury="533.0" pageNum="6">I.</author-first>
+            <author-last initialCol="1" llx="310.0" lly="519.0" urx="536.0" ury="533.0" pageNum="6">Pitas,</author-last>
+          </author>
+        </authors>
+        <reference-hlabeled initialCol="1" llx="310.0" lly="519.0" urx="536.0" ury="533.0" pageNum="6">"</reference-hlabeled>
+        <title initialCol="1" llx="310.0" lly="505.0" urx="536.0" ury="533.0" pageNum="6">Image watermarking using DCT domain constraints,"</title>
+        <conference initialCol="1" llx="327.0" lly="492.0" urx="534.0" ury="517.0" pageNum="6">Proc. ICIP</conference>
+        <date initialCol="1" llx="327.0" lly="492.0" urx="534.0" ury="504.0" pageNum="6">'96,</date>
+        <conference initialCol="1" llx="327.0" lly="492.0" urx="534.0" ury="504.0" pageNum="6">Int. Conf. on Image Processing,</conference>
+        <address initialCol="1" llx="327.0" lly="478.0" urx="536.0" ury="492.0" pageNum="6">vol.III,</address>
+        <pages initialCol="1" llx="327.0" lly="478.0" urx="536.0" ury="492.0" pageNum="6">pp.231--234,</pages>
+        <address initialCol="1" llx="327.0" lly="478.0" urx="536.0" ury="492.0" pageNum="6">Lausanne,</address>
+        <date initialCol="1" llx="327.0" lly="465.0" urx="536.0" ury="492.0" pageNum="6">September 1996.</date>
+      </reference>
+      <reference initialCol="1" llx="310.0" lly="389.0" urx="536.0" ury="457.0" pageNum="6" refID="p6x310.0y443.0">
+        <ref-marker initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">[4]</ref-marker>
+        <authors initialCol="1" llx="310.0" lly="429.0" urx="536.0" ury="457.0" pageNum="6">
+          <author initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">I.</author-first>
+            <author-middle initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">J.</author-middle>
+            <author-last initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">Cox,</author-last>
+          </author>
+          <author initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">J.</author-first>
+            <author-last initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">Kilian,</author-last>
+          </author>
+          <author initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">T.</author-first>
+            <author-last initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">Leighton</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="310.0" lly="429.0" urx="536.0" ury="457.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="443.0" urx="536.0" ury="457.0" pageNum="6">T.</author-first>
+            <author-last initialCol="1" llx="327.0" lly="429.0" urx="536.0" ury="444.0" pageNum="6">Shamoon,</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="327.0" lly="416.0" urx="536.0" ury="444.0" pageNum="6">"Secure spread spectrum watermarking for multimedia,"</title>
+        <journal initialCol="1" llx="327.0" lly="403.0" urx="534.0" ury="428.0" pageNum="6">IEEE Trans. Image Processing,</journal>
+        <volume initialCol="1" llx="417.0" lly="402.0" urx="536.0" ury="416.0" pageNum="6">vol.6,</volume>
+        <number initialCol="1" llx="417.0" lly="402.0" urx="536.0" ury="416.0" pageNum="6">no.12,</number>
+        <pages initialCol="1" llx="327.0" lly="389.0" urx="536.0" ury="416.0" pageNum="6">pp. 1673-1687,</pages>
+        <date initialCol="1" llx="327.0" lly="389.0" urx="441.0" ury="403.0" pageNum="6">December 1997.</date>
+      </reference>
+      <reference initialCol="1" llx="310.0" lly="326.0" urx="536.0" ury="381.0" pageNum="6" refID="p6x310.0y367.0">
+        <ref-marker initialCol="1" llx="310.0" lly="367.0" urx="536.0" ury="381.0" pageNum="6">[5]</ref-marker>
+        <authors initialCol="1" llx="310.0" lly="367.0" urx="536.0" ury="381.0" pageNum="6">
+          <author initialCol="1" llx="310.0" lly="367.0" urx="536.0" ury="381.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="367.0" urx="536.0" ury="381.0" pageNum="6">I.</author-first>
+            <author-last initialCol="1" llx="310.0" lly="367.0" urx="536.0" ury="381.0" pageNum="6">Pitas,</author-last>
+          </author>
+        </authors>
+        <reference-hlabeled initialCol="1" llx="310.0" lly="367.0" urx="536.0" ury="381.0" pageNum="6">"</reference-hlabeled>
+        <title initialCol="1" llx="310.0" lly="353.0" urx="536.0" ury="381.0" pageNum="6">A method for signature casting on digital images,"</title>
+        <conference initialCol="1" llx="436.0" lly="354.0" urx="534.0" ury="365.0" pageNum="6">Proc. ICIP</conference>
+        <date initialCol="1" llx="436.0" lly="354.0" urx="534.0" ury="365.0" pageNum="6">'96,</date>
+        <conference initialCol="1" llx="327.0" lly="340.0" urx="534.0" ury="365.0" pageNum="6">Int. Conf. on Image Processing,</conference>
+        <address initialCol="1" llx="472.0" lly="340.0" urx="536.0" ury="354.0" pageNum="6">vol.III,</address>
+        <pages initialCol="1" llx="327.0" lly="326.0" urx="536.0" ury="354.0" pageNum="6">pp. 215--218,</pages>
+        <address initialCol="1" llx="327.0" lly="326.0" urx="512.0" ury="340.0" pageNum="6">Lausanne,</address>
+        <date initialCol="1" llx="327.0" lly="326.0" urx="512.0" ury="340.0" pageNum="6">September 1996.</date>
+      </reference>
+      <reference initialCol="1" llx="310.0" lly="250.0" urx="536.0" ury="321.0" pageNum="6" refID="p6x310.0y304.0">
+        <ref-marker initialCol="1" llx="310.0" lly="304.0" urx="375.0" ury="321.0" pageNum="6">[6]</ref-marker>
+        <authors initialCol="1" llx="310.0" lly="291.0" urx="536.0" ury="321.0" pageNum="6">
+          <author initialCol="1" llx="310.0" lly="304.0" urx="375.0" ury="321.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="304.0" urx="375.0" ury="321.0" pageNum="6">J.J.</author-first>
+            <author-middle initialCol="1" llx="310.0" lly="304.0" urx="375.0" ury="321.0" pageNum="6">K.</author-middle>
+            <author-last initialCol="1" llx="310.0" lly="304.0" urx="375.0" ury="321.0" pageNum="6">'</author-last>
+          </author>
+          <author initialCol="1" llx="358.0" lly="304.0" urx="536.0" ury="319.0" pageNum="6">
+            <author-first initialCol="1" llx="358.0" lly="304.0" urx="536.0" ury="319.0" pageNum="6">O</author-first>
+            <author-last initialCol="1" llx="358.0" lly="304.0" urx="536.0" ury="319.0" pageNum="6">Ruanaidh,</author-last>
+          </author>
+          <author initialCol="1" llx="358.0" lly="304.0" urx="536.0" ury="319.0" pageNum="6">
+            <author-first initialCol="1" llx="358.0" lly="304.0" urx="536.0" ury="319.0" pageNum="6">F.</author-first>
+            <author-middle initialCol="1" llx="358.0" lly="304.0" urx="536.0" ury="319.0" pageNum="6">M.</author-middle>
+            <author-last initialCol="1" llx="358.0" lly="304.0" urx="536.0" ury="319.0" pageNum="6">Boland</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="327.0" lly="291.0" urx="536.0" ury="319.0" pageNum="6">
+            <author-first initialCol="1" llx="358.0" lly="304.0" urx="536.0" ury="319.0" pageNum="6">W.</author-first>
+            <author-middle initialCol="1" llx="358.0" lly="304.0" urx="536.0" ury="319.0" pageNum="6">J.</author-middle>
+            <author-last initialCol="1" llx="327.0" lly="291.0" urx="536.0" ury="305.0" pageNum="6">Dowling,</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="327.0" lly="277.0" urx="536.0" ury="305.0" pageNum="6">"Phase watermarking of digital images,"</title>
+        <conference initialCol="1" llx="370.0" lly="278.0" urx="534.0" ury="289.0" pageNum="6">Proc. ICIP</conference>
+        <date initialCol="1" llx="370.0" lly="278.0" urx="534.0" ury="289.0" pageNum="6">'96,</date>
+        <conference initialCol="1" llx="327.0" lly="264.0" urx="534.0" ury="289.0" pageNum="6">Int. Conf. on Image Processing,</conference>
+        <series initialCol="1" llx="403.0" lly="263.0" urx="536.0" ury="278.0" pageNum="6">vol.III,</series>
+        <pages initialCol="1" llx="403.0" lly="263.0" urx="536.0" ury="278.0" pageNum="6">pp. 239--242,</pages>
+        <address initialCol="1" llx="327.0" lly="250.0" urx="536.0" ury="278.0" pageNum="6">Lausanne,</address>
+        <date initialCol="1" llx="327.0" lly="250.0" urx="449.0" ury="264.0" pageNum="6">September 1996.</date>
+      </reference>
+      <reference initialCol="1" llx="310.0" lly="188.0" urx="536.0" ury="242.0" pageNum="6" refID="p6x310.0y228.0">
+        <ref-marker initialCol="1" llx="310.0" lly="228.0" urx="536.0" ury="242.0" pageNum="6">[7]</ref-marker>
+        <authors initialCol="1" llx="310.0" lly="228.0" urx="536.0" ury="242.0" pageNum="6">
+          <author initialCol="1" llx="310.0" lly="228.0" urx="536.0" ury="242.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="228.0" urx="536.0" ury="242.0" pageNum="6">R.</author-first>
+            <author-last initialCol="1" llx="310.0" lly="228.0" urx="536.0" ury="242.0" pageNum="6">Wolfgang</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="310.0" lly="228.0" urx="536.0" ury="242.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="228.0" urx="536.0" ury="242.0" pageNum="6">E.</author-first>
+            <author-middle initialCol="1" llx="310.0" lly="228.0" urx="536.0" ury="242.0" pageNum="6">J.</author-middle>
+            <author-last initialCol="1" llx="310.0" lly="228.0" urx="536.0" ury="242.0" pageNum="6">Delp</author-last>
+          </author>
+        </authors>
+        <reference-hlabeled initialCol="1" llx="310.0" lly="228.0" urx="536.0" ury="242.0" pageNum="6">"</reference-hlabeled>
+        <title initialCol="1" llx="310.0" lly="215.0" urx="536.0" ury="242.0" pageNum="6">A watermark for digital images,"</title>
+        <conference initialCol="1" llx="429.0" lly="215.0" urx="534.0" ury="227.0" pageNum="6">Proc. ICIP</conference>
+        <date initialCol="1" llx="429.0" lly="215.0" urx="534.0" ury="227.0" pageNum="6">'96,</date>
+        <conference initialCol="1" llx="327.0" lly="202.0" urx="534.0" ury="227.0" pageNum="6">Int. Conf. on Image Processing,</conference>
+        <address initialCol="1" llx="468.0" lly="201.0" urx="536.0" ury="215.0" pageNum="6">vol. III,</address>
+        <pages initialCol="1" llx="327.0" lly="188.0" urx="536.0" ury="215.0" pageNum="6">pp. 219--222,</pages>
+        <address initialCol="1" llx="327.0" lly="188.0" urx="512.0" ury="202.0" pageNum="6">Lausanne,</address>
+        <date initialCol="1" llx="327.0" lly="188.0" urx="512.0" ury="202.0" pageNum="6">September 1996.</date>
+      </reference>
+      <reference initialCol="1" llx="310.0" lly="98.0" urx="536.0" ury="180.0" pageNum="6" refID="p6x310.0y166.0">
+        <ref-marker initialCol="1" llx="310.0" lly="166.0" urx="536.0" ury="180.0" pageNum="6">[8]</ref-marker>
+        <authors initialCol="1" llx="310.0" lly="166.0" urx="536.0" ury="180.0" pageNum="6">
+          <author initialCol="1" llx="310.0" lly="166.0" urx="536.0" ury="180.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="166.0" urx="536.0" ury="180.0" pageNum="6">J.</author-first>
+            <author-last initialCol="1" llx="310.0" lly="166.0" urx="536.0" ury="180.0" pageNum="6">Zhao</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="310.0" lly="166.0" urx="536.0" ury="180.0" pageNum="6">
+            <author-first initialCol="1" llx="310.0" lly="166.0" urx="536.0" ury="180.0" pageNum="6">E.</author-first>
+            <author-last initialCol="1" llx="310.0" lly="166.0" urx="536.0" ury="180.0" pageNum="6">Koch,</author-last>
+          </author>
+        </authors>
+        <reference-hlabeled initialCol="1" llx="310.0" lly="166.0" urx="536.0" ury="180.0" pageNum="6">"</reference-hlabeled>
+        <title initialCol="1" llx="310.0" lly="139.0" urx="536.0" ury="180.0" pageNum="6">Embedding robust labels into images for copyright protection,"</title>
+        <conference initialCol="1" llx="327.0" lly="99.0" urx="534.0" ury="151.0" pageNum="6">Proc. of the Int. Congress on Intellectual Property Rights for Specialized Information, Knowledge and New Technologies,</conference>
+        <pages initialCol="1" llx="351.0" lly="98.0" urx="526.0" ury="112.0" pageNum="6">pp. 242-251,</pages>
+        <address initialCol="1" llx="351.0" lly="98.0" urx="526.0" ury="112.0" pageNum="6">Vienna,</address>
+        <date initialCol="1" llx="351.0" lly="98.0" urx="526.0" ury="112.0" pageNum="6">August 1995.</date>
+      </reference>
+    </biblio>
+  </content>
+  <CitationContexts />
+  <grants>
+    <grant-sentence>
+      <grant-record>
+        <grant-institution>Acknowledgments This</grant-institution>
+      </grant-record>
+      <grant-background>work was partially supported by the "Pro getto</grant-background>
+      <grant-record>
+        <grant-institution>Finalizzato Beni Culturali"</grant-institution>
+      </grant-record>
+      <grant-record>
+        <grant-institution>(Finalized Project for Cultural Heritage) of the Italian National Research Council (CNR).</grant-institution>
+        <grant-number>-0.01 -0.005</grant-number>
+        <grant-background>0</grant-background>
+        <grant-number>0.005</grant-number>
+        <grant-background>0.01</grant-background>
+        <grant-number>0.015</grant-number>
+      </grant-record>
+      <grant-background>0.02 0 100 200 300 400 500 600 700 800 900 1000</grant-background>
+      <grant-record>
+        <grant-institution>Watermarks Detector Response Tr T'</grant-institution>
+      </grant-record>
+      <grant-background>r</grant-background>
+      <grant-record>
+        <grant-institution>Figure</grant-institution>
+      </grant-record>
+      <grant-background>9:</grant-background>
+      <grant-record>
+        <grant-institution>Detector</grant-institution>
+      </grant-record>
+      <grant-background>response of the watermaked image in</grant-background>
+      <grant-record>
+        <grant-institution>Figure</grant-institution>
+      </grant-record>
+      <grant-background>5 after</grant-background>
+      <grant-record>
+        <grant-institution>JPEG</grant-institution>
+      </grant-record>
+      <grant-background>compression of 15%, despeckle filtering and dithering with reduction to 4 grey levels.</grant-background>
+    </grant-sentence>
+  </grants>
+</document>
+

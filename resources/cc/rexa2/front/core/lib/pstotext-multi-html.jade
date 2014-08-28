@@ -1,0 +1,15 @@
+!!!html
+-import cc.rexa2.front.core.lib.{Page, Font, Document}
+
+-@ val documents: Seq[Document]
+
+head
+body
+  -var pageOffset:Float = 0 
+
+  -for(dd <- documents.grouped(2))
+    .embed(style="position:absolute;top:#{pageOffset.toString}px;left:0px")
+      -render("pstotext-body-as-div.jade", Map("document" -> dd(0)))
+    .embed(style="position:absolute;top:#{pageOffset.toString}px;left:600px")
+      -render("pstotext-body-as-div.jade", Map("document" -> dd(1)))
+    -pageOffset += math.max(dd(0).pages.head.box.height, dd(1).pages.head.box.height)

@@ -1,0 +1,10 @@
+!!!html
+-import cc.rexa2.front.core.lib.{Page, Font, Document}
+
+-@ val docDivs: Seq[String]
+
+head
+body
+  -for(d <- docDivs)
+    .embed
+      ${unescape(=d)}
