@@ -274,9 +274,9 @@ object AuthorEmailTaggingFilter {
   val logger = LoggerFactory.getLogger(AuthorEmailTaggingFilter.getClass()) // hmm... not sure this is correct
   val metrics = new Metrics("AuthorEmailTaggingFilter")
 
-  def main(args: Array[String]) {
-    new AuthorEmailTaggingFilter().run(args)
-  }
+  //def main(args: Array[String]) {
+   // new AuthorEmailTaggingFilter().run(args)
+ // }
 
 
   def usage() {
@@ -395,7 +395,7 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
 
     newXML
   }
-
+/*
   def run(args: Array[String]) {
 
     AuthorEmailTaggingFilter.metrics.logStart("AuthorEmailTaggingFilter")
@@ -419,7 +419,7 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
     val newXML = run_filter(XML.loadFile(infile))
     XML.save((infile split ".xml")(0) + ".summary.xml", newXML, "UTF-8", true)
   }
-
+*/
   def run_filter(xmldata : Node) : Node = {
 
     val refXML = AuthorEmailTaggingFilter.XMLPreProcess(xmldata)
