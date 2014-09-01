@@ -134,7 +134,6 @@ object MetaTag {
 	  		val files = line.split( "->" )
 	  		val infile = new File( files(0) )
 	  		val outfile = new File( files(1).trim() )
-        val outfile1 = new File (files(1).trim() + ".scala.justjavapipeline")
 
 	  		logger.info( infile.getPath() + " -> " + outfile.getPath()  )
 	  		if ( infile.exists() ) {
@@ -147,19 +146,11 @@ object MetaTag {
          		logger.info("exectuting java pipeline")
 	  				javaPipeline.execute( rdoc )
 
-            writeOutput( outfile1, rdoc )  // TODO take out!
-
             logger.info("exectuting scala pipeline")
-            // now do the scala pipeline sequence
-            //scalaPipeline.execute( ) // eventually do this, for now just get the filter def main(args: Array[String]){
 
             val tokenization = rdoc.getTokenization()
             val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
             val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
-
-            //val xmlOutputStream = new FileOutputStream( "/Users/bseeger/Projects/dataset/goodfiles/focus/output.xml" )
-            //val output =  new XMLOutputter( Format.getPrettyFormat() ) // XMLOutputter
-            //output.output( doc, xmlOutputStream )
 
             // run it!
             val newDoc = scalaPipeline(doc)
