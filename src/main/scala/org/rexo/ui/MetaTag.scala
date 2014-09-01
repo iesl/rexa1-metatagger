@@ -18,8 +18,10 @@ import org.rexo.pipeline.ErrorLogFilter
 import org.rexo.pipeline.GrantExtractionFilter
 import org.rexo.pipeline.InfoLogFilter
 import org.rexo.pipeline.PipelineMetricsFilter
+import org.rexo.pipeline.BodyExtractionFilter
 import org.rexo.pipeline.ReferenceExtractionFilter
 import org.rexo.pipeline.components.{RxPipeline, RxDocument}
+
 import org.rexo.store.MetaDataXMLDocument
 
 import org.rexo.util.EnglishDictionary
@@ -72,8 +74,11 @@ object MetaTag {
 
 		pipeline.add( new edu.umass.cs.rexo.ghuang.segmentation.SegmentationFilter( crfBibSegmentor ) )
 
-		pipeline.add( new GrantExtractionFilter() )
-		pipeline.add( new ReferenceExtractionFilter( refCrf, hdrCrf ) )
+		pipeline
+		.add( new GrantExtractionFilter() )
+		.add( new ReferenceExtractionFilter( refCrf, hdrCrf ))
+		.add( new BodyExtractionFilter())
+
 		// .add( new CitationContextFilter() )
 		// .add( new WriteAnnotatedXMLFilter() )
 		// .add( new MetatagPostconditionTestFilter() )
@@ -81,11 +86,12 @@ object MetaTag {
 
 		if (logp) {
 			// log document errors to '.list' and '.html'
-			pipeline.addErrorFilters()
-			pipeline.add( new ErrorLogFilter() )
-			pipeline.addEpilogueFilters()
-			pipeline.add( new InfoLogFilter() )
-			pipeline.add( new PipelineMetricsFilter() )
+			pipeline
+			.addErrorFilters()
+			.add( new ErrorLogFilter() )
+			.addEpilogueFilters()
+			.add( new InfoLogFilter() )
+			.add( new PipelineMetricsFilter() )
 		}
 
 		return pipeline
@@ -128,6 +134,8 @@ object MetaTag {
 	  		val files = line.split( "->" )
 	  		val infile = new File( files(0) )
 	  		val outfile = new File( files(1).trim() )
+        val outfile1 = new File (files(1).trim() + ".scala.justjavapipeline")
+
 	  		logger.info( infile.getPath() + " -> " + outfile.getPath()  )
 	  		if ( infile.exists() ) {
 	  			val document = readInputDocument( infile )
@@ -136,25 +144,27 @@ object MetaTag {
 	  			rdoc.setTokenization( tokenization )
 
 	  			try {
-            		logger.info("exectuting java pipeline")
+         		logger.info("exectuting java pipeline")
 	  				javaPipeline.execute( rdoc )
 
-					logger.info("exectuting scala pipeline")
-					// now do the scala pipeline sequence
-					//scalaPipeline.execute( ) // eventually do this, for now just get the filter def main(args: Array[String]){
+            writeOutput( outfile1, rdoc )  // TODO take out!
 
-					val tokenization = rdoc.getTokenization()
-					val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
-					val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
+            logger.info("exectuting scala pipeline")
+            // now do the scala pipeline sequence
+            //scalaPipeline.execute( ) // eventually do this, for now just get the filter def main(args: Array[String]){
 
-					//val xmlOutputStream = new FileOutputStream( "/Users/bseeger/Projects/dataset/goodfiles/focus/output.xml" )
-					//val output =  new XMLOutputter( Format.getPrettyFormat() ) // XMLOutputter
-					//output.output( doc, xmlOutputStream )
+            val tokenization = rdoc.getTokenization()
+            val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
+            val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
 
-					// run it!
-					val newDoc = scalaPipeline(doc)
+            //val xmlOutputStream = new FileOutputStream( "/Users/bseeger/Projects/dataset/goodfiles/focus/output.xml" )
+            //val output =  new XMLOutputter( Format.getPrettyFormat() ) // XMLOutputter
+            //output.output( doc, xmlOutputStream )
 
-	  		    	writeOutput( outfile, newDoc )
+            // run it!
+            val newDoc = scalaPipeline(doc)
+
+            writeOutput( outfile, newDoc )
 	  			}
 	  			catch {
             case e: Exception => {
@@ -239,11 +249,11 @@ object MetaTag {
 	  			xmlOutputStream.close()
 	  		}
 	  		catch {
-          case e: java.io.IOException =>  {
-            logger.error("Here" + e.getMessage() )
-          }
-        }
-	  	}
+              case e: java.io.IOException =>  {
+                logger.error("IO Exception: " + e.getMessage() )
+              }
+            }
+	  	 }
 	  }
 	}
 }

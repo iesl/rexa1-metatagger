@@ -93,7 +93,7 @@ public class RxPipeline {
 			if (returnCode == ReturnCode.ABORT_PAPER || returnCode == ReturnCode.ABORT_SESSION) {
 				break;
 			}
-		}
+    }
 		// Run 'error' filters
 		if (returnCode != ReturnCode.OK && returnCode != ReturnCode.ABORT_SESSION) {
 			for (Iterator filterIter = _errorFilterList.iterator(); filterIter.hasNext();) {

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <content>
+    <headers initialCol="1" llx="96.0" lly="325.0" urx="532.0" ury="710.0" pageNum="1" headerID="p1x98.0y688.0">
+      <title initialCol="1" llx="98.0" lly="672.0" urx="532.0" ury="710.0" pageNum="1">Industry/University Software Engineering Collaborations for the Successful Reeducation of Non-Software Professionals</title>
+      <authors initialCol="1" llx="150.0" lly="616.0" urx="461.0" ury="634.0" pageNum="1">
+        <author initialCol="1" llx="150.0" lly="616.0" urx="239.0" ury="634.0" pageNum="1">
+          <author-first initialCol="1" llx="150.0" lly="616.0" urx="239.0" ury="634.0" pageNum="1">Heidi</author-first>
+          <author-middle initialCol="1" llx="150.0" lly="616.0" urx="239.0" ury="634.0" pageNum="1">J. C.</author-middle>
+          <author-last initialCol="1" llx="150.0" lly="616.0" urx="239.0" ury="634.0" pageNum="1">Ellis</author-last>
+        </author>
+        <author initialCol="1" llx="372.0" lly="616.0" urx="461.0" ury="634.0" pageNum="1">
+          <author-first initialCol="1" llx="372.0" lly="616.0" urx="461.0" ury="634.0" pageNum="1">Nancy</author-first>
+          <author-middle initialCol="1" llx="372.0" lly="616.0" urx="461.0" ury="634.0" pageNum="1">R.</author-middle>
+          <author-last initialCol="1" llx="372.0" lly="616.0" urx="461.0" ury="634.0" pageNum="1">Mead</author-last>
+        </author>
+      </authors>
+      <institution initialCol="1" llx="138.0" lly="601.0" urx="499.0" ury="619.0" pageNum="1">Rensselaer at Hartford Software Engineering Institute</institution>
+      <email initialCol="1" llx="153.0" lly="586.0" urx="469.0" ury="604.0" pageNum="1">heidic@rh.edu nrm@sei.cmu.edu</email>
+      <authors initialCol="1" llx="150.0" lly="555.0" urx="476.0" ury="573.0" pageNum="1">
+        <author initialCol="1" llx="150.0" lly="555.0" urx="241.0" ury="573.0" pageNum="1">
+          <author-first initialCol="1" llx="150.0" lly="555.0" urx="241.0" ury="573.0" pageNum="1">Ana</author-first>
+          <author-middle initialCol="1" llx="150.0" lly="555.0" urx="241.0" ury="573.0" pageNum="1">M.</author-middle>
+          <author-last initialCol="1" llx="150.0" lly="555.0" urx="241.0" ury="573.0" pageNum="1">Moreno</author-last>
+        </author>
+        <author initialCol="1" llx="365.0" lly="555.0" urx="476.0" ury="573.0" pageNum="1">
+          <author-first initialCol="1" llx="365.0" lly="555.0" urx="476.0" ury="573.0" pageNum="1">Stephen</author-first>
+          <author-middle initialCol="1" llx="365.0" lly="555.0" urx="476.0" ury="573.0" pageNum="1">B.</author-middle>
+          <author-last initialCol="1" llx="365.0" lly="555.0" urx="476.0" ury="573.0" pageNum="1">Seidman</author-last>
+        </author>
+      </authors>
+      <institution initialCol="1" llx="114.0" lly="540.0" urx="504.0" ury="558.0" pageNum="1">Universidad Politcnica de Madrid New Jersey Institute of Technology</institution>
+      <email initialCol="1" llx="144.0" lly="525.0" urx="486.0" ury="542.0" pageNum="1">ammoreno@fi.upm.es Stephen.Seidman@njit.edu</email>
+      <abstract initialCol="1" llx="96.0" lly="325.0" urx="532.0" ury="489.0" pageNum="1">Abstract Production of software is growing at a phenomenal rate worldwide. In addition, the increasingly global business climate has accelerated the need for business software. There are too few software engineers to produce and maintain software to meet this demand. One possible solution to correcting this shortfall is reeducating existing non-software employees to become software engineers. For the past two years, the Industry/University (I/U) subgroup of the Working Group on Software Engineering Education and Training (WGSEET) has been investigating active collaborations between companies and universities in which employees without formal software education are reeducated to become software engineers. This paper reports on our findings by discussing our approach to the investigation, outlining the factors involved in successful collaboration construction and execution, and describing alumni views of the knowledge and skills transferred by the collaboration.</abstract>
+    </headers>
+    <body initialCol="1" llx="93.0" lly="86.0" urx="532.0" ury="727.0" pageNum="1" bodyID="p1x95.0y296.0">
+      <section-marker initialCol="1" llx="95.0" lly="296.0" urx="194.0" ury="317.0" pageNum="1">1. Introduction</section-marker>
+      <text initialCol="1" llx="96.0" lly="86.0" urx="532.0" ury="284.0" pageNum="1">In its annual report (Worldwide Software Market Forecast Summary 2001-2005 [15]), International Data Corp. has projected a growth rate of 11.8% for companies in the market of developing and deploying software applications in the year 2002, indicating rapid growth in the development and use of software. However, the number of software professionals available to develop and maintain this software is limited and is not growing at a rate equal to the growth rate of software. This lack of software professionals is also occurring in countries such as Canada, India, and most countries in Europe. Educational institutions are expanding efforts to increase the number of software engineering graduates [13], but the rate of production is not keeping up with demand. The reeducation of existing non-software personnel to fill software engineering positions is one logical approach to meet this shortfall. Indeed, some companies have entered into cooperative partnerships with academic institutions to retrain employees with domain knowledge in order to retain this valuable resource [6]. In addition, various efforts have identified the need for incorporating a strong industry perspective into software engineering education programs [7, 8, 12, 14]. Thus, the construction of a collaborative relationship between industry and academic partners to reeducate a</text>
+      <text initialCol="1" llx="93.0" lly="644.0" urx="530.0" ury="725.0" pageNum="2">portion of the existing non-software workforce is one approach to providing a larger software engineering workforce. This paper presents the findings of recent research performed by the Industry/University subgroup of the Working Group on Software Engineering Education and Training into collaborative reeducation efforts between industry and academic institutions for converting non-software professionals into software engineers.</text>
+      <section-marker initialCol="1" llx="93.0" lly="617.0" urx="453.0" ury="635.0" pageNum="2">1.1 The Working Group on Software Engineering Education and Training</section-marker>
+      <text initialCol="1" llx="93.0" lly="423.0" urx="529.0" ury="608.0" pageNum="2">The Working Group on Software Engineering Education and Training (WGSEET) (http:// www.sei.cmu.edu/collaborating/ed/workgroup-ed.html) was formed in 1995 with the mission of improving the state of software engineering education and training. An ad hoc group of approximately 80 international professionals from academia, industry, and government, the focus of the group is on the education and professional development of software practitioners through degree programs, continuing education, on-the-job training, etc. The Industry/University (I/U) subgroup is a subset of WGSEET members whose focus is to explore and foster collaborations between academic institutions and industry [11]. Currently, the I/U group is investigating collaborations in which non-software professionals and practitioners without formal software education are reeducated to become software engineers. Section 2 describes our approach and research framework, while Section 3 discusses the characteristics of successful collaborations. Section 4 describes the alumni opinions of the usefulness of the knowledge they gained in the collaborative programs, and Section 5 provides some general conclusions.</text>
+      <section-marker initialCol="1" llx="93.0" lly="394.0" urx="238.0" ury="415.0" pageNum="2">2. Investigation process</section-marker>
+      <text initialCol="1" llx="93.0" lly="184.0" urx="530.0" ury="382.0" pageNum="2">The motivation for investigating I/U reeducation collaborations occurred as a result of a talk given to the WGSEET by Dennis Frailey [6] in March 2000 in which he described a collaborative software engineering reeducation program between Texas Instruments/Raytheon and several Dallas area universities. Using Beckman's definition [1] of a collaboration as "a formal, joint effort by a university (or universities) and a business or government organization(s), where each party provides specified products and services to achieve common goals," we decided to focus on cooperative programs between academic institutions and industry partners to retrain non-software professionals to become software engineers. We decided to center our investigation on education programs that had a wider effect than several-day or week-long just-in-time training. In March 2000 we began our investigation by identifying nine industry-university collaborative programs. By February 2001, we had centered our investigation on five ongoing collaborations whose programs range in duration from eight months to two years. The outcomes of these collaborative programs ranged from students that obtained credit towards undergraduate courses to students who received Master's degrees. In the following sections we describe our approach to investigating I/U reeducation collaborations.</text>
+      <notext initialCol="1" llx="93.0" lly="132.0" urx="490.0" ury="175.0" pageNum="2">2.1 Our approach The organization of the major steps taken in our investigation are shown in Figure 1.</notext>
+      <figure-marker initialCol="1" llx="93.0" lly="90.0" urx="529.0" ury="457.0" pageNum="3">Figure 1. Process used to study I/U reeducation collaborations Our investigation process has ten steps: Step 1 Determine Collaboration Selection Criteria: We began our efforts in March 2000 by identifying a set of criteria that we used to select candidate collaborations. Criteria included programs with a focus on education/training for non-software professionals, programs that were currently in existence, and ongoing interaction between industrial and academic partners. Step 2 Conduct Initial Survey: Based on our selection criteria, we developed a short survey that we used to identify candidate collaborations. Between April and June 2000, we distributed this survey to a variety of software engineering fora. Step 3 Filter Respondent Information: In December 2000 we applied the selection criteria to the results of the initial survey to determine collaborations and identified a pool of nine successful collaborations, six located in the United States and three located in Europe. Details of these results are described in [5]. Step 4 Administer Questionnaire: An in-depth questionnaire was constructed in November 2000, focusing on the organizational and participational factors that may have contributed to the success of the collaboration. Step 5 Conduct Interviews: During January and February 2001, the questionnaire was administered to the candidate collaborations identified in Step 3. Step 6 Evaluate Questionnaire Results: During the month of February 2001, the results of the questionnaire were tabulated to determine characteristics of successful industry/university collaborations. Ellis et al. [2] provide the initial results of the questionnaire, and an overview of features of successful collaborations is included in Section 3. Step 7 Create Industry Opinion Survey: Results from the questionnaires and interviews indicated a possible academic bias in our information. Therefore, in order to elicit industry views, we constructed a short industry opinion survey during February 2001. Step 8 Incorporate Industry Opinion Results: The industry opinion survey was administered to the industry partners participating in the collaborations in April 2001, and during May</figure-marker>
+      <notext initialCol="1" llx="93.0" lly="494.0" urx="529.0" ury="725.0" pageNum="3">Potential I/U Programs 2. INITIAL SURVEY 3. RESPONDENT INFORMATION 1. Collaboration Selection Criteria Successful Collaborations 4. QUESTIONNAIRE 6. QUESTIONNAIRE RESULTS Lessons Learned 7. INDUSTRY OPINION SURVEY 5. INTERVIEWS 8. INDUSTRY OPINION RESULTS 9. ALUMNI SURVEY 10. ALUMNI SURVEY RESULTS 2001 the results were tabulated. An overview of industry opinions on successful collaboration development is included in Section 3, and details are provided by Ellis et al. [3].</notext>
+      <text initialCol="1" llx="93.0" lly="670.0" urx="529.0" ury="700.0" pageNum="4">Step 9 Conduct Alumni Survey: During October 2001, the I/U subgroup constructed a survey to elicit information on the breadth of knowledge gained from the collaboration and its</text>
+      <notext initialCol="1" llx="93.0" lly="657.0" urx="321.0" ury="673.0" pageNum="4">usefulness. Survey details are provided in Section 4.</notext>
+      <text initialCol="1" llx="93.0" lly="631.0" urx="529.0" ury="661.0" pageNum="4">Step 10 Interpret Alumni Survey Results: In February 2002, the I/U subgroup evaluated the results of the alumni survey. While we lacked sufficient responses to obtain statistically</text>
+      <notext initialCol="1" llx="93.0" lly="576.0" urx="529.0" ury="634.0" pageNum="4">significant results, we were able to make some useful observations on the transfer of skills, which we discuss in Section 4. 3. Successful collaboration construction and execution</notext>
+      <text initialCol="1" llx="93.0" lly="535.0" urx="529.0" ury="564.0" pageNum="4">Based on our observations of the ongoing collaborations over the course of two years, we have identified characteristics of successful collaborative efforts to reeducate software</text>
+      <notext initialCol="1" llx="93.0" lly="495.0" urx="436.0" ury="538.0" pageNum="4">engineers. A more complete discussion of our observations can be found in [4]. 3.1 Common characteristics</notext>
+      <text initialCol="1" llx="93.0" lly="405.0" urx="529.0" ury="486.0" pageNum="4">Based on our observations, it appears that successful collaborations share factors related to industry participation. Common characteristics of the collaborations we studied include: Industrial Initiative: A majority of the collaborations were initiated by the industry partner(s) as a result of recognizing the need to expand their workforce. Strong Industrial Partners: The industry partners in the collaborations are either sizeable companies or collections of companies that have significant financial resources, and almost all</text>
+      <notext initialCol="1" llx="93.0" lly="392.0" urx="490.0" ury="408.0" pageNum="4">are either government agencies or private companies that handle government contracts.</notext>
+      <text initialCol="1" llx="93.0" lly="314.0" urx="529.0" ury="396.0" pageNum="4">Practically Oriented Programs: All of the collaborative programs studied were practically oriented, focusing on the application of knowledge and skills. Software Practitioners as Students: All of the students who participated in the collaborative programs had been employed in some aspect of the software field for two to over ten years. Limited Number of Students: The successful collaborations that we examined all had between 10 and 25 students per offering.</text>
+      <notext initialCol="1" llx="93.0" lly="287.0" urx="242.0" ury="305.0" pageNum="4">3.2 Dissimilar characteristics</notext>
+      <section-marker initialCol="1" llx="106.0" lly="262.0" urx="430.0" ury="278.0" pageNum="4">We also identified several differences between the programs including:</section-marker>
+      <text initialCol="1" llx="93.0" lly="210.0" urx="529.0" ury="266.0" pageNum="4">Content Definition for the Program: Content definition alternatives included determination by the industry partners, by the university partner, or by a mixed group. Admission Procedure: In some collaborations the industry partner selected students or dictated student selection, while in others students were required to fulfill the academic institution's</text>
+      <notext initialCol="1" llx="93.0" lly="197.0" urx="246.0" ury="213.0" pageNum="4">program entrance requirements.</notext>
+      <text initialCol="1" llx="93.0" lly="171.0" urx="529.0" ury="201.0" pageNum="4">Financial Models: In some collaborations the industry partner paid on a per student basis, while in others the industry partner provided the academic partner with a specific amount of</text>
+      <notext initialCol="1" llx="93.0" lly="158.0" urx="315.0" ury="174.0" pageNum="4">funding, irrespective of the number of students.</notext>
+      <text initialCol="1" llx="93.0" lly="132.0" urx="529.0" ury="161.0" pageNum="4">Other minor differences between the programs included location, timing of class offerings, and content.</text>
+      <notext initialCol="1" llx="93.0" lly="105.0" urx="529.0" ury="725.0" pageNum="4">3.3 Benefits In the process of evaluating the collaborations, we identified four benefits that resulted from the collaborative reeducation efforts: Knowledge Enrichment of University Teachers: Practical knowledge migrated into the curriculum as faculty gained increased exposure to real-world software development practices. Self-Supporting Programs: All of the collaborations that we studied were entirely self-supporting and in some instances financially profitable. Knowledge Enrichment of Industry Employees: The expanded knowledge and skill set of employees is the primary benefit identified by industry partners. More Competitive Software Industries: Reeducation collaborations result in a benefit to the software industry as a whole through the production of better quality software.</notext>
+      <text initialCol="1" llx="93.0" lly="566.0" urx="529.0" ury="595.0" pageNum="5">Other indirect benefits obtained from the collaborative programs are that employees are less likely to leave the company when they are participating in a collaborative reeducation program.</text>
+      <section-marker initialCol="1" llx="93.0" lly="539.0" urx="212.0" ury="557.0" pageNum="5">3.4 Industry viewpoint</section-marker>
+      <text initialCol="1" llx="93.0" lly="384.0" urx="529.0" ury="530.0" pageNum="5">In general, the industry partners appeared to be very satisfied with the collaborations and their outcome [3]. All of the industry partners indicated that they were satisfied or very satisfied with the program development and participant selection. All industry partners thought that the program management and oversight, student enrollment procedure, and format, content, and pace of the program were acceptable. The majority of the industry respondents rated both the instructors' knowledge and the facilities as outstanding, while the instructors' teaching skills were rated sufficient by most respondents. All of the respondents indicated that they felt that the number of participants in the program was the correct size. All of the industry partners indicated that they felt that the program was successful and that they gained knowledgeable, competent employees. The main area for improvement identified by industry partners was the incorporation of domain knowledge in program content.</text>
+      <section-marker initialCol="1" llx="93.0" lly="355.0" urx="319.0" ury="376.0" pageNum="5">4. Evaluating knowledge/skill transfer</section-marker>
+      <text initialCol="1" llx="93.0" lly="223.0" urx="529.0" ury="343.0" pageNum="5">In October 2001, the I/U subgroup decided to try to assess the efficacy and efficiency of knowledge and skill transfer that occurs in the collaborative reeducation programs (Figure 1 steps 9-10). We constructed a survey to educe the opinions of alumni of the collaborative programs in which they participated. The first part of the survey asked students the emphasis placed on each of the subjects, the usefulness of the knowledge acquired in each subject for alumni's current job tasks, and the sufficiency of knowledge gained for each subject using the ten major SWEBOK topics [9]. The second focus area of the surveys dealt with the impact of the programs on the professional and educational status of the alumni. In this section, we describe our effort and the results.</text>
+      <section-marker initialCol="1" llx="93.0" lly="196.0" urx="199.0" ury="214.0" pageNum="5">4.2. Results analysis</section-marker>
+      <text initialCol="1" llx="93.0" lly="93.0" urx="530.0" ury="725.0" pageNum="5">Alumni of four different collaborations were surveyed to analyze knowledge transfer in their collaborations. A total of 31 surveys for the four collaborations were collected. Two collaborations were located in Spain (Madrid) and two in the United States (Georgia, Pennsylvania). Although the final number of surveys is insufficient for a formal statistical analysis, the survey results allow us to make some general observations about the efficacy of the programs. In order to understand how the alumni's current jobs were impacted by their education, we surveyed alumni to determine the software engineering activities performed in their current positions. Table 1 shows the activities performed by the alumni. Note that the percentage column does not add up to 100, as some alumni performed more than one activity type.</text>
+      <section-marker initialCol="1" llx="93.0" lly="553.0" urx="529.0" ury="571.0" pageNum="6">4.2.1. Results of content measurement: A set of emphasis, usefulness and sufficiency of</section-marker>
+      <text initialCol="1" llx="93.0" lly="437.0" urx="529.0" ury="557.0" pageNum="6">knowledge gradients were used to ascertain alumni opinions on the skills gained from their educational experience. Figure 2 shows the results for all 31 alumni for the part of our survey based on these gradients. Overall, practitioners who participated in the collaborative programs have a positive impression of the effectiveness and usefulness of the skills that they gained. These results differ somewhat from Lethbridge's study on the applicability of software engineering knowledge [10], which indicates a larger gap between transferred knowledge and its usefulness in industry. One reason for this difference could be the fact that the majority of the collaborative efforts we investigated involved postgraduate (Master's level) education, which is typically more focused than undergraduate education.</text>
+      <figure-marker initialCol="1" llx="93.0" lly="359.0" urx="529.0" ury="440.0" pageNum="6">Figure 2 indicates that alumni consider the knowledge acquired about the topics of software management and software requirements most useful, whereas the knowledge related to software construction, software testing, and software maintenance is somewhat less useful. Since Table 1 Indicates that a higher percentage of alumni perform project and requirements management tasks, this is not an unexpected result. The results for the topics of testing and maintenance indicate that alumni do not consider the knowledge acquired on these topics to be very useful.</figure-marker>
+      <figure-marker initialCol="1" llx="93.0" lly="130.0" urx="527.0" ury="147.0" pageNum="6">Figure 2. Weighted values of emphasis, usefulness, and sufficiency of knowledge</figure-marker>
+      <text initialCol="1" llx="93.0" lly="88.0" urx="529.0" ury="117.0" pageNum="6">The ideal result would be for all three measures (emphasis, usefulness, and sufficiency) to be equal for each subject. An analysis of the chart in Figure 2 shows that the average pair-wise cor</text>
+      <table-marker initialCol="1" llx="99.0" lly="615.0" urx="455.0" ury="690.0" pageNum="6">Table 1: Current alumni job types Job Type Requir ements Design Code Test CM Maintenance nance Documentation tion QA</table-marker>
+      <text initialCol="1" llx="93.0" lly="170.0" urx="529.0" ury="725.0" pageNum="6">Project Management ment % alumni 36% 25% 14% 29% 11% 25% 21% 11% 50% 0 1 2 3 4 5 Requirements Design Construction Testing Maintenance Configuration Management Management Process Tools /Methods Quality emphasis usefulness suf.knowledge relation for the three characteristics is .79 between usefulness and sufficiency of knowledge, .78 between emphasis and usefulness, and .89 between emphasis and sufficiency of knowledge. The relationship between usefulness and sufficiency of knowledge indicates the effectiveness of the programs. Figure 2 shows that except for software management, the knowledge sufficiency for each subject is at least as great as the usefulness, indicating that the programs are viewed as very effective. For software management, the emphasis rating is slightly lower than the usefulness rating, which may indicate a need for programs to reexamine content related to software management, as well as to review the process by which this topic is taught. Overall, the .79 correlation between usefulness and sufficiency of knowledge shows that alumni are satisfied with the knowledge gained from the collaboration. A large difference between the sufficiency of knowledge rating and a greater usefulness rating, as seen in the software tools/methods and software design areas, indicates that programs are providing more knowledge or skills than required by the alumni. Since only 25% of alumni perform design tasks (see Table 1), alumni may benefit from education and skills at a higher level of abstraction. The relationship between content emphasis and the sufficiency of knowledge determines the efficiency of the education. The .89 correlation between these two characteristics indicates a relatively efficient transfer of skills. The largest differences are found for software quality and software configuration management; alumni believe that these topics receive more emphasis than their usefulness warrants. The results for software testing show that the sufficiency of knowledge rating is higher than the level of emphasis. The relationship between content emphasis and knowledge usefulness can provide an indication of the overall success of the collaboration. The relatively high correlation of .78 indicates that the reeducation programs are producing individuals that, from the alumni point of view, are highly qualified to step into software engineering positions.</text>
+      <section-marker initialCol="1" llx="106.0" lly="383.0" urx="529.0" ury="401.0" pageNum="7">4.2.2. Results of subjective assessment: The second part of the survey asked alumni to</section-marker>
+      <text initialCol="1" llx="93.0" lly="111.0" urx="529.0" ury="387.0" pageNum="7">assess the program's effect on the educational and professional status of the alumni by indicating the extent they agreed (strongly agree, agree, disagree, or strongly disagree) with statements: My software engineering education has adequately prepared me for my current job. My education provided me with knowledge and skills that contribute to my job performance. My education has improved my software development skills. My education has improved my communication skills. My education has improved my technical skills. My education has improved my organizational skills. My education was highly relevant to state-of-the-art practices in my field. My education provided me with a useful reputation as a software engineer. My education contributed to the development of my professional career. I would recommend participation in my educational program to others. The results indicate that the alumni generally agree that the programs improved their skills, with 70% of alumni stating that the programs improved their technical skills and almost 90% of alumni indicating that they would recommend the program to colleagues. Although a majority of the alumni stated that management supported the use of the newly acquired knowledge and skills, 25% of alumni indicated that they received no such assistance. Another unexpected result of the subjective assessment was that alumni have a relatively low perception of the reputation that they received as a result of their educational experience. One possible reason for this result is that most of the alumni surveyed were within two years or less of their graduation and the impact of the reputation may not be felt until later in their careers.</text>
+      <notext initialCol="1" llx="93.0" lly="706.0" urx="183.0" ury="727.0" pageNum="8">5. Conclusion</notext>
+      <text initialCol="1" llx="93.0" lly="496.0" urx="529.0" ury="694.0" pageNum="8">In the course of its two-year investigation into industry/university collaborations to reeducate non-software personnel to become software engineers, the I/U subgroup of the WGSEET has compiled several useful observations about such collaborations. The primary observation is that these collaborations provide significant benefits for all three major stakeholders: the industry partner, the academic partner, and the students. Industry feedback indicates that companies benefit from a larger, more highly trained workforce with a higher level of knowledge and skills while retaining large stores of domain knowledge held by the existing employees. Universities benefit from increased visibility of their programs, as well as from the dissemination of a realworld vision of software engineering throughout the faculty. Students benefit by becoming more highly skilled workers, with higher job satisfaction and more career mobility. One area of concern that we identified in our investigation was the apparent relatively short life of industry/university collaborations for reeducating software engineers. Given the amount of effort required to construct such a program and the continuing shortfall of qualified software engineers, we believe that maintaining these programs is of value to both the partners involved, as well as to the larger discipline of software engineering.</text>
+      <notext initialCol="1" llx="93.0" lly="439.0" urx="529.0" ury="488.0" pageNum="8">Acknowledgements The authors would like to acknowledge and thank Dawn Ramsey and Cynthia Tanner for their efforts in support of this work.</notext>
+    </body>
+    <biblio>
+      <reference initialCol="1" llx="94.0" lly="387.0" urx="527.0" ury="410.0" pageNum="8" refID="p8x94.0y397.0">
+        <ref-marker initialCol="1" llx="94.0" lly="397.0" urx="527.0" ury="410.0" pageNum="8">[1]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="397.0" urx="527.0" ury="410.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="397.0" urx="527.0" ury="410.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="397.0" urx="527.0" ury="410.0" pageNum="8">Beckman,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="397.0" urx="527.0" ury="410.0" pageNum="8">K.,</author-first>
+          </author>
+        </authors>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="397.0" urx="527.0" ury="410.0" pageNum="8">"</reference-hlabeled>
+        <title initialCol="1" llx="94.0" lly="387.0" urx="527.0" ury="410.0" pageNum="8">Directory of Industry and University Collaborations with a Focus on Software Engineering Education and Training," Version 7,</title>
+        <tech initialCol="1" llx="94.0" lly="387.0" urx="387.0" ury="400.0" pageNum="8">Technical Report, CMU/SEI-99-SR-0001,</tech>
+        <date initialCol="1" llx="94.0" lly="387.0" urx="387.0" ury="400.0" pageNum="8">1999.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="365.0" urx="526.0" ury="388.0" pageNum="8" refID="p8x94.0y375.0">
+        <ref-marker initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">[2]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">Ellis,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">H.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">J. C.,</author-middle>
+          </author>
+          <author initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">N.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">R.</author-middle>
+            <author-last initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">Mead,</author-last>
+          </author>
+          <author initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">A.</author-first>
+            <author-last initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">Moreno,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">P.</author-first>
+            <author-last initialCol="1" llx="94.0" lly="375.0" urx="526.0" ury="388.0" pageNum="8">MacNeil,</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="94.0" lly="365.0" urx="526.0" ury="388.0" pageNum="8">"Can Industry and Academia Collaborate to Meet the Need for Software Engineers?</title>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="365.0" urx="216.0" ury="378.0" pageNum="8">"</reference-hlabeled>
+        <journal initialCol="1" llx="208.0" lly="365.0" urx="285.0" ury="378.0" pageNum="8">Cutter IT Journal,</journal>
+        <date initialCol="1" llx="277.0" lly="365.0" urx="325.0" ury="378.0" pageNum="8">June 2001.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="343.0" urx="527.0" ury="366.0" pageNum="8" refID="p8x94.0y353.0">
+        <ref-marker initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">[3]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">Ellis,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">H.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">J. C.,</author-middle>
+          </author>
+          <author initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">N.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">R.</author-middle>
+            <author-last initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">Mead,</author-last>
+          </author>
+          <author initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">A.</author-first>
+            <author-last initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">Moreno,</author-last>
+          </author>
+          <author initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">C.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">D.</author-middle>
+            <author-last initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">Tanner,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">D.</author-first>
+            <author-last initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">Ramsey,</author-last>
+          </author>
+        </authors>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="353.0" urx="527.0" ury="366.0" pageNum="8">"</reference-hlabeled>
+        <title initialCol="1" llx="94.0" lly="343.0" urx="527.0" ury="366.0" pageNum="8">Characteristics of Successful Collaborations to Produce Educated Software Engineering Professionals,</title>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="343.0" urx="335.0" ury="356.0" pageNum="8">"</reference-hlabeled>
+        <journal initialCol="1" llx="327.0" lly="343.0" urx="527.0" ury="356.0" pageNum="8">Computer Science Education Journal, ,</journal>
+        <date initialCol="1" llx="466.0" lly="343.0" urx="527.0" ury="356.0" pageNum="8">Spring 2002.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="311.0" urx="526.0" ury="344.0" pageNum="8" refID="p8x94.0y331.0">
+        <ref-marker initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">[4]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">Ellis</author-last>
+            <author-first initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">H.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">J.C.,</author-middle>
+          </author>
+          <author initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">Ana</author-first>
+            <author-last initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">Moreno,</author-last>
+          </author>
+          <author initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">Nancy</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">R.</author-middle>
+            <author-last initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">Mead,</author-last>
+          </author>
+          <author initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">Stephen</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">B.</author-middle>
+            <author-last initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">Seidman</author-last>
+          </author>
+        </authors>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="331.0" urx="526.0" ury="344.0" pageNum="8">"</reference-hlabeled>
+        <title initialCol="1" llx="94.0" lly="321.0" urx="526.0" ury="344.0" pageNum="8">Reeducation to Expand the Software Engineering Workforce: Successful Industry/University Collaborations,"</title>
+        <tech initialCol="1" llx="94.0" lly="321.0" urx="507.0" ury="334.0" pageNum="8">SEI Technical Report, CMU/SEI-2002-SR-001,</tech>
+        <date initialCol="1" llx="94.0" lly="311.0" urx="526.0" ury="334.0" pageNum="8">Aug. 2002.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="279.0" urx="527.0" ury="312.0" pageNum="8" refID="p8x94.0y299.0">
+        <ref-marker initialCol="1" llx="94.0" lly="299.0" urx="527.0" ury="312.0" pageNum="8">[5]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="299.0" urx="527.0" ury="312.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="299.0" urx="527.0" ury="312.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="299.0" urx="527.0" ury="312.0" pageNum="8">Ellis,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="299.0" urx="527.0" ury="312.0" pageNum="8">H.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="299.0" urx="527.0" ury="312.0" pageNum="8">J. C.,</author-middle>
+          </author>
+        </authors>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="299.0" urx="527.0" ury="312.0" pageNum="8">"</reference-hlabeled>
+        <title initialCol="1" llx="94.0" lly="299.0" urx="527.0" ury="312.0" pageNum="8">Summary of the Initial Results of the University/Industry Survey Performed by the Industry/</title>
+        <conference initialCol="1" llx="94.0" lly="289.0" urx="527.0" ury="302.0" pageNum="8">University Subgroup of the Working Group on Software Engineering Education and Training," FASE</conference>
+        <volume initialCol="1" llx="94.0" lly="289.0" urx="527.0" ury="302.0" pageNum="8">Vol. 11,</volume>
+        <number initialCol="1" llx="94.0" lly="289.0" urx="527.0" ury="302.0" pageNum="8">No. 1,</number>
+        <date initialCol="1" llx="94.0" lly="279.0" urx="527.0" ury="302.0" pageNum="8">Jan. 2001.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="257.0" urx="527.0" ury="280.0" pageNum="8" refID="p8x94.0y267.0">
+        <ref-marker initialCol="1" llx="94.0" lly="267.0" urx="451.0" ury="280.0" pageNum="8">[6]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="267.0" urx="451.0" ury="280.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="267.0" urx="451.0" ury="280.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="267.0" urx="451.0" ury="280.0" pageNum="8">Frailey,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="267.0" urx="451.0" ury="280.0" pageNum="8">D.,</author-first>
+          </author>
+          and
+          <author initialCol="1" llx="94.0" lly="267.0" urx="451.0" ury="280.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="267.0" urx="451.0" ury="280.0" pageNum="8">F.</author-first>
+            <author-last initialCol="1" llx="94.0" lly="267.0" urx="451.0" ury="280.0" pageNum="8">Moore,</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="94.0" lly="267.0" urx="451.0" ury="280.0" pageNum="8">"Maintaining a Capable Software Engineering Pool,"</title>
+        <conference initialCol="1" llx="94.0" lly="267.0" urx="451.0" ury="280.0" pageNum="8">Proceedings,</conference>
+        <date initialCol="1" llx="443.0" lly="267.0" urx="527.0" ury="280.0" pageNum="8">1998</date>
+        <conference initialCol="1" llx="94.0" lly="257.0" urx="527.0" ury="280.0" pageNum="8">Software Technology Conference,</conference>
+        <date initialCol="1" llx="166.0" lly="257.0" urx="214.0" ury="270.0" pageNum="8">Apr. 1998.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="235.0" urx="527.0" ury="258.0" pageNum="8" refID="p8x94.0y245.0">
+        <ref-marker initialCol="1" llx="94.0" lly="245.0" urx="527.0" ury="258.0" pageNum="8">[7]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="245.0" urx="527.0" ury="258.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="245.0" urx="527.0" ury="258.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="245.0" urx="527.0" ury="258.0" pageNum="8">Frezza,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="245.0" urx="527.0" ury="258.0" pageNum="8">S.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="245.0" urx="527.0" ury="258.0" pageNum="8">T.,</author-middle>
+          </author>
+          and
+          <author initialCol="1" llx="94.0" lly="245.0" urx="527.0" ury="258.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="245.0" urx="527.0" ury="258.0" pageNum="8">S.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="245.0" urx="527.0" ury="258.0" pageNum="8">L.</author-middle>
+            <author-last initialCol="1" llx="94.0" lly="245.0" urx="527.0" ury="258.0" pageNum="8">Hazen,</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="94.0" lly="235.0" urx="527.0" ury="258.0" pageNum="8">"Integrating an Industrial Practicum into a Graduate Embedded Software Engineering Program,</title>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="235.0" urx="155.0" ury="248.0" pageNum="8">"</reference-hlabeled>
+        <journal initialCol="1" llx="147.0" lly="235.0" urx="285.0" ury="248.0" pageNum="8">Frontiers in Education Conference,</journal>
+        <date initialCol="1" llx="277.0" lly="235.0" urx="326.0" ury="248.0" pageNum="8">Nov. 1999.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="213.0" urx="527.0" ury="236.0" pageNum="8" refID="p8x94.0y223.0">
+        <ref-marker initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">[8]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">Hazen,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">S.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">L.,</author-middle>
+          </author>
+          and
+          <author initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">S.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">T.</author-middle>
+            <author-last initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">Frezza,</author-last>
+          </author>
+        </authors>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">"</reference-hlabeled>
+        <title initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">An Integrated Embedded Software Engineering Program and Practicum,</title>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="223.0" urx="504.0" ury="236.0" pageNum="8">"</reference-hlabeled>
+        <journal initialCol="1" llx="94.0" lly="213.0" urx="527.0" ury="236.0" pageNum="8">Frontiers in Education Conference,</journal>
+        <date initialCol="1" llx="206.0" lly="213.0" urx="255.0" ury="226.0" pageNum="8">Nov. 1997.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="201.0" urx="484.0" ury="214.0" pageNum="8" refID="p8x94.0y201.0">
+        <ref-marker initialCol="1" llx="94.0" lly="201.0" urx="484.0" ury="214.0" pageNum="8">[9]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="201.0" urx="484.0" ury="214.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="201.0" urx="484.0" ury="214.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="201.0" urx="484.0" ury="214.0" pageNum="8">Hilburn,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="201.0" urx="484.0" ury="214.0" pageNum="8">T.,</author-first>
+          </author>
+          et al.,
+        </authors>
+        <title initialCol="1" llx="94.0" lly="201.0" urx="484.0" ury="214.0" pageNum="8">"A Software Engineering Body of Knowledge," Version 1.0,</title>
+        <tech initialCol="1" llx="94.0" lly="201.0" urx="484.0" ury="214.0" pageNum="8">CMU/SEI-99-TR-004.</tech>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="189.0" urx="487.0" ury="202.0" pageNum="8" refID="p8x94.0y189.0">
+        <ref-marker initialCol="1" llx="94.0" lly="189.0" urx="382.0" ury="202.0" pageNum="8">[10]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="189.0" urx="382.0" ury="202.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="189.0" urx="382.0" ury="202.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="189.0" urx="382.0" ury="202.0" pageNum="8">Lethbridge,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="189.0" urx="382.0" ury="202.0" pageNum="8">T.,</author-first>
+          </author>
+        </authors>
+        <title initialCol="1" llx="94.0" lly="189.0" urx="382.0" ury="202.0" pageNum="8">"What Knowledge is Important to a Software Engineer?</title>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="189.0" urx="382.0" ury="202.0" pageNum="8">"</reference-hlabeled>
+        <journal initialCol="1" llx="375.0" lly="189.0" urx="445.0" ury="202.0" pageNum="8">IEEE Computer,</journal>
+        <date initialCol="1" llx="436.0" lly="189.0" urx="487.0" ury="202.0" pageNum="8">May, 2001.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="167.0" urx="527.0" ury="190.0" pageNum="8" refID="p8x94.0y177.0">
+        <ref-marker initialCol="1" llx="94.0" lly="177.0" urx="527.0" ury="190.0" pageNum="8">[11]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="177.0" urx="527.0" ury="190.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="177.0" urx="527.0" ury="190.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="177.0" urx="527.0" ury="190.0" pageNum="8">Mead,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="177.0" urx="527.0" ury="190.0" pageNum="8">N.</author-first>
+            <author-middle initialCol="1" llx="94.0" lly="177.0" urx="527.0" ury="190.0" pageNum="8">R.,</author-middle>
+          </author>
+          et al.,
+        </authors>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="177.0" urx="527.0" ury="190.0" pageNum="8">"</reference-hlabeled>
+        <title initialCol="1" llx="94.0" lly="177.0" urx="527.0" ury="190.0" pageNum="8">Industry/University Collaborations: Different Perspectives Heighten Mutual Opportunities,"</title>
+        <journal initialCol="1" llx="94.0" lly="167.0" urx="281.0" ury="180.0" pageNum="8">Journal of Systems and Software (</journal>
+        <volume initialCol="1" llx="213.0" lly="167.0" urx="281.0" ury="180.0" pageNum="8">49)</volume>
+        <pages initialCol="1" llx="213.0" lly="167.0" urx="281.0" ury="180.0" pageNum="8">2-3</pages>
+        <date initialCol="1" llx="213.0" lly="167.0" urx="281.0" ury="180.0" pageNum="8">(1999).</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="155.0" urx="527.0" ury="168.0" pageNum="8" refID="p8x94.0y155.0">
+        <ref-marker initialCol="1" llx="94.0" lly="155.0" urx="332.0" ury="168.0" pageNum="8">[12]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="155.0" urx="332.0" ury="168.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="155.0" urx="332.0" ury="168.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="155.0" urx="332.0" ury="168.0" pageNum="8">Mingas,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="155.0" urx="332.0" ury="168.0" pageNum="8">C.,</author-first>
+          </author>
+          et al.,
+        </authors>
+        <title initialCol="1" llx="94.0" lly="155.0" urx="332.0" ury="168.0" pageNum="8">"How We Teach Software Engineering,"</title>
+        <journal initialCol="1" llx="324.0" lly="155.0" urx="487.0" ury="168.0" pageNum="8">Journal of Object-Oriented Programming,</journal>
+        <date initialCol="1" llx="479.0" lly="155.0" urx="527.0" ury="168.0" pageNum="8">Feb. 1999.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="133.0" urx="527.0" ury="156.0" pageNum="8" refID="p8x94.0y143.0">
+        <ref-marker initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">[13]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">Modesitt,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">K.,</author-first>
+          </author>
+          <author initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">D.</author-first>
+            <author-last initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">Bagert,</author-last>
+          </author>
+          and
+          <author initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">L.</author-first>
+            <author-last initialCol="1" llx="94.0" lly="143.0" urx="527.0" ury="156.0" pageNum="8">Werth,</author-last>
+          </author>
+        </authors>
+        <title initialCol="1" llx="94.0" lly="133.0" urx="527.0" ury="156.0" pageNum="8">"International Academic Software Engineering: Results of the First Annual Survey," Proceedings,</title>
+        <conference initialCol="1" llx="204.0" lly="133.0" urx="425.0" ury="146.0" pageNum="8">IASTED International Conference on Applied Informatics,</conference>
+        <date initialCol="1" llx="417.0" lly="133.0" urx="465.0" ury="146.0" pageNum="8">Feb. 2001.</date>
+      </reference>
+      <reference initialCol="1" llx="94.0" lly="96.0" urx="527.0" ury="134.0" pageNum="8" refID="p8x94.0y121.0">
+        <ref-marker initialCol="1" llx="94.0" lly="121.0" urx="527.0" ury="134.0" pageNum="8">[14]</ref-marker>
+        <authors initialCol="1" llx="94.0" lly="121.0" urx="527.0" ury="134.0" pageNum="8">
+          <author initialCol="1" llx="94.0" lly="121.0" urx="527.0" ury="134.0" pageNum="8">
+            <author-last initialCol="1" llx="94.0" lly="121.0" urx="527.0" ury="134.0" pageNum="8">Wholin,</author-last>
+            <author-first initialCol="1" llx="94.0" lly="121.0" urx="527.0" ury="134.0" pageNum="8">C.,</author-first>
+          </author>
+          and
+          <author initialCol="1" llx="94.0" lly="121.0" urx="527.0" ury="134.0" pageNum="8">
+            <author-first initialCol="1" llx="94.0" lly="121.0" urx="527.0" ury="134.0" pageNum="8">B.</author-first>
+            <author-last initialCol="1" llx="94.0" lly="121.0" urx="527.0" ury="134.0" pageNum="8">Regnell,</author-last>
+          </author>
+        </authors>
+        <reference-hlabeled initialCol="1" llx="94.0" lly="121.0" urx="527.0" ury="134.0" pageNum="8">"</reference-hlabeled>
+        <title initialCol="1" llx="94.0" lly="121.0" urx="527.0" ury="134.0" pageNum="8">Achieving Industrial Relevance in Software Engineering Education," Proceedings,</title>
+        <conference initialCol="1" llx="94.0" lly="108.0" urx="344.0" ury="124.0" pageNum="8">12 th Conference on Software Engineering Education and Training,</conference>
+        <date initialCol="1" llx="336.0" lly="108.0" urx="385.0" ury="122.0" pageNum="8">Mar. 1999.</date>
+        <ref-marker initialCol="1" llx="94.0" lly="96.0" urx="451.0" ury="110.0" pageNum="8">[15]</ref-marker>
+        <publisher initialCol="1" llx="94.0" lly="96.0" urx="451.0" ury="110.0" pageNum="8">IDC Worldwide Software Market Forecast Summary,</publisher>
+        <date initialCol="1" llx="94.0" lly="96.0" urx="451.0" ury="110.0" pageNum="8">2001-2005, (IDC #25569), Oct. 2001.</date>
+      </reference>
+    </biblio>
+  </content>
+  <CitationContexts />
+  <grants />
+</document>
+

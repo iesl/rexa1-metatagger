@@ -1,13 +1,11 @@
 package edu.umass.cs.rexo.ghuang.segmentation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.umass.cs.mallet.base.extract.StringSpan;
+import edu.umass.cs.mallet.base.util.PropertyList;
 import org.rexo.extraction.NewHtmlTokenization;
 import org.rexo.referencetagging.HeaderNotFoundException;
 import org.rexo.referencetagging.ReferenceParsingException;
@@ -15,6 +13,7 @@ import org.rexo.referencetagging.ReferencesNotFoundException;
 
 import edu.umass.cs.mallet.base.extract.Span;
 import edu.umass.cs.mallet.base.types.PropertyHolder;
+import org.rexo.span.CompositeSpan;
 
 /**
  * Author: saunders Created Nov 9, 2005 Copyright (C) Univ. of Massachusetts Amherst, Computer Science Dept.
@@ -30,19 +29,24 @@ public class LayoutSegmentFinder
 	static final private Pattern BIBLIOGRAPHY_PATTERN;
 	
 	CRFBibliographySegmentor m_crfBibSegmentor;
-	
+
+    RulesBibliographySegmentor m_rulesBibSegmentor;
 	
 	static {
-		INTRODUCTION_PATTERN = Pattern.compile("I(?i:ntroduction)");
-		ABSTRACT_PATTERN = Pattern.compile("A(?i:bstract)");
+		INTRODUCTION_PATTERN = Pattern.compile("^[#iIvVxX\\s\\.\\d]*I(?i:ntroduction)");
+		ABSTRACT_PATTERN = Pattern.compile("^[\\s]*((A(?i:bstract))|((abstract)[\\s]*$))");
 		BIBLIOGRAPHY_PATTERN = Pattern
-				.compile("^[iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography))\\s*$");
+			//	.compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited))\\s*$");
+                //just temporary to make it work with 2010Song_...
+            .compile("^[#iIvVxX\\d\\.\\s]{0,5}(R(?i:eferences)|B(?i:ibliography)|R(?i:eferences and Notes)|L(?i:iterature Cited)|A(?i:cknowledgements))\\s*$");
 	}
+
 
 	
 	public LayoutSegmentFinder(CRFBibliographySegmentor crfBibSegmentor)
 	{
 		m_crfBibSegmentor = crfBibSegmentor;
+        m_rulesBibSegmentor = new RulesBibliographySegmentor();
 	}
 	
 	/* Partition element 'contentElement' into segments. */
@@ -68,12 +72,19 @@ public class LayoutSegmentFinder
 		ArrayList lineSpans = new ArrayList();
 		lineSpans.addAll(tokenization.getLineSpans());
 
+
 		//**** Find header ****
 		LinkedList headerLineList = new LinkedList();
 		// look for 'abstract'
 		List subList = findMatchingLines(lineSpans, NULL_PATTERN,
 				ABSTRACT_PATTERN, /*lineCountMax=*/Integer.MAX_VALUE, /*pageCountMax=*/
 				Integer.MAX_VALUE);
+
+//        for(Object s: lineSpans)
+//        {
+//            System.out.println(s.toString());
+//        }
+
 		if (!subList.isEmpty()) {
 			// add everything before 'abstract' to header list
 			headerLineList.addAll(subList);
@@ -93,19 +104,42 @@ public class LayoutSegmentFinder
 				headerLineList.addAll(subList);
 				subList.clear();
 			} else {
-				throw new HeaderNotFoundException(
-						"did not find 'abstract' or 'introduction'");
+                //TODO: try with rules for each of the journals
+                JournalSegmenter js = JournalSegmenter.getSegmenter(lineSpans);
+
+                if(js==null)
+                {
+                    throw new HeaderNotFoundException(
+                            "did not find 'abstract' or 'introduction'");
+                }
+                subList = js.getAbstract(lineSpans);
+
+
+                if(subList.isEmpty() )
+                {
+                    throw new HeaderNotFoundException(
+                            "did not find 'abstract' or 'introduction'");
+                }
+                else
+                {
+                    headerLineList.addAll(subList);
+                    subList.clear();
+                }
 			}
 		}
 
+
 		// Create header element
 		long[] headerTokenBoundaries = lineListBoundaries(headerLineList);
-		NewHtmlTokenization header = tokenization.getSubspanTokenization(
+//        System.out.println(Arrays.toString(headerTokenBoundaries));
+
+        NewHtmlTokenization header = tokenization.getSubspanTokenization(
 				(int) headerTokenBoundaries[0], (int) headerTokenBoundaries[1]);
 
 		subsections.put("headerTokenization", header);
 
 		//***** Find body ****
+
 		ArrayList bodyLines = new ArrayList();
 		subList = findMatchingLines(lineSpans, NULL_PATTERN,
 				BIBLIOGRAPHY_PATTERN, /*lineCountMax=*/Integer.MAX_VALUE, /*pageCountMax=*/
@@ -134,6 +168,9 @@ public class LayoutSegmentFinder
 		long[] biblioBoundaries= lineListBoundaries(lineSpans);
 		NewHtmlTokenization biblio = tokenization.getSubspanTokenization((int)biblioBoundaries[0], (int)biblioBoundaries[1]);
 		CRFBibliographySegmentor.ReferenceData referenceData = m_crfBibSegmentor.segmentReferences(biblio);
+//uncomment to use rule-based approach
+//        RulesBibliographySegmentor.ReferenceData referenceData = m_rulesBibSegmentor.segmentReferences(biblio, m_crfBibSegmentor.getInputPipe());
+
 
 		// Create biblioPrologue element
 		if (!referenceData.prologueList.isEmpty()) {
@@ -155,7 +192,7 @@ public class LayoutSegmentFinder
 			NewHtmlTokenization reference = tokenization
 					.getSubspanTokenization((int) referenceTokenBoundaries[0],
 							(int) referenceTokenBoundaries[1]);
-			refTokenizationList.add(reference);
+			refTokenizationList.add(reference); //here adds ALL, junk included (ex: [70] in paper2_1.pdf), todo: improve it so it ignores "junk" part
 
 		}
 		subsections.put("referenceList", refTokenizationList);

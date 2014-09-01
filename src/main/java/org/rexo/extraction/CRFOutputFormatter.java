@@ -5,10 +5,12 @@ import edu.umass.cs.mallet.base.types.Sequence;
 import edu.umass.cs.mallet.base.types.PropertyHolder;
 import org.jdom.Element;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.rexo.span.CompositeSpan;
 
 /**
  * Author: saunders Created Nov 16, 2005 Copyright (C) Univ. of Massachusetts Amherst, Computer Science Dept.
@@ -16,6 +18,8 @@ import org.apache.log4j.Logger;
 public class CRFOutputFormatter {
     private static Logger log = Logger.getLogger( CRFOutputFormatter.class );
 
+    //
+    //private int lastWidth = 0;
 	/**
 	 *
 	 * @param input
@@ -25,19 +29,140 @@ public class CRFOutputFormatter {
 	 */
 	public Element toXmlElement(NewHtmlTokenization input, Sequence tokenLabels, String parentName) {
 		Element rootElement = new Element( parentName );
+        List<BoxCoordinates> columns = null;
+        int currentColumn = 1;
+        //kzaporojets: gets the columns and its coordinates in terms of the width
+        if(parentName.equals("reference")) {
+            columns = getColumnData(input.getLineSpans());
+        }
+
+        int page = -1;
 		for (int i = 0; i < input.size(); i++) {
+
 			Span span = (Span)input.get( i );
 			String labels = tokenLabels.get( i ).toString();
 			// hack: header/reference related fixes
 			labels = labels.replaceAll( "author-begin", "authors:^author" );
 			labels = labels.replaceAll( "author-inside", "authors:author" );
-			String[] labelParts = labels.split( "[:|]" );
+            //for body
+            labels = labels.replaceAll( "text-begin", "^text" );
+            labels = labels.replaceAll( "text-inside", "text" );
+
+            labels = labels.replaceAll( "section-marker-begin", "^section-marker" );
+            labels = labels.replaceAll( "section-marker-inside", "section-marker" );
+
+            labels = labels.replaceAll( "table-marker-begin", "^table-marker" );
+            labels = labels.replaceAll( "table-marker-inside", "table-marker" );
+
+            labels = labels.replaceAll( "figure-marker-begin", "^figure-marker" );
+            labels = labels.replaceAll( "figure-marker-inside", "figure-marker" );
+
+            labels = labels.replaceAll( "paragraph-begin", "^paragraph-marker" );
+            labels = labels.replaceAll( "paragraph-inside", "paragraph-marker" );
+
+            String[] labelParts = labels.split( "[:|]" );
+            BoxCoordinates bcord = getSpanBoxCoordinates(span);
+            //kzaporojets: gets the columns and its coordinates in terms of the width
+            if(parentName.equals("reference")) {
+                currentColumn = getCurrentColumn(columns,span);
+                //all in the same page
+//                if(page!=-1 && bcord.getPageNum()!=page)
+//                {
+//                    bcord.setPageNum(page);
+//                }
+            }
+//            page = bcord.getPageNum();
+
             //kzaporojets: insertTokenPosition also includes the position
 			//insertToken( rootElement, getSpanText( span ), labelParts );
-            insertTokenPosition(rootElement, getSpanText( span ), labelParts, getSpanBoxCoordinates(span));
+            insertTokenPosition(rootElement, getSpanText( span ), labelParts, bcord,currentColumn);
 		}
 		return rootElement;
 	}
+
+
+    int getCurrentColumn(List<BoxCoordinates> columns, Span span)
+    {
+        double llxSpan = ((PropertyHolder) span).getNumericProperty( "llx" );
+        double urxSpan = ((PropertyHolder) span).getNumericProperty( "urx" );
+        int col=1;
+        int estimateCol = 1;
+        double estimateDistance = 10000;
+        for(BoxCoordinates bc : columns)
+        {
+            if(bc.getLlx()<=llxSpan && urxSpan<=bc.getUrx())
+            {
+                return col;
+            }
+            else
+            {
+                if(bc.getLlx()<=llxSpan&&bc.getUrx()>=llxSpan)
+                {
+//                    estimateDistance=0;
+                    estimateCol = col;
+                }
+                else if (bc.getLlx()<=urxSpan&&bc.getUrx()>=urxSpan)
+                {
+//                    estimateDistance=0;
+                    estimateCol = col;
+                }
+                else if(bc.getLlx()>=llxSpan&&bc.getUrx()<=urxSpan)
+                {
+                    estimateCol = col;
+                }
+                else if(bc.getUrx()<=urxSpan&&bc.getUrx()<=llxSpan)
+                {
+                    estimateCol = col;
+                }
+            }
+            col++;
+        }
+        return estimateCol;
+    }
+    List<BoxCoordinates> getColumnData(List lineSpan)
+    {
+        List<BoxCoordinates> retVal = new ArrayList<BoxCoordinates>();
+        int currCol=0;
+        for (Object span:lineSpan)
+        {
+            if(span instanceof CompositeSpan) {
+                Double llx = Double.valueOf(((CompositeSpan)span).getProperty("llx").toString());
+                Double urx = Double.valueOf(((CompositeSpan)span).getProperty("urx").toString());
+                if (retVal.size() <= currCol) {
+                    //double ury, double urx, double lly, double llx, int pageNum
+                    retVal.add(new BoxCoordinates(-1, urx, -1, llx, -1));
+                } else {
+                    BoxCoordinates bc = retVal.get(currCol);
+                    if (bc.getUrx() < llx) {
+                        currCol = retVal.size();
+                        retVal.add(new BoxCoordinates(-1, urx, -1, llx, -1));
+                    } else if (urx < bc.getLlx()) {
+                        //add in the beginning of the list
+                        retVal.add(0, new BoxCoordinates(-1, urx, -1, llx, -1));
+                    } else {
+                        if (bc.getLlx() > llx) {
+                            bc.setLlx(llx);
+                        }
+                        if (bc.getUrx() < urx) {
+                            bc.setUrx(urx);
+                        }
+                    }
+                }
+            }
+        }
+
+        if(retVal.size()>1) {
+            BoxCoordinates prevBc = retVal.get(0);
+            for (BoxCoordinates bc : retVal.subList(1,retVal.size())) {
+                if(bc.getLlx()<prevBc.getUrx())
+                {
+                    bc.setLlx(prevBc.getUrx()+1);
+                }
+                prevBc = bc;
+            }
+        }
+        return retVal;
+    }
 
 	public Element toXmlElement(String[] tokenStrings, Sequence tokenLabels, String parentName) {
 		Element rootElement = new Element( parentName );
@@ -106,9 +231,9 @@ public class CRFOutputFormatter {
      * @param span
      * @param labelParts
      */
-    private void insertTokenPosition(Element parent, String span, String[] labelParts, BoxCoordinates positionSpan) {
+    private void insertTokenPosition(Element parent, String span, String[] labelParts, BoxCoordinates positionSpan, int currentColumn) {
         //associate position here
-        adjustPosition(parent, positionSpan);
+        adjustPosition(parent, positionSpan, currentColumn);
         //end associate position
         if (labelParts.length > 0) {
             String labelPart = labelParts[0];
@@ -116,7 +241,23 @@ public class CRFOutputFormatter {
 
             if ((child = lastChild( parent )) == null || labelPart.startsWith( "^" ) || !labelPart.equals( child.getName() )) {
                 labelPart = labelPart.replaceFirst( "^\\^", "" );
+                String extraAttrs[]=null;
+                if(labelPart.indexOf("--_--")>-1) {
+                    extraAttrs = labelPart.substring(labelPart.indexOf("--_--")).replace("--_--","").split(";");
+                    labelPart = labelPart.replace(labelPart.substring(labelPart.indexOf("--_--")),"");
+                }
                 child = new Element( labelPart );
+
+                if(extraAttrs!=null && extraAttrs.length>0)
+                {
+                    for(String currAttr:extraAttrs)
+                    {
+                        String attr = currAttr.substring(0,currAttr.indexOf("="));
+                        String value = currAttr.substring(currAttr.indexOf("=")+1,currAttr.length());
+                        child.setAttribute(attr, value);
+                    }
+                }
+
                 parent.addContent( child );
             }
             List tails = Arrays.asList( labelParts ).subList( 1, labelParts.length );
@@ -124,38 +265,70 @@ public class CRFOutputFormatter {
             //associate position here
 
             //end associate position
-            insertTokenPosition(child, span, labelTail, positionSpan);
+            insertTokenPosition(child, span, labelTail, positionSpan, currentColumn);
         }
         else {
             parent.addContent( span );
         }
     }
 
+//    private void setParagraphAttributes(Element child)
+//    {
+//        if(child.getName().equals("paragraph"))
+//        {
+//            System.out.println("paragraph met");
+//        }
+//    }
+
     //adjust the position
-    private void adjustPosition(Element elem, BoxCoordinates pos)
+    private void adjustPosition(Element elem, BoxCoordinates pos, int currentColumn)
     {
         try {
             //if suddenly all the attributes change abruptly, and we are in references section, don't change them:
             //probably its just a new column. Won't deel with it for now.
-            if (elem.getAttribute("llx")!=null && elem.getName().equals("reference"))
+            int initCol = 1;
+//todo: see if initialCol attr is really necessary
+//            if(elem.getAttribute("initialCol")!=null)
+//            {
+//                initCol = elem.getAttribute("initialCol").getIntValue();
+//            }
+
+            //todo: see why the commented code fails on  1997Fey_The_affects_of_stoichiometry_and_synthesis_temperature_on_the_preperation_of_the_inverse_spinel_LiNiVO4_and_its_performance_as_a_new_high_voltage_cathod_material.pdf
+            String llxAttr = "llx"; //currentColumn==initCol?"llx":elem.getAttribute("llx")!=null?"llxc" + (Math.abs(currentColumn - initCol)+1):"llx";
+            String llyAttr = "lly"; //currentColumn==initCol?"lly":elem.getAttribute("lly")!=null?"llyc" + (Math.abs(currentColumn - initCol)+1):"lly";
+            String urxAttr = "urx"; //currentColumn==initCol?"urx":elem.getAttribute("urx")!=null?"urxc" + (Math.abs(currentColumn - initCol)+1):"urx";
+            String uryAttr = "ury"; //currentColumn==initCol?"ury":elem.getAttribute("ury")!=null?"uryc" + (Math.abs(currentColumn - initCol)+1):"ury";
+
+
+
+
+            if (elem.getAttribute(llxAttr)!=null && elem.getName().equals("reference"))
             {
-                if(Math.abs(elem.getAttribute("lly").getDoubleValue() - pos.getLly())>150 &&
-                        Math.abs(elem.getAttribute("ury").getDoubleValue() - pos.getUry())>150)
+                if(Math.abs(elem.getAttribute(llyAttr).getDoubleValue() - pos.getLly())>400 &&
+                        Math.abs(elem.getAttribute(uryAttr).getDoubleValue() - pos.getUry())>400)
                 {
                     return;
                 }
             }
-            if (elem.getAttribute("llx") == null || elem.getAttribute("llx").getDoubleValue() > pos.getLlx()) {
-                elem.setAttribute("llx", String.valueOf(pos.getLlx()));
+            //inserts the number of column with respect to which the llxc_ is calculated
+//todo: see if initialCol attr is really necessary
+//            if(llxAttr.equals("llx") && elem.getAttribute("initialCol")==null)
+//            {
+//                elem.setAttribute("initialCol",String.valueOf(currentColumn));
+//            }
+
+            if (elem.getAttribute(llxAttr) == null || elem.getAttribute(llxAttr).getDoubleValue() > pos.getLlx()) {
+                elem.setAttribute(llxAttr, String.valueOf(pos.getLlx()));
+
             }
-            if (elem.getAttribute("lly") == null || elem.getAttribute("lly").getDoubleValue() > pos.getLly()) {
-                elem.setAttribute("lly", String.valueOf(pos.getLly()));
+            if (elem.getAttribute(llyAttr) == null || elem.getAttribute(llyAttr).getDoubleValue() > pos.getLly()) {
+                elem.setAttribute(llyAttr, String.valueOf(pos.getLly()));
             }
-            if (elem.getAttribute("urx") == null || elem.getAttribute("urx").getDoubleValue() < pos.getUrx()) {
-                elem.setAttribute("urx", String.valueOf(pos.getUrx()));
+            if (elem.getAttribute(urxAttr) == null || elem.getAttribute(urxAttr).getDoubleValue() < pos.getUrx()) {
+                elem.setAttribute(urxAttr, String.valueOf(pos.getUrx()));
             }
-            if (elem.getAttribute("ury") == null || elem.getAttribute("ury").getDoubleValue() < pos.getUry()) {
-                elem.setAttribute("ury", String.valueOf(pos.getUry()));
+            if (elem.getAttribute(uryAttr) == null || elem.getAttribute(uryAttr).getDoubleValue() < pos.getUry()) {
+                elem.setAttribute(uryAttr, String.valueOf(pos.getUry()));
             }
             if (elem.getAttribute("pageNum") == null) {
                 elem.setAttribute("pageNum", String.valueOf(pos.getPageNum()));

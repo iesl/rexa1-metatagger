@@ -25,11 +25,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.rexo.extraction.NewHtmlTokenization;
-import org.rexo.pipeline.ErrorLogFilter;
-import org.rexo.pipeline.GrantExtractionFilter;
-import org.rexo.pipeline.InfoLogFilter;
-import org.rexo.pipeline.PipelineMetricsFilter;
-import org.rexo.pipeline.ReferenceExtractionFilter;
+import org.rexo.pipeline.*;
 import org.rexo.pipeline.components.RxDocument;
 import org.rexo.pipeline.components.RxPipeline;
 import org.rexo.store.MetaDataXMLDocument;
@@ -88,6 +84,8 @@ public class MetaTagger {
 		pipeline
 		.add( new GrantExtractionFilter() )
 		.add( new ReferenceExtractionFilter( refCrf, hdrCrf ) )
+        .add( new BodyExtractionFilter())
+
 		// .add( new CitationContextFilter() )
 		// .add( new WriteAnnotatedXMLFilter() )
 		// .add( new MetatagPostconditionTestFilter() )
