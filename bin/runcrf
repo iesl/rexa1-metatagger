@@ -1,5 +1,5 @@
 #!/bin/bash
 
-# MetaTag is the scala version
+# MetaTag is the scala version -- defaulted to this right now, change if you need to
 # MetaTagger is the java version
-exec ./sbt  "runMain org.rexo.ui.MetaTagger --data-dir data/"
+exec ./sbt  "runMain org.rexo.ui.MetaTag --data-dir data/"
