@@ -129,7 +129,7 @@ object MetaTag {
 	  	while ({line = reader.readLine(); line != null}) {
 	  		// format is input-filename -> output-filename
 	  		val files = line.split( "->" )
-	  		val infile = new File( files(0) )
+	  		val infile = new File( files(0).trim() )
 	  		val outfile = new File( files(1).trim() )
 
 	  		logger.info( infile.getPath() + " -> " + outfile.getPath()  )
@@ -138,7 +138,6 @@ object MetaTag {
 	  			val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
 	  			val rdoc = new RxDocument()
 	  			rdoc.setTokenization( tokenization )
-
 	  			try {
 					logger.info("exectuting java pipeline")
 					javaPipeline.execute( rdoc )
