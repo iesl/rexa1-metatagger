@@ -23,3 +23,5 @@ resolvers ++= Seq(
 
 
 javacOptions ++= Seq("-Xlint:-rawtypes", "-Xlint:-unchecked")
+
+releaseSettings
