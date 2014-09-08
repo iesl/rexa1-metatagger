@@ -6,6 +6,7 @@ import java.io
 import scala.collection.mutable.Stack
 import org.rexo.pipeline.components.RxDocument
 import org.slf4j.{Logger, LoggerFactory}
+import org.rexo.util.{ParseArgs,Metrics}
 
 class Email(email: String, refid: Int, metatag: String) {
   val id = refid
@@ -132,7 +133,7 @@ class Institution(instName: String, refid: Int) {
     address = new Some(newAddr)
   }
 
-  def toXML() : NodeSeq = {
+  def toXML : NodeSeq = {
     <institution-name>
       {name}
     </institution-name>
@@ -206,12 +207,12 @@ object cleaner
   // TODO - this sort of thing should probably be done in PDF2Meta...
   // consider foreign characters in this string (umlaut, etc)
   def cleanName(name: String) : String = {
-    val nameRe = """([a-zA-Z-]+)""".r
+    val nameRe = """([a-zA-Z-\.]+)""".r
     nameRe.findFirstIn(name).getOrElse("")
   }
 }
 
-class Author (xmlseq: NodeSeq) {
+class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
   val id = (xmlseq \ "@id").text.toInt
   val name_first = cleaner.cleanName((xmlseq \ "author-first").text)
   val name_middle = cleaner.cleanName((xmlseq \ "author-middle").text)
@@ -223,11 +224,14 @@ class Author (xmlseq: NodeSeq) {
     "lly"->(xmlseq \ "@lly").text,
     "urx"->(xmlseq \ "@urx").text,
     "ury"->(xmlseq \ "@ury").text)
-
-  var email: Option[Email] = None
+  val emailMeta : Option[String] = if (xmlseq \ "@email" != NodeSeq.Empty) Some((xmlseq \ "@email").text) else None
+  var email = emailOption
+  val instMeta : Option[String] = if (xmlseq \"@institution" != NodeSeq.Empty) Some((xmlseq \ "@institution").text) else None
   var institution: Option[Institution] = None
 
-  override def toString() : String =  {
+  def this (xmlseq: NodeSeq) { this(xmlseq, None) }
+
+  override def toString : String =  {
     val attrs = (for ((attr, value) <- attributes ) yield { s"$attr: $value"}).mkString("\n")
 
     s"""|
@@ -236,8 +240,14 @@ class Author (xmlseq: NodeSeq) {
        |PDF Attributes:  \n$attrs
        """.stripMargin
   }
+  def getFullName : String = {
+    var name = name_first + " " + name_middle
+    if (name_middle != "") name += " "
+    name += name_last
+    name
+  }
 
-  def getNote() : Option[Note] = { note }
+  def getNote : Option[Note] = { note }
 
   def addEmail(email : Email) { this.email = new Some(email)}
   def addInstitution(inst : Institution) { this.institution = new Some(inst)}
@@ -395,12 +405,12 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
 
     newXML
   }
-/*
+
   def run(args: Array[String]) {
 
     AuthorEmailTaggingFilter.metrics.logStart("AuthorEmailTaggingFilter")
 
-    val argMap = ParseArgs.parseArgs("AuthorEmailTaggingFilter", args, AuthorEmailTaggingFilter.usage)
+    val argMap = ParseArgs.parseArgs("AuthorEmailTaggingFilter", args, "-i:-d:", AuthorEmailTaggingFilter.usage)
     // need exception handling here!!
     val infile = argMap("-i")
     var dictFile = ""
@@ -419,7 +429,7 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
     val newXML = run_filter(XML.loadFile(infile))
     XML.save((infile split ".xml")(0) + ".summary.xml", newXML, "UTF-8", true)
   }
-*/
+
   def run_filter(xmldata : Node) : Node = {
 
     val refXML = AuthorEmailTaggingFilter.XMLPreProcess(xmldata)
@@ -565,120 +575,5 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
   }
 }
 
-/**
- * This is a class to help keep some simple metrics about a program and how it's running.
- * This will give us an idea of timing, but if we want to be more accurate we should probably
- * switch to using Metrics Core or Criterium (might be Java only)
- * @param project
- */
-class Metrics (project : String) {
-  val logger = LoggerFactory.getLogger(Metrics.getClass())
-  val projectName = project
-  var success : Int = 0
-  var failure = scala.collection.mutable.Map[String, String]()
-  var timestampMap = scala.collection.mutable.Map[String, (Long, Long)]()
 
-  def logStart(tag: String) : Unit = {
-    timestampMap += tag -> (System.nanoTime(), -1.asInstanceOf[Long])
-  }
 
-  def logStop(tag: String) : Unit = {
-    //val tagInfo = timestampMap.get(tag)
-    val timeval = timestampMap.getOrElse(tag, (-1L, -1L))
-
-    if (timeval._1 != -1) {
-      timestampMap += tag -> (timeval._1, System.nanoTime())
-    }
-  }
-
-  def getTimeMS(tag: String) : Double = {
-    val timeval = timestampMap.getOrElse(tag, (-1L,-1L))
-    (timeval._2 - timeval._1) / 1e6
-  }
-
-  // tell the time it takes to run a function
-  def getFunctionTime[A](func: => A) = {
-    val s = System.nanoTime()
-    val ret = func
-    logger.info("time: " + (System.nanoTime() - s) / 1e6 + "ms")
-    ret
-  }
-
-  def logSuccess() : Unit = { success += 1 }
-
-  def logFailure(fname: String, errMsg: String) : Unit = {
-    if (fname != "" && errMsg != "") {
-      failure += fname -> errMsg
-    }
-  }
-
-  def successCount() : Int = {success}
-  def failureCount() : Int = {failure.size}
-
-  def summary() : String = {
-    s"Successfully matched $success emails(s).\n"+
-      s"Failed on the following ${failure.size}: \n" +
-      (for ((key,value) <- failure) yield {s"\t$key: $value\n"}).toList.mkString  +
-      "Time Values: \n" +
-      (for ((key,(start, stop)) <- timestampMap) yield {s"\t$key: " + this.getTimeMS(key) +  "ms\n"}).toList.mkString
-  }
-}
-
-object Metrics {
-  val logger = LoggerFactory.getLogger(Metrics.getClass())
-  def main(args : Array[String]) {
-    TestMetric("Test Run")
-  }
-
-  def TestMetric (projectName : String) : Unit = {
-    val metric = new Metrics(projectName)
-    metric.logStart("program run time")
-
-    metric.logStart("success")
-    metric.logSuccess()
-    metric.logStop("success")
-    metric.logStart("failure")
-    metric.logFailure("foo.txt", "file does not exist")
-    metric.logStop("failure")
-
-    //metric.getFunctionTime(metric.logSuccess())
-    metric.logStop("program run time")
-
-    logger.info(metric.summary())
-  }
-}
-
-// quick and dirty command line argument parser...
-// todo- make this more robust at some point
-
-object ParseArgs {
-
-  def parseArgs(progname : String, args : Array[String], usage : () => Unit) : scala.collection.mutable.Map[String,String] = {
-    var map = scala.collection.mutable.Map[String, String]()
-    val stack = scala.collection.mutable.Stack[String](args: _*) // _* factory method to make the args array viewed as list of strings
-
-    if (stack.isEmpty) {
-      usage()
-      sys.error("Missing arguments") // exit
-    }
-
-    try {
-      do {
-        val arg = stack.pop //stack.headOption.getOrElse("unknown")
-        println(s"arg is $arg")
-        arg match {
-          case "-i" | "-d" | "-f" | "-o" => map += arg -> stack.pop() //stack.headOption.getOrElse("")
-          case `progname` => // ignore
-          case "unknown" => println(s"Shouldn't reach here!: $arg")
-          case _ => usage(); //sys.error(s"Unknown argument: $arg")
-        }
-      } while (stack.nonEmpty)
-
-      map
-
-    } catch {
-      case e: NoSuchElementException => usage(); System.err.print("Missing argument: " + e); map
-      case e: Exception => System.err.print("Unable to parse command line arguments: " + e); map
-    }
-  }
-}
