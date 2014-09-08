@@ -119,8 +119,6 @@ object MetaTag {
 	  	val javaPipeline = buildJavaPipeline()
       val scalaPipeline = buildScalaPipeline()
 
-      val inject = true;
-
       var reader = new BufferedReader( new InputStreamReader( System.in ) )
 
 	  	var line: String = null
