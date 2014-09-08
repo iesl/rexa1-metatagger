@@ -1,6 +1,5 @@
 ### Rexa metatagger: scientific paper header and reference extraction.
 
-
 Metatagger is a system which consumes the output of the Rexa's
 [pstotext](https://github.com/iesl/rexa1-pstotext) tool and produces an annotated version of the
 text, finishing by writing the results to an XML file. The system is a structured series of pipelined
