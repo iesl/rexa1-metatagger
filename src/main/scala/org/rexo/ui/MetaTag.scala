@@ -123,9 +123,6 @@ object MetaTag {
 
       var reader = new BufferedReader( new InputStreamReader( System.in ) )
 
-      if (inject) // override it!
-        reader = new BufferedReader(new FileReader("/Users/bseeger/Projects/rexa-workspace/rexa1-metatagger/filelist.txt"))
-
 	  	var line: String = null
 	  	logger.info( "begin" )
 
@@ -143,25 +140,28 @@ object MetaTag {
 	  			rdoc.setTokenization( tokenization )
 
 	  			try {
-         		logger.info("exectuting java pipeline")
-	  				javaPipeline.execute( rdoc )
+					logger.info("exectuting java pipeline")
+					javaPipeline.execute( rdoc )
+	/*
+					SCALA pipeline turned off for now. 
 
-            logger.info("exectuting scala pipeline")
+					logger.info("exectuting scala pipeline")
 
-            val tokenization = rdoc.getTokenization()
-            val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
-            val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
+					val tokenization = rdoc.getTokenization()
+					val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
+					val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
 
-            // run it!
-            val newDoc = scalaPipeline(doc)
-
-            writeOutput( outfile, newDoc )
+					// run it!
+					val newDoc = scalaPipeline(doc)
+					writeOutput( outfile, newDoc )
+	*/
+					writeOutput( outfile, rdoc )
 	  			}
 	  			catch {
-            case e: Exception => {
-              logger.error(e.getClass().getName() + ": " + e.getMessage())
-            }
-          }
+                    case e: Exception => {
+                        logger.error(e.getClass().getName() + ": " + e.getMessage())
+                    }
+                }
 	  		}
 	  		else {
 	  			logger.error( "File not found: " + infile.getPath() )
