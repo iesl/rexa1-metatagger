@@ -25,3 +25,7 @@ resolvers ++= Seq(
 javacOptions ++= Seq("-Xlint:-rawtypes", "-Xlint:-unchecked")
 
 releaseSettings
+
+ReleaseKeys.releaseProcess := releaseConfig.releaseSteps
+
+  //ReleaseKeys.releaseProcess := Seq[ReleaseStep](
