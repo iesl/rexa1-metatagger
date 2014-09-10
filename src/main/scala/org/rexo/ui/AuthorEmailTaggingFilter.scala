@@ -144,6 +144,7 @@ class Institution(instName: String, refid: Int) {
 }
 
 object Institution {
+  val logger = LoggerFactory.getLogger(Institution.getClass())
   private val map = scala.collection.mutable.Map[String,(String,String)]()
   private var filename : Option[String] = None
 
@@ -158,30 +159,36 @@ object Institution {
 
     val lines = instData split "\n"
     for(line <- lines) {
-      val pair = line split ";;" // split on domain, name, address
-      map += pair(0).trim -> (pair(1).trim, pair(2).trim)
+      if (!line.startsWith("#")) { // don't parse comment lines
+        val pair = line split ";;" // split on domain, name, address
+        map += pair(0).trim.stripPrefix("www.") ->(pair(1).trim, pair(2).trim)
+      }
     }
+
+    logger.info("Institution Dictionary has " + map.size + " entries.")
   }
 
-  def lookupInstitution(key: String): Option[(String,String)] = {
-    // passed in key might be a subdomain of the actual key, hence
-    // the key find here.
-    // This might not be specific enough, if a institution is linked to several sub-domains.
-    // But start here for now.
+  def lookupInstitution(domain: String): Option[(String,String)] = {
 
-    def instMatch (mapKey : String) : Boolean =  {
-      key.r.findFirstIn(mapKey).nonEmpty || mapKey.r.findFirstIn(key).nonEmpty
+    // start from end and walk back til it is found.  Then walk back one more to see if
+    // it can be refined
+
+    var index = domain.lastIndexOf('.', domain.lastIndexOf('.')-1)
+    var key = domain.slice(index+1, domain.length)
+    var foundInfo = map.get(key)
+    var prevInfo : Option[(String,String)] = None
+
+    while ((foundInfo == Some && index != -1) || (index != -1 && foundInfo == None && prevInfo == None)) {
+      prevInfo = foundInfo
+      index = domain.lastIndexOf('.', index - 1)
+      key = domain.slice(index+1, domain.length)
+      foundInfo = map.get(key)
     }
 
-    try {
-      val theKey : String = (map.keys.find((keyVal : String)=> instMatch(keyVal))).getOrElse("")
-      if (theKey != "")
-        Some(map(theKey))
-      else {
-        None
-      }
-    } catch {
-      case e: NoSuchElementException => None
+    if (foundInfo.nonEmpty) {
+      foundInfo
+    } else {
+      prevInfo
     }
   }
 }
@@ -284,9 +291,9 @@ object AuthorEmailTaggingFilter {
   val logger = LoggerFactory.getLogger(AuthorEmailTaggingFilter.getClass()) // hmm... not sure this is correct
   val metrics = new Metrics("AuthorEmailTaggingFilter")
 
-  //def main(args: Array[String]) {
-   // new AuthorEmailTaggingFilter().run(args)
- // }
+  def main(args: Array[String]) {
+    new AuthorEmailTaggingFilter().run(args)
+  }
 
 
   def usage() {
@@ -438,19 +445,18 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
     var authorList: List[Author] = List()
     var emailList: List[Email] = List()
     var instList: List[Institution] = List()
-
-    AuthorEmailTaggingFilter.metrics.logStart("Parsing Header (Method B)")
+    AuthorEmailTaggingFilter.metrics.reset()
+    AuthorEmailTaggingFilter.metrics.logStart("Parsing Header")
 
     /* maybe pay attention to notes in the future. Currently they are not useful */
     authorList = getAuthors(headerXML)
     emailList = getEmails(headerXML)
     instList = getInstitutions(headerXML)
 
-    AuthorEmailTaggingFilter.metrics.logStop("Parsing Header (Method B)")
+    AuthorEmailTaggingFilter.metrics.logStop("Parsing Header")
 
     if (authorList.length == 0) {
       logger.info("****** Document has no authors listed in it. Exiting ******")
-      sys.exit(-1)
     }
 
     val emailInstMap = mapEmailToInst(emailList, instList)
@@ -466,20 +472,27 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
   def mapEmailToInst(emailList: List[Email], instList: List[Institution]) : Map[Email,Institution] = {
 
     val thelist : List[(Email, Option[Institution])] =
-      (for (email <- emailList;
-            instTuple <- Institution.lookupInstitution(email.getDomain).toList;
-            //instReg = instTuple._1.toLowerCase.r()
-            //inst <- instList if instReg.  ) yield {
-            inst <- instList) yield {
-        // does any inst in the instList match the name in our dictionary?
+      (for (email <- emailList) yield {
+				val dictInst = Institution.lookupInstitution(email.getDomain)
+        if (dictInst.nonEmpty) {
+					// now we see if we can match it to an institution listed in the document
+					val matchInst = instList.find(inst => {
+							dictInst.get._1.toLowerCase.r.findFirstIn(inst.name.toLowerCase).nonEmpty ||
+							inst.name.toLowerCase.r.findFirstMatchIn(dictInst.get._1.toLowerCase).nonEmpty})
 
-        val instReg = instTuple._1.toLowerCase.r()
-
-        if (instReg.findFirstIn(inst.name.toLowerCase).nonEmpty) {
-          // match!!
-          email -> Some(inst)
+					if (matchInst.nonEmpty) {
+						// we have a match (one is a substring of the other, doesn't matter which one)
+						email -> matchInst // use the name from the paper, not dictionary
+					} else {
+						val foundInst = new StringExtras(dictInst.get._1)
+						// 5 is arbitrary - adjust!
+						email -> instList.find(inst => {
+							val distance = foundInst.editDistance(inst.name);
+							distance < 5
+						})
+					}
         } else {
-          // TODO add domain ;; institution name / addr to dictionary
+          // no institution found in our lookup table
           email -> None
         }
       }).toList
