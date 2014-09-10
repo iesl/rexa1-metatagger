@@ -136,29 +136,25 @@ object MetaTag {
 	  			val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
 	  			val rdoc = new RxDocument()
 	  			rdoc.setTokenization( tokenization )
+
 	  			try {
-					logger.info("exectuting java pipeline")
-					javaPipeline.execute( rdoc )
-	/*
-					SCALA pipeline turned off for now. 
+            logger.info("executing java pipeline")
+            javaPipeline.execute( rdoc )
 
-					logger.info("exectuting scala pipeline")
+            logger.info("executing scala pipeline")
+            val tokenization = rdoc.getTokenization()
+            val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
+            val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
+            val newDoc = scalaPipeline(doc)
 
-					val tokenization = rdoc.getTokenization()
-					val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
-					val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
+            writeOutput( outfile, newDoc )
 
-					// run it!
-					val newDoc = scalaPipeline(doc)
-					writeOutput( outfile, newDoc )
-	*/
-					writeOutput( outfile, rdoc )
 	  			}
 	  			catch {
-                    case e: Exception => {
-                        logger.error(e.getClass().getName() + ": " + e.getMessage())
-                    }
-                }
+             case e: Exception => {
+               logger.error(e.getClass().getName() + ": " + e.getMessage())
+            }
+          }
 	  		}
 	  		else {
 	  			logger.error( "File not found: " + infile.getPath() )
