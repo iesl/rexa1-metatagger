@@ -15,6 +15,12 @@ class Metrics (project : String) {
   var failure = scala.collection.mutable.Map[String, String]()
   var timestampMap = scala.collection.mutable.Map[String, (Long, Long)]()
 
+  def reset() {
+    success = 0
+    failure.clear()
+    timestampMap.clear()
+  }
+
   def logStart(tag: String) : Unit = {
     timestampMap += tag -> (System.nanoTime(), -1.asInstanceOf[Long])
   }
