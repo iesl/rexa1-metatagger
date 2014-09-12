@@ -20,83 +20,92 @@ object Analyzer {
     println("\tFilterAnalyzer -d <directory> -r <csv results file> [-f <outfilename>]")
     println("   -d    directory where processed files are. Will only operate on *.meta.xml files")
     println("   -r    CSV results file. One row per file")
-    println("   -f    optional filename specifing where to print results to. Default is stdout")
+    println("   -f    optional filename specifying where to print results to. Default is stdout")
   }
 
   def main(args: Array[String]) {
 
-    val arguments: scala.collection.mutable.Map[String,String] = ParseArgs.parseArgs("MetaTaggerAnalyzer", args, "d:i:r:f:", usage)
-    val dir = arguments.getOrElse("-d", "")
-    val csvFilename = arguments.getOrElse("-r", "")
-    val outfile = arguments.getOrElse("-f", "")
+		val arguments: scala.collection.mutable.Map[String, String] = ParseArgs.parseArgs("MetaTaggerAnalyzer", args, "d:i:r:f:", usage)
+		val dir = arguments.getOrElse("-d", "")
+		val csvFilename = arguments.getOrElse("-r", "")
+		val outfile = arguments.getOrElse("-f", "")
 		val dictFile = arguments.getOrElse("-i", "")
 
-    if (dir == "" || csvFilename == "") {
-      println("Missing arguments, unable to proceed.")
-      usage()
-      sys.exit()
-    }
-
-    // get pdf.meta.xml list
-    val directory = new File(dir)
-    val fileList = getFileList(directory, "pdf.meta.xml")
-
-    // open csv file
-    val resultsMap = parseCSVData(csvFilename)
-
-    Analyzer.addTest(new AnalyzeAuthorEmailTagging())
-
-    // 23 elements in header
-    val results =
-      //for ((filename, info) <- resultsMap;
-       //   test <- testList) yield {
-      for (file <- fileList;
-           test <- testList)  yield {
-        val info = resultsMap.getOrElse(file.getName().stripSuffix(".meta.xml"), Map.empty[String, Map[String, String]]);
-        logger.info("Looking at: " + test.getName)
-
-        if (info.nonEmpty) {
-          test.apply(file, info, dictFile)
-        } else {
-          val emptyResults = new AuthorEmailFilterResults(file.getName)
-          emptyResults.registerErrorMsg("No expected information found for this file. Unable to compare.  Is this a good file?")
-          emptyResults
-        }
-      }
-
-    var totalSuccesses = 0
-    var totalFiles = 0
-    var totalNumberAuthors = 0
-    var totalPartialEmail = 0
-    var totalPartialInst = 0
-    var totalNumberEmails = 0
-
-    results.foreach (x => {
-      totalSuccesses += x.fullSuccesses
-      totalFiles += 1
-      totalNumberAuthors += x.totalSamples
-      totalPartialEmail += x.asInstanceOf[AuthorEmailFilterResults].partialEmail
-      totalPartialInst += x.asInstanceOf[AuthorEmailFilterResults].partialInst
-      x.prettyPrint(System.out)
-    })
-
-    val emailPercentage : Float =  if(totalPartialEmail > 0) (totalPartialEmail.toFloat/totalNumberAuthors.toFloat * 100) else 0
-    val instPercentage : Float =  if(totalPartialInst > 0) (totalPartialInst.toFloat/totalNumberAuthors.toFloat * 100) else 0
-    val matchPercentage : Float  = if (totalSuccesses > 0) (totalSuccesses.toFloat / totalNumberAuthors.toFloat * 100) else 0
-
-    println("\n--------------------------------------------------------\n")
-    println(s"\nTotal number of files analyzed: $totalFiles")
-		if (totalFiles != 0) {
-			println(f"Complete Author/EMail/Institute Matches: $totalSuccesses%d   $matchPercentage%.2f%%")
-			println(s"Total number of authors: $totalNumberAuthors")
-			println("Average authors per file: " + totalNumberAuthors / totalFiles)
-			println(f"Partial Match - Email: $totalPartialEmail%d  $emailPercentage%.2f%%")
-			println(f"Partial Match - Institution: $totalPartialInst%d  $instPercentage%.2f%%")
+		if (dir == "" || csvFilename == "") {
+			println("Missing arguments, unable to proceed.")
+			usage()
+			sys.exit()
 		}
-    println("\n--------------------------------------------------------\n")
+
+		// get pdf.meta.xml list
+		val directory = new File(dir)
+		val fileList = getFileList(directory, "pdf.meta.xml")
+
+		// open csv file
+		val resultsMap = parseCSVData(csvFilename)
+
+		Analyzer.addTest(new AnalyzeAuthorEmailTagging())
+
+		val results =
+			for (file <- fileList;
+					 test <- testList) yield {
+				val info = resultsMap.getOrElse(file.getName().stripSuffix(".meta.xml"), Map.empty[String, Map[String, String]]);
+				logger.info("Looking at: " + test.getName)
+
+				if (info.nonEmpty) {
+					test.apply(file, info, dictFile)
+				} else {
+					val emptyResults = new AuthorEmailFilterResults(file.getName)
+					emptyResults.registerErrorMsg("No expected information found for this file. Unable to compare.  Is this a good file?")
+					emptyResults
+				}
+			}
+
+		if (outfile.nonEmpty) {
+		  val ps = new PrintStream(outfile)
+			printSummary(results, ps)
+			ps.close()
+		} else {
+		  printSummary(results, System.out)
+	  }
   }
 
-  def parseCSVData(csvFilename: String) : Map[String, Map[String,Map[String,String]]] = {
+	def printSummary(results: Array[TestFilterResults], stream : PrintStream) = {
+		var totalSuccesses = 0
+		var totalFiles = 0
+		var totalNumberAuthors = 0
+		var totalPartialEmail = 0
+		var totalPartialInst = 0
+		var totalNumberEmails = 0
+
+		results.foreach(x => {
+			totalSuccesses += x.fullSuccesses
+			totalFiles += 1
+			totalNumberAuthors += x.totalSamples
+			totalPartialEmail += x.asInstanceOf[AuthorEmailFilterResults].partialEmail
+			totalPartialInst += x.asInstanceOf[AuthorEmailFilterResults].partialInst
+			x.prettyPrint(stream)
+		})
+
+		val emailPercentage: Float = if (totalPartialEmail > 0) (totalPartialEmail.toFloat / totalNumberAuthors.toFloat * 100) else 0
+		val instPercentage: Float = if (totalPartialInst > 0) (totalPartialInst.toFloat / totalNumberAuthors.toFloat * 100) else 0
+		val matchPercentage: Float = if (totalSuccesses > 0) (totalSuccesses.toFloat / totalNumberAuthors.toFloat * 100) else 0
+
+		var output = "\n--------------------------------------------------------\n" +
+		       s"\nTotal number of files analyzed: $totalFiles\n"
+		if (totalFiles != 0) {
+			output += f"Complete Author/EMail/Institute Matches: $totalSuccesses%d   $matchPercentage%.2f%%\n" +
+				s"Total number of authors: $totalNumberAuthors\n" +
+				"Average authors per file: " + totalNumberAuthors / totalFiles + "\n" +
+				f"Partial Match - Email: $totalPartialEmail%d  $emailPercentage%.2f%%\n" +
+				f"Partial Match - Institution: $totalPartialInst%d  $instPercentage%.2f%%\n"
+		}
+		output += "\n--------------------------------------------------------\n"
+
+		stream.print(output)
+	}
+
+	def parseCSVData(csvFilename: String) : Map[String, Map[String,Map[String,String]]] = {
     val csvData = scala.io.Source.fromFile(csvFilename).getLines()
 
     val header = csvData.next() /* header line */
