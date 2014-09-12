@@ -1,0 +1,1889 @@
+
+
+Filename: 00007BF8CD3BCA7EB1F474EB124A06714A36EE3F.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Finn B. Jensen                                      Finn B. Jensen                                    
+		                                                                                                      
+		                                                    NATO Undersea Research Centre                     
+
+		Alessandra Tesei                                    Alessandra Tesei                                  
+		                                                                                                      
+		                                                    NATO Undersea Research Centre                     
+
+		Mario Zampolli                                      Mario Zampolli                                    
+		                                                    zampolli@nurc.nato.int                            
+		                                                    NATO Undersea Research Centre                     
+
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 000090EA051D52CDCEA3B6EC962AF56FF623AA46.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 3    100%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Chew-Lim Tan                                        Chew-Lim Tan                                      
+		tancl@comp.nus.edu.sg                               tancl@comp.nus.edu.sg                             
+		School of Computing, National University of Singapore  School of Computing, National University of Singapore
+
+		Ah-Hwee Tan                                         Ah-Hwee Tan                                       
+		ahhwee@krdl.org.sg                                  ahhwee@krdl.org.sg                                
+		Kent Ridge Digital Labs                             Kent Ridge Digital Labs                           
+
+		Ji He                                               Ji He                                             
+		heji@comp.nus.edu.sg                                heji@comp.nus.edu.sg                              
+		School of Computing, National University of Singapore  School of Computing, National University of Singapore
+
+
+
+Filename: 0000D1B586E04430A645359435781AA528707E87.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 1
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		T. Knowles                                          T. Knowles                                        
+		                                                                                                      
+		                                                    Texzec, Inc. Round Rock Texax                     
+
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 0000D89AC7AC3065DCDDE5A76220008764CB9B27.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		David B. Cooper                                     David B. Cooper                                   
+		                                                                                                      
+		                                                    Lab. For Engineering Man / Machine Systems Brown Univ.
+
+		Ruud M. Bolle                                       Ruud M. Bolle                                     
+		                                                    Exploratory Computer Vision Group, IBM J.J. Watson Research Centre
+		                                                                                                      
+
+		Gabriel Taubin                                      Gabriel Taubin                                    
+		                                                                                                      
+		                                                    Laboratory for Engineering Man / Machine Systems, Brown University
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 0000E6AE7062368569BBC1300005F97DDB90DD68.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Jesse Tov                                           Jesse Tov                                         
+		                                                    tov@eecs.harvard.edu                              
+		                                                    EECS Harvard                                      
+
+		Kevin Redwine                                       Kevin Redwine                                     
+		                                                    redwine@eecs.harvard.edu                          
+		                                                    EECS Harvard                                      
+
+	Unmatched information:
+ 		Konrad Lorincz
+		
+		
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 0000FE37620643B2F34B3C62BFD41705850440F7.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 1
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		SERVICE 
+		
+		
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 0000FF68310E8A43C26371B4F0FF05DDAED93577.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 11112BCF3EDB96172A1569CA2DE1C071EC48C617.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 4
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Danielle R. Reed                                    Danielle R. Reed                                  
+		                                                                                                      
+		                                                    Monell Chemical Senses Center                     
+
+		Jonathan L. Hansen                                  Jonathan L. Hansen                                
+		                                                                                                      
+		                                                    Genetic Epidemiologic Group, Queensland Institute of Medical Resarch, School of Medicine, U of Queensland
+
+		Paul M. Wise                                        Paul M. Wise                                      
+		                                                    pwise@monell.org                                  
+		                                                    Monell Chemical Senses Center                     
+
+	Unmatched information:
+ 		Paul A.S. Breslin
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 11114131C7ADC0FDC729B1E101B96197263C4F94.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 1111976D755571793AFE5860E6D5CB49246612F7.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 1111CB2AC92CCF4BA485A82EFAAA4D1CDDC40B2C.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 1
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Peter Stone                                         Peter Stone                                       
+		pstone@cs.utexas.edu                                pstone@cs.utexas.edu                              
+		                                                    Dept CS U of Texas                                
+
+		Doran Chakraborty                                   Doran Chakraborty                                 
+		                                                    chakrado@cs.utexas.edu                            
+		                                                    Dept CS U of Texas                                
+
+
+
+Filename: 1111D78B7F4D21E2D9C2E6512CC6E781E23C6BB8.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 1
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		E. H. DAVIDSON
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 1111E026EC43B51D67078DDCCE742C727C0BDDF1.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		May Cassar                                          May Cassar                                        
+		                                                                                                      
+		                                                    Centre for Sustainable Heritage, Univ. College London, UK
+
+		Nigel Blades                                        Nigel Blades                                      
+		                                                                                                      
+		                                                    Centre for Sustainable Heritage, Univ. College London, UK
+
+		Joel Taylor                                         Joel Taylor                                       
+		                                                                                                      
+		                                                    Centre for Sustainable Heritage, Univ. College London, UK
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 1111E9E908BDB4CFDF52B230C4AF5BB7044C48C1.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Charles Hansen                                      Charles Hansen                                    
+		                                                    hansen@cs.utah.edu                                
+		                                                    Univ. of Utah                                     
+
+		Martin Bertram                                      Martin Bertram                                    
+		                                                    bertram@infomatik.uni-kk.ed                       
+		                                                    Univ. of Kaiserslautern                           
+
+		Shaun D. Ramsey                                     Shaun D. Ramsey                                   
+		                                                    ramsey@cs.utah.edu                                
+		                                                    Univ. of Utah                                     
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 111209D1334A6A2696F64A4D47028DE63EB073F1.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 5
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		James T. Kuehn                                      James T. Kuehn                                    
+		                                                                                                      
+		                                                    PASM Parallel Processing Lab School of Electrical Engineering, Purdue Univ. 
+
+		Thomas Schwederski                                  Thomas Schwederski                                
+		                                                                                                      
+		                                                    PASM Parallel Processing Lab School of Electrical Engineering, Purdue Univ. 
+
+		Howard Jay Siegel                                   Howard Jay Siegel                                 
+		                                                                                                      
+		                                                    PASM Parallel Processing Lab School of Electrical Engineering, Purdue Univ. 
+
+	Unmatched information:
+ 		avis IV
+		
+		
+		Nathaniel J. 
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 111211A17913FDDD255B4DA73E3EDB99C1322B38.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		QINGBIN LI
+		
+		
+		 GUANYONG
+		
+		
+		LIBO YUAN
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 111212C3E6BB00F1EEEFAAD642B651D9F8B39B0B.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Johannes Buchmann                                   Johannes Buchmann                                 
+		                                                                                                      
+		                                                    Technische Universitat Darmstadt                  
+
+		Markus Kaiser                                       Markus Kaiser                                     
+		                                                                                                      
+		                                                    Technische Universitat Darmstadt                  
+
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 11121836E66D1CD3E6EBAF013415EB27E3137A0C.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Bernhard Grimm                                      Bernhard Grimm                                    
+		                                                                                                      
+		                                                    Institut feur Pflanzengenetik und Kulturpflanzenforschung
+
+	Unmatched information:
+ 		Heiko Ha
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 1112457D7255A0B6C9A388325894A852E36137FA.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 111267B9AA45F58568E55C4C61303016BC8A862F.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		ANGELA DIAZ
+		
+		
+		T SHARON EDWARDS
+		
+		
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 11129DE6812C8C92F0F0AF94867F9BD67CF5FE2F.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Zvika Neeman                                        Zvika Neeman                                      
+		                                                    zvika@bu.edu                                      
+		                                                    Department of Economics, Boston University, and Center for Rationality and Department of Economics, Hebrew University of Jerusalem
+
+		Aviad Heifetz                                       Aviad Heifetz                                     
+		                                                    aviadhe@openu.ac.il                               
+		                                                    Department of Economis and Management, The Open University of Isreal
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 1112C2F5788C34ADB21BF90C3CFFA666334E7166.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Samuel R. Madden                                    Samuel R. Madden                                  
+		                                                    madden@csail.mit.ed                               
+		                                                    MIT                                               
+
+		Carlos Guestrin                                     Carlos Guestrin                                   
+		                                                    guestrin@cs.cmu.edu                               
+		                                                    CMU                                               
+
+		Amol Deshpande                                      Amol Deshpande                                    
+		                                                    amol@cs.umd.edu                                   
+		                                                    University of Maryland                            
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 1112C3A8F6EB02D4CF1393759A938B7DEFCCB208.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		NISSIM FRANCEZ
+		
+		
+		YAROSLAV FYODOROV
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 1112DA5C7350E2305D881B651DD23AD0AFFE3B08.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 1112E58D4A899E78ADA1B041E266AD42405D236D.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 4
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 4
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		William Yurcik                                      William Yurcik                                    
+		byurcik@ncsa.uiuc.edu                               byurcik@ncsa.uiuc.edu                             
+		                                                    National Center for Supercomputing Applications (NCSA) University of Illinois at Ubana-Champaign (UIUC)
+
+		Xin Meng                                            Xin Meng                                          
+		xinmeng@ncsa.uiuc.edu                               xinmeng@ncsa.uiuc.edu                             
+		                                                    National Center for Supercomputing Applications (NCSA) University of Illinois at Ubana-Champaign (UIUC)
+
+		Gregory A. Koenig                                   Gregory A. Koenig                                 
+		koenig@ncsa.uiuc.edu                                koenig@ncsa.uiuc.edu                              
+		                                                    National Center for Supercomputing Applications (NCSA) University of Illinois at Ubana-Champaign (UIUC)
+
+		Michael Treaster                                    Michael Treaster                                  
+		treaster@ncsa.uiuc.edu                              treaster@ncsa.uiuc.edu                            
+		                                                    National Center for Supercomputing Applications (NCSA) University of Illinois at Ubana-Champaign (UIUC)
+
+
+
+Filename: 11130458ABDAC4E9FBCFE0E1C08C72B19BE9C630.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 111313DEE5CBEB57D9BB3FF232C9440DC39AB833.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		A. Jaya Kumar                                       A. Jaya Kumar                                     
+		                                                                                                      
+		                                                    Department of Eletrical Enginnering Indian Instituteof Science
+
+		Y. V. Venkatesh                                     Y. V. Venkatesh                                   
+		                                                    yvvele@ee.iisc.ernet.in                           
+		                                                    Department of Eletrical Enginnering Indian Instituteof Science
+
+	Unmatched information:
+ 		B. S. Venhtesh
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 11132A21DA8FF8BC12B44691DB7E05DC55DEE18C.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 1    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 1
+
+	Filter Found:					Expected:
+
+		Ling Liu                                            Ling Liu                                          
+		lxiong@mathcs.emory.edu                             lingliu@cc.gatech.edu                             
+		Department of Mathematics and Computer Science Emory University  College of Computing Georgia Institute of Technology
+
+		Li Xiong                                            Li Xiong                                          
+		lxiong@mathcs.emory.edu                             lxiong@mathcs.emory.edu                           
+		Department of Mathematics and Computer Science Emory University  Department of Mathematics and Computer Science Emory University
+
+	Unmatched information:
+ 		Subramanyam Chitti
+		
+		
+
+
+Filename: 111333D588DB9708631E1E0DD6F84CF1880C5C77.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 4
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Johannes B. Huber                                   Johannes B. Huber                                 
+		                                                                                                      
+		                                                    Laboratorium feur Nachrichtentechnik, Universitat Erlangen-Nurnberg
+
+		Gerald Enzner                                       Gerald Enzner                                     
+		                                                                                                      
+		                                                    Laboratorium feur Nachrichtentechnik, Universitat Erlangen-Nurnberg
+
+		Robert Schober                                      Robert Schober                                    
+		                                                                                                      
+		                                                    Laboratorium feur Nachrichtentechnik, Universitat Erlangen-Nurnberg
+
+	Unmatched information:
+ 		Lutz H.-J. Lampe
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 111338D0CA060C3AEE78985A64B510ED1F9FD0AD.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 111345EC770F2C7E556B79B3ED3946A9399A1CCD.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		DONICA DUDLEY
+		
+		
+		MATHEW ALPERN
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 11134A20C4C5B4F4D72D76F37F1BAC0D0ED71884.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 1113631A1E1A3D97E57419ED4B639BF9935DA56F.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 1
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		William P. III
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 11137B1276C5384E3A24004F464C0A6DC3CF0948.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 1
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 1
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Markus Weber                                        Markus Weber                                      
+		weber@ergosign.de                                   weber@ergosign.de                                 
+		                                                    ergosign GmbH                                     
+
+
+
+Filename: 1113809883296AC2D8CBC65A0244980080A9FCE2.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 2
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Steve Webb                                          Steve Webb                                        
+		webb@cc.gatech.edu                                  webb@cc.gatech.edu                                
+		                                                    College of Computing Georgia Tech                 
+
+		James Caverlee                                      James Caverlee                                    
+		caverlee@cs.tamu.edu                                caverlee@cs.tamu.edu                              
+		                                                    Department of Computer Science Texas A&M University
+
+
+
+Filename: 11138668D993FEB61229EA503BB78556626AAEDB.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 1113D8745DC7AC88FF7CB975466F6202D6482CAA.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Reginald J. Madden                                  Reginald J. Madden                                
+		                                                                                                      
+		                                                    Inland Fisheries Division, Nova Scotia Department of Fisheries and Aquaculture
+
+		John L. MacMillan                                   John L. MacMillan                                 
+		                                                                                                      
+		                                                    Inland Fisheries Division, Nova Scotia Department of Fisheries and Aquaculture
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 111413CA242B49FA53076B49A48D5EDB9012CE91.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 111419417C279AA82F2152196B8F6A123F4494CD.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		BettyH.H. Cheng
+		
+		
+		GeraldC . Gannod
+		gannod@cps.msu.edu
+		Department of Computer Science Michigan State University
+
+
+Filename: 111447E6A8865746452911B5454E76F7E5AB3187.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 1114580DB6D3E8903AC32B9DCD44C2652560B122.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 4
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 2
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Jan Peters                                          Jan Peters                                        
+		jan.peters@tuebingen.mpg.de                         jan.peters@tuebingen.mpg.de                       
+		                                                    Max Planck Inst. For Biol. Cybernetics            
+
+		Arnaud Doucet                                       Arnaud Doucet                                     
+		arnaud@cs.ubc.ca                                    arnaud@cs.ubc.ca                                  
+		                                                    Univ. of British Columbia, Computer Science       
+
+	Unmatched information:
+ 		Nando de
+		nando@cs.ubc.ca
+		
+		Matt Ho
+		
+		
+
+
+Filename: 11145F9ED3C9622BDE92748A13DE1B3491ABF682.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Michael Woodford                                    Michael Woodford                                  
+		                                                    woodford@princeton.edu                            
+		                                                    Princeton University and NBER                     
+
+		Lars E.O. Svensson                                  Lars E.O. Svensson                                
+		                                                    svensson@princeton.edu                            
+		                                                    Institute for International Economic Studies, Stockholm University, Princeton University, CEPR andNBER
+
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 111462F1C1D4CB8ADA822E5B80D1AC22F199A48A.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 111492244782B915F28F7852615F3D0EDEF08687.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Tatsuya Akutsu                                      Tatsuya Akutsu                                    
+		                                                    takutsu@kuicr.kyoto-u.ac.jp                       
+		                                                    Bioinformatics Center, Institute for Chemical Research, Kyoto University
+
+		Nobuhisa Ueda                                       Nobuhisa Ueda                                     
+		                                                                                                      
+		                                                    Bioinformatics Center, Institute for Chemical Research, Kyoto University
+
+		Morihiro Hayashida                                  Morihiro Hayashida                                
+		                                                                                                      
+		                                                    Bioinformatics Center, Institute for Chemical Research, Kyoto University
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 1114AD669967CA4E59F092B72C1CDD1CAB14B1ED.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 1114C437600A4DA9B706CF61E0B877E625BDE6DD.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 1114DF9D52A78616BA6F0B939C378023D41DCCE8.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 4
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Anthony L. Ritaccio                                 Anthony L. Ritaccio                               
+		                                                                                                      
+		                                                    Department of Neurology and Neurosurgery, Albany Medical College
+
+		Rasmus Bro                                          Rasmus Bro                                        
+		                                                                                                      
+		                                                    Facilty of Life Sciences, Copenhagen University   
+
+		Haluk Bingol                                        Haluk Bingol                                      
+		                                                                                                      
+		                                                    Computer Engineering Department, Bogazici University
+
+		Evrim Acar                                          Evrim Acar                                        
+		                                                                                                      
+		                                                    Computer Science Department, Rennselaer Polytechnic Institute
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 1114FAA9E3BDE3B53EE1FC7A5A983BCD7FA176B8.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 6
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		R. J. HOGAN
+		
+		
+		A. J. ILLINGWORTH
+		
+		
+		P. R. FIELD
+		
+		
+		P. R.A. BROWN
+		
+		
+		T. W. CHOULARTON
+		
+		
+		P. D. CLARK
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 44440FF0BD8181B6E3561455BCA6EEDAFEFA3998.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 444432B0B6A4D33B9FE72FC47EED2FD5E2BCF533.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 44446E8A2864C6203F6C856C45EF699ED625E797.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Bingrui Foo                                         Bingrui Foo                                       
+		                                                    foob@purdue.edu                                   
+		                                                    Purdue                                            
+
+		Ning Shang                                          Ning Shang                                        
+		                                                    nshang@purdue.edu                                 
+		                                                    Purdue                                            
+
+		Sungjoo Suh                                         Sungjoo Suh                                       
+		                                                    sjsuh@purdue.edu                                  
+		                                                    Purdue                                            
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 44448D07FEAA029C5EBF4C80EFEEAE05D6C6FC63.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 1
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Jaakko Kangasharju                                  Jaakko Kangasharju                                
+		                                                                                                      
+		                                                    University of Helsinki                            
+
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 4444B9ACE18CD14380F7C30171A453F1A97A899D.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 3
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Fabio Patrizi                                       Fabio Patrizi                                     
+		patrizi@dis.uniroma1.it                             patrizi@dis.uniroma1.it                           
+		                                                    Dipartimento di Informatica e Sistemistica        
+
+		Toni Mancini                                        Toni Mancini                                      
+		tmancini@dis.uniroma1.it                            tmancini@dis.uniroma1.it                          
+		                                                    Dipartimento di Informatica e Sistemistica        
+
+		Marco Cadoli                                        Marco Cadoli                                      
+		cadoli@dis.uniroma1.it                              cadoli@dis.uniroma1.it                            
+		                                                    Dipartimento di Informatica e Sistemistica        
+
+
+
+Filename: 4444C2D1157D68A482D6882E52C1B49E652596BE.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Yong Sik Yun                                        Yong Sik Yun                                      
+		                                                                                                      
+		                                                                                                      
+
+	Unmatched information:
+ 		Sang Uk Ryu
+		
+		
+		Jae Song
+		
+		
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 4444DA1408D9DDDD2964857B56651CEB7074E841.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 4
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Susana V. Mondschein                                Susana V. Mondschein                              
+		                                                                                                      
+		                                                    Operations Research Center, MIT                   
+
+	Unmatched information:
+ 		SUSANA V. MONDSCHEIN
+		
+		
+		GABRIEL R. BITRAN
+		
+		
+		GabrielR . Bitran
+		
+		
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 4444DE3183581605B11D33B4778877CA0E1CACBD.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55511279D47F2425C4A84ED227B549375661B013.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		WILLY VAN
+		
+		
+		Luc DESMEDT
+		
+		
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 55512FD74C9A1783B63283F2984E6AB68DA45CCA.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 4
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Yuan Yu                                             Yuan Yu                                           
+		                                                    yuan@cs.utexas.edu                                
+		                                                    Computer Science and Mathematics Departments University of Texas at Austen
+
+		Robert S. Boyer                                     Robert S. Boyer                                   
+		                                                    boyer@cs.utexas.edu                               
+		                                                    Computer Science and Mathematics Departments University of Texas at Austen
+
+		Yuan Yu                                             Yuan Yu                                           
+		                                                    yuan@cs.utexas.edu                                
+		                                                    Computer Science and Mathematics Departments University of Texas at Austen
+
+		Robert S. Boyer                                     Robert S. Boyer                                   
+		                                                    boyer@cs.utexas.edu                               
+		                                                    Computer Science and Mathematics Departments University of Texas at Austen
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 5551769108BCE842D09CCD4123051A76AD24403C.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 1    0%
+	Partial matches:
+		(email only): 1
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Mark Schwabacher                                    Mark Schwabacher                                  
+		Mark.A.Schwabacher@nasa.gov                         Mark.A.Schwabacher@nasa.gov                       
+		NASA Ames Research Center Computational Sciences Division  NASA Ames Research Center Computational Sciences Division
+
+		Stephen D. Bay                                      Stephen D. Bay                                    
+		sbay@apres.stanford.edu                             sbay@apres.stanford.edu                           
+		                                                    Institute for the Study of Learning and Expertise 
+
+
+
+Filename: 55518B0FB869AEDF6221AE61F4005FD338120CFF.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55519EB0E0038B3EC44F6DF494A7909E9CD6EF05.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 1
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		by 
+		
+		
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 5551E7F1F7DBC5342999FCDCA50F860873A3B152.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Leonardo Felli                                      Leonardo Felli                                    
+		                                                                                                      
+		                                                    London School of Economics                        
+
+		Luca Anderlini                                      Luca Anderlini                                    
+		                                                    la2@georgetown.edu                                
+		                                                    Georgetown University                             
+
+		Nabil I. Al-Najjar                                  Nabil I. Al-Najjar                                
+		                                                                                                      
+		                                                    Northwester University                            
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 5551E91523F624493A2EAC3609847AEC87498189.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Steven P. Reiss                                     Steven P. Reiss                                   
+		                                                    spr@cs.brown.edu                                  
+		                                                    Brown University                                  
+
+		Manos Renieris                                      Manos Renieris                                    
+		                                                    er@cs.brown.edu                                   
+		                                                    Brown University                                  
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 5551ED61A4138FD9B42B960687C34106F9629ED8.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 5551F2A47CDFD81DCF600937F209F0651F4ACCB9.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 2
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Nikos Grammalidis                                   Nikos Grammalidis                                 
+		                                                                                                      
+		                                                    University of Thessaloniki                        
+
+	Unmatched information:
+ 		Michael G. Strintzis
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 5551F85645C47CF3018322D3155813215777C9D7.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+		No authors found in pdf.meta.xml file.  No author tags in file?
+
+
+Filename: 555208BCDFB075EA6FBE4F239805DAB2DCDA676C.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55520BF027F6D45AE03BEC7B29D707ADD80ABAE4.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55520D5C46E801A48B0C826BFB0CB29083FF6AF6.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55520EFCE16A0099346EE86C0A4556704AA39009.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55521DF9DC47B128197680E9AE756862F9049B80.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 555261E2DE8A3F93547755AE0339408B394B562C.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 555268B753F34D817889B8F30106CCB3E081825A.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55528BB52148900C0961CA195CC0D18CE7981B91.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55528CAD322D12DABB28177DFB77027B727BAD38.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5552B346D6A56A3F7C9AB14C27E9CC80F7BAA80B.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 3
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Richard Gardner                                     Richard Gardner                                   
+		                                                    richard.gardner@wwu.edu                           
+		                                                    Western Washington University                     
+
+		Peyman Milanfar                                     Peyman Milanfar                                   
+		                                                    milanfar@ee.uscs.edu                              
+		                                                    University of California, Santa Cruz              
+
+		Amyn Poonawala                                      Amyn Poonawala                                    
+		                                                    amny@ce.uscs.edu                                  
+		                                                    University of California, Santa Cruz              
+
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 5552C051C3DB09FCF5213A08DDB6F73A7364E379.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5552EEB4565669BCF8AF6AE1A03F532476DE8C4A.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5552F340E43594C8AB0718510633053FE1A3D1C4.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 555321D016F5A7ACC9650A8C884392A3B523FE78.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55533DD63CE364A761C36ACBE44EB08348F2FB90.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55534257E5F213E3868B17FB48C7882779571709.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5553CF7AFC0676C86837217486C63E9B967C9F5A.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 4
+	Number fully matched: 2    0%
+	Partial matches:
+		(email only): 1
+		(inst only): 0
+	False Matches: 1
+
+	Filter Found:					Expected:
+
+		Charles P. Wright                                   Charles P. Wright                                 
+		cpwright@us.ibm.com                                 cpwright@us.ibm.com                               
+		                                                    Network Server System Software, IBM Research      
+
+		Mustaque Ahamad                                     Mustaque Ahamad                                   
+		mustaq@cc.gatech.edu                                mustaq@cc.gatech.edu                              
+		College of Computing, Georgia Institute of Technology,  College of Computing, Georgia Institute of Technology
+
+		Arup Acharya                                        Arup Acharya                                      
+		arup@us.ibm.com                                     arup@us.ib.com                                    
+		                                                    Network Server System Software, IBM Research      
+
+		Vijay A. Balasubramaniyan                           Vijay A. Balasubramaniyan                         
+		vijayab@cc.gatech.edu                               vijayab@cc.gatech.edu                             
+		College of Computing, Georgia Institute of Technology,  College of Computing, Georgia Institute of Technology
+
+
+
+Filename: 55542D78EB07E43D2E8D6F8E2A8FCA4B7549AFAD.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 555435A24BA6B9EFFEE10E447B5739B546202F54.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 555458E693418E4CC1B1FD698ADA1CC26250B402.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 555464B774607DD55678EA5E2DF0D3FD482525F9.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 555477E837E260825DC8AD3F471DB297741010E8.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 555482E6BAADC0245E001015E13A9FB7519D51D5.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5554838BBAB0110B153E70F9617EE409EBEFC4D8.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5554D163142E2923FA4464D06901583D87A2464F.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5554F485A25957673C4A1554931BAD021CD8F72B.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 1
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Unmatched information:
+ 		Jerry Serdar
+		
+		
+	Error Messages: 
+		No institution found in pdf.meta.xml file. No institution tags in file?
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 5554FB82A6C4D8602A94C52098228AC6AF52097B.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 7
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+
+	Filter Found:					Expected:
+
+		Edward A. Fox                                       Edward A. Fox                                     
+		                                                    fox@vt.edu                                        
+		                                                    Virginia Tech                                     
+
+		Weiguo Fan                                          Weiguo Fan                                        
+		                                                    wfan@vt.edu                                       
+		                                                    Virginia tech                                     
+
+		Rao Shen                                            Rao Shen                                          
+		                                                    rshen@vt.edu                                      
+		                                                    Virginia Tech                                     
+
+		Divya Rangarajan                                    Divya Rangarajan                                  
+		                                                    divyar@vt.edu                                     
+		                                                    Virginia Tech                                     
+
+		Ananth Raghavan                                     Ananth Raghavan                                   
+		                                                    anathr@vt.edu                                     
+		                                                    Virginia Tech                                     
+
+	Unmatched information:
+ 		Naga Srinivas
+		
+		
+		Marcos AndrGonalves
+		
+		
+	Error Messages: 
+		No email addresses found in pdf.meta.xml file.  No email tags in file?
+
+
+Filename: 5555015CE5D236DA4F19B95922FF40B48B55AF5E.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5555130C6A994325798BB81EE89B0A67FCD2C4F1.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55552DFD276151C47AB0A39C14DC4A2FAF950E7C.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55552E2D525709282DDDD8B514F32305FD8DFF58.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55553555583A8F09D9F7DF686FAE2CD769438159.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 55554A14A3412E81691438450259300B0876B846.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5555BEE63E3E723779F54137479AD2E1DB6EC280.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5555E9B4D126104749B3CFBE2F0F1B9117E5F642.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+
+Filename: 5555EC501264129893236F8CC0296DB2F40852B0.pdf.meta.xml
+	Filter: AuthorEmailFilter
+	Number of authors looked at: 0
+	Number fully matched: 0    0%
+	Partial matches:
+		(email only): 0
+		(inst only): 0
+	False Matches: 0
+	Error Messages: 
+		No expected information found for this file. Unable to compare.  Is this a good file?
+
+--------------------------------------------------------
+
+Total number of files analyzed: 102
+Complete Author/EMail/Institute Matches: 7   5.15%
+Total number of authors: 136
+Average authors per file: 1
+Partial Match - Email: 15  11.03%
+Partial Match - Institution: 0  0.00%
+
+--------------------------------------------------------
