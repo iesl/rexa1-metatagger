@@ -26,6 +26,7 @@ import scala.Array
 /** New functionality on String instances, available by implicit conversion in the cc.factorie.factorie package object. */
 class StringExtras(val s: String) extends AnyVal {
 
+	def length = s.length
   def toIntSafe: Option[Int] = try { Some(s.toInt) } catch { case _: Throwable => None }
   def toDoubleSafe: Option[Double] = try { Some(s.toDouble) } catch { case _: Throwable => None }
 

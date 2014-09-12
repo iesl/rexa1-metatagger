@@ -31,15 +31,18 @@ class Email(email: String, refid: Int, metatag: String) {
   }
 
   def getDomain: String = {
-    val domain = (email split "@")(1)
-    domain
+    (email split "@")(1)
   }
+
+  def getUsername: String = {
+		(email split "@")(0)
+	}
 }
 
 object Email {
   val logger = LoggerFactory.getLogger(Email.getClass)
-  private val username_regex = """^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*"""
-  private val email_regex = (username_regex + """@(([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?)\.+)+([a-z])+$""").r
+  private val username_regex = """^[-a-zA-Z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-zA-Z0-9!#$%&'*+/=?^_`{|}~]+)*"""
+  private val email_regex = (username_regex + """@(([a-zA-Z0-9]([-a-zA-Z0-9]{0,61}[a-zA-Z0-9])?)\.+)+([a-zA-Z])+$""").r
 
   // Returns an Either object - String if Left (error), Email Object if Right
   def getEmailObj(email: String, id: Int): Either[String, Email] = {
@@ -59,7 +62,7 @@ object Email {
       // This is a first pass through the email address to separate out the
       // users, if there is more then one user in an email address.
       // Further down we will verify that the username is of the appropriate content (see isValid())
-      val caseOne = """^f([^,]+)(,[^,]+)+?g$""".r         /* ffred,bob,jessg */
+      val caseOne = """^[f{]([^,]+)(,[^,]+)+?[g}]$""".r         /* ffred,bob,jessg */
       val caseTwo = """^[^f]([^,]+)(,[^,])+[^g]$""".r     /* fred,bob,jess */
       val caseThree = """^([^,][^|]+)(|[^,][^|]+)+$""".r  /* fred|bob|jess */
       //val caseFour = ("""^(""" + username_regex + """)$""").r /* jess */
@@ -101,20 +104,24 @@ object Email {
     } else Left("Bad email string. Unable to extract email address(es) from it. ")
   }
 
-  def emailPossibilities(author: Author) : List[String] = {
+  def usernamePossibilities(author: Author) : List[String] = {
     // ie: First Middle Last ; for hyphen matching: Fi-rst Last
     // The code that does the matching will ignore any '.' in the incoming email
     // address, so no need to list those here as well.
+
+		// TODO - some of these are dups when rendered in certain circumstances, clean it up!
     List[String](
-      /* last */ author.name_last,
-      /* first */ author.name_first, /* in the case of a hyphenated name, this will be unique */
-      /* fmlast */ (((author.name_first split "-") map (_.head)).mkString + author.name_last), // assumes only one hyphen
-      /* lastfm */ (author.name_last + ((author.name_first split "-") map (_.head)).mkString), // assumes only one hyphen
-      /* first */ (author.name_first split "-").mkString, /* TODO this is a dup, if name has no hyphen */
-      /* flast */ (author.name_first.head + author.name_last),
-      /* lastf */ (author.name_last + author.name_first.head),
-      /* firstlast */ (author.name_first + author.name_last),
-      /* lastfirst */ (author.name_last + author.name_first)
+      /* last */             author.name_last,
+      /* first */            author.name_first, /* in the case of a hyphenated name, this will be unique */
+      /* fmlast */           (((author.name_first split "-") map (_.head)).mkString + author.name_last), // assumes only one hyphen
+      /* lastfm */           (author.name_last + ((author.name_first split "-") map (_.head)).mkString), // assumes only one hyphen
+      /* first */            (author.name_first split "-").mkString, /* TODO this is a dup, if name has no hyphen */
+      /* flast */            author.name_first.head + author.name_last,
+      /* lastf */            author.name_last + author.name_first.head,
+      /* firstlast */        author.name_first + author.name_last,
+      /* lastfirst */        author.name_last + author.name_first,
+		  /* firstmiddlelast */  author.name_first + author.name_middle + author.name_last,
+			/* firstmlast */       author.name_first + (if (author.name_middle.nonEmpty) author.name_middle.head else "") + author.name_last
     )
   }
 }
@@ -158,9 +165,11 @@ object Institution {
     val instData = scala.io.Source.fromFile(instFilename).mkString
 
     val lines = instData split "\n"
-    for(line <- lines) {
-      if (!line.startsWith("#")) { // don't parse comment lines
+    for((line,index) <- lines.zipWithIndex) {
+      if (!line.startsWith("#") && """^[\s]*$""".r.findFirstIn(line).isEmpty  /*&& line.nonEmpty*/) { // don't parse comment lines or blank lines
         val pair = line split ";;" // split on domain, name, address
+				if (pair.length < 3)
+					logger.info(s"Inst dictionary is messed up at line ($index): '${pair(0)}'")
         map += pair(0).trim.stripPrefix("www.") ->(pair(1).trim, pair(2).trim)
       }
     }
@@ -211,7 +220,7 @@ class Note(noteXML: NodeSeq) {
 
 object cleaner
 {
-  // TODO - this sort of thing should probably be done in PDF2Meta...
+  // TODO - this sort of thing should probably be done earlier in this process (ie, before this filter)
   // consider foreign characters in this string (umlaut, etc)
   def cleanName(name: String) : String = {
     val nameRe = """([a-zA-Z-\.]+)""".r
@@ -233,6 +242,7 @@ class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
     "ury"->(xmlseq \ "@ury").text)
   val emailMeta : Option[String] = if (xmlseq \ "@email" != NodeSeq.Empty) Some((xmlseq \ "@email").text) else None
   var email = emailOption
+	var emailScore : Float = 0  // how certain we are
   val instMeta : Option[String] = if (xmlseq \"@institution" != NodeSeq.Empty) Some((xmlseq \ "@institution").text) else None
   var institution: Option[Institution] = None
 
@@ -289,16 +299,34 @@ class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
 
 object AuthorEmailTaggingFilter {
   val logger = LoggerFactory.getLogger(AuthorEmailTaggingFilter.getClass()) // hmm... not sure this is correct
-  val metrics = new Metrics("AuthorEmailTaggingFilter")
+  val metrics = new Metrics("AuthorEmailTaggingFilter", List("EmailExact", "EmailClose", "EmailAndInstitution", "EmailBetterMatchFound"))
 
   def main(args: Array[String]) {
-    new AuthorEmailTaggingFilter().run(args)
+		val argMap = ParseArgs.parseArgs("AuthorEmailTaggingFilter", args, "-i:-d:", AuthorEmailTaggingFilter.usage)
+    // need exception handling here!!
+    val infile = argMap("-i")
+    var dictFile = ""
+
+    logger.info("Current directory is: " + (new java.io.File(".")).getCanonicalPath)
+
+    try {
+      dictFile = argMap("-d") // may not be set
+    } catch {
+      case e: NoSuchElementException =>
+    }
+
+    new AuthorEmailTaggingFilter(dictFile).run(infile)
   }
 
 
   def usage() {
     println("Usage: authoremailtaggerfilter -d dict_filename -i filename")
   }
+
+	def max(valList: List[Int]) : Int = {
+		valList.foldLeft(0)((r,c) => r.max(c))
+		//valList.foldLeft(0)((r,c) => if (r > c) r else c)
+	}
 
   // XMLPreProcess adds an id attribute to the author, email, institution xml tags.
   // For email tag: it will also split out the email addresses and put them into an attribute on
@@ -401,7 +429,7 @@ object AuthorEmailTaggingFilter {
   }
 }
 
-class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
+class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent {
   val logger = LoggerFactory.getLogger(AuthorEmailTaggingFilter.getClass())
 
   override def apply(xmldata: Node): Node = {
@@ -413,28 +441,17 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
     newXML
   }
 
-  def run(args: Array[String]) {
+	/* TODO - move the inst dictionary reference elsewhere - so that we only load it once
+	   per application, versus per file!!
+	 */
 
-    AuthorEmailTaggingFilter.metrics.logStart("AuthorEmailTaggingFilter")
+  def run(infile: String) {
 
-    val argMap = ParseArgs.parseArgs("AuthorEmailTaggingFilter", args, "-i:-d:", AuthorEmailTaggingFilter.usage)
-    // need exception handling here!!
-    val infile = argMap("-i")
-    var dictFile = ""
-
-    logger.info("Current directory is: " + (new java.io.File(".")).getCanonicalPath)
-
-    try {
-      dictFile = argMap("-d") // may not be set
-    } catch {
-      case e: NoSuchElementException =>
-    }
-
-    if (dictFile != "")
-      Institution.readInstitutionDictionary(dictFile)
+    AuthorEmailTaggingFilter.metrics.logStart("AuthurEmailTaggingFilter")
 
     val newXML = run_filter(XML.loadFile(infile))
-    XML.save((infile split ".xml")(0) + ".summary.xml", newXML, "UTF-8", true)
+    //XML.save((infile split ".xml")(0) + ".summary.xml", newXML, "UTF-8", true)
+		XML.save(infile, newXML, "UTF-8", true)
   }
 
   def run_filter(xmldata : Node) : Node = {
@@ -447,6 +464,9 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
     var instList: List[Institution] = List()
     AuthorEmailTaggingFilter.metrics.reset()
     AuthorEmailTaggingFilter.metrics.logStart("Parsing Header")
+
+		if (instDict != "")
+			Institution.readInstitutionDictionary(instDict)
 
     /* maybe pay attention to notes in the future. Currently they are not useful */
     authorList = getAuthors(headerXML)
@@ -500,29 +520,109 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
     thelist.filter(_._2.isDefined).map(x => x._1 -> x._2.get).toMap
   }
 
+	/*
+	 Start tests for author/email matching
+	 */
+	def emailTest_Regex(author: Author, email: Email) : Int = {
+
+		val usernamePossibilities = Email.usernamePossibilities(author)
+		val score = for(possEmail <- usernamePossibilities) yield {
+			if (email.userMatches(possEmail)) {
+				// have direct match!
+			  possEmail.length
+			} else {
+				0
+			}
+		}
+		AuthorEmailTaggingFilter.max(score)
+	}
+
+	def emailTest_EditDistance(author: Author, email: Email) : Int = {
+		val usernamePossibilities = Email.usernamePossibilities(author)
+		val username = new StringExtras(email.getUsername.toLowerCase)
+		val scores = for (possEmail <- usernamePossibilities) yield {
+			// not sure if this makes sense.  Take the distance difference and subtract it from the
+			// length. Then we return the number of matching characters to compare in the end
+			username.length - username.editDistance(possEmail.toLowerCase)
+		}
+
+		AuthorEmailTaggingFilter.max(scores)
+	}
+
+	/*
+	 End tests for author/email matching
+	 */
+
+	// TODO this is just a very rough first pass!
+	// Will return a value between o and 1 (inclusive). 1 means it's a perfect match
+	def analyzeScores(scores: List[Int],author: Author, email: Email) : Float = {
+		val maxScore: Float = AuthorEmailTaggingFilter.max(scores)
+
+		// we have the max score from the algorithm
+		val userLen: Float = email.getUsername.length
+		val score: Float = maxScore / userLen
+
+		score
+	}
+
   def mapAuthorToEmail(authorList : List[Author], emailList: List[Email], emailInstMap : Map[Email,Institution]) {
 
     var matchedSet = scala.collection.mutable.Set[Author]()
 
-    for (email <- emailList;
-         author <- authorList;
-         if !matchedSet.contains(author);
-         emailPossibility <- Email.emailPossibilities(author) ) {
+		for (email <- emailList;
+				 author <- authorList) {
 
-      if (email.userMatches(emailPossibility)) {
-        AuthorEmailTaggingFilter.metrics.logSuccess()
-        // yeah, matches! I'm sure this is not scala like... must learn more! :)
-        // this may not even work.
-        // Ideally we'd remove email & author from the search list once we've paired them. How to?
-        author.addEmail(email)
-        matchedSet add(author)
+			// Step One - Run Tests
+			val testScores = List(
+				emailTest_Regex(author, email),
+				emailTest_EditDistance(author, email))
 
-        emailInstMap.get(email) match {
-          case None => // no mapping, ignore!
-          case Some(i) => author.addInstitution(i)
-        }
-      }
-    }
+			// Step Two - Analyze Tests
+			val score = analyzeScores(testScores, author, email)
+
+		  // Step Three - Response based on overall score
+			if (score > .60) {
+				// sometimes we find another close match in email. Save the one with the
+				// highest score
+				if (author.emailScore < score) {
+					var replace = false
+
+					// TODO - sort out how these logSuccess values should interact. If we are replacing a value, then
+					// we should not increment "close" again. Email exact should only get set one time, with no one
+					// replacing it, so it can just stay as is.
+
+				  if (author.emailScore > 0) {
+					  // we are replacing results, since the emailScore was already greater then the default of 0
+						AuthorEmailTaggingFilter.metrics.logSuccess("EmailBetterMatchFound")
+						replace = true
+				  }
+
+					if (score == 1) {
+						// found a perfect match
+						AuthorEmailTaggingFilter.metrics.logSuccess("EmailExact")
+						if (replace)
+							AuthorEmailTaggingFilter.metrics.success("EmailClose") -= 1
+
+					} else {
+						// we found a fairly close match, which is probably correct, though there is room for error
+						if (!replace)
+							AuthorEmailTaggingFilter.metrics.logSuccess("EmailClose")
+					}
+
+					// link them up!
+					author.emailScore = score
+					author.addEmail(email)
+
+					emailInstMap.get(email) match {
+						case Some(inst) =>
+							AuthorEmailTaggingFilter.metrics.logSuccess("EmailAndInstitution")
+							author.addInstitution(inst)
+						case None => // no mapping, ignore
+					}
+				}
+			}
+		}
+
     /*
       // just maybe they're matched by notes.  Rare, probably
       if (author.note != None) {

@@ -42,6 +42,7 @@ object MetaTag {
   val REFERENCE_CRF = "extractors/Refs.crf.dat.gz"
   val BIBLIO_SEG_CRF = "extractors/Seg.crf.dat.gz"
   val DICT_FILE = "words.txt"
+	val INST_LOOKUP_FILE = "institution.dict"
   val logger = LoggerFactory.getLogger(MetaTag.getClass())
 
 	val dataDir: File = new java.io.File("data")
@@ -99,9 +100,10 @@ object MetaTag {
 
   def buildScalaPipeline() : ScalaPipeline = {
 
-    logger.info ("creating new scala component pipeline")
+    logger.info ("creating new scala component pipeline. Institution Dictionary: " + dataDir.getAbsoluteFile + "/" + INST_LOOKUP_FILE)
 
-    return new ScalaPipeline(List(new AuthorEmailTaggingFilter))
+    return new ScalaPipeline(List(new AuthorEmailTaggingFilter(dataDir.getAbsolutePath()+"/"+INST_LOOKUP_FILE)))
+
   }
 
 
@@ -119,9 +121,13 @@ object MetaTag {
 	  	val javaPipeline = buildJavaPipeline()
       val scalaPipeline = buildScalaPipeline()
 
+			val inject = true
       var reader = new BufferedReader( new InputStreamReader( System.in ) )
 
-	  	var line: String = null
+			if (inject) // override it!
+				reader = new BufferedReader(new FileReader("/Users/bseeger/Projects/dataset/goodfiles/PDFtoText.tmp"))
+
+			var line: String = null
 	  	logger.info( "begin" )
 
 	  	while ({line = reader.readLine(); line != null}) {
@@ -138,6 +144,7 @@ object MetaTag {
 	  			rdoc.setTokenization( tokenization )
 
 	  			try {
+
             logger.info("executing java pipeline")
             javaPipeline.execute( rdoc )
 

@@ -8,18 +8,22 @@ import org.slf4j.LoggerFactory
  * switch to using Metrics Core or Criterium (might be Java only)
  * @param project
  */
-class Metrics (project : String) {
+class Metrics (project : String, successTypes: List[String]) {
   val logger = LoggerFactory.getLogger(Metrics.getClass())
   val projectName = project
-  var success : Int = 0
-  var failure = scala.collection.mutable.Map[String, String]()
+  val success = scala.collection.mutable.Map[String, Int]((for (t <- successTypes) yield { (t,0) }):_*)
+  val failure = scala.collection.mutable.Map[String, String]()
   var timestampMap = scala.collection.mutable.Map[String, (Long, Long)]()
 
   def reset() {
-    success = 0
+		resetSuccess()
     failure.clear()
     timestampMap.clear()
   }
+
+	private def resetSuccess() {
+		successTypes.foreach(st => success(st) = 0)
+	}
 
   def logStart(tag: String) : Unit = {
     timestampMap += tag -> (System.nanoTime(), -1.asInstanceOf[Long])
@@ -47,7 +51,13 @@ class Metrics (project : String) {
     ret
   }
 
-  def logSuccess() : Unit = { success += 1 }
+	def logSuccess(successType: String) {
+		if( success.get(successType).nonEmpty ) {
+			success(successType) += 1
+		} else {
+			logger.warn(s"Registering success on non existent type '$successType'")
+		}
+	}
 
   def logFailure(fname: String, errMsg: String) : Unit = {
     if (fname != "" && errMsg != "") {
@@ -55,12 +65,13 @@ class Metrics (project : String) {
     }
   }
 
-  def successCount() : Int = {success}
+  def successCount(successType :String) : Int = {success.getOrElse(successType, -1)}
+
   def failureCount() : Int = {failure.size}
 
   def summary() : String = {
-    s"Successfully matched $success emails(s).\n"+
-      s"Failed on the following ${failure.size}: \n" +
+      "Success summary: \n" + (for((key,value) <- success) yield {s"\t$key : $value\n"}).mkString +
+      s"Failed with ${failure.size} error message(s): \n" +
       (for ((key,value) <- failure) yield {s"\t$key: $value\n"}).toList.mkString  +
       "Time Values: \n" +
       (for ((key,(start, stop)) <- timestampMap) yield {s"\t$key: " + this.getTimeMS(key) +  "ms\n"}).toList.mkString
@@ -74,17 +85,20 @@ object Metrics {
   }
 
   def TestMetric (projectName : String) : Unit = {
-    val metric = new Metrics(projectName)
+    val metric = new Metrics(projectName, List("Full", "Partial"))
     metric.logStart("program run time")
 
     metric.logStart("success")
-    metric.logSuccess()
+    metric.logSuccess("Full")
     metric.logStop("success")
+		metric.logStart("partial success")
+    metric.logSuccess("Partial")
+		metric.logStop("partial success")
     metric.logStart("failure")
     metric.logFailure("foo.txt", "file does not exist")
     metric.logStop("failure")
 
-    //metric.getFunctionTime(metric.logSuccess())
+    //metric.getFunctionTime(metric.logSuccessFull())
     metric.logStop("program run time")
 
     logger.info(metric.summary())
