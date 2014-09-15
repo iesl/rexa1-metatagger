@@ -160,12 +160,12 @@ public class MetaTagger {
 				File outfile = new File( files[1].trim() );
 				log.info( infile.getPath() + " -> " + outfile.getPath()  );
 				if ( infile.exists() ) {
-					Document document = readInputDocument( infile );
-					NewHtmlTokenization tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary );
-					RxDocument rdoc = new RxDocument(); 
-					rdoc.setTokenization( tokenization );
+                    try {
+                        Document document = readInputDocument( infile );
+                        NewHtmlTokenization tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary );
+                        RxDocument rdoc = new RxDocument();
+                        rdoc.setTokenization( tokenization );
 
-					try {
 						pipeline.execute( rdoc );
 						log.info( "writing output file" );
 						writeOutput( outfile, rdoc );
