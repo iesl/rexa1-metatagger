@@ -119,8 +119,6 @@ object MetaTag {
 	  	val javaPipeline = buildJavaPipeline()
       val scalaPipeline = buildScalaPipeline()
 
-      val inject = true;
-
       var reader = new BufferedReader( new InputStreamReader( System.in ) )
 
 	  	var line: String = null
@@ -134,26 +132,26 @@ object MetaTag {
 
 	  		logger.info( infile.getPath() + " -> " + outfile.getPath()  )
 	  		if ( infile.exists() ) {
-	  			val document = readInputDocument( infile )
-	  			val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
-	  			val rdoc = new RxDocument()
-	  			rdoc.setTokenization( tokenization )
-	  			try {
-					logger.info("exectuting java pipeline")
-					javaPipeline.execute( rdoc )
-	/*
-					SCALA pipeline turned off for now. 
+					try {
+						val document = readInputDocument( infile )
+						val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
+						val rdoc = new RxDocument()
+						rdoc.setTokenization( tokenization )
+						logger.info("exectuting java pipeline")
+						javaPipeline.execute( rdoc )
+		/*
+						SCALA pipeline turned off for now.
 
-					logger.info("exectuting scala pipeline")
+						logger.info("exectuting scala pipeline")
 
-					val tokenization = rdoc.getTokenization()
-					val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
-					val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
+						val tokenization = rdoc.getTokenization()
+						val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
+						val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
 
-					// run it!
-					val newDoc = scalaPipeline(doc)
-					writeOutput( outfile, newDoc )
-	*/
+						// run it!
+						val newDoc = scalaPipeline(doc)
+						writeOutput( outfile, newDoc )
+		*/
 					writeOutput( outfile, rdoc )
 	  			}
 	  			catch {
