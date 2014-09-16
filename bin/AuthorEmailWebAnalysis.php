@@ -70,7 +70,8 @@ function startsWith($needle, $haystack) {
 
 /* PAGE LOGIC STARTS HERE */
 
-$filename = $_REQUEST["filename"];
+$directory = @$_REQUEST["directory"]; // where the files are
+$filename = @$_REQUEST["filename"];
 $mode = @$_REQUEST["mode"];
 $msg = "";
 
@@ -83,27 +84,34 @@ if ($mode == "SaveTrimmedList") {
 
 	fclose($outFile);
 
-	$msg = "Trimmed file list saved to file: TrimmedFileList.txt";
-
-	$fileData = $_SESSION['FileData'];
+	$msg = "Trimmed file list saved to file: /tmp/TrimmedFileList.txt";
 
 } else if (isset($_POST['GoodDocs'])) {
 	foreach ($_POST['GoodDocs'] as $pdfName) {
 		$fileData[$pdfName] = $_SESSION['FileData'][$pdfName];
 	}
-	
+	$_SESSION['FileData'] = $fileData;	
 	$msg = "File list trimmed successfully";
 
 } else {
 
 	if ($filename) {
 		$fileData = parseFile($filename);
+		$_SESSION['Filename'] = $filename;
 	} else { 
 		$fileData = array();
 	} 
-}
 
-$_SESSION['FileData'] = $fileData;
+	$_SESSION['FileData'] = $fileData;
+
+	if (isset($directory)) {
+		rtrim($directory, "/");
+		$_SESSION['Directory'] = $directory;
+	}
+}
+$filename = $_SESSION['Filename'];
+$directory = $_SESSION['Directory'];
+$fileData = $_SESSION['FileData'];
 
 ?>
 
@@ -129,7 +137,7 @@ $_SESSION['FileData'] = $fileData;
 	$totPartialInst = 0;
 	$totFalseMatches = 0;
 
-	echo '<form name="input" action="FinalAnalysis.php" method="post">';
+	echo '<form name="input" action="AuthorEmailWebAnalysis.php" method="post">';
 	echo "<input type=\"hidden\" name=\"filename\" value=\"$filename\">";
 	echo '<table>';
 
@@ -146,7 +154,9 @@ $_SESSION['FileData'] = $fileData;
 		$totFalseMatches += @$pdfRecord["FalseMatches"];
 
 		if ($pdfName != "Summary") {
-			echo "<tr><td class=\"pdfName\" colspan=\"2\">$pdfName</td></tr>";
+			$xmlDirPath = $directory . "/" . $pdfName;
+			$pdfDirPath = $directory . "/" . trim($pdfName,".meta.xml");
+			echo "<tr><td class=\"pdfName\" colspan=\"2\"><a target=\"_blank\" href=\"$xmlDirPath\">$pdfName</a>  <a target=\"_blank\" href=\"$pdfDirPath\">PDF</a></td></tr>";
 			echo "<tr>
 			 		<td class=\"pdfText\"> <pre>";
 					print_r($pdfRecord['Analysis']);
@@ -188,8 +198,8 @@ Partial Match - Inst:  $totPartialInst  " . $totPartialInst / $totalSamples * 10
 
 		<tr><td colspan=\"2\" class=\"submit\">
    	            <input type=\"submit\" value=\"Trim List\">
-				<input type=\"button\" onclick=\"window.location.replace('FinalAnalysis.php?mode=Start&filename=$filename')\" value=\"Reset\" />
-				<input type=\"button\" onclick=\"window.location.replace('FinalAnalysis.php?mode=SaveTrimmedList&filename=$filename')\" value=\"Save PDF Names To File\" />
+				<input type=\"button\" onclick=\"window.location.replace('AuthorEmailWebAnalysis.php?mode=Start&filename=$filename')\" value=\"Reset\" />
+				<input type=\"button\" onclick=\"window.location.replace('AuthorEmailWebAnalysis.php?mode=SaveTrimmedList&filename=$filename')\" value=\"Save PDF Names To File\" />
 	   	     </td>
 		  </tr>
 		</table>
