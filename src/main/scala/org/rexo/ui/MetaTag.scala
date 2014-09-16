@@ -11,6 +11,7 @@ import java.io.ObjectInputStream
 import java.util.{Map,HashMap}
 import java.util.zip.GZIPInputStream
 
+import org.apache.commons.cli.OptionBuilder
 import org.slf4j.{Logger, LoggerFactory}
 
 import org.rexo.extraction.NewHtmlTokenization
@@ -44,7 +45,7 @@ object MetaTag {
   val DICT_FILE = "words.txt"
   val logger = LoggerFactory.getLogger(MetaTag.getClass())
 
-	val dataDir: File = new java.io.File("data")
+  var dataDir: File = new java.io.File("data")
 
 	/* Construct the Metatagger pipeline from the given RxDocumentQueue and command
 	 * line options */
@@ -94,32 +95,55 @@ object MetaTag {
 			.add( new PipelineMetricsFilter() )
 		}
 
-		return pipeline
+    pipeline
 	}
 
   def buildScalaPipeline() : ScalaPipeline = {
-
     logger.info ("creating new scala component pipeline")
-
-    return new ScalaPipeline(List(new AuthorEmailTaggingFilter))
+    new ScalaPipeline(List(new AuthorEmailTaggingFilter))
   }
 
+  def commandLineOptions() : CommandLineOptions = {
+    new CommandLineOptions {
+      def addOpt(longOpt : String, description : String, hasArgument : Boolean = false, isReq : Boolean = false) {
+        import org.apache.commons.cli.OptionBuilder._
+        withLongOpt(longOpt)
+        withDescription(description)
+        if (hasArgument) hasArg
+        isRequired(isReq)
+        getOptions.addOption(create)
+      }
+      override protected def createOptions() {
+        addOpt("enable-log", "enable logging")
+        addOpt("data-dir", "path to rexa-textmill/data/ directory", hasArgument = true, isReq = true)
+        addOpt("input", "filename (instead of STDIN) for 'input_file -> output_file' pairs", hasArgument = true)
+      }
+    }
+  }
 
 	/** Run the meta-tagger pipeline */
 	def main(args: Array[String]) {
 	  // val initProperties: Map = null
-    // val cli: CommandLineOptions = null
+    val cli: CommandLineOptions = commandLineOptions()
+    val commandLine = cli.getCommandLine(args)
+    dataDir = new File(commandLine.getOptionValue("data-dir"))
 
 	  try {
       val currentDirectory = new File(new File(".").getAbsolutePath());
-      println("Current Directory Is: " + currentDirectory.getAbsolutePath())
+      logger.debug("Current Directory Is: " + currentDirectory.getAbsolutePath())
 	  	EnglishDictionary.setDefaultWordfile( new File( dataDir, DICT_FILE ) )
 	  	val dictionary = EnglishDictionary.createDefault()
 
 	  	val javaPipeline = buildJavaPipeline()
       val scalaPipeline = buildScalaPipeline()
 
-      var reader = new BufferedReader( new InputStreamReader( System.in ) )
+      val inject = true
+      val inputStream = if (commandLine.hasOption("input")) {
+        new InputStreamReader(new FileInputStream(new File(commandLine.getOptionValue("input"))))
+      } else {
+        new InputStreamReader(System.in)
+      }
+      val reader = new BufferedReader(inputStream)
 
 	  	var line: String = null
 	  	logger.info( "begin" )
@@ -132,26 +156,26 @@ object MetaTag {
 
 	  		logger.info( infile.getPath() + " -> " + outfile.getPath()  )
 	  		if ( infile.exists() ) {
-					try {
-						val document = readInputDocument( infile )
-						val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
-						val rdoc = new RxDocument()
-						rdoc.setTokenization( tokenization )
-						logger.info("exectuting java pipeline")
-						javaPipeline.execute( rdoc )
-		/*
-						SCALA pipeline turned off for now.
+	  			val document = readInputDocument( infile )
+	  			val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
+	  			val rdoc = new RxDocument()
+	  			rdoc.setTokenization( tokenization )
+	  			try {
+					logger.info("exectuting java pipeline")
+					javaPipeline.execute( rdoc )
+	/*
+					SCALA pipeline turned off for now. 
 
-						logger.info("exectuting scala pipeline")
+					logger.info("exectuting scala pipeline")
 
-						val tokenization = rdoc.getTokenization()
-						val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
-						val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
+					val tokenization = rdoc.getTokenization()
+					val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
+					val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
 
-						// run it!
-						val newDoc = scalaPipeline(doc)
-						writeOutput( outfile, newDoc )
-		*/
+					// run it!
+					val newDoc = scalaPipeline(doc)
+					writeOutput( outfile, newDoc )
+	*/
 					writeOutput( outfile, rdoc )
 	  			}
 	  			catch {
@@ -189,14 +213,14 @@ object MetaTag {
   }
 
   private def writeOutput(outputFile: File, doc: Document) {
-    var xmlOutputStream: FileOutputStream = null;
+    var xmlOutputStream: FileOutputStream = null
 
-    logger.info("writing xml file now")
+    logger.info("writing xml file ({}) now", outputFile.toString)
     try {
       xmlOutputStream = new FileOutputStream(outputFile)
       val output = new XMLOutputter(Format.getPrettyFormat()) // XMLOutputter
       output.output(doc, xmlOutputStream)
-      logger.info("just wrote file!")
+      logger.info("just wrote file ({})!", outputFile.toString)
     } catch {
       case e: java.io.IOException => {
         logger.error( "xml writer " + e.getClass().getName() + ": " + e.getMessage())
@@ -219,12 +243,12 @@ object MetaTag {
     var xmlOutputStream : FileOutputStream = null;
 
 	  try {
-      logger.info("writing file now")
+      logger.info("writing file {} now", outputFile.toString)
 	  	val document = MetaDataXMLDocument.createFromTokenization( null, segmentations ).getDocument()
       xmlOutputStream = new FileOutputStream( outputFile )
 	  	val output =  new XMLOutputter( Format.getPrettyFormat() ) // XMLOutputter
 	  	output.output( document, xmlOutputStream )
-      logger.info("just wrote file!")
+      logger.info("just wrote file {}!", outputFile.toString)
 	  }
 	  catch {
       case e: java.io.IOException => {
