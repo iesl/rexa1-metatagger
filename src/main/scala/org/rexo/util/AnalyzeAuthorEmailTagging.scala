@@ -153,6 +153,7 @@ class TestFilterResults(filename : String, filtername: String) {
     falseMatches += 1
   }
 
+	/* generally override this */
   def prettyPrint(stream: PrintStream) = {
     val info = s"\nFiltername: $name\n"
       s"\tTotal samples: $totalSamples\n"
@@ -193,8 +194,13 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
     errorMsgs ::= msg
   }
 
+  def machine_summary() : String = {
+  	s"$filename;$name;$totalSamples;$fullSuccesses;$partialEmail;$partialInst;$falseMatches\n"
+	}
+
   override def prettyPrint(stream: PrintStream) = {
-    var info = s"\n\nFilename: $filename\n" +
+    var info =  "\n\n##" + machine_summary() +
+			s"\nFilename: $filename\n" +
       s"\tFilter: $name\n" +
       s"\tNumber of authors looked at: $totalSamples\n" +
       s"\tNumber fully matched: $fullSuccesses    " + (if (fullSuccesses > 0) (fullSuccesses/totalSamples * 100) else 0) +"%" + "\n" +
@@ -232,7 +238,9 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
       info = info.concat(s"\tError Messages: \n$str")
     }
 
+		info = info + "\n##\n"
     stream.print(info)
+
   }
 }
 
