@@ -47,16 +47,16 @@ object MetaTag {
 
   var dataDir: File = new java.io.File("data")
 
-	/* Construct the Metatagger pipeline from the given RxDocumentQueue and command
-	 * line options */
-	def buildJavaPipeline(): RxPipeline = {
-		val pipeline = new RxPipeline()
+  /* Construct the Metatagger pipeline from the given RxDocumentQueue and command
+   * line options */
+  def buildJavaPipeline(): RxPipeline = {
+    val pipeline = new RxPipeline()
 
-		val hdrCrf = new File( dataDir, HEADER_CRF )
-		val refCrf = new File( dataDir, REFERENCE_CRF  )
-		val bibCrf = new File( dataDir, BIBLIO_SEG_CRF )
+    val hdrCrf = new File( dataDir, HEADER_CRF )
+    val refCrf = new File( dataDir, REFERENCE_CRF  )
+    val bibCrf = new File( dataDir, BIBLIO_SEG_CRF )
 
-		// handle 'enable-log'2
+    // handle 'enable-log'2
     val logp = true
     import scala.collection.JavaConverters._
 
@@ -65,38 +65,38 @@ object MetaTag {
     // sessionScope.put( "log.directory", new File( "./log" ) )
     // sessionScope.put( "sessionID.integer", new Integer( -1 ) )
 
-		pipeline.addStandardFilters()
+    pipeline.addStandardFilters()
 
-		logger.info( "loading biblio-segmentation crf" )
-		val ois = new ObjectInputStream( new GZIPInputStream(new BufferedInputStream( new FileInputStream( bibCrf ))))
-		val crf = ois.readObject().asInstanceOf[CRF4]
-		ois.close()
-		val crfBibSegmentor = new CRFBibliographySegmentor( crf )
+    logger.info( "loading biblio-segmentation crf" )
+    val ois = new ObjectInputStream( new GZIPInputStream(new BufferedInputStream( new FileInputStream( bibCrf ))))
+    val crf = ois.readObject().asInstanceOf[CRF4]
+    ois.close()
+    val crfBibSegmentor = new CRFBibliographySegmentor( crf )
 
-		pipeline.add( new edu.umass.cs.rexo.ghuang.segmentation.SegmentationFilter( crfBibSegmentor ) )
-
-		pipeline
-		.add( new GrantExtractionFilter() )
-		.add( new ReferenceExtractionFilter( refCrf, hdrCrf ))
-		.add( new BodyExtractionFilter())
-
-		// .add( new CitationContextFilter() )
-		// .add( new WriteAnnotatedXMLFilter() )
-		// .add( new MetatagPostconditionTestFilter() )
-
-
-		if (logp) {
-			// log document errors to '.list' and '.html'
-			pipeline
-			.addErrorFilters()
-			.add( new ErrorLogFilter() )
-			.addEpilogueFilters()
-			.add( new InfoLogFilter() )
-			.add( new PipelineMetricsFilter() )
-		}
+    pipeline.add( new edu.umass.cs.rexo.ghuang.segmentation.SegmentationFilter( crfBibSegmentor ) )
 
     pipeline
-	}
+    .add( new GrantExtractionFilter() )
+    .add( new ReferenceExtractionFilter( refCrf, hdrCrf ))
+    .add( new BodyExtractionFilter())
+
+    // .add( new CitationContextFilter() )
+    // .add( new WriteAnnotatedXMLFilter() )
+    // .add( new MetatagPostconditionTestFilter() )
+
+
+    if (logp) {
+      // log document errors to '.list' and '.html'
+      pipeline
+      .addErrorFilters()
+      .add( new ErrorLogFilter() )
+      .addEpilogueFilters()
+      .add( new InfoLogFilter() )
+      .add( new PipelineMetricsFilter() )
+    }
+
+    pipeline
+  }
 
   def buildScalaPipeline() : ScalaPipeline = {
     logger.info ("creating new scala component pipeline")
@@ -122,22 +122,21 @@ object MetaTag {
     }
   }
 
-	/** Run the meta-tagger pipeline */
-	def main(args: Array[String]) {
-	  // val initProperties: Map = null
+  /** Run the meta-tagger pipeline */
+  def main(args: Array[String]) {
+    // val initProperties: Map = null
     val commandLine = commandLineOptions.getCommandLine(args)
     dataDir = new File(commandLine.getOptionValue("data-dir"))
 
-	  try {
+    try {
       val currentDirectory = new File(new File(".").getAbsolutePath());
       logger.debug("Current Directory Is: " + currentDirectory.getAbsolutePath())
-	  	EnglishDictionary.setDefaultWordfile( new File( dataDir, DICT_FILE ) )
-	  	val dictionary = EnglishDictionary.createDefault()
+      EnglishDictionary.setDefaultWordfile( new File( dataDir, DICT_FILE ) )
+      val dictionary = EnglishDictionary.createDefault()
 
-	  	val javaPipeline = buildJavaPipeline()
+      val javaPipeline = buildJavaPipeline()
       val scalaPipeline = buildScalaPipeline()
 
-      val inject = true
       val inputStream = if (commandLine.hasOption("input")) {
         new InputStreamReader(new FileInputStream(new File(commandLine.getOptionValue("input"))))
       } else {
@@ -145,71 +144,71 @@ object MetaTag {
       }
       val reader = new BufferedReader(inputStream)
 
-	  	var line: String = null
-	  	logger.info( "begin" )
+      var line: String = null
+      logger.info( "begin" )
 
-	  	while ({line = reader.readLine(); line != null}) {
-	  		// format is input-filename -> output-filename
-	  		val files = line.split( "->" )
-	  		val infile = new File( files(0).trim() )
-	  		val outfile = new File( files(1).trim() )
+      while ({line = reader.readLine(); line != null}) {
+        // format is input-filename -> output-filename
+        val files = line.split( "->" )
+        val infile = new File( files(0).trim() )
+        val outfile = new File( files(1).trim() )
 
-	  		logger.info( infile.getPath() + " -> " + outfile.getPath()  )
-	  		if ( infile.exists() ) {
-	  			val document = readInputDocument( infile )
-	  			val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
-	  			val rdoc = new RxDocument()
-	  			rdoc.setTokenization( tokenization )
-	  			try {
-					logger.info("exectuting java pipeline")
-					javaPipeline.execute( rdoc )
-	/*
-					SCALA pipeline turned off for now.
+        logger.info( infile.getPath() + " -> " + outfile.getPath()  )
+        if ( infile.exists() ) {
+          try {
+          val document = readInputDocument( infile )
+          val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
+          val rdoc = new RxDocument()
+          rdoc.setTokenization( tokenization )
+          logger.info("exectuting java pipeline")
+          javaPipeline.execute( rdoc )
+  /*
+          SCALA pipeline turned off for now.
 
-					logger.info("exectuting scala pipeline")
+          logger.info("exectuting scala pipeline")
 
-					val tokenization = rdoc.getTokenization()
-					val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
-					val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
+          val tokenization = rdoc.getTokenization()
+          val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
+          val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
 
-					// run it!
-					val newDoc = scalaPipeline(doc)
-					writeOutput( outfile, newDoc )
-	*/
-					writeOutput( outfile, rdoc )
-	  			}
-	  			catch {
-                    case e: Exception => {
-                        logger.error(e.getClass().getName() + ": " + e.getMessage())
-                    }
-                }
-	  		}
-	  		else {
-	  			logger.error( "File not found: " + infile.getPath() )
-	  		}
-	  	}
-	  }
-	  catch {
+          // run it!
+          val newDoc = scalaPipeline(doc)
+          writeOutput( outfile, newDoc )
+  */
+          writeOutput( outfile, rdoc )
+          }
+          catch {
+            case e: Exception => {
+              logger.error(e.getClass().getName() + ": " + e.getMessage())
+            }
+          }
+        }
+        else {
+          logger.error( "File not found: " + infile.getPath() )
+        }
+      }
+    }
+    catch {
       case e:Exception => {
         logger.error( e.getClass().getName() + ": " + e.getMessage() )
       }
     }
-	}
+  }
 
 
   @throws[java.io.IOException]("If SAXBuilder is unable to write to infile")
-	private def readInputDocument(infile: File) : Document = {
-	  val saxBuilder = new SAXBuilder()
-	  val is = new BufferedInputStream( new FileInputStream( infile ) )
-	  try {
-	  	saxBuilder.build( is )
-	  }
-	  catch {
-	  	case e:Exception => throw new RuntimeException(e.getClass().getName() + ": " + e.getMessage())
-	  }
-	  finally {
-	  	is.close()
-	  }
+  private def readInputDocument(infile: File) : Document = {
+    val saxBuilder = new SAXBuilder()
+    val is = new BufferedInputStream( new FileInputStream( infile ) )
+    try {
+      saxBuilder.build( is )
+    }
+    catch {
+      case e:Exception => throw new RuntimeException(e.getClass().getName() + ": " + e.getMessage())
+    }
+    finally {
+      is.close()
+    }
   }
 
   private def writeOutput(outputFile: File, doc: Document) {
@@ -230,44 +229,44 @@ object MetaTag {
         xmlOutputStream.close()
     }
   }
-	private def writeOutput(outputFile: File, rdoc: RxDocument) {
-	  val tokenization = rdoc.getTokenization()
-	  val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
+  private def writeOutput(outputFile: File, rdoc: RxDocument) {
+    val tokenization = rdoc.getTokenization()
+    val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
 
 
-	  if (tokenization == null) {
-	  	logger.error( "No xml content available for document " + rdoc )
-	  	return
-	  }
+    if (tokenization == null) {
+      logger.error( "No xml content available for document " + rdoc )
+      return
+    }
 
     var xmlOutputStream : FileOutputStream = null;
 
-	  try {
+    try {
       logger.info("writing file {} now", outputFile.toString)
-	  	val document = MetaDataXMLDocument.createFromTokenization( null, segmentations ).getDocument()
+      val document = MetaDataXMLDocument.createFromTokenization( null, segmentations ).getDocument()
       xmlOutputStream = new FileOutputStream( outputFile )
-	  	val output =  new XMLOutputter( Format.getPrettyFormat() ) // XMLOutputter
-	  	output.output( document, xmlOutputStream )
+      val output =  new XMLOutputter( Format.getPrettyFormat() ) // XMLOutputter
+      output.output( document, xmlOutputStream )
       logger.info("just wrote file {}!", outputFile.toString)
-	  }
-	  catch {
+    }
+    catch {
       case e: java.io.IOException => {
         logger.info( "(xml writer) " + e.getClass().getName() + ": " + e.getMessage() )
       }
     }
-	  finally {
-		if (xmlOutputStream != null) {
-	  		try {
-	  			xmlOutputStream.close()
-	  		}
-	  		catch {
+    finally {
+    if (xmlOutputStream != null) {
+        try {
+          xmlOutputStream.close()
+        }
+        catch {
               case e: java.io.IOException =>  {
                 logger.error("IO Exception: " + e.getMessage() )
               }
             }
-	  	 }
-	  }
-	}
+       }
+    }
+  }
 }
 
 
