@@ -121,11 +121,11 @@ object MetaTag {
 	  	val javaPipeline = buildJavaPipeline()
       val scalaPipeline = buildScalaPipeline()
 
-			val inject = true
       var reader = new BufferedReader( new InputStreamReader( System.in ) )
 
-			if (inject) // override it!
-				reader = new BufferedReader(new FileReader("/Users/bseeger/Projects/dataset/goodfiles/PDFtoText.tmp"))
+      val inject = true;
+	  	if (inject) // override it!
+	  		reader = new BufferedReader(new FileReader("/Users/bseeger/Projects/dataset/goodfiles/PDFtoText.tmp"))
 
 			var line: String = null
 	  	logger.info( "begin" )
@@ -138,24 +138,27 @@ object MetaTag {
 
 	  		logger.info( infile.getPath() + " -> " + outfile.getPath()  )
 	  		if ( infile.exists() ) {
-	  			val document = readInputDocument( infile )
-	  			val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
-	  			val rdoc = new RxDocument()
-	  			rdoc.setTokenization( tokenization )
+				try {
+					val document = readInputDocument( infile )
+					val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
+					val rdoc = new RxDocument()
+					rdoc.setTokenization( tokenization )
+					logger.info("exectuting java pipeline")
+					javaPipeline.execute( rdoc )
+	/*
+					SCALA pipeline turned off for now.
 
-	  			try {
+					logger.info("exectuting scala pipeline")
 
-            logger.info("executing java pipeline")
-            javaPipeline.execute( rdoc )
+					val tokenization = rdoc.getTokenization()
+					val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
+					val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
 
-            logger.info("executing scala pipeline")
-            val tokenization = rdoc.getTokenization()
-            val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
-            val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
-            val newDoc = scalaPipeline(doc)
-
-            writeOutput( outfile, newDoc )
-
+					// run it!
+					val newDoc = scalaPipeline(doc)
+					writeOutput( outfile, newDoc )
+	*/
+				writeOutput( outfile, rdoc )
 	  			}
 	  			catch {
              case e: Exception => {
