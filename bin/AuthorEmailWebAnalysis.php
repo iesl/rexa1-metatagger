@@ -145,6 +145,9 @@ $fileData = $_SESSION['FileData'];
 		echo "<tr><td colspan=\"2\" class=\"message\">$msg</td></tr>";
 	}
 
+  $fileInfo = array();
+  $fileSummary = "";
+
  	foreach ($fileData as $pdfName => $pdfRecord) { 
 		//echo "<pre>" + print_r($pdfRecord)+ "</pre>";
 		$totalSamples += @$pdfRecord["TotalSamples"];
@@ -154,22 +157,23 @@ $fileData = $_SESSION['FileData'];
 		$totFalseMatches += @$pdfRecord["FalseMatches"];
 
 		if ($pdfName != "Summary") {
+
 			$xmlDirPath = $directory . "/" . $pdfName;
 			$pdfDirPath = $directory . "/" . trim($pdfName,".meta.xml");
-			echo "<tr><td class=\"pdfName\" colspan=\"2\"><a target=\"_blank\" href=\"$xmlDirPath\">$pdfName</a>  <a target=\"_blank\" href=\"$pdfDirPath\">PDF</a></td></tr>";
-			echo "<tr>
-			 		<td class=\"pdfText\"> <pre>";
-					print_r($pdfRecord['Analysis']);
-			echo "  </pre> </td>
+			$fileInfo[$pdfName] = "<tr><td class=\"pdfName\" colspan=\"2\"><a target=\"_blank\" href=\"$xmlDirPath\">$pdfName</a>  <a target=\"_blank\" href=\"$pdfDirPath\">PDF</a></td></tr>";
+			$fileInfo[$pdfName] .= "<tr>
+			                   <td class=\"pdfText\"> <pre>";
+			$fileInfo[$pdfName] .=	print_r($pdfRecord['Analysis'], true);
+			$fileInfo[$pdfName] .= "  </pre> </td>
 					<td class=\"pdfAdmin\"> <input type=\"checkbox\" name=\"GoodDocs[]\" value=\"$pdfName\">Keep it?</input></td>
 				  </tr>";
 
 		} else {
-			echo "<tr> <td class=\"pdfName\" colspan=\"2\">Summary From File</td></tr>
+			$fileSummary = "<tr> <td class=\"pdfName\" colspan=\"2\">Summary From File</td></tr>
 			      <tr> <td class=\"pdfText\" colspan=\"2\">
 				  <pre>";
-				print_r($pdfRecord['Analysis']);
-			echo '</pre> </td> </tr>';
+			$fileSummary .= print_r($pdfRecord['Analysis'], true);
+			$fileSummary .= '</pre> </td> </tr>';
 		}
 	}	
 
@@ -180,19 +184,29 @@ $fileData = $_SESSION['FileData'];
 		$numberFiles -= 1;
 	}
 
+
+/* Add
+  Total number of emails
+  Total number matched
+  Total number of institutions
+  Total number matched
+*/
+
 	echo "<tr> <td class=\"pdfName\" colspan=\"2\">Website Summary</td></tr>
           <tr> 
 		    <td class=\"pdfText\" colspan=\"2\">
-		      <pre>
-Total number of files analyzed:  $numberFiles
-Complete Author/Email/Institute Matches: $totFullSuccess $matchPercentage%
-Total number of authors:  $totalSamples
-Average authors per file: " . $totalSamples / $numberFiles . "
-Partial Match - Email:  $totPartialEmail  " . $totPartialEmail / $totalSamples * 100 . "%
-Partial Match - Inst:  $totPartialInst  " . $totPartialInst / $totalSamples * 100 . "%";
+          <div class=\"summary\">
+		      <pre><h2> Overall Analysis </h2>
+  Total number of files analyzed: $numberFiles
+  Total number of authors:        $totalSamples
+  Complete Match:                 $totFullSuccess         " .  number_format((float)$matchPercentage, 2, '.', '') ."%
+  Average authors per file:       " . number_format($totalSamples / $numberFiles, 2, '.', '') . "
+  Email Match Only:               $totPartialEmail        " . number_format($totPartialEmail / $totalSamples * 100, 2, '.','') . "%
+  Institution Match only:         $totPartialInst         " . number_format($totPartialInst / $totalSamples * 100,2,'.','') . "%";
 
-	echo "
+	echo "    
 	          </pre> 
+            <div>
 		  </td> 
 		</tr>
 
@@ -201,7 +215,15 @@ Partial Match - Inst:  $totPartialInst  " . $totPartialInst / $totalSamples * 10
 				<input type=\"button\" onclick=\"window.location.replace('AuthorEmailWebAnalysis.php?mode=Start&filename=$filename')\" value=\"Reset\" />
 				<input type=\"button\" onclick=\"window.location.replace('AuthorEmailWebAnalysis.php?mode=SaveTrimmedList&filename=$filename')\" value=\"Save PDF Names To File\" />
 	   	     </td>
-		  </tr>
+		  </tr>";
+
+  echo $fileSummary;
+
+  foreach ($fileInfo as $data) {
+    echo $data;
+  }
+
+  echo "
 		</table>
 	  </form>
 	";
