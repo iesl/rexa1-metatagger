@@ -83,7 +83,7 @@ object MetaTag {
 		// .add( new CitationContextFilter() )
 		// .add( new WriteAnnotatedXMLFilter() )
 		// .add( new MetatagPostconditionTestFilter() )
-		
+
 
 		if (logp) {
 			// log document errors to '.list' and '.html'
@@ -103,15 +103,16 @@ object MetaTag {
     new ScalaPipeline(List(new AuthorEmailTaggingFilter))
   }
 
-  def commandLineOptions() : CommandLineOptions = {
+  def commandLineOptions : CommandLineOptions = {
     new CommandLineOptions {
       def addOpt(longOpt : String, description : String, hasArgument : Boolean = false, isReq : Boolean = false) {
-        import org.apache.commons.cli.OptionBuilder._
-        withLongOpt(longOpt)
-        withDescription(description)
-        if (hasArgument) hasArg
-        isRequired(isReq)
-        getOptions.addOption(create)
+        // note: this looks funny, because commons-cli uses a private static instance variable which is updated
+        // in the process of these static calls, and is returned and flushed with the call to create()
+        OptionBuilder.withLongOpt(longOpt)
+        OptionBuilder.withDescription(description)
+        if (hasArgument) OptionBuilder.hasArg
+        OptionBuilder.isRequired(isReq)
+        getOptions.addOption(OptionBuilder.create)
       }
       override protected def createOptions() {
         addOpt("enable-log", "enable logging")
@@ -124,8 +125,7 @@ object MetaTag {
 	/** Run the meta-tagger pipeline */
 	def main(args: Array[String]) {
 	  // val initProperties: Map = null
-    val cli: CommandLineOptions = commandLineOptions()
-    val commandLine = cli.getCommandLine(args)
+    val commandLine = commandLineOptions.getCommandLine(args)
     dataDir = new File(commandLine.getOptionValue("data-dir"))
 
 	  try {
@@ -164,7 +164,7 @@ object MetaTag {
 					logger.info("exectuting java pipeline")
 					javaPipeline.execute( rdoc )
 	/*
-					SCALA pipeline turned off for now. 
+					SCALA pipeline turned off for now.
 
 					logger.info("exectuting scala pipeline")
 
@@ -195,7 +195,7 @@ object MetaTag {
       }
     }
 	}
-	
+
 
   @throws[java.io.IOException]("If SAXBuilder is unable to write to infile")
 	private def readInputDocument(infile: File) : Document = {
