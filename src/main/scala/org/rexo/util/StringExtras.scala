@@ -55,36 +55,10 @@ class StringExtras(val s: String) extends AnyVal {
         val cost = if (s(i - 1) == s2(j - 1)) 0 else substCost
         d(i)(j) = math.min(d(i - 1)(j) + deleteCost, math.min(d(i)(j - 1) + insertCost, d(i - 1)(j - 1) + cost))
       }
+
+      printMatrix(d, s2, s)
       d(s.length)(s2.length)
     }
-  }
-
-
-  def affineGapCost(s2: String, penalty: Int = -2, matchScore : Int = 1, mismatchScore : Int = -1) : Int = {
-    //var strMatrix = Array.ofDim[Int](s.length, s2.length)
-    var strMatrix = Array.fill(s.length+1, s2.length+1)(0)
-
-    printMatrix(strMatrix, s2, s)
-    var max = 0
-
-    //M i-1, j-1 + S i j
-    //M i, j-1 + w
-    //M i-1, j + w
-
-    for (i <- 1 to s.length;
-       j <- 1 to s2.length) yield
-    {
-      val score = if (s(i-1) == s2(j-1)) matchScore else mismatchScore
-      val diagonal = strMatrix(i-1)(j-1) + score
-      val verGap = strMatrix(i)(j-1) + penalty
-      val horzGap = strMatrix(i-1)(j) + penalty
-
-      strMatrix(i)(j) = diagonal.max(verGap.max(horzGap))
-    }
-    printMatrix(strMatrix, s2, s)
-
-    // THIS IS NOT CORRECT YET!
-    return strMatrix(s.length)(s2.length)
   }
 
   private def max(one : Int, two : Int, three : Int) : Int = {
@@ -93,7 +67,7 @@ class StringExtras(val s: String) extends AnyVal {
 
   private def printMatrix(matrix : Array[Array[Int]], str1 : String, str2 : String) = {
     println("Matrix:  ")
-    println("\t\t\t" + str1.mkString("\t "))
+    println("\t\t\t\t " + str1.mkString("\t "))
     for ((m,i) <- matrix.zipWithIndex) {
       if (i != 0)
         print("\t" + str2(i-1))
@@ -115,9 +89,8 @@ object TestStringExtras {
     println(s"Comparing '$str1' and '$str2'")
 
     val editDist = strE.editDistance(str2)
-    val affineGapCost = strE.affineGapCost(str2)
 
     println(s"Comparing '$str1' and '$str2'")
-    println(s"\tLevenshtein:\t$editDist\n\tAffine Gap:\t$affineGapCost" )
+    println(s"\tLevenshtein:\t$editDist\n")
   }
 }
