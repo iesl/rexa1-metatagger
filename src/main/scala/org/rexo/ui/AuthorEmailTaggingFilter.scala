@@ -496,21 +496,28 @@ class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent
 				val dictInst = Institution.lookupInstitution(email.getDomain)
         if (dictInst.nonEmpty) {
 					// now we see if we can match it to an institution listed in the document
+          val seDictInst = new StringExtras(dictInst.get._1)
 					val matchInst = instList.find(inst => {
-							dictInst.get._1.toLowerCase.r.findFirstIn(inst.name.toLowerCase).nonEmpty ||
-							inst.name.toLowerCase.r.findFirstMatchIn(dictInst.get._1.toLowerCase).nonEmpty})
+							val substrMatch = dictInst.get._1.toLowerCase.r.findFirstIn(inst.name.toLowerCase).nonEmpty ||
+							    inst.name.toLowerCase.r.findFirstMatchIn(dictInst.get._1.toLowerCase).nonEmpty
+
+              substrMatch
+              /* This needs some work.
+              if (substrMatch) true  // shortcut out of here, else...
+
+              val distance = seDictInst.editDistance(inst.name)
+              // if the distance is less then 20% of the overall length....
+
+              if (distance / seDictInst.length < .20) true else false
+              */
+          })
 
 					if (matchInst.nonEmpty) {
 						// we have a match (one is a substring of the other, doesn't matter which one)
 						email -> matchInst // use the name from the paper, not dictionary
 					} else {
-						val foundInst = new StringExtras(dictInst.get._1)
-						// 5 is arbitrary - adjust!
-						email -> instList.find(inst => {
-							val distance = foundInst.editDistance(inst.name);
-							distance < 5
-						})
-					}
+            email -> None
+          }
         } else {
           // no institution found in our lookup table
           email -> None
@@ -523,6 +530,9 @@ class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent
 	/*
 	 Start tests for author/email matching
 	 */
+
+  // rather then just test author name (First Middle Last) this tests a variety of
+  // variants on the name, as well as FirstMiddleLast.
 	def emailTest_Regex(author: Author, email: Email) : Int = {
 
 		val usernamePossibilities = Email.usernamePossibilities(author)
@@ -534,9 +544,12 @@ class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent
 				0
 			}
 		}
+
 		AuthorEmailTaggingFilter.max(score)
 	}
 
+  // rather then just test author name (First Middle Last) this tests a variety of
+  // variants on the name, as well as FirstMiddleLast.
 	def emailTest_EditDistance(author: Author, email: Email) : Int = {
 		val usernamePossibilities = Email.usernamePossibilities(author)
 		val username = new StringExtras(email.getUsername.toLowerCase)
@@ -554,7 +567,7 @@ class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent
 	 */
 
 	// TODO this is just a very rough first pass!
-	// Will return a value between o and 1 (inclusive). 1 means it's a perfect match
+	// Will return a value between 0 and 1 (inclusive). 1 means it's a perfect match
 	def analyzeScores(scores: List[Int],author: Author, email: Email) : Float = {
 		val maxScore: Float = AuthorEmailTaggingFilter.max(scores)
 
