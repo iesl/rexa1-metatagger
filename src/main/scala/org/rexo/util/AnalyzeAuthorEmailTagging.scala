@@ -230,7 +230,7 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
         s"\t\t" + frecord("INST") + "\n"
       ).mkString
 
-      info = info.concat(s"\tUnmatched information:\n $str")
+      info = info.concat(s"\tNo CSV Data For:\n $str")
     }
 
     if (errorMsgs.nonEmpty) {
