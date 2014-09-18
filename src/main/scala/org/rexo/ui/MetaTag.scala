@@ -165,20 +165,16 @@ object MetaTag {
           rdoc.setTokenization( tokenization )
           logger.info("exectuting java pipeline")
           javaPipeline.execute( rdoc )
-  /*
-          SCALA pipeline turned off for now.
 
           logger.info("exectuting scala pipeline")
 
-          val tokenization = rdoc.getTokenization()
+          //val tokenization = rdoc.getTokenization()
           val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
           val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
 
           // run it!
           val newDoc = scalaPipeline(doc)
           writeOutput( outfile, newDoc )
-  */
-          writeOutput( outfile, rdoc )
           }
           catch {
             case e: Exception => {
