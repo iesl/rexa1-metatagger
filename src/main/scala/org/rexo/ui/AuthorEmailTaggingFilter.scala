@@ -6,6 +6,7 @@ import java.io
 import scala.collection.mutable.Stack
 import org.rexo.pipeline.components.RxDocument
 import org.slf4j.{Logger, LoggerFactory}
+import org.rexo.util.{ParseArgs,Metrics}
 
 class Email(email: String, refid: Int, metatag: String) {
   val id = refid
@@ -30,15 +31,18 @@ class Email(email: String, refid: Int, metatag: String) {
   }
 
   def getDomain: String = {
-    val domain = (email split "@")(1)
-    domain
+    (email split "@")(1)
   }
+
+  def getUsername: String = {
+		(email split "@")(0)
+	}
 }
 
 object Email {
   val logger = LoggerFactory.getLogger(Email.getClass)
-  private val username_regex = """^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*"""
-  private val email_regex = (username_regex + """@(([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?)\.+)+([a-z])+$""").r
+  private val username_regex = """^[-a-zA-Z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-zA-Z0-9!#$%&'*+/=?^_`{|}~]+)*"""
+  private val email_regex = (username_regex + """@(([a-zA-Z0-9]([-a-zA-Z0-9]{0,61}[a-zA-Z0-9])?)\.+)+([a-zA-Z])+$""").r
 
   // Returns an Either object - String if Left (error), Email Object if Right
   def getEmailObj(email: String, id: Int): Either[String, Email] = {
@@ -58,7 +62,7 @@ object Email {
       // This is a first pass through the email address to separate out the
       // users, if there is more then one user in an email address.
       // Further down we will verify that the username is of the appropriate content (see isValid())
-      val caseOne = """^f([^,]+)(,[^,]+)+?g$""".r         /* ffred,bob,jessg */
+      val caseOne = """^[f{]([^,]+)(,[^,]+)+?[g}]$""".r         /* ffred,bob,jessg */
       val caseTwo = """^[^f]([^,]+)(,[^,])+[^g]$""".r     /* fred,bob,jess */
       val caseThree = """^([^,][^|]+)(|[^,][^|]+)+$""".r  /* fred|bob|jess */
       //val caseFour = ("""^(""" + username_regex + """)$""").r /* jess */
@@ -100,20 +104,24 @@ object Email {
     } else Left("Bad email string. Unable to extract email address(es) from it. ")
   }
 
-  def emailPossibilities(author: Author) : List[String] = {
+  def usernamePossibilities(author: Author) : List[String] = {
     // ie: First Middle Last ; for hyphen matching: Fi-rst Last
     // The code that does the matching will ignore any '.' in the incoming email
     // address, so no need to list those here as well.
+
+		// TODO - some of these are dups when rendered in certain circumstances, clean it up!
     List[String](
-      /* last */ author.name_last,
-      /* first */ author.name_first, /* in the case of a hyphenated name, this will be unique */
-      /* fmlast */ (((author.name_first split "-") map (_.head)).mkString + author.name_last), // assumes only one hyphen
-      /* lastfm */ (author.name_last + ((author.name_first split "-") map (_.head)).mkString), // assumes only one hyphen
-      /* first */ (author.name_first split "-").mkString, /* TODO this is a dup, if name has no hyphen */
-      /* flast */ (author.name_first.head + author.name_last),
-      /* lastf */ (author.name_last + author.name_first.head),
-      /* firstlast */ (author.name_first + author.name_last),
-      /* lastfirst */ (author.name_last + author.name_first)
+      /* last */             author.name_last,
+      /* first */            author.name_first, /* in the case of a hyphenated name, this will be unique */
+      /* fmlast */           (((author.name_first split "-") map (_.head)).mkString + author.name_last), // assumes only one hyphen
+      /* lastfm */           (author.name_last + ((author.name_first split "-") map (_.head)).mkString), // assumes only one hyphen
+      /* first */            (author.name_first split "-").mkString, /* TODO this is a dup, if name has no hyphen */
+      /* flast */            author.name_first.head + author.name_last,
+      /* lastf */            author.name_last + author.name_first.head,
+      /* firstlast */        author.name_first + author.name_last,
+      /* lastfirst */        author.name_last + author.name_first,
+		  /* firstmiddlelast */  author.name_first + author.name_middle + author.name_last,
+			/* firstmlast */       author.name_first + (if (author.name_middle.nonEmpty) author.name_middle.head else "") + author.name_last
     )
   }
 }
@@ -132,7 +140,7 @@ class Institution(instName: String, refid: Int) {
     address = new Some(newAddr)
   }
 
-  def toXML() : NodeSeq = {
+  def toXML : NodeSeq = {
     <institution-name>
       {name}
     </institution-name>
@@ -143,6 +151,7 @@ class Institution(instName: String, refid: Int) {
 }
 
 object Institution {
+  val logger = LoggerFactory.getLogger(Institution.getClass())
   private val map = scala.collection.mutable.Map[String,(String,String)]()
   private var filename : Option[String] = None
 
@@ -156,31 +165,39 @@ object Institution {
     val instData = scala.io.Source.fromFile(instFilename).mkString
 
     val lines = instData split "\n"
-    for(line <- lines) {
-      val pair = line split ";;" // split on domain, name, address
-      map += pair(0).trim -> (pair(1).trim, pair(2).trim)
+    for((line,index) <- lines.zipWithIndex) {
+      if (!line.startsWith("#") && """^[\s]*$""".r.findFirstIn(line).isEmpty  /*&& line.nonEmpty*/) { // don't parse comment lines or blank lines
+        val pair = line split ";;" // split on domain, name, address
+				if (pair.length < 3)
+					logger.info(s"Inst dictionary is messed up at line ($index): '${pair(0)}'")
+        map += pair(0).trim.stripPrefix("www.") ->(pair(1).trim, pair(2).trim)
+      }
     }
+
+    logger.info("Institution Dictionary has " + map.size + " entries.")
   }
 
-  def lookupInstitution(key: String): Option[(String,String)] = {
-    // passed in key might be a subdomain of the actual key, hence
-    // the key find here.
-    // This might not be specific enough, if a institution is linked to several sub-domains.
-    // But start here for now.
+  def lookupInstitution(domain: String): Option[(String,String)] = {
 
-    def instMatch (mapKey : String) : Boolean =  {
-      key.r.findFirstIn(mapKey).nonEmpty || mapKey.r.findFirstIn(key).nonEmpty
+    // start from end and walk back til it is found.  Then walk back one more to see if
+    // it can be refined
+
+    var index = domain.lastIndexOf('.', domain.lastIndexOf('.')-1)
+    var key = domain.slice(index+1, domain.length)
+    var foundInfo = map.get(key)
+    var prevInfo : Option[(String,String)] = None
+
+    while ((foundInfo == Some && index != -1) || (index != -1 && foundInfo == None && prevInfo == None)) {
+      prevInfo = foundInfo
+      index = domain.lastIndexOf('.', index - 1)
+      key = domain.slice(index+1, domain.length)
+      foundInfo = map.get(key)
     }
 
-    try {
-      val theKey : String = (map.keys.find((keyVal : String)=> instMatch(keyVal))).getOrElse("")
-      if (theKey != "")
-        Some(map(theKey))
-      else {
-        None
-      }
-    } catch {
-      case e: NoSuchElementException => None
+    if (foundInfo.nonEmpty) {
+      foundInfo
+    } else {
+      prevInfo
     }
   }
 }
@@ -203,15 +220,15 @@ class Note(noteXML: NodeSeq) {
 
 object cleaner
 {
-  // TODO - this sort of thing should probably be done in PDF2Meta...
+  // TODO - this sort of thing should probably be done earlier in this process (ie, before this filter)
   // consider foreign characters in this string (umlaut, etc)
   def cleanName(name: String) : String = {
-    val nameRe = """([a-zA-Z-]+)""".r
+    val nameRe = """([a-zA-Z-\.]+)""".r
     nameRe.findFirstIn(name).getOrElse("")
   }
 }
 
-class Author (xmlseq: NodeSeq) {
+class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
   val id = (xmlseq \ "@id").text.toInt
   val name_first = cleaner.cleanName((xmlseq \ "author-first").text)
   val name_middle = cleaner.cleanName((xmlseq \ "author-middle").text)
@@ -223,11 +240,15 @@ class Author (xmlseq: NodeSeq) {
     "lly"->(xmlseq \ "@lly").text,
     "urx"->(xmlseq \ "@urx").text,
     "ury"->(xmlseq \ "@ury").text)
-
-  var email: Option[Email] = None
+  val emailMeta : Option[String] = if (xmlseq \ "@email" != NodeSeq.Empty) Some((xmlseq \ "@email").text) else None
+  var email = emailOption
+	var emailScore : Float = 0  // how certain we are
+  val instMeta : Option[String] = if (xmlseq \"@institution" != NodeSeq.Empty) Some((xmlseq \ "@institution").text) else None
   var institution: Option[Institution] = None
 
-  override def toString() : String =  {
+  def this (xmlseq: NodeSeq) { this(xmlseq, None) }
+
+  override def toString : String =  {
     val attrs = (for ((attr, value) <- attributes ) yield { s"$attr: $value"}).mkString("\n")
 
     s"""|
@@ -236,8 +257,14 @@ class Author (xmlseq: NodeSeq) {
        |PDF Attributes:  \n$attrs
        """.stripMargin
   }
+  def getFullName : String = {
+    var name = name_first + " " + name_middle
+    if (name_middle != "") name += " "
+    name += name_last
+    name
+  }
 
-  def getNote() : Option[Note] = { note }
+  def getNote : Option[Note] = { note }
 
   def addEmail(email : Email) { this.email = new Some(email)}
   def addInstitution(inst : Institution) { this.institution = new Some(inst)}
@@ -272,16 +299,34 @@ class Author (xmlseq: NodeSeq) {
 
 object AuthorEmailTaggingFilter {
   val logger = LoggerFactory.getLogger(AuthorEmailTaggingFilter.getClass()) // hmm... not sure this is correct
-  val metrics = new Metrics("AuthorEmailTaggingFilter")
+  val metrics = new Metrics("AuthorEmailTaggingFilter", List("EmailExact", "EmailClose", "EmailAndInstitution", "EmailBetterMatchFound"))
 
-  //def main(args: Array[String]) {
-   // new AuthorEmailTaggingFilter().run(args)
- // }
+  def main(args: Array[String]) {
+		val argMap = ParseArgs.parseArgs("AuthorEmailTaggingFilter", args, "-i:-d:", AuthorEmailTaggingFilter.usage)
+    // need exception handling here!!
+    val infile = argMap("-i")
+    var dictFile = ""
+
+    logger.info("Current directory is: " + (new java.io.File(".")).getCanonicalPath)
+
+    try {
+      dictFile = argMap("-d") // may not be set
+    } catch {
+      case e: NoSuchElementException =>
+    }
+
+    new AuthorEmailTaggingFilter(dictFile).run(infile)
+  }
 
 
   def usage() {
     println("Usage: authoremailtaggerfilter -d dict_filename -i filename")
   }
+
+	def max(valList: List[Int]) : Int = {
+		valList.foldLeft(0)((r,c) => r.max(c))
+		//valList.foldLeft(0)((r,c) => if (r > c) r else c)
+	}
 
   // XMLPreProcess adds an id attribute to the author, email, institution xml tags.
   // For email tag: it will also split out the email addresses and put them into an attribute on
@@ -384,7 +429,7 @@ object AuthorEmailTaggingFilter {
   }
 }
 
-class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
+class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent {
   val logger = LoggerFactory.getLogger(AuthorEmailTaggingFilter.getClass())
 
   override def apply(xmldata: Node): Node = {
@@ -395,31 +440,20 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
 
     newXML
   }
-/*
-  def run(args: Array[String]) {
 
-    AuthorEmailTaggingFilter.metrics.logStart("AuthorEmailTaggingFilter")
+	/* TODO - move the inst dictionary reference elsewhere - so that we only load it once
+	   per application, versus per file!!
+	 */
 
-    val argMap = ParseArgs.parseArgs("AuthorEmailTaggingFilter", args, AuthorEmailTaggingFilter.usage)
-    // need exception handling here!!
-    val infile = argMap("-i")
-    var dictFile = ""
+  def run(infile: String) {
 
-    logger.info("Current directory is: " + (new java.io.File(".")).getCanonicalPath)
-
-    try {
-      dictFile = argMap("-d") // may not be set
-    } catch {
-      case e: NoSuchElementException =>
-    }
-
-    if (dictFile != "")
-      Institution.readInstitutionDictionary(dictFile)
+    AuthorEmailTaggingFilter.metrics.logStart("AuthurEmailTaggingFilter")
 
     val newXML = run_filter(XML.loadFile(infile))
-    XML.save((infile split ".xml")(0) + ".summary.xml", newXML, "UTF-8", true)
+    //XML.save((infile split ".xml")(0) + ".summary.xml", newXML, "UTF-8", true)
+		XML.save(infile, newXML, "UTF-8", true)
   }
-*/
+
   def run_filter(xmldata : Node) : Node = {
 
     val refXML = AuthorEmailTaggingFilter.XMLPreProcess(xmldata)
@@ -428,19 +462,21 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
     var authorList: List[Author] = List()
     var emailList: List[Email] = List()
     var instList: List[Institution] = List()
+    AuthorEmailTaggingFilter.metrics.reset()
+    AuthorEmailTaggingFilter.metrics.logStart("Parsing Header")
 
-    AuthorEmailTaggingFilter.metrics.logStart("Parsing Header (Method B)")
+		if (instDict != "")
+			Institution.readInstitutionDictionary(instDict)
 
     /* maybe pay attention to notes in the future. Currently they are not useful */
     authorList = getAuthors(headerXML)
     emailList = getEmails(headerXML)
     instList = getInstitutions(headerXML)
 
-    AuthorEmailTaggingFilter.metrics.logStop("Parsing Header (Method B)")
+    AuthorEmailTaggingFilter.metrics.logStop("Parsing Header")
 
     if (authorList.length == 0) {
       logger.info("****** Document has no authors listed in it. Exiting ******")
-      sys.exit(-1)
     }
 
     val emailInstMap = mapEmailToInst(emailList, instList)
@@ -456,20 +492,34 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
   def mapEmailToInst(emailList: List[Email], instList: List[Institution]) : Map[Email,Institution] = {
 
     val thelist : List[(Email, Option[Institution])] =
-      (for (email <- emailList;
-            instTuple <- Institution.lookupInstitution(email.getDomain).toList;
-            //instReg = instTuple._1.toLowerCase.r()
-            //inst <- instList if instReg.  ) yield {
-            inst <- instList) yield {
-        // does any inst in the instList match the name in our dictionary?
+      (for (email <- emailList) yield {
+				val dictInst = Institution.lookupInstitution(email.getDomain)
+        if (dictInst.nonEmpty) {
+					// now we see if we can match it to an institution listed in the document
+          val seDictInst = new StringExtras(dictInst.get._1)
+					val matchInst = instList.find(inst => {
+							val substrMatch = dictInst.get._1.toLowerCase.r.findFirstIn(inst.name.toLowerCase).nonEmpty ||
+							    inst.name.toLowerCase.r.findFirstMatchIn(dictInst.get._1.toLowerCase).nonEmpty
 
-        val instReg = instTuple._1.toLowerCase.r()
+              substrMatch
+              /* This needs some work.
+              if (substrMatch) true  // shortcut out of here, else...
 
-        if (instReg.findFirstIn(inst.name.toLowerCase).nonEmpty) {
-          // match!!
-          email -> Some(inst)
+              val distance = seDictInst.editDistance(inst.name)
+              // if the distance is less then 20% of the overall length....
+
+              if (distance / seDictInst.length < .20) true else false
+              */
+          })
+
+					if (matchInst.nonEmpty) {
+						// we have a match (one is a substring of the other, doesn't matter which one)
+						email -> matchInst // use the name from the paper, not dictionary
+					} else {
+            email -> None
+          }
         } else {
-          // TODO add domain ;; institution name / addr to dictionary
+          // no institution found in our lookup table
           email -> None
         }
       }).toList
@@ -477,29 +527,115 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
     thelist.filter(_._2.isDefined).map(x => x._1 -> x._2.get).toMap
   }
 
+	/*
+	 Start tests for author/email matching
+	 */
+
+  // rather then just test author name (First Middle Last) this tests a variety of
+  // variants on the name, as well as FirstMiddleLast.
+	def emailTest_Regex(author: Author, email: Email) : Int = {
+
+		val usernamePossibilities = Email.usernamePossibilities(author)
+		val score = for(possEmail <- usernamePossibilities) yield {
+			if (email.userMatches(possEmail)) {
+				// have direct match!
+			  possEmail.length
+			} else {
+				0
+			}
+		}
+
+		AuthorEmailTaggingFilter.max(score)
+	}
+
+  // rather then just test author name (First Middle Last) this tests a variety of
+  // variants on the name, as well as FirstMiddleLast.
+	def emailTest_EditDistance(author: Author, email: Email) : Int = {
+		val usernamePossibilities = Email.usernamePossibilities(author)
+		val username = new StringExtras(email.getUsername.toLowerCase)
+		val scores = for (possEmail <- usernamePossibilities) yield {
+			// not sure if this makes sense.  Take the distance difference and subtract it from the
+			// length. Then we return the number of matching characters to compare in the end
+			username.length - username.editDistance(possEmail.toLowerCase)
+		}
+
+		AuthorEmailTaggingFilter.max(scores)
+	}
+
+	/*
+	 End tests for author/email matching
+	 */
+
+	// TODO this is just a very rough first pass!
+	// Will return a value between 0 and 1 (inclusive). 1 means it's a perfect match
+	def analyzeScores(scores: List[Int],author: Author, email: Email) : Float = {
+		val maxScore: Float = AuthorEmailTaggingFilter.max(scores)
+
+		// we have the max score from the algorithm
+		val userLen: Float = email.getUsername.length
+		val score: Float = maxScore / userLen
+
+		score
+	}
+
   def mapAuthorToEmail(authorList : List[Author], emailList: List[Email], emailInstMap : Map[Email,Institution]) {
 
     var matchedSet = scala.collection.mutable.Set[Author]()
 
-    for (email <- emailList;
-         author <- authorList;
-         if !matchedSet.contains(author);
-         emailPossibility <- Email.emailPossibilities(author) ) {
+		for (email <- emailList;
+				 author <- authorList) {
 
-      if (email.userMatches(emailPossibility)) {
-        AuthorEmailTaggingFilter.metrics.logSuccess()
-        // yeah, matches! I'm sure this is not scala like... must learn more! :)
-        // this may not even work.
-        // Ideally we'd remove email & author from the search list once we've paired them. How to?
-        author.addEmail(email)
-        matchedSet add(author)
+			// Step One - Run Tests
+			val testScores = List(
+				emailTest_Regex(author, email),
+				emailTest_EditDistance(author, email))
 
-        emailInstMap.get(email) match {
-          case None => // no mapping, ignore!
-          case Some(i) => author.addInstitution(i)
-        }
-      }
-    }
+			// Step Two - Analyze Tests
+			val score = analyzeScores(testScores, author, email)
+
+		  // Step Three - Response based on overall score
+			if (score > .60) {
+				// sometimes we find another close match in email. Save the one with the
+				// highest score
+				if (author.emailScore < score) {
+					var replace = false
+
+					// TODO - sort out how these logSuccess values should interact. If we are replacing a value, then
+					// we should not increment "close" again. Email exact should only get set one time, with no one
+					// replacing it, so it can just stay as is.
+
+				  if (author.emailScore > 0) {
+					  // we are replacing results, since the emailScore was already greater then the default of 0
+						AuthorEmailTaggingFilter.metrics.logSuccess("EmailBetterMatchFound")
+						replace = true
+				  }
+
+					if (score == 1) {
+						// found a perfect match
+						AuthorEmailTaggingFilter.metrics.logSuccess("EmailExact")
+						if (replace)
+							AuthorEmailTaggingFilter.metrics.success("EmailClose") -= 1
+
+					} else {
+						// we found a fairly close match, which is probably correct, though there is room for error
+						if (!replace)
+							AuthorEmailTaggingFilter.metrics.logSuccess("EmailClose")
+					}
+
+					// link them up!
+					author.emailScore = score
+					author.addEmail(email)
+
+					emailInstMap.get(email) match {
+						case Some(inst) =>
+							AuthorEmailTaggingFilter.metrics.logSuccess("EmailAndInstitution")
+							author.addInstitution(inst)
+						case None => // no mapping, ignore
+					}
+				}
+			}
+		}
+
     /*
       // just maybe they're matched by notes.  Rare, probably
       if (author.note != None) {
@@ -565,120 +701,5 @@ class AuthorEmailTaggingFilter extends ScalaPipelineComponent {
   }
 }
 
-/**
- * This is a class to help keep some simple metrics about a program and how it's running.
- * This will give us an idea of timing, but if we want to be more accurate we should probably
- * switch to using Metrics Core or Criterium (might be Java only)
- * @param project
- */
-class Metrics (project : String) {
-  val logger = LoggerFactory.getLogger(Metrics.getClass())
-  val projectName = project
-  var success : Int = 0
-  var failure = scala.collection.mutable.Map[String, String]()
-  var timestampMap = scala.collection.mutable.Map[String, (Long, Long)]()
 
-  def logStart(tag: String) : Unit = {
-    timestampMap += tag -> (System.nanoTime(), -1.asInstanceOf[Long])
-  }
 
-  def logStop(tag: String) : Unit = {
-    //val tagInfo = timestampMap.get(tag)
-    val timeval = timestampMap.getOrElse(tag, (-1L, -1L))
-
-    if (timeval._1 != -1) {
-      timestampMap += tag -> (timeval._1, System.nanoTime())
-    }
-  }
-
-  def getTimeMS(tag: String) : Double = {
-    val timeval = timestampMap.getOrElse(tag, (-1L,-1L))
-    (timeval._2 - timeval._1) / 1e6
-  }
-
-  // tell the time it takes to run a function
-  def getFunctionTime[A](func: => A) = {
-    val s = System.nanoTime()
-    val ret = func
-    logger.info("time: " + (System.nanoTime() - s) / 1e6 + "ms")
-    ret
-  }
-
-  def logSuccess() : Unit = { success += 1 }
-
-  def logFailure(fname: String, errMsg: String) : Unit = {
-    if (fname != "" && errMsg != "") {
-      failure += fname -> errMsg
-    }
-  }
-
-  def successCount() : Int = {success}
-  def failureCount() : Int = {failure.size}
-
-  def summary() : String = {
-    s"Successfully matched $success emails(s).\n"+
-      s"Failed on the following ${failure.size}: \n" +
-      (for ((key,value) <- failure) yield {s"\t$key: $value\n"}).toList.mkString  +
-      "Time Values: \n" +
-      (for ((key,(start, stop)) <- timestampMap) yield {s"\t$key: " + this.getTimeMS(key) +  "ms\n"}).toList.mkString
-  }
-}
-
-object Metrics {
-  val logger = LoggerFactory.getLogger(Metrics.getClass())
-  def main(args : Array[String]) {
-    TestMetric("Test Run")
-  }
-
-  def TestMetric (projectName : String) : Unit = {
-    val metric = new Metrics(projectName)
-    metric.logStart("program run time")
-
-    metric.logStart("success")
-    metric.logSuccess()
-    metric.logStop("success")
-    metric.logStart("failure")
-    metric.logFailure("foo.txt", "file does not exist")
-    metric.logStop("failure")
-
-    //metric.getFunctionTime(metric.logSuccess())
-    metric.logStop("program run time")
-
-    logger.info(metric.summary())
-  }
-}
-
-// quick and dirty command line argument parser...
-// todo- make this more robust at some point
-
-object ParseArgs {
-
-  def parseArgs(progname : String, args : Array[String], usage : () => Unit) : scala.collection.mutable.Map[String,String] = {
-    var map = scala.collection.mutable.Map[String, String]()
-    val stack = scala.collection.mutable.Stack[String](args: _*) // _* factory method to make the args array viewed as list of strings
-
-    if (stack.isEmpty) {
-      usage()
-      sys.error("Missing arguments") // exit
-    }
-
-    try {
-      do {
-        val arg = stack.pop //stack.headOption.getOrElse("unknown")
-        println(s"arg is $arg")
-        arg match {
-          case "-i" | "-d" | "-f" | "-o" => map += arg -> stack.pop() //stack.headOption.getOrElse("")
-          case `progname` => // ignore
-          case "unknown" => println(s"Shouldn't reach here!: $arg")
-          case _ => usage(); //sys.error(s"Unknown argument: $arg")
-        }
-      } while (stack.nonEmpty)
-
-      map
-
-    } catch {
-      case e: NoSuchElementException => usage(); System.err.print("Missing argument: " + e); map
-      case e: Exception => System.err.print("Unable to parse command line arguments: " + e); map
-    }
-  }
-}

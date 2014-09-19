@@ -43,6 +43,7 @@ object MetaTag {
   val REFERENCE_CRF = "extractors/Refs.crf.dat.gz"
   val BIBLIO_SEG_CRF = "extractors/Seg.crf.dat.gz"
   val DICT_FILE = "words.txt"
+	val INST_LOOKUP_FILE = "institution.dict"
   val logger = LoggerFactory.getLogger(MetaTag.getClass())
 
   var dataDir: File = new java.io.File("data")
@@ -99,8 +100,8 @@ object MetaTag {
   }
 
   def buildScalaPipeline() : ScalaPipeline = {
-    logger.info ("creating new scala component pipeline")
-    new ScalaPipeline(List(new AuthorEmailTaggingFilter))
+   logger.info ("creating new scala component pipeline. Institution Dictionary: " + dataDir.getAbsoluteFile + "/" + INST_LOOKUP_FILE)
+    new ScalaPipeline(List(new AuthorEmailTaggingFilter(dataDir.getAbsolutePath()+"/"+INST_LOOKUP_FILE)))
   }
 
   def commandLineOptions : CommandLineOptions = {
@@ -156,26 +157,22 @@ object MetaTag {
         logger.info( infile.getPath() + " -> " + outfile.getPath()  )
         if ( infile.exists() ) {
           try {
-          val document = readInputDocument( infile )
-          val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
-          val rdoc = new RxDocument()
-          rdoc.setTokenization( tokenization )
-          logger.info("exectuting java pipeline")
-          javaPipeline.execute( rdoc )
-  /*
-          SCALA pipeline turned off for now.
+            val document = readInputDocument( infile )
+            val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
+            val rdoc = new RxDocument()
+            rdoc.setTokenization( tokenization )
+            logger.info("exectuting java pipeline")
+            javaPipeline.execute( rdoc )
 
-          logger.info("exectuting scala pipeline")
+            logger.info("exectuting scala pipeline")
 
-          val tokenization = rdoc.getTokenization()
-          val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
-          val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
+            //val tokenization = rdoc.getTokenization()
+            val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
+            val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument()
 
-          // run it!
-          val newDoc = scalaPipeline(doc)
-          writeOutput( outfile, newDoc )
-  */
-          writeOutput( outfile, rdoc )
+            // run it!
+            val newDoc = scalaPipeline(doc)
+            writeOutput( outfile, newDoc )
           }
           catch {
             case e: Exception => {
@@ -194,7 +191,6 @@ object MetaTag {
       }
     }
   }
-
 
   @throws[java.io.IOException]("If SAXBuilder is unable to write to infile")
   private def readInputDocument(infile: File) : Document = {

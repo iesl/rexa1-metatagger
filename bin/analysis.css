@@ -1,0 +1,63 @@
+
+.message{
+	background-color: #B96666;
+	width: 70%;
+}
+
+td {
+	margin: 0;
+ /* height: 1px; hackish */
+}
+
+td.pdfName {
+	border-top: 4px solid #452D07;
+	border-left: 4px solid #452D07;
+	border-right: 4px solid #452D07;
+	border-bottom: 1px solid #452D07;
+	background-color: #EAA12F;
+}
+
+td.pdfText {
+	width: 80%; 
+	background-color: #F8DFBA;
+	border-left: 4px solid #452D07;
+	border-bottom: 4px solid #452D07;
+	border-right: 1px solid #452D07;
+
+}
+
+td.pdfAdmin {
+	width: 20%;
+	background-color: #F8DFBA;
+	border-right: 4px solid #452D07;
+	border-left: 1px solid #452D07;
+	border-bottom: 4px solid #452D07;
+}
+
+td.submit {
+	background-color: #F8DFBA;
+	border: 4px solid #452D07;
+	text-align: center;
+}
+
+.summary {
+  font-size: 14px;
+  background-color: #C2F3FF;
+  border: 2px solid #7A593A;
+  width: 50%;
+  margin: auto;
+  /*position: absolute;  */
+  /*left: 40%; */
+  /*margin: 0 0 0 -150px;*/
+}
+
+
+pre {
+	border: none;
+	margin: 0;
+}
+
+tr { 
+	margin: 0;
+}
+
