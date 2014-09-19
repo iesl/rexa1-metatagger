@@ -6,8 +6,8 @@
 
 td {
 	margin: 0;
+ /* height: 1px; hackish */
 }
-
 
 td.pdfName {
 	border-top: 4px solid #452D07;
@@ -44,10 +44,11 @@ td.submit {
   font-size: 14px;
   background-color: #C2F3FF;
   border: 2px solid #7A593A;
-  width: 40%;
-  position: absolute; 
-  left: 40%;
-  margin: 0 0 0 -150px;
+  width: 50%;
+  margin: auto;
+  /*position: absolute;  */
+  /*left: 40%; */
+  /*margin: 0 0 0 -150px;*/
 }
 
 
