@@ -10,6 +10,28 @@ session_start();
 //phpinfo();
 
 /* HELPER FUNCTIONS HERE */
+function parseSummaryLine($line) {
+	// parse it!
+
+	// filename, total samples, full success, partial email, partial inst, false matches
+	$machineOutput = explode(";", $line);
+	$curPDF = trim($machineOutput[0], "## ");
+
+  $data = array("TotalSamples" => $machineOutput[2],  /* throw away 1, name of filter */
+                "NumFoundAuthors" => $machineOutput[3],
+                "NumExpectedAuthors" => $machineOutput[4],
+                "NumFoundEmails" => $machineOutput[5],
+                "NumExpectedEmails" => $machineOutput[6],
+                "NumFoundInst" => $machineOutput[7],
+                "NumExpectedInst" => $machineOutput[8],
+								"FullSuccess" => $machineOutput[9],
+							 	"PartialEmail" => $machineOutput[10],
+							 	"PartialInst" => $machineOutput[11],
+								"FalseMatches" => $machineOutput[12],
+								"Analysis" => "");
+
+  return array($curPDF, $data);
+}
 
 function parseFile($filename) {
 	$myfile = fopen($filename, "r") or die("Unable to open input file");
@@ -24,20 +46,14 @@ function parseFile($filename) {
 		$line = fgets($myfile);
 		
 		if (startsWith("##",$line) && !$inRecord) {
-			// the first ## line will have a machine summary on it. Then read until the 
-			// next ## for the whole record. 
-			// parse it!
 
-			// filename, total samples, full success, partial email, partial inst, false matches
-			$machineOutput = explode(";", $line);
-			$curPDF = trim($machineOutput[0], "## ");
-			$data[$curPDF] = array("TotalSamples" => $machineOutput[2],  /* throw away 1, name of filter */
-								   "FullSuccess" => $machineOutput[3],
-							 	   "PartialEmail" => $machineOutput[4],
-							 	   "PartialInst" => $machineOutput[5],
-								   "FalseMatches" => $machineOutput[6],
-								   "Analysis" => "");
+      // the first ## line will have a machine summary on it. Then read until the 
+	    // next ## for the whole record. 
+      $result = parseSummaryLine($line);
+      $curPDF = $result[0];
+      $data[$curPDF] = $result[1];
 			$inRecord = true;
+
 		} else if (startsWith("##", $line)) {
 			// finish the record
 			$inRecord = false;
@@ -131,11 +147,17 @@ $fileData = $_SESSION['FileData'];
   print_r($_GET);
   echo "</pre>";
  */
- 	$totalSamples = 0;
 	$totFullSuccess = 0;
 	$totPartialEmail = 0;
 	$totPartialInst = 0;
 	$totFalseMatches = 0;
+
+  $totFoundAuthors = 0;
+  $totExpectedAuthors = 0;
+  $totFoundEmails = 0;
+  $totExpectedEmails = 0;
+  $totFoundInst = 0;
+  $totExpectedInst = 0;
 
 	echo '<form name="input" action="AuthorEmailWebAnalysis.php" method="post">';
 	echo "<input type=\"hidden\" name=\"filename\" value=\"$filename\">";
@@ -150,11 +172,16 @@ $fileData = $_SESSION['FileData'];
 
  	foreach ($fileData as $pdfName => $pdfRecord) { 
 		//echo "<pre>" + print_r($pdfRecord)+ "</pre>";
-		$totalSamples += @$pdfRecord["TotalSamples"];
 		$totFullSuccess += @$pdfRecord["FullSuccess"];
 		$totPartialEmail += @$pdfRecord["PartialEmail"];
 		$totPartialInst += @$pdfRecord["PartialInst"];
 		$totFalseMatches += @$pdfRecord["FalseMatches"];
+    $totFoundAuthors += @$pdfRecord["NumFoundAuthors"];
+    $totExpectedAuthors += @$pdfRecord["NumExpectedAuthors"];
+    $totFoundEmails += @$pdfRecord["NumFoundEmails"];
+    $totExpectedEmails += @$pdfRecord["NumExpectedEmails"];
+    $totFoundInst += @$pdfRecord["NumFoundInst"];
+    $totExpectedInst += @$pdfRecord["NumExpectedInst"];
 
 		if ($pdfName != "Summary") {
 
@@ -177,7 +204,7 @@ $fileData = $_SESSION['FileData'];
 		}
 	}	
 
-	$matchPercentage = $totFullSuccess / $totalSamples * 100;
+	$matchPercentage = $totFullSuccess / $totFoundAuthors * 100;
 	$numberFiles = count($fileData);
 
 	if (isset($fileData["Summary"])) { 
@@ -197,25 +224,30 @@ $fileData = $_SESSION['FileData'];
 		    <td class=\"pdfText\" colspan=\"2\">
           <div class=\"summary\">
 		      <pre><h2> Overall Analysis </h2>
-  Total number of files analyzed: $numberFiles
-  Total number of authors:        $totalSamples
-  Complete Match:                 $totFullSuccess         " .  number_format((float)$matchPercentage, 2, '.', '') ."%
-  Average authors per file:       " . number_format($totalSamples / $numberFiles, 2, '.', '') . "
-  Email Match Only:               $totPartialEmail        " . number_format($totPartialEmail / $totalSamples * 100, 2, '.','') . "%
-  Institution Match only:         $totPartialInst         " . number_format($totPartialInst / $totalSamples * 100,2,'.','') . "%";
+  Total number of files analyzed:   $numberFiles
+
+                     Found:     Expected: 
+
+       Authors        $totFoundAuthors           $totExpectedAuthors
+       Emails         $totFoundEmails           $totExpectedEmails
+       Institutions   $totFoundInst           $totExpectedInst
+
+  ---------------------------------------------------------------
+
+  Average authors per file:       " . number_format($totFoundAuthors / $numberFiles, 2, '.', '') . "
+
+  Results for matching 'found' information: 
+  Author/Email/Inst Match:        $totFullSuccess         " .  number_format((float)$matchPercentage, 2, '.', '') ."%
+  Author/Email Match:             $totPartialEmail        " . number_format($totPartialEmail / $totFoundAuthors * 100, 2, '.','') . "%
+  Author/Inst Match:              $totPartialInst         " . number_format($totPartialInst / $totFoundAuthors * 100,2,'.','') . "%";
 
 	echo "    
 	          </pre> 
             <div>
 		  </td> 
 		</tr>
-
-		<tr><td colspan=\"2\" class=\"submit\">
-   	            <input type=\"submit\" value=\"Trim List\">
-				<input type=\"button\" onclick=\"window.location.replace('AuthorEmailWebAnalysis.php?mode=Start&filename=$filename')\" value=\"Reset\" />
-				<input type=\"button\" onclick=\"window.location.replace('AuthorEmailWebAnalysis.php?mode=SaveTrimmedList&filename=$filename')\" value=\"Save PDF Names To File\" />
-	   	     </td>
-		  </tr>";
+";
+		
 
   echo $fileSummary;
 
@@ -224,6 +256,12 @@ $fileData = $_SESSION['FileData'];
   }
 
   echo "
+      <tr><td colspan=\"2\" class=\"submit\">
+   	            <input type=\"submit\" value=\"Trim List\">
+				<input type=\"button\" onclick=\"window.location.replace('AuthorEmailWebAnalysis.php?mode=Start&filename=$filename')\" value=\"Reset\" />
+				<input type=\"button\" onclick=\"window.location.replace('AuthorEmailWebAnalysis.php?mode=SaveTrimmedList&filename=$filename')\" value=\"Save PDF Names To File\" />
+	   	     </td>
+		  </tr>
 		</table>
 	  </form>
 	";
