@@ -56,7 +56,6 @@ class StringExtras(val s: String) extends AnyVal {
         d(i)(j) = math.min(d(i - 1)(j) + deleteCost, math.min(d(i)(j - 1) + insertCost, d(i - 1)(j - 1) + cost))
       }
 
-      printMatrix(d, s2, s)
       d(s.length)(s2.length)
     }
   }
