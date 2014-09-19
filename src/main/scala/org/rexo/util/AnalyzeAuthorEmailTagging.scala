@@ -78,7 +78,6 @@ object Analyzer {
     /* revise this so one could add on information - so maybe it starts with nothing in it and
      * each filter adds on it's own stuff to it.  */
     var summaryMap = Map[String, Float] (
-      "totalSamples" -> 0,
       "totalSuccesses" -> 0,
       "totalFalseMatches" -> 0,
       "totalPartialEmail" -> 0,
@@ -326,7 +325,7 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
   }
 
   def machine_summary() : String = {
-    s"$filename;$name;$totalSamples;$fullSuccesses;$partialEmail;$partialInst;$falseMatches\n"
+    s"$filename;$name;$numFoundAuthors;$numExpectedAuthors;$numFoundEmails;$numExpectedEmails;$numFoundInst;$numExpectedInst;$fullSuccesses;$partialEmail;$partialInst;$falseMatches\n"
   }
 
   override def addToTally(tally: Map[String, Float]) : Map[String, Float] = {
