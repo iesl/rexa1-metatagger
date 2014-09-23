@@ -12,6 +12,8 @@ import java.util.{Map,HashMap}
 import java.util.zip.GZIPInputStream
 
 import org.apache.commons.cli.OptionBuilder
+import org.rexo.pipelinescala.extractors.{CitationTaggingFilter, AuthorEmailTaggingFilter}
+import org.rexo.referencetagging.{CitationContextExtractor, CitationContextFilter}
 import org.slf4j.{Logger, LoggerFactory}
 
 import org.rexo.extraction.NewHtmlTokenization
@@ -101,7 +103,9 @@ object MetaTag {
 
   def buildScalaPipeline() : ScalaPipeline = {
    logger.info ("creating new scala component pipeline. Institution Dictionary: " + dataDir.getAbsoluteFile + "/" + INST_LOOKUP_FILE)
-    new ScalaPipeline(List(new AuthorEmailTaggingFilter(dataDir.getAbsolutePath()+"/"+INST_LOOKUP_FILE)))
+    new ScalaPipeline(List(
+      new AuthorEmailTaggingFilter(dataDir.getAbsolutePath()+"/"+INST_LOOKUP_FILE) /*,
+      new CitationTaggingFilter()*/))
   }
 
   def commandLineOptions : CommandLineOptions = {
