@@ -3,9 +3,11 @@ package org.rexo.util
 import java.io.{PrintStream, File}
 
 
-import scala.collection.immutable.List
+import org.rexo.pipelinescala.extractors.{Author, Institution, Email, AuthorEmailTaggingFilter}
+
+import scala.collection.immutable.{List,Map}
 import scala.xml.{Node, NodeSeq, XML, Elem, Attribute, Text, Null}
-import org.rexo.ui.{Email, Author, Institution, AuthorEmailTaggingFilter}
+import org.rexo.pipelinescala.extractors.Author
 import org.slf4j.{Logger, LoggerFactory}
 
 object Analyzer {
@@ -50,7 +52,7 @@ object Analyzer {
 		val results =
 			for (file <- fileList;
 					 test <- testList) yield {
-				val info = resultsMap.getOrElse(file.getName.stripSuffix(".meta.xml"), Map.empty[String, Map[String, String]]);
+				val info = resultsMap.getOrElse(file.getName.stripSuffix(".meta.xml"), Map.empty[String,Map[String, String]]);
 				logger.info("Looking at: " + test.getName)
 
 				if (info.nonEmpty) {
@@ -74,10 +76,9 @@ object Analyzer {
 	def printSummary(results: Array[TestFilterResults], stream : PrintStream) = {
 		val totalFiles = results.length
 
-
     /* revise this so one could add on information - so maybe it starts with nothing in it and
      * each filter adds on it's own stuff to it.  */
-    var summaryMap = Map[String, Float] (
+    var summaryMap = Map[String, Float](
       "totalSuccesses" -> 0,
       "totalFalseMatches" -> 0,
       "totalPartialEmail" -> 0,
@@ -88,34 +89,34 @@ object Analyzer {
       "totalNumberEmailsExpected" -> 0,
       "totalNumberInstsFound" -> 0,
       "totalNumberInstsExpected" -> 0
-      )
+    )
 
-    summaryMap = results.foldLeft(summaryMap) {(i,filter) => filter.addToTally(i)}
-		results.foreach(_.prettyPrint(stream))
+    summaryMap = results.foldLeft(summaryMap) { (i, filter) => filter.addToTally(i)}
+    results.foreach(x => if (x.nonEmpty) x.prettyPrint(stream))
 
-		val emailPercentage: Float = if (summaryMap("totalPartialEmail") > 0) (summaryMap("totalPartialEmail") / summaryMap("totalNumberAuthorsFound") * 100) else 0
-		val instPercentage: Float = if (summaryMap("totalPartialInst") > 0) (summaryMap("totalPartialInst") / summaryMap("totalNumberAuthorsFound") * 100) else 0
-		val matchPercentage: Float = if (summaryMap("totalSuccesses") > 0) (summaryMap("totalSuccesses") / summaryMap("totalNumberAuthorsFound") * 100) else 0
+    val emailPercentage: Float = if (summaryMap("totalPartialEmail") > 0) (summaryMap("totalPartialEmail") / summaryMap("totalNumberAuthorsFound") * 100) else 0
+    val instPercentage: Float = if (summaryMap("totalPartialInst") > 0) (summaryMap("totalPartialInst") / summaryMap("totalNumberAuthorsFound") * 100) else 0
+    val matchPercentage: Float = if (summaryMap("totalSuccesses") > 0) (summaryMap("totalSuccesses") / summaryMap("totalNumberAuthorsFound") * 100) else 0
 
-		var output =
-            "\n--------------------------------------------------------\n" +
-		       s"\nTotal number of files analyzed: $totalFiles\n\n\n"
-		if (totalFiles != 0) {
-			output +=
-      s"             Found:     Expected:\n" +
-       "-----------------------------------------------\n" +
-      s"Authors        ${summaryMap("totalNumberAuthorsFound")}       ${summaryMap("totalNumberAuthorsExpected")}\n" +
-      s"Emails         ${summaryMap("totalNumberEmailsFound")}       ${summaryMap("totalNumberEmailsExpected")}\n" +
-      s"Institutions   ${summaryMap("totalNumberInstsFound")}       ${summaryMap("totalNumberInstsExpected")}\n" +
-       "-----------------------------------------------\n" +
-      f"Complete Author/EMail/Institute Matches:    ${summaryMap("totalSuccesses")}%.2f     $matchPercentage%.2f%%\n" +
-			"Average authors found per file:             " + summaryMap("totalNumberAuthorsFound") / totalFiles + "\n" +
-			f"Email Only Match:                           ${summaryMap("totalPartialEmail")}%.2f    $emailPercentage%.2f%%\n" +
-			f"Institution Only Match:                     ${summaryMap("totalPartialInst")}%.2f    $instPercentage%.2f%%\n"
-		}
-		output += "\n--------------------------------------------------------\n"
+    var output =
+      "\n--------------------------------------------------------\n" +
+        s"\nTotal number of files analyzed: $totalFiles\n\n\n"
+    if (totalFiles != 0) {
+      output +=
+        s"             Found:     Expected:\n" +
+          "-----------------------------------------------\n" +
+          s"Authors        ${summaryMap("totalNumberAuthorsFound")}       ${summaryMap("totalNumberAuthorsExpected")}\n" +
+          s"Emails         ${summaryMap("totalNumberEmailsFound")}       ${summaryMap("totalNumberEmailsExpected")}\n" +
+          s"Institutions   ${summaryMap("totalNumberInstsFound")}       ${summaryMap("totalNumberInstsExpected")}\n" +
+          "-----------------------------------------------\n" +
+          f"Complete Author/EMail/Institute Matches:    ${summaryMap("totalSuccesses")}%.2f     $matchPercentage%.2f%%\n" +
+          "Average authors found per file:             " + summaryMap("totalNumberAuthorsFound") / totalFiles + "\n" +
+          f"Email Only Match:                           ${summaryMap("totalPartialEmail")}%.2f    $emailPercentage%.2f%%\n" +
+          f"Institution Only Match:                     ${summaryMap("totalPartialInst")}%.2f    $instPercentage%.2f%%\n"
+    }
+    output += "\n--------------------------------------------------------\n"
 
-		stream.print(output)
+    stream.print(output)
 	}
 
 	def parseCSVData(csvFilename: String) : Map[String, Map[String,Map[String,String]]] = {
@@ -154,7 +155,7 @@ class AnalyzeAuthorEmailTagging() extends TestFilter {
 
   override val getName = "AuthorEmailTaggingFilter"
 
-  def apply(XMLFile : File, expResults : Map[String,Map[String,String]], instDict: String) : TestFilterResults = {
+  def apply(XMLFile : File, csvResults : Map[String, Map[String, String]], instDict: String) : TestFilterResults = {
 
     val authorEmailFilter = new AuthorEmailTaggingFilter(instDict)
 
@@ -162,15 +163,17 @@ class AnalyzeAuthorEmailTagging() extends TestFilter {
     val xmlFile = XML.loadFile(XMLFile)
     val pdfName = XMLFile.getName.stripSuffix(".meta.xml")
 
+    var expResults = csvResults // get this into var
+
     logger.info(s"Analyzing results for file: $pdfName")
 
     val results = new AuthorEmailFilterResults(XMLFile.getName)
 
     val headerXML = xmlFile \ "content" \ "headers"
 
-    val authorList = authorEmailFilter.getAuthors(headerXML)
-    val emailList = authorEmailFilter.getEmails(headerXML)
-    val instList = authorEmailFilter.getInstitutions(headerXML)
+    val authorList = Author.getAuthors(headerXML)
+    val emailList = Email.getEmails(headerXML)
+    val instList = Institution.getInstitutions(headerXML)
 
     results.registerExpectedResults(expResults)
 
@@ -232,9 +235,12 @@ class AnalyzeAuthorEmailTagging() extends TestFilter {
 
       var matched = false
 
+      // remove them from the expected set as we go.
       val resultSet : Map[String, String]= expResults.getOrElse(xmlAuthor, Map.empty[String, String])
 
       if (resultSet.nonEmpty) {
+        expResults = expResults - xmlAuthor // take it out of the result set.
+
         results.registerSampleInfo(Map("AUTHOR"->xmlAuthor, "EMAIL"->xmlEmail,"INST"->xmlInst),
           Map("AUTHOR"->xmlAuthor, "EMAIL"->resultSet("Email"), "INST"->resultSet("Institute")))
 
@@ -262,12 +268,19 @@ class AnalyzeAuthorEmailTagging() extends TestFilter {
           results.registerFalseMatch()
         }
       } else {
-        results.registerNoMatch(Map("AUTHOR"->xmlAuthor, "EMAIL"->xmlEmail, "INST"->xmlInst))
+        results.registerNoFoundMatch(Map("AUTHOR"->xmlAuthor, "EMAIL"->xmlEmail, "INST"->xmlInst))
       }
 
       if (!matched)
         logger.info(s"Failed to find expected results for author: $xmlAuthor")
     }
+
+    if (expResults.size > 0) {
+      expResults.foreach(x => {
+        results.registerNoExpectedMatch(Map("AUTHOR" -> x._1, "EMAIL" -> x._2("Email"), "INST" -> x._2("Institute")))
+      })
+    }
+
     results
   }
 }
@@ -285,8 +298,14 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
 
   var foundRecordList : List[Map[String,String]] = List[Map[String, String]]()
   var expectedRecordList : List[Map[String, String]] = List[Map[String,String]]()
-  var noMatchList : List[Map[String, String]] = List[Map[String,String]]()
+  var noMatchFoundList : List[Map[String, String]] = List[Map[String,String]]()
+  var noMatchExpList : List[Map[String, String]] = List[Map[String,String]]()
   var errorMsgs : List[String] = List[String]()
+
+  def nonEmpty : Boolean = {
+    foundRecordList.nonEmpty || expectedRecordList.nonEmpty
+  }
+
 
   def registerPartialSuccess(kind: String) = {
     if (kind == "EMAIL") {
@@ -302,13 +321,23 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
     numFoundInst += insts.length
 
   }
-  def registerExpectedResults(expected: Map[String,Map[String, String]]) {
+  def registerExpectedResults(expected: Map[String, Map[String,String]]) {
     numExpectedAuthors += expected.size // mapping is Author -> email, inst
 
-    expected.foreach(x => {
-      if (x._1.nonEmpty) numExpectedEmails += 1
-      if (x._2.nonEmpty) numExpectedInst += 1
+    var InstList : List[String] = List()
+
+    expected.foreach(r => {
+      if (r._2("Email").nonEmpty) {
+        numExpectedEmails += 1
+      }
+      if (r._2("Institute").nonEmpty) {
+        if (!InstList.contains(r._2("Institute"))) {
+          InstList ::= r._2("Institute")
+        }
+      }
     })
+
+    numExpectedInst += InstList.size
   }
 
   def registerSampleInfo(found : Map[String,String], expected: Map[String,String]) {
@@ -316,8 +345,14 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
     expectedRecordList ::= expected
   }
 
-  def registerNoMatch(found : Map[String, String]) {
-    noMatchList ::= found
+  /* there was not match for the found data */
+  def registerNoFoundMatch(found : Map[String, String]) {
+    noMatchFoundList ::= found
+  }
+
+  /* there was no match for the expected data */
+  def registerNoExpectedMatch(exp : Map[String, String]) {
+    noMatchExpList ::= exp
   }
 
   def registerErrorMsg(msg : String) {
@@ -359,7 +394,7 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
 
     if (foundRecordList.nonEmpty && expectedRecordList.nonEmpty) {
 
-      val str = (for((frecord,index) <- foundRecordList.zipWithIndex) yield {
+      var str = (for((frecord,index) <- foundRecordList.zipWithIndex) yield {
         val erecord = expectedRecordList(index)
 
         "\t\t%-50s  %-50s\n\t\t%-50s  %-50s\n\t\t%-50s  %-50s\n\n".format(frecord("AUTHOR"), erecord("AUTHOR"),
@@ -367,18 +402,37 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
 
       }).mkString
 
+      if (expectedRecordList.length > foundRecordList.length) {
+        var i = 0
+        while (foundRecordList.length + i < expectedRecordList.length) {
+          val erecord = expectedRecordList(foundRecordList.length)
+          str = str.concat("\t\t\t\t  %-50s\n\t\t\t\t  %-50s\n\t\t\t\t  %-50s\n\n".format(erecord("AUTHOR"), erecord("EMAIL"), erecord("INST")))
+          i += 1
+        }
+      }
+
       info = info.concat(s"\n\tFilter Found:\t\t\t\t\tExpected:\n\n$str")
     }
 
-    if (noMatchList.nonEmpty) {
+    if (noMatchFoundList.nonEmpty) {
 
-      val str = noMatchList.map(frecord =>
+      val str = noMatchFoundList.map(frecord =>
         s"\t\t" + frecord("AUTHOR") + "\n" +
           s"\t\t" + frecord("EMAIL") + "\n" +
           s"\t\t" + frecord("INST") + "\n"
       ).mkString
 
-      info = info.concat(s"\tNo CSV Data For:\n $str")
+      info = info.concat(s"\tNo CSV data for these found entries:\n $str\n\n")
+    }
+    if (noMatchExpList.nonEmpty) {
+
+      val str = noMatchExpList.map(frecord =>
+        s"\t\t" + frecord("AUTHOR") + "\n" +
+          s"\t\t" + frecord("EMAIL") + "\n" +
+          s"\t\t" + frecord("INST") + "\n"
+      ).mkString
+
+      info = info.concat(s"\tNo found data for these CSV entries:\n $str\n\n")
     }
 
     if (errorMsgs.nonEmpty) {
