@@ -2,7 +2,7 @@ package org.rexo.util
 
 import java.io.{File, PrintStream}
 
-import org.rexo.ui.{Institution, Email, Author}
+import org.rexo.pipelinescala.extractors.Author
 
 import scala.collection.immutable.List
 
@@ -28,10 +28,12 @@ abstract class TestFilterResults(filename : String, filtername: String) {
 
   def prettyPrint(stream: PrintStream)
 
+  def nonEmpty : Boolean
+
   def addToTally(tally: Map[String,Float]) : Map[String, Float] = {
-    Map[String, Float] ("totalSamples" -> (tally("totalSamples") + totalSamples),
-     "totalSuccesses"-> (tally("totalSuccesses")+ fullSuccesses),
-     "totalFalseMatches" -> (tally("totalFalseMatches")+ falseMatches)
+    Map[String, Float] ("totalSamples" -> (tally.getOrElse("totalSamples", 0F) + totalSamples),
+     "totalSuccesses"-> (tally.getOrElse("totalSuccesses", 0F)+ fullSuccesses),
+     "totalFalseMatches" -> (tally.getOrElse("totalFalseMatches", 0F)+ falseMatches)
     )
   }
 }
