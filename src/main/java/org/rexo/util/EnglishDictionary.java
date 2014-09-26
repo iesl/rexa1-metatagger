@@ -33,7 +33,7 @@ public class EnglishDictionary {
 	}
 
 	public static EnglishDictionary createDefault() {
-		return create( _defaultWords );
+        return create( _defaultWords );
 	}
 
 	public boolean contains(String word) {
