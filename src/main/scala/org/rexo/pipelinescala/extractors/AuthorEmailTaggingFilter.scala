@@ -1,5 +1,6 @@
 package org.rexo.pipelinescala.extractors
 
+import org.rexo.pipelinescala.extractors.AuthorType.AuthorType
 import org.rexo.ui.{ScalaPipelineComponent, StringExtras}
 import org.rexo.util.{Metrics, ParseArgs}
 import org.slf4j.LoggerFactory
@@ -261,6 +262,11 @@ object cleaner
   }
 }
 
+object AuthorType extends Enumeration {
+    type AuthorType = Value
+    val Reference, Header = Value
+  }
+
 class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
   val id = if (xmlseq \ "@id" != NodeSeq.Empty) (xmlseq \ "@id").text.toInt else -1
   val name_first = cleaner.cleanName((xmlseq \ "author-first").text)
@@ -281,6 +287,7 @@ class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
 
   def this (xmlseq: NodeSeq) { this(xmlseq, None) }
 
+
   override def toString : String =  {
     val attrs = (for ((attr, value) <- attributes ) yield { s"$attr: $value"}).mkString("\n")
 
@@ -290,11 +297,24 @@ class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
        |PDF Attributes:  \n$attrs
        """.stripMargin
   }
-  def getFullName : String = {
-    var name = name_first + " " + name_middle
-    if (name_middle != "") name += " "
-    name += name_last
-    name
+
+
+
+  // style can be
+  // 'Header'     First Middle Last
+  // 'Reference'  Last F. M.
+  def getFullName (style : AuthorType = AuthorType.Header) : String = {
+
+    if (style == AuthorType.Reference) {
+      val first : Option[Char] = name_first.headOption
+      val middle : Option[Char] = name_middle.headOption
+      s"$name_last " + (if (first.nonEmpty) first.get + ". " else "")  + (if (middle.nonEmpty) middle.get + "." else "")
+    } else {
+      var name = name_first + " " + name_middle
+      if (name_middle != "") name += " "
+      name += name_last
+      name
+    }
   }
 
   def getNote : Option[Note] = { note }
@@ -302,7 +322,7 @@ class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
   def addEmail(email : Email) { this.email = new Some(email)}
   def addInstitution(inst : Institution) { this.institution = new Some(inst)}
 
-  def toXML() : Elem = {
+  def toXML : Elem = {
     val instID = institution.map(f => f.id).getOrElse(-1)
     val emailID = email.map(f => f.id).getOrElse(-1)
     val instxml =
