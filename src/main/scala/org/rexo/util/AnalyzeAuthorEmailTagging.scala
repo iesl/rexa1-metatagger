@@ -3,11 +3,10 @@ package org.rexo.util
 import java.io.{PrintStream, File}
 
 
-import org.rexo.pipelinescala.extractors.{Author, Institution, Email, AuthorEmailTaggingFilter}
+import org.rexo.pipelinescala.extractors._
 
 import scala.collection.immutable.{List,Map}
 import scala.xml.{Node, NodeSeq, XML, Elem, Attribute, Text, Null}
-import org.rexo.pipelinescala.extractors.Author
 import org.slf4j.{Logger, LoggerFactory}
 
 object Analyzer {
@@ -196,7 +195,7 @@ class AnalyzeAuthorEmailTagging() extends TestFilter {
       // get author's name, email and inst from the xml document.
       // compare them to the expected results.
 
-      val xmlAuthor = author.getFullName
+      val xmlAuthor = author.getFullName(AuthorType.Reference)
       var xmlEmail = ""
       var xmlInst = ""
 
