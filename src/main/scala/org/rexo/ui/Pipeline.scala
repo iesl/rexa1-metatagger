@@ -14,7 +14,7 @@ import org.slf4j.{Logger,LoggerFactory}
 trait ScalaPipelineComponent {
 
 
-  def apply(xml: Node) : Node
+  def apply(xml: Node, filename : String) : Node
 }
 
 class ScalaPipeline (pipelineList : List[ScalaPipelineComponent]) {
@@ -23,7 +23,7 @@ class ScalaPipeline (pipelineList : List[ScalaPipelineComponent]) {
   // val pdfExtractor  // not necessary here (yet?)
   //val docTransformer =
 
-  def apply(doc: Document) : Document = {
+  def apply(doc: Document, filename : String) : Document = {
 
     val strbuf = new StringWriter()
     val xmlOutputter = new XMLOutputter(Format.getPrettyFormat())
@@ -32,7 +32,7 @@ class ScalaPipeline (pipelineList : List[ScalaPipelineComponent]) {
 
     val xmldata : Node = XML.loadString(strbuf.toString)
     val xmlfinal = pipelineList.foldLeft(xmldata) { (xml, component) =>
-      component(xml)
+      component(xml, filename)
     }
 
     logger.info("returning new data now")
