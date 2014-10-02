@@ -1,5 +1,7 @@
 package org.rexo.pipelinescala.extractors
 
+import java.io.PrintStream
+
 import org.rexo.pipelinescala.extractors.CitationTypeInformation._
 import org.rexo.ui.ScalaPipelineComponent
 import scala.util.matching.Regex
@@ -11,9 +13,9 @@ import org.slf4j.LoggerFactory
 class CitationTaggingFilter extends ScalaPipelineComponent{
   val logger = LoggerFactory.getLogger(CitationTaggingFilter.this.getClass())
 
-  override def apply(xmldata: Node):Node= {
+  override def apply(xmldata: Node, filename : String):Node= {
     logger.info("Citation Filter Running!")
-    val newXML = run_filter(xmldata);
+    val newXML = run_filter(xmldata, filename);
     newXML;
   }
 
@@ -21,13 +23,14 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
   def run(infile: String) {
   }
 
-  def run_filter(xmldata: Node) : Node = {
+  def run_filter(xmldata: Node, filename: String) : Node = {
 
     val biblioxml = xmldata \ "content" \ "biblio"
     val refList = Reference.getReferences(biblioxml)
     val referenceManager = new ReferenceManager(refList)
     var newBodyText = ""
 
+    val infoFile = new PrintStream(filename + ".info")
 
     println("reference list:")
     refList.foreach(println(_))
@@ -45,44 +48,15 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
     //
     ///////////////////////////////////////////////////////////////////////////////
 
-    // get and idea of how each regex does on the body text (with xml tags in it)
-    val regexChoices = List(NUMERICAL, AUTHOR_LAST)
-    val citationManagers : Map[CitationType, CitationManager] = (for(r <- regexChoices) yield r -> new CitationManager(r.getRegex.findAllMatchIn(body), r)).toMap
+    val citationManager : Option[CitationManager] = CitationManager.getManager(numReferences, body)
 
-    // compare the results - for now just who finds the most citations. Add More Later!
-    val evaluations : Map[CitationType, Int]= for ((m) <- citationManagers) yield {
-      val diff =  m._2.citationCount() - numReferences
-      m._1 -> diff
-    }
-
-    val threshold = 10
-
-    // find the one with the least difference!
-    var max = evaluations.head._2
-    var theWinner : Option[(CitationType, Int)] = Some(evaluations.head)
-
-    evaluations.foreach( (t) => {
-      val typeName = t._1.getName
-      logger.info(s"Type $typeName:  ${t._2} ")
-      if (t._2 > max) {
-        max = t._2
-        theWinner = Some(t)
-      }
-    })
-
-    val regexChoice : (CitationType, Int) = theWinner.getOrElse((NONE,0))
-
-    if (regexChoice._2 <= threshold) {
-      logger.info("Regex Citation Type " + regexChoice._1.getName + " matches best")
-    }
-
-    if (regexChoice._1 == NONE) {
-      logger.info("No current citation type worked well for this file")
-
-      // TODO - figure out what to do here, maybe default to one of them?
+    if (citationManager == NONE) {
+      logger.info("No current citation type worked well for this file!")
+      // TODO - figure out what to do here, maybe default to one of them? For now, return
       xmldata
     }
 
+    infoFile.println("CitationType = " + citationManager.get.citationType)
 
     ///////////////////////////////////////////////////////////////////////////////
     // Now process the citations of the best matching Citation Type.
@@ -94,7 +68,7 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
     var tagCitList : List[Citation] = List()
     var tagRefList : List[Option[Reference]] = List()
     var offset : Int = 0 // how much text we have added this. Revamp to make cleaner
-    for(citation <- citationManagers(regexChoice._1).citationList) {
+    for(citation <- citationManager.get.citationList) {
       index += 1
       logger.info(s"citation $index) " + citation.text)
 
@@ -103,11 +77,11 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
       tagRefList ::= reference
 
 
-      if (citation.multi == -1 || citation.isLastMulti == true) {
+      if (citation.multi == -1 || citation.isLastMulti) {
         val str = body.substring(citation.startPos+offset, citation.endPos+offset)
         logger.info(s"str is $str")
 
-        val newTag = citationManagers(regexChoice._1).createCitationXMLTag(tagCitList, tagRefList)
+        val newTag = citationManager.get.createCitationXMLTag(tagCitList, tagRefList)
 
         // as we add in text, we need to adjust how much the other position information needs to be adjusted by.
         val part1 = body.substring(0, citation.startPos + offset)
@@ -141,9 +115,14 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
       case e: Exception => logger.info("caught exception loading new citation body text: " + e.getClass())
     }
     val newXML = <document><content>{headers +: newBody +: biblioxml}</content>{grants}</document>
+
+    infoFile.close()
+
     newXML
   }
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 object Util {
 
@@ -154,12 +133,55 @@ object Util {
   }
 
   def cleanString(str: String) : String = {
-    str.replaceAll("[,.;]", "")
+    str.replaceAll("[,.;\\[\\]]", "")
   }
 }
 
 
+//
+// Citation Management Section
+//
 
+object CitationManager {
+  val logger = LoggerFactory.getLogger(CitationManager.this.getClass)
+
+  def getManager(numReferences : Int, data : String)  : Option[CitationManager] = {
+    // get and idea of how each regex does on the data
+    val regexChoices = List(NUMERICAL, AUTHOR_LAST)
+    val citationManagers: Map[CitationType, CitationManager] = (for (r <- regexChoices) yield r -> new CitationManager(r.getRegex.findAllMatchIn(data), r)).toMap
+
+    // compare the results - for now just who finds the most citations. Add More Later!
+    val evaluations: Map[CitationType, Int] = for ((m) <- citationManagers) yield {
+      val diff = m._2.citationCount() - numReferences
+      m._1 -> diff
+    }
+
+    val threshold = 10
+
+    // find the one that found the most citations
+    var max = -100 // hmm, make this better
+    var theWinner: Option[(CitationType, Int)] = None
+
+    evaluations.foreach((t) => {
+      val typeName = t._1.getName
+      logger.info(s"Type $typeName:  ${t._2} ")
+      if (t._2 > max) {
+        max = t._2
+        theWinner = Some(t)
+      }
+    })
+
+    if (theWinner != None) {
+      Some(citationManagers(theWinner.get._1))
+    } else {
+      None
+    }
+  }
+
+  def getManager(citationType : CitationType, references: List[Reference], data: String) : CitationManager = {
+    new CitationManager(citationType.getRegex.findAllMatchIn(data), citationType)
+  }
+}
 
 class CitationManager (citations: List[Citation], cType: CitationType) {
   val citationList : List[Citation] = citations.flatMap(cit => splitCitations(cit, cType))
@@ -229,8 +251,17 @@ case class Citation (start: Int, end: Int, citation : String, multi: Int = -1, m
   val endPos = end
   var refID = "-1"
   val multiple = multi  // position in citation
-  val isLastMulti = multiLast
+  def isLastMulti = multiLast
   val text = citation
+
+  override def toString = {
+    val isMultiple = multiple != -1
+    s"""|
+       | Location:  (start: $startPos,   end: $endPos)
+       | Grouped?   $isMultiple ($multiple) Last: $isLastMulti
+       | Text:      $text
+       """.stripMargin
+  }
 }
 
 object CitationTypeInformation {
@@ -246,19 +277,38 @@ object CitationTypeInformation {
     def getName : String =  name
     def getPrefix : String = prefix
     def getSuffix : String = suffix
+
+  }
+
+  object CitationType {
+    def unapply(str : String) : Option[CitationType] = {
+      str match {
+        case "None"  => Some(NONE)
+        case "Numerical" => Some(NUMERICAL)
+        case "Author Last" => Some(AUTHOR_LAST)
+        case _ => None
+      }
+    }
   }
 
   case object NONE extends CitationType       ("".r, "None", "", "", "")
   case object NUMERICAL extends CitationType  (("""(""" + Number + """)""").r, "Numerical", Number, "", "")
   case object AUTHOR_LAST extends CitationType(("""(\((""" + Author + """)([ ]*[,;]{1}""" + Author + """)*\))+""").r, "Author Last", Author, "(", ")")
 
-
-  //import EnumerationMacros._
-
   val citationTypes  : Set[CitationType] = Set(NONE, NUMERICAL, AUTHOR_LAST)
+  def getCitationType(name : String) : CitationType ={
+    name match {
+      case "None" => NONE
+      case "Numerical" => NUMERICAL
+      case "Author Last" => AUTHOR_LAST
+      case _ => NONE
+    }
+  }
 }
 
-
+//
+// Reference Management Section
+//
 class ReferenceManager (references : List[Reference]) {
   val logger = LoggerFactory.getLogger(ReferenceManager.this.getClass)
   val refMap = createMap(references)
@@ -282,7 +332,7 @@ class ReferenceManager (references : List[Reference]) {
 
   private def createKey(reference : Reference) : String = {
     if (reference.refmarker.nonEmpty) {
-      reference.refmarker
+      Util.cleanString(reference.refmarker)
     } else {
       // key off of the first listed author's last name and year the document was published.
       val first = reference.authorList.head // this could die, but every reference has at least author.
@@ -290,7 +340,6 @@ class ReferenceManager (references : List[Reference]) {
     }
   }
 }
-
 
 
 class Reference (xmldata: Node, defaultID: Int = -1) {
