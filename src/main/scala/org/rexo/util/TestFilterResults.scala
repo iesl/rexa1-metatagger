@@ -40,9 +40,13 @@ abstract class TestFilterResults(filename : String, filtername: String) {
 
 
 abstract class TestFilter() {
-  def apply(XMLfile : File, expectedResults : Map[String,Map[String,String]], instDict: String) : TestFilterResults
+  def apply(XMLfile : File, directory: String, expectedResults : Map[String,Map[String,String]], instDict: String) : TestFilterResults
 
   def getName : String
+
+  def printSummary(results: List[TestFilterResults], stream : PrintStream)
+
+  def parseCSVData(csvFilename : String) : Map[String, Map[String, Map[String, String]]]
 
 }
 
