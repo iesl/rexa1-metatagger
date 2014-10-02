@@ -502,7 +502,7 @@ object AuthorEmailTaggingFilter {
 class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent {
   val logger = LoggerFactory.getLogger(AuthorEmailTaggingFilter.getClass())
 
-  override def apply(xmldata: Node): Node = {
+  override def apply(xmldata: Node, filename : String): Node = {
     AuthorEmailTaggingFilter.metrics.logStart("AuthorEmailTaggingFilter")
     //val xmldata = XML.loadString(doc.toString)
 
