@@ -57,7 +57,7 @@ function parseFile($filename) {
 			// finish the record
 			$inRecord = false;
 			$curPDF = "";
-	    } else if (startsWith("-----", $line)) {
+	  } else if (startsWith("-----", $line)) {
 			//Summary section!
 			if ($atSummary == false) {
 				$atSummary = true;
