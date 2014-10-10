@@ -32,6 +32,10 @@ class AnalyzeAuthorEmailTagging() extends TestFilter {
     }).toMap
   }
 
+  override def testFile(csvRecord : Map[String,Map[String,String]]): Boolean = {
+    csvRecord.nonEmpty
+  }
+
   def apply(XMLFile: File, directory: String, csvResults: Map[String, Map[String, String]], instDict: String): TestFilterResults = {
 
     val authorEmailFilter = new AuthorEmailTaggingFilter(instDict)
@@ -222,7 +226,6 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
   var expectedRecordList : List[Map[String, String]] = List[Map[String,String]]()
   var noMatchFoundList : List[Map[String, String]] = List[Map[String,String]]()
   var noMatchExpList : List[Map[String, String]] = List[Map[String,String]]()
-  var errorMsgs : List[String] = List[String]()
 
   def nonEmpty : Boolean = {
     foundRecordList.nonEmpty || expectedRecordList.nonEmpty
@@ -277,10 +280,6 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
     noMatchExpList ::= exp
   }
 
-  def registerErrorMsg(msg : String) {
-    errorMsgs ::= msg
-  }
-
   def machine_summary() : String = {
     s"$filename;$name;$numFoundAuthors;$numExpectedAuthors;$numFoundEmails;$numExpectedEmails;$numFoundInst;$numExpectedInst;$fullSuccesses;$partialEmail;$partialInst;$falseMatches\n"
   }
@@ -289,14 +288,14 @@ class AuthorEmailFilterResults(filename : String) extends TestFilterResults (fil
     val parent = super.addToTally(tally)
 
     val map = Map[String, Float](
-      "totalNumberAuthorsFound" -> (tally("totalNumberAuthorsFound") + numFoundAuthors),
-      "totalNumberAuthorsExpected" -> (tally("totalNumberAuthorsExpected") + numExpectedAuthors),
-      "totalNumberEmailsFound" -> (tally("totalNumberEmailsFound") + numFoundEmails),
-      "totalNumberEmailsExpected" -> (tally("totalNumberEmailsExpected") + numExpectedEmails),
-      "totalNumberInstsFound" -> (tally("totalNumberInstsFound") + numFoundInst),
-      "totalNumberInstsExpected" -> (tally("totalNumberInstsExpected") + numExpectedInst),
-      "totalPartialEmail" -> (tally("totalPartialEmail") + partialEmail),
-      "totalPartialInst" -> (tally("totalPartialInst") + partialInst) )
+      "totalNumberAuthorsFound" -> (tally.getOrElse("totalNumberAuthorsFound", 0F) + numFoundAuthors),
+      "totalNumberAuthorsExpected" -> (tally.getOrElse("totalNumberAuthorsExpected", 0F) + numExpectedAuthors),
+      "totalNumberEmailsFound" -> (tally.getOrElse("totalNumberEmailsFound", 0F) + numFoundEmails),
+      "totalNumberEmailsExpected" -> (tally.getOrElse("totalNumberEmailsExpected",0F) + numExpectedEmails),
+      "totalNumberInstsFound" -> (tally.getOrElse("totalNumberInstsFound", 0F) + numFoundInst),
+      "totalNumberInstsExpected" -> (tally.getOrElse("totalNumberInstsExpected", 0F) + numExpectedInst),
+      "totalPartialEmail" -> (tally.getOrElse("totalPartialEmail", 0F) + partialEmail),
+      "totalPartialInst" -> (tally.getOrElse("totalPartialInst", 0F) + partialInst) )
 
     parent ++ map
   }

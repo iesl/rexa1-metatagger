@@ -6,6 +6,7 @@ import org.rexo.pipelinescala.extractors.Author
 
 import scala.collection.immutable.List
 
+
 abstract class TestFilterResults(filename : String, filtername: String) {
   val name = filtername
   var totalSamples = 0
@@ -13,6 +14,9 @@ abstract class TestFilterResults(filename : String, filtername: String) {
   // filter found a match, but it wasn't the expected results
   var falseMatches: Int = 0
   //val time_ms: Double = 0 // unused
+  var errorMsgs : List[String] = List[String]()
+
+
 
   def upSampleCount() = {
     totalSamples += 1
@@ -27,6 +31,11 @@ abstract class TestFilterResults(filename : String, filtername: String) {
   }
 
   def prettyPrint(stream: PrintStream)
+
+  def registerErrorMsg(msg: String) {
+    errorMsgs ::= msg
+  }
+
 
   def nonEmpty : Boolean
 
@@ -43,6 +52,8 @@ abstract class TestFilter() {
   def apply(XMLfile : File, directory: String, expectedResults : Map[String,Map[String,String]], instDict: String) : TestFilterResults
 
   def getName : String
+
+  def testFile(csvRecord: Map[String,Map[String,String]]) : Boolean
 
   def printSummary(results: List[TestFilterResults], stream : PrintStream)
 

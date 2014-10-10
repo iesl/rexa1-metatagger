@@ -3,7 +3,7 @@ package org.rexo.util
 import org.rexo.pipelinescala.extractors.CitationTypeInformation._
 import org.rexo.pipelinescala.extractors._
 import org.slf4j.LoggerFactory
-import java.io.{File,PrintStream, FileOutputStream}
+import java.io.{FileNotFoundException, File, PrintStream, FileOutputStream}
 
 import scala.xml.{Elem, NodeSeq, XML, Node}
 
@@ -13,6 +13,11 @@ class AnalyzeCitationTagging (directory : String) extends TestFilter {
   val summaryFilename = if (directory.last == '/') { directory + sumName } else { directory + "/" + sumName }
 
   override val getName = "CitationTaggingFilter"
+
+  override def testFile(csvRecord: Map[String, Map[String,String]]) : Boolean = {
+    // should we test this file? always run them! (for now)
+    true
+  }
 
   def parseCSVData(csvFilename: String) : Map[String, Map[String,Map[String,String]]] = {
     val csvData = scala.io.Source.fromFile(csvFilename).getLines()
@@ -34,12 +39,18 @@ class AnalyzeCitationTagging (directory : String) extends TestFilter {
   }
 
   def readInfoFile(infoFile : String) : Map[String,String] = {
-    val linesList = scala.io.Source.fromFile(infoFile).getLines().toList
-
-    (for (line <- linesList) yield {
-      val spl = line.split("=")
-      spl(0).trim -> spl(1).trim
-    }).toMap
+    try {
+      val linesList = scala.io.Source.fromFile(infoFile).getLines().toList
+      (for (line <- linesList) yield {
+        val spl = line.split("=")
+        spl(0).trim -> spl(1).trim
+      }).toMap
+   }  catch {
+      case e: FileNotFoundException => {
+        logger.info(s"Unable to find info file: '$infoFile'")
+        Map.empty[String, String]
+      }
+    }
   }
 
   def apply(XMLFile: File, directory: String, csvResults: Map[String, Map[String, String]], instDict: String): TestFilterResults = {
@@ -53,7 +64,12 @@ class AnalyzeCitationTagging (directory : String) extends TestFilter {
     val pdfInfo = s"$XMLFile.info" //directory + (if(directory.last != '/') "/") +  s"$XMLFile.info"
     logger.info(s"pdfinfo found in file $pdfInfo")
 
+
     val metaInfo = readInfoFile(pdfInfo)
+
+    if (metaInfo.isEmpty) {
+      results // can't work on this file
+    }
 
     /*
     val citationType : CitationType = metaInfo.getOrElse("CitationType", "") match {
@@ -103,7 +119,8 @@ class AnalyzeCitationTagging (directory : String) extends TestFilter {
       //"totalNumberCitationsExpected" -> 0,
       "totalNumberCitationsMatched" -> 0,
       "totalNumberCitationsNotMatched" -> 0,
-      "totalNumberCitationTypeNumerical" -> 0,
+      "totalNumberCitationTypeNumericalBrackets" -> 0,
+      "totalNumberCitationTypeNumericalParens" -> 0,
       "totalNumberCitationTypeAuthorLast" -> 0,
       "totalNumberCitationTypeNone" -> 0
     )
@@ -151,7 +168,8 @@ class AnalyzeCitationTagging (directory : String) extends TestFilter {
       f"Citations Matched:                    ${summaryMap("totalNumberCitationsMatched")}%.2f     $perMatched %%\n" +
       f"Citations Not Matched:                ${summaryMap("totalNumberCitationsNotMatched")}%.2f     $perNotMatched %%\n" +
       "\nCitation Type Summary: \n" +
-      "\t Numerical [1] :             " + summaryMap("totalNumberCitationTypeNumerical").toInt + " file(s)\n" +
+      "\t Numerical [1] :             " + summaryMap("totalNumberCitationTypeNumericalBrackets").toInt + " file(s)\n" +
+      "\t Numerical (1) :             " + summaryMap("totalNumberCitationTypeNumericalParens").toInt + " file(s)\n" +
       "\t Author Last (Seltan 1999) : " + summaryMap("totalNumberCitationTypeAuthorLast").toInt + " file(s)\n" +
     "\n\n\n" +
     "\n--------------------------------------------------------\n"
@@ -225,6 +243,7 @@ class CitationTaggingFilterResults(pdfFilename : String) extends TestFilterResul
   var numCitationsLinked: Int = 0
   var numFoundCitations: Int = 0
   var numExpectedCitations: Int = 0
+  var numReferencesCited: Int = 0
 
   var citationType: CitationType = NONE
 
@@ -238,7 +257,6 @@ class CitationTaggingFilterResults(pdfFilename : String) extends TestFilterResul
 
   var noMatchFoundList : List[Map[String, String]] = List[Map[String,String]]()
   var noMatchExpList : List[Map[String, String]] = List[Map[String,String]]()
-  var errorMsgs : List[String] = List[String]()
 
 
   def nonEmpty : Boolean = {
@@ -260,10 +278,15 @@ class CitationTaggingFilterResults(pdfFilename : String) extends TestFilterResul
   def registerExpectedResults(expected: Map[String, Map[String,String]]) {
   }
 
-  /*def registerSampleInfo(references : Map[String,String], citations: Map[String,String]) { */
   def registerSampleInfo(references : List[Reference], citations: List[Citation]) {
     foundReferenceList = foundReferenceList ::: references
     foundCitationList = foundCitationList ::: citations
+
+    foundReferenceList.foreach(ref =>
+      if (foundCitationList.filter(_.refID== ref.id).nonEmpty) {
+        numReferencesCited += 1;
+      }
+    )
   }
 
   def registerCitationType(citType: CitationType) {
@@ -280,34 +303,31 @@ class CitationTaggingFilterResults(pdfFilename : String) extends TestFilterResul
     noMatchExpList ::= exp
   }
 
-  def registerErrorMsg(msg : String) {
-    errorMsgs ::= msg
-  }
-
   def machine_summary() : String = {
-    s"$pdfFilename;$name;$citationType;$numFoundReferences;$numExpectedReferences;$numFoundCitations;$numExpectedCitations;$numCitationsLinked"// TODO ADD ON HERE
+    s"$pdfFilename;$name;$citationType;$numFoundReferences;$numExpectedReferences;$numFoundCitations;$numExpectedCitations;$numCitationsLinked;$numReferencesCited"// TODO ADD ON HERE
   }
 
   override def addToTally(tally: Map[String, Float]) : Map[String, Float] = {
     val parent = super.addToTally(tally)
 
     val map = Map[String, Float](
-      "totalNumberReferencesFound" -> (tally("totalNumberReferencesFound") + numFoundReferences),
-      //"totalNumberReferencesExpected" -> (tally("totalNumberReferencesExpected") + numExpectedReferences),
-      "totalNumberCitationsFound" -> (tally("totalNumberCitationsFound") + numFoundCitations),
-      //"totalNumberCitationsExpected" -> (tally("totalNumberCitationsExpected") + numExpectedCitations),
-      "totalNumberCitationsMatched" -> (tally("totalNumberCitationsMatched") + numCitationsLinked),
-      "totalNumberCitationsNotMatched" -> (tally("totalNumberCitationsNotMatched") + noMatchFoundList.length),
-      "totalNumberCitationTypeNumerical" -> (tally("totalNumberCitationTypeNumerical") + (if (citationType == NUMERICAL) 1 else 0)),
-      "totalNumberCitationTypeAuthorLast" -> (tally("totalNumberCitationTypeAuthorLast") + (if (citationType == AUTHOR_LAST) 1 else 0)),
-      "totalNumberCitationTypeNone" -> (tally("totalNumberCitationTypeNone") + (if (citationType == NONE) 1 else 0)))
+      "totalNumberReferencesFound" -> (tally.getOrElse("totalNumberReferencesFound", 0F) + numFoundReferences),
+      //"totalNumberReferencesExpected" -> (tally.getOrElse("totalNumberReferencesExpected", 0F) + numExpectedReferences),
+      "totalNumberCitationsFound" -> (tally.getOrElse("totalNumberCitationsFound", 0F) + numFoundCitations),
+      //"totalNumberCitationsExpected" -> (tally.getOrElse("totalNumberCitationsExpected", 0F) + numExpectedCitations),
+      "totalNumberCitationsMatched" -> (tally.getOrElse("totalNumberCitationsMatched", 0F) + numCitationsLinked),
+      "totalNumberCitationsNotMatched" -> (tally.getOrElse("totalNumberCitationsNotMatched", 0F) + noMatchFoundList.length),
+      "totalNumberCitationTypeNumericalBrackets" -> (tally.getOrElse("totalNumberCitationTypeNumericalBrackets", 0F) + (if (citationType == NUMERICAL_BRACKETS) 1 else 0)),
+      "totalNumberCitationTypeNumericalParens" -> (tally.getOrElse("totalNumberCitationTypeNumericalParens", 0F) + (if (citationType == NUMERICAL_PARENS) 1 else 0)),
+      "totalNumberCitationTypeAuthorLast" -> (tally.getOrElse("totalNumberCitationTypeAuthorLast", 0F) + (if (citationType == AUTHOR_LAST) 1 else 0)),
+      "totalNumberCitationTypeNone" -> (tally.getOrElse("totalNumberCitationTypeNone", 0F) + (if (citationType == NONE) 1 else 0)))
 
     parent ++ map
   }
 
   def updateSummaryFile(file : String) {
     // this seems a bit convoluted, opening it every time, but keeping it open throughout run time seems
-    // odd too, since there's not destructor in scala and a call to a function named cleanup() seems
+    // odd too, since there's no destructor in scala and a call to a method named cleanup() seems
     // un-scala like. Leaving it for now.
     val summaryFile : PrintStream = new PrintStream(new FileOutputStream(file, true))
     summaryFile.println (machine_summary())
@@ -316,7 +336,7 @@ class CitationTaggingFilterResults(pdfFilename : String) extends TestFilterResul
 
   override def prettyPrint(stream: PrintStream) = {
 
-   val perCitationsLinked = numCitationsLinked / numFoundCitations * 100
+   val perCitationsLinked : Float = numCitationsLinked.toFloat / numFoundCitations.toFloat * 100
 
    // now gather the summary for the file information
    var info =  "\n\n##" + machine_summary() +
@@ -324,9 +344,21 @@ class CitationTaggingFilterResults(pdfFilename : String) extends TestFilterResul
       s"\tFilter: $name\n" +
       s"\tNumber of citations found:  $numFoundCitations,    expected: $numExpectedCitations\n" +
       s"\tNumber of references found: $numFoundReferences,    expected: $numExpectedCitations\n" +
-      s"\tNumber of citations matched to a reference:  $numCitationsLinked    $perCitationsLinked%.2f\n"
+      s"\tNumer of uncited references: " + (numFoundReferences-numReferencesCited) + "\n" +
+      s"\tNumber of citations matched to a reference:  $numCitationsLinked    $perCitationsLinked%\n" +
       s"\tNumber of citations _not_ matched: " +  (numFoundCitations - numCitationsLinked) + "\n" +
-      s"\n\n\tExamined Records:"
+      s"\n"
+
+    if (foundReferenceList.nonEmpty) {
+      val refInfo = foundReferenceList.map(r => {
+          val aInfo = r.authorList.map(_.getFullName(AuthorType.Reference)).mkString(", ")
+          val dates = r.date.mkString(" ") // might be one or more
+          s"${r.id} : ${r.refmarker} : $dates : $aInfo"
+      }).mkString("\n")
+
+      info = info.concat("\nReferences:\n" + refInfo + "\nReferences End\n")
+    }
+
 
     if (foundCitationList.nonEmpty && expectedCitationList.nonEmpty) {
 
@@ -337,7 +369,7 @@ class CitationTaggingFilterResults(pdfFilename : String) extends TestFilterResul
 
       }).mkString
 /*
-      if (expectedist.length > foundRecordList.length) {
+      if (expectedList.length > foundRecordList.length) {
         var i = 0
         while (foundRecordList.length + i < expectedRecordList.length) {
           val erecord = expectedRecordList(foundRecordList.length)
