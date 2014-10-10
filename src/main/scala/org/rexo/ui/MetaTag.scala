@@ -173,9 +173,8 @@ object MetaTag {
             //val tokenization = rdoc.getTokenization()
             val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
             val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument
-
             // run it!
-            val newDoc = scalaPipeline(doc, infile.getName)
+            val newDoc = scalaPipeline(doc, outfile.getAbsolutePath)
             writeOutput( outfile, newDoc )
           }
           catch {
@@ -238,7 +237,6 @@ object MetaTag {
       logger.error( "No xml content available for document " + rdoc )
       return
     }
-
     var xmlOutputStream : FileOutputStream = null;
 
     try {
