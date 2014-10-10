@@ -126,11 +126,13 @@ object Util {
   // get rid of prefix or trailing junk/white space
   def stripPrefixSuffix(str: String): String = {
     val ignorable = ",;. \t\r\n()[]" // maybe make this a parameter
-    str.dropWhile(c => ignorable.indexOf(c) >= 0).reverse.dropWhile(c => ignorable.indexOf(c) >= 0).reverse
+    val stepOne = str.dropWhile(c => ignorable.indexOf(c) >= 0)
+    val stepTwo = stepOne.reverse.dropWhile(c => ignorable.indexOf(c) >= 0)
+    stepTwo.reverse
   }
 
   def cleanString(str: String) : String = {
-    str.replaceAll("[,.;\\[\\]]", "")
+    str.replaceAll("()[,.;\\[\\]]", "")
   }
 }
 
@@ -228,20 +230,19 @@ class CitationManager (citations: List[Citation], cType: CitationType, xmlText :
 
   def citationCount() : Int = {citationList.length}
 
-  def createCitationXMLTag(citations: List[Citation], references: List[Option[Reference]]) : List[NodeSeq]= {
+  def createCitationXMLTag(citations: List[Citation], references: List[Option[Reference]]) : String = {
 
     // check ordering here to see that it gets put back in in the proper order.
-    val list : List[NodeSeq] =
+    val list : List[String] =
       for ((cit, i) <- citations.zipWithIndex) yield {
         val ref = references(i)
         val id = if(ref.nonEmpty)ref.get.id else "-1"
-        //"<citation refID=\"%s\">%s</citation>".format(id, cit.text)
-        Elem(null, "citation", new UnprefixedAttribute("refID", id, null), TopScope, Text(cit.text))
+        "<citation refID=\"%s\">%s</citation>".format(id, cit.text)
+        //Elem(null, "citation", new UnprefixedAttribute("refID", id, null), TopScope, Text(cit.text))
     }
 
-    list
-    //val str = citationType.getPrefix + list.mkString("") + citationType.getSuffix
-    //str
+    val str = citationType.getPrefix + list.mkString(",") + citationType.getSuffix
+    str
   }
 
   import scala.util.parsing.combinator.RegexParsers
@@ -278,28 +279,27 @@ class CitationManager (citations: List[Citation], cType: CitationType, xmlText :
     var tagRefList : List[Option[Reference]] = List()
     var offset : Int = 0 // how much text we have added this. Revamp to make cleaner
 
-    var newText : String = ""
+    var newText : String = xmlText
 
-    for(citation <- citations) {
+    for(citation <- citationList) {
       index += 1
       logger.info(s"citation $index) " + citation.text)
 
-      tagCitList ::= citation
+      tagCitList = tagCitList :+ citation
       val reference = referenceManager.findReference(citation, this)
-      tagRefList ::= reference
+      tagRefList = tagRefList :+ reference
 
 
       if (citation.multi == -1 || citation.isLastMulti) {
-        val str = xmlText.substring(citation.startPos+offset, citation.endPos+offset)
+        val str = newText.substring(citation.startPos+offset, citation.endPos+offset)
         logger.info(s"str is $str")
 
         val newTag = this.createCitationXMLTag(tagCitList, tagRefList)
 
         // as we add in text, we need to adjust how much the other position information needs to be adjusted by.
-        val part1 = xmlText.substring(0, citation.startPos + offset)
-        val part2 = xmlText.substring(citation.endPos+offset, xmlText.length)
+        val part1 = newText.substring(0, citation.startPos + offset)
+        val part2 = newText.substring(citation.endPos+offset, newText.length)
 
-        //xmlText = xmlText.replace(str, newTag)
         newText = part1 + newTag + part2
 
         tagCitList = tagCitList.drop(tagCitList.length)
@@ -378,9 +378,9 @@ object CitationTypeInformation {
   def getCitationType(name : String) : CitationType ={
     name.toLowerCase() match {
       case "none" => NONE
-      case "numerical brackets" => NUMERICAL_BRACKETS
-      case "numerical parens" => NUMERICAL_PARENS
-      case "author last" => AUTHOR_LAST
+      case "numerical_brackets" => NUMERICAL_BRACKETS
+      case "numerical_parens" => NUMERICAL_PARENS
+      case "author_last" => AUTHOR_LAST
       case _ => NONE
     }
   }

@@ -389,6 +389,13 @@ function getBackNextButtons($filename) {
   $totExpectedCitations = 0;
   $totReferencesCited = 0;
 
+  $totCitType_NumericalBrackets = 0;
+  $totCitType_NumericalParens = 0;
+  $totCitType_AuthorLast = 0;
+  $totCitType_None = 0;
+
+
+
 	echo '<form name="input" action="CICWebAnalysis.php" method="post">';
 	echo "<input type=\"hidden\" name=\"filename\" value=\"$filename\">";
 	echo '<table>';
@@ -412,6 +419,21 @@ function getBackNextButtons($filename) {
     $totFoundReferences += @$pdfRecord["NumFoundReferences"];
     $totExpectedReferences += @$pdfRecord["NumExpectedReferences"];
     $totReferencesCited += @$pdfRecord["NumReferencesCited"];
+
+    switch (@$pdfRecord["CitationType"]) {
+      case "NUMERICAL_PARENS":  
+        $totCitType_NumericalParens++;
+        break;
+      case "NUMERICAL_BRACKETS":
+        $totCitType_NumericalBrackets++;
+        break;
+      case "AUTHOR_LAST":
+        $totCitType_AuthorLast++;
+        break;
+      case "NONE":
+        $totCitType_None++;
+        break;
+    }
  /* 
     foreach ($fileData[$curFile]['References'] as $ref) {
       if ($ref['Cited'] == true) {
@@ -467,12 +489,20 @@ function getBackNextButtons($filename) {
 
        Citations                               $totFoundCitations           
        References                              $totFoundReferences         
-       -------------------------------------------------------------
+       ------------------------------------------------------------
        Citation to Reference Match:            $totCitationsMatched          " .  number_format((float)$matchPercentage, 2, '.', '') ."%
        References Cited:                       $totReferencesCited           " .  number_format((float)$refCitedPercentage, 2, '.', '') . "%
 
        Average citations per file:             " . number_format($totFoundCitations / $numberFiles, 2, '.', '') . "
        References with no citation found:      ". ($totFoundReferences - $totReferencesCited) . "          " . number_format((float)$refNotCitedPercentage, 2, '.', '') ."%
+       ------------------------------------------------------------
+
+       Types:
+          Numerical Brackets:                 $totCitType_NumericalBrackets
+          Numerical Parenthesis:              $totCitType_NumericalParens 
+          Author Last:                        $totCitType_AuthorLast
+          Unknown:                            $totCitType_None
+
 	          </pre> 
             <div>
 		  </td> 
