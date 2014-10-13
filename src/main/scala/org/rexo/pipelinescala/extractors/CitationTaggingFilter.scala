@@ -68,7 +68,7 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
     ///////////////////////////////////////////////////////////////////////////////
 
     var newBodyStr = citationManager.get.processCitations(referenceManager)
-    var newAbstractStr = citationManager.get.processCitations(referenceManager)
+    //var newAbstractStr = citationManager.get.processCitations(referenceManager)
 
     val headers = xmldata \ "content" \ "headers"
     val grants = xmldata \"grants"
@@ -86,7 +86,7 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
     var newAbstract = NodeSeq.Empty
     try {
       newBody = XML.loadString(newBodyStr)
-      newAbstract = XML.loadString(newAbstractStr)
+      //newAbstract = XML.loadString(newAbstractStr)
     } catch {
       case e: Exception => logger.info("caught exception loading new citation body text: " + e.getClass())
     }
@@ -132,7 +132,7 @@ object Util {
   }
 
   def cleanString(str: String) : String = {
-    str.replaceAll("()[,.;\\[\\]]", "")
+    str.replaceAll("[\\(\\),.;\\[\\]]", "")
   }
 }
 
@@ -144,17 +144,17 @@ object Util {
 object CitationManager {
   val logger = LoggerFactory.getLogger(CitationManager.this.getClass)
 
-  def getManager(numReferences : Int, data : String)  : Option[CitationManager] = {
+  def getManager(numReferences : Int, data : String) : Option[CitationManager] = {
     // get and idea of how each regex does on the data
 
     val cleanData = data.replaceAll("\n", " ")
-    val regexChoices = List(NUMERICAL_BRACKETS, NUMERICAL_PARENS, AUTHOR_LAST)
+    //val regexChoices = List(NUMERICAL_BRACKETS, NUMERICAL_PARENS, AUTHOR_LAST)
+    val regexChoices = CitationTypeInformation.citationTypes
     val citationManagers: Map[CitationType, CitationManager] = (for (r <- regexChoices) yield r -> new CitationManager(r.getRegex.findAllMatchIn(cleanData), r, data)).toMap
 
     // compare the results - for now just who finds the most citations. Add More Later!
 
     // TODO 2nd test should be how many citations to references are there? What's an appropriate ratio?
-
 
     val evaluations: Map[CitationType, (Int, Float)] = for ((m) <- citationManagers) yield {
 
@@ -169,7 +169,7 @@ object CitationManager {
 
     // get rid of outliers  (less citations then references, large numbers of citations to references)
     var reduced : Map[CitationType, (Int, Float)] = (for ((citType, tests) <- evaluations) yield {
-      if (tests._1 >= 0 && tests._2 < 300 /* % */) {
+      if (tests._1 >= -10 && tests._2 < 300 /* % */) {
         Some(citType->(tests))
       } else {
         None
@@ -177,12 +177,13 @@ object CitationManager {
     }).flatten.toMap
 
 
-    var theWinner: Option[(CitationType, (Int, Float))] =  None;
-    var minDiff = 1000;
-    var minPer = 1000F;
+    var theWinner: Option[(CitationType, (Int, Float))] =  None
+    var minDiff = 1000
+    var minPer = 1000F
 
     reduced.foreach(test => {
-      if (test._2._1 < minDiff && test._2._2 < minPer) {
+     // if (Math.abs(test._2._1) < minDiff && test._2._2 < minPer) {
+      if (Math.abs(test._2._1) < minDiff && (test._2._2 < 200F && test._2._2 > 50F)) {
         minDiff = test._2._1
         minPer = test._2._2
         theWinner = Some(test)
@@ -344,6 +345,7 @@ object CitationTypeInformation {
 
   val Author = """[-A-Za-z, .]+ [0-9]{4}"""
   val Number = """[0-9]+"""
+  val AlphaNumeric = """[a-zA-Z]{2,}[0-9]+"""
 
 
   sealed abstract class CitationType (regex: Regex, name: String, simple: String, prefix : String, suffix : String) extends Ordered[CitationType] {
@@ -356,30 +358,37 @@ object CitationTypeInformation {
 
   }
 
-  object CitationType {
-    def unapply(str : String) : Option[CitationType] = {
-      str match {
-        case "None"  => Some(NONE)
-        case "Numerical Brackets" => Some(NUMERICAL_BRACKETS)
-        case "Numerical Parens" => Some(NUMERICAL_PARENS)
-        case "Author Last" => Some(AUTHOR_LAST)
-        case _ => None
-      }
+  /*
+object CitationType {
+  def unapply(str : String) : Option[CitationType] = {
+    str match {
+      case "None"  => Some(NONE)
+      case "Numerical Brackets" => Some(NUMERICAL_BRACKETS)
+      case "Numerical Parens" => Some(NUMERICAL_PARENS)
+      case "Author Last" => Some(AUTHOR_LAST)
+      case _ => None
     }
   }
+  }
+  */
 
   case object NONE extends CitationType       ("".r, "None", "", "", "")
   case object NUMERICAL_BRACKETS extends CitationType  (("""(\[(""" + Number + """[ ,;]*)+\])""").r, "Numerical Brackets", Number, "[", "]")
   case object NUMERICAL_PARENS extends CitationType  (("""(\((""" + Number + """[ ,;]*)+\))""").r, "Numerical Parens", Number, "(", ")")
+  case object ALPHA_NUMERIC_BRACKETS extends CitationType  (("""(\[(""" + AlphaNumeric + """[ ,;]*)+\])""").r, "Alpha Numeric Brackets", AlphaNumeric, "[", "]")
+  case object ALPHA_NUMERIC_PARENS extends CitationType  (("""(\((""" + AlphaNumeric + """[ ,;]*)+\))""").r, "Alpha Numeric Parens", AlphaNumeric, "(", ")")
   case object AUTHOR_LAST extends CitationType(("""(\((""" + Author + """)([ ]*[,;]{1}""" + Author + """)*\))+""").r, "Author Last", Author, "(", ")")
 
-  val citationTypes  : Set[CitationType] = Set(NONE, NUMERICAL_BRACKETS, NUMERICAL_PARENS, AUTHOR_LAST)
+  val citationTypes  : List[CitationType] = List(NUMERICAL_BRACKETS, NUMERICAL_PARENS,
+    ALPHA_NUMERIC_BRACKETS, ALPHA_NUMERIC_PARENS, AUTHOR_LAST)
 
   def getCitationType(name : String) : CitationType ={
     name.toLowerCase() match {
       case "none" => NONE
       case "numerical_brackets" => NUMERICAL_BRACKETS
       case "numerical_parens" => NUMERICAL_PARENS
+      case "alpha_numeric_brackets" => ALPHA_NUMERIC_BRACKETS
+      case "alpha_numeric_parens" => ALPHA_NUMERIC_PARENS
       case "author_last" => AUTHOR_LAST
       case _ => NONE
     }
