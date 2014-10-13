@@ -129,14 +129,18 @@ $directory = @$_REQUEST["directory"]; // where the files are
 $filename = @$_REQUEST["filename"];
 $mode = @$_REQUEST["mode"];
 $ignore = @$_REQUEST["ignore"];
+$addToDataset = @$_REQUEST["addToDataset"];
 $msg = "";
 
 if (@$directory) {
   rtrim($directory);
   $_SESSION['Directory'] = $directory;
+} else {
+  $directory = $_SESSION['Directory'];
 }
 
-$ignoreFile = $directory . "AnalysisIgnore.txt";
+$ignoreFile = $directory . "/AnalysisIgnore.txt";
+$analyzeMoreFile = $directory . "/AnalyzeMore.txt";
 
 if (!isset($fileData)) {
 	if ($filename) {
@@ -153,7 +157,8 @@ if (!isset($fileData)) {
   $_SESSION['CurrentFileIndex'] = $curFileIndex;
 
   // Now weed out the files to ignore
-  $iFile = @fopen($ignoreFile, "r");
+  $iFile = fopen($ignoreFile, "r");
+  echo "<pre>ignore file '$ignoreFile'</pre>";
 
   if ($iFile) {
     while (!feof($iFile)) {
@@ -176,6 +181,9 @@ if (!isset($fileData)) {
       file_put_contents($ignoreFile, $pdfName."\n", FILE_APPEND);
       unset($fileData[$pdfName]);
       $_SESSION['FileData'] = $fileData;
+    } else if ($mode = "addToDataset") {
+      $pdfName = array_keys($fileData)[$curFileIndex];
+      file_put_contents($analyzeMoreFile, $pdfName."\n", FILE_APPEND);
     }
 
     // adjust to make sure in bounds 
@@ -498,10 +506,10 @@ function getBackNextButtons($filename) {
        ------------------------------------------------------------
 
        Types:
-          Numerical Brackets:                 $totCitType_NumericalBrackets
-          Numerical Parenthesis:              $totCitType_NumericalParens 
-          Author Last:                        $totCitType_AuthorLast
-          Unknown:                            $totCitType_None
+          Numerical Brackets:                 $totCitType_NumericalBrackets          " . number_format(((float)$totCitType_NumericalBrackets) / ((float) $numberFiles) *100, 2, '.', '') . "%
+          Numerical Parenthesis:              $totCitType_NumericalParens          " . number_format(((float) $totCitType_NumericalParens) / ((float) $numberFiles) *100, 2, '.', '') . "%
+          Author Last:                        $totCitType_AuthorLast            " . number_format(((float) $totCitType_AuthorLast) / ((float) $numberFiles) *100, 2, '.', '') . "%
+          Unknown:                            $totCitType_None          " . number_format(((float) $totCitType_None) / ((float) $numberFiles) *100, 2, '.', '') . "%
 
 	          </pre> 
             <div>
@@ -529,11 +537,12 @@ function getBackNextButtons($filename) {
       <td colspan=\"2\" class=\"submit\">" .  getBackNextButtons($filename) . " </td>
 		</tr>
     <tr>
-      <td class=\"pdfName\">File
+      <td class=\"pdfName\">$curFileIndex &nbsp;&nbsp;&nbsp;&nbsp;File
         <a target=\"_blank\" href=\"$pstotextFilename\">pstotext</a>&nbsp;&nbsp;&nbsp; <a target=\"_blank\" href=\"$xmlFilename\">$curFile</a>&nbsp;&nbsp;&nbsp;<a target=\"_blank\" href=\"$pdfFilename\">PDF</a></td></tr> </pre>
       </td>
       <td class=\"pdfName\">  
 				<input type=\"button\" onclick=\"window.location.replace('CICWebAnalysis.php?&filename=$filename&mode=ignore')\" value=\"Ignore File\"/> 
+				<input type=\"button\" onclick=\"window.location.replace('CICWebAnalysis.php?&filename=$filename&mode=addToDataset')\" value=\"Add To Dataset\"/> 
       </td>
     </tr>
 
