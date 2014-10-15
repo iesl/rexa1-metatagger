@@ -1,5 +1,6 @@
 ### Rexa metatagger: scientific paper header and reference extraction.
 
+
 Metatagger is a system which consumes the output of the Rexa's
 [pstotext](https://github.com/iesl/rexa1-pstotext) tool and produces an annotated version of the
 text, finishing by writing the results to an XML file. The system is a structured series of pipelined
@@ -32,8 +33,15 @@ Body fields include:
    + notext
    + figure-marker
    + table-marker
+   + citation
 
 - - - 
+
+The citation tag will be put around a citation in the text of the document's abstract and body.  It contains a refID attribute which 
+will contain a reference's refID value if the algorithm was able to link the citation to a reference.  If the algorithm was unable 
+to link a citation to a reference, then a "-1" will be placed in the citation's refID attribute. 
+
+- - -
 
 ![Alt text](./docs/img/pdf-and-meta-ref.png)
 
@@ -69,6 +77,7 @@ Some reference XML tags are given the following attributes:
    + id
 
 ### Compiling
+
 
     $prompt> ./sbt compile
 
