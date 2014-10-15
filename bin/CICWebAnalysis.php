@@ -553,6 +553,7 @@ function getBackNextButtons($filename) {
 
   $xml = simplexml_load_file($directory.'/'.$curFile);
   $body = $xml->xpath('//body');
+  $abstract = $xml->xpath('//abstract');
   $citations = $xml->xpath('//citation');
   $refXML = $xml->xpath('//biblio');
 
@@ -573,7 +574,7 @@ function getBackNextButtons($filename) {
   echo "</div>";
 
   echo "<div class=\"container\">";
-
+  writeXML2($abstract[0]->asXML());
   writeXML2($body[0]->asXML());
   writeReferences($fileData[$curFile]['References']);
 	  

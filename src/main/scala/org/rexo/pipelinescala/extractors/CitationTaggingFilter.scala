@@ -37,7 +37,7 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
 
     /* find citations in body of the xml */
     var body = (xmldata \ "content" \ "body").toString()  // this keeps the xml tags in, very important!
-    var abstractStr = (xmldata \ "content" \ "header" \ "abstract").toString()  // this keeps the xml tags in, very important!
+    var abstractStr = (xmldata \ "content" \ "headers" \ "abstract").toString()  // this keeps the xml tags in, very important!
 
     // get references
     val numReferences = refList.length
@@ -59,10 +59,6 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
 
     infoFile.println("CitationType = " + citationManager.get.citationType)
 
-    // Work on the abstract as well, since there might be citations in there.
-    //val absCitManager = CitationManager(citationManager.get.citationType.getRegex.findAllMatchIn(abstractStr), abstractStr)
-
-
     ///////////////////////////////////////////////////////////////////////////////
     // Now process the citations of the best matching Citation Type.
     // We already have the citation list, it's just a matter of walking through
@@ -70,7 +66,7 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
     ///////////////////////////////////////////////////////////////////////////////
 
     var newBodyStr = citationManager.get.processCitations(referenceManager)
-    //var newAbstractStr = headerCitationManager.processCitations(referenceManager)
+    var newAbstractStr = headerCitationManager.processCitations(referenceManager)
 
     var headers = xmldata \ "content" \ "headers"
     val grants = xmldata \"grants"
@@ -85,37 +81,37 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
     printToFile(new File("ExampleCIC.txt")) (p => { p.println(body) })
     */
     var newBody = NodeSeq.Empty
-//    var newAbstract = NodeSeq.Empty
+    var newAbstract = NodeSeq.Empty
     try {
       newBody = XML.loadString(newBodyStr)
-  //    newAbstract = XML.loadString(newAbstractStr)
+      newAbstract = XML.loadString(newAbstractStr)
 
-   //   headers = updateAbstract(newAbstract, headers)
+      headers = updateAbstract(newAbstract(0), headers.toSeq)
     } catch {
       case e: Exception => logger.info("caught exception loading new citation body text: " + e.getClass())
     }
 
-    val newXML = <document><content>{headers +: newBody +: biblioxml}</content>{grants}</document>
+    val newXML = <document><content><headers>{headers}</headers>{newBody +: biblioxml}</content>{grants}</document>
 
     infoFile.close()
 
     newXML
   }
-/*
+import scala.collection.breakOut
   // this is not the best way to do this, but will work for now.
-  def updateAbstract(newAbstract : NodeSeq, header: Seq[Node]) : Seq[Node] = {
-
-    (for (subnode <- header) yield {
-      subnode match {
+  def updateAbstract(newAbstract : Node, header: Seq[Node]) : NodeSeq = {
+    header(0).child.map(subnode =>  {
+        subnode match {
         case Elem(prefix, "abstract", metadata, scope, children@_*) =>
           newAbstract
 
         // preserve everything else
-        case other => other
-      }
-    })(0)
+        case other =>
+          logger.info(s"Subnode label is: ${subnode.label}");
+          other
+        }
+    }) (breakOut)
   }
-   */
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -174,8 +170,6 @@ object CitationManager {
     val citationManagers = cm + (AUTHOR_LAST-> alcm)
 
     // compare the results - for now just who finds the most citations. Add More Later!
-
-    // TODO 2nd test should be how many citations to references are there? What's an appropriate ratio?
 
     val evaluations: Map[CitationType, (Int, Float)] = for ((m) <- citationManagers) yield {
 
@@ -297,25 +291,6 @@ class CitationManager (citations: List[Citation], cType: CitationType, xmlText :
       }
     }
   }
-  /*
-  def splitAuthorLastCitation (cit: Citation, cType: CitationType, xmlText: String) : List[Citation] = {
-
-    val text = (xmlText.substring(cit.startPos, 100)).trim() // <-- 100 enough? Probably
-    val andRegex = """([a-zA-Z-]+) ([aA][nN][dD]|&) ([a-zA-Z-]+) [(]?([0-9]{4})[)]?""".r.findAllIn(text)
-    val etalRegex = """([a-zA-Z-]+) ([eE][tT] [aA][lL][.]?) [(]?([0-9]{4})[)]?""".r.findAllIn(text)
-    val noneRegex = """[(]?([a-zA-Z-]+) [(]?([0-9]{4})[)]?[)]?""".r.findAllIn(text)
-
-    if (andRegex.nonEmpty) {
-      val m = andRegex.matchData.next()
-      val name1 = m.group(1)
-      val name2 = m.group(3)
-      val year = m.group(4)
-
-    } else if (etalRegex.nonEmpty) {
-    } else if (noneRegex.nonEmpty) {
-    }
-  }
-  */
 
   // this will walk through all the citations it found and replace them with an XML tag.
   def processCitations(referenceManager : ReferenceManager) : String = {
