@@ -47,7 +47,7 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
     //
     ///////////////////////////////////////////////////////////////////////////////
 
-    val citationManager : Option[CitationManager] = CitationManager.getManager(numReferences, body)
+    val citationManager : Option[CitationManager] = CitationManager.getManager(refList, body)
 
     if (citationManager == None) {
       logger.info("No current citation type worked well for this file!")
@@ -55,11 +55,13 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
       return xmldata
     }
 
+    val headerCitationManager = new CitationManager(citationManager.get.citationType.getRegex.findAllMatchIn(abstractStr.replaceAll("\n", "")), citationManager.get.citationType, abstractStr)
+
     infoFile.println("CitationType = " + citationManager.get.citationType)
 
+    // Work on the abstract as well, since there might be citations in there.
     //val absCitManager = CitationManager(citationManager.get.citationType.getRegex.findAllMatchIn(abstractStr), abstractStr)
 
-    // Work on the abstract as well, since there might be citations in there.
 
     ///////////////////////////////////////////////////////////////////////////////
     // Now process the citations of the best matching Citation Type.
@@ -68,9 +70,9 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
     ///////////////////////////////////////////////////////////////////////////////
 
     var newBodyStr = citationManager.get.processCitations(referenceManager)
-    //var newAbstractStr = citationManager.get.processCitations(referenceManager)
+    //var newAbstractStr = headerCitationManager.processCitations(referenceManager)
 
-    val headers = xmldata \ "content" \ "headers"
+    var headers = xmldata \ "content" \ "headers"
     val grants = xmldata \"grants"
 
 /*
@@ -83,10 +85,12 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
     printToFile(new File("ExampleCIC.txt")) (p => { p.println(body) })
     */
     var newBody = NodeSeq.Empty
-    var newAbstract = NodeSeq.Empty
+//    var newAbstract = NodeSeq.Empty
     try {
       newBody = XML.loadString(newBodyStr)
-      //newAbstract = XML.loadString(newAbstractStr)
+  //    newAbstract = XML.loadString(newAbstractStr)
+
+   //   headers = updateAbstract(newAbstract, headers)
     } catch {
       case e: Exception => logger.info("caught exception loading new citation body text: " + e.getClass())
     }
@@ -97,26 +101,21 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
 
     newXML
   }
-/* not used yet
-   def XMLPreProcess(node : Node) : Node = {
+/*
+  // this is not the best way to do this, but will work for now.
+  def updateAbstract(newAbstract : NodeSeq, header: Seq[Node]) : Seq[Node] = {
 
-    def updateNodes(ns: Seq[Node], mayChange: Boolean): Seq[Node] = {
-      for (subnode <- ns) yield {
+    (for (subnode <- header) yield {
+      subnode match {
+        case Elem(prefix, "abstract", metadata, scope, children@_*) =>
+          newAbstract
 
-        subnode match {
-
-          case Elem(prefix, "abstract", metadata, scope, children@_*) if mayChange =>
-
-            Elem(prefix, subnode.label, metadata, scope, Text() : _*)
-
-          // preserve text
-          case other => other
-        }
+        // preserve everything else
+        case other => other
       }
-    }
-    updateNodes(node.theSeq, false)(0)
+    })(0)
   }
-  */
+   */
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -144,13 +143,35 @@ object Util {
 object CitationManager {
   val logger = LoggerFactory.getLogger(CitationManager.this.getClass)
 
-  def getManager(numReferences : Int, data : String) : Option[CitationManager] = {
+  def getByAuthorLast(references : List[Reference], data : String) : CitationManager = {
+    val authorNameString = (for (ref <- references)  yield {
+      if (ref.authorList.length > 0) {
+        ref.authorList.head.name_last.trim() // <- ADJUST THIS ??? Really only need first name
+      } else {
+        ""
+      }
+    }).distinct.filter(s => s.nonEmpty).mkString("|")
+
+
+    //val matches = ("(" + authorNameString + ")").r.findAllMatchIn(data)
+
+    val matches = ("""([(]?(e[.]?g[.]?)?("""+authorNameString+""") (((and|&) [a-zA-Z-]+)|(et al[.]?){1})?[ ]?[(]?([0-9]{4}[a-z]?)[)]?[)]?)+""").r.findAllMatchIn(data)
+
+    val man = new CitationManager(matches, AUTHOR_LAST, data)
+
+    man
+  }
+
+  def getManager(refList: List[Reference], data : String) : Option[CitationManager] = {
     // get and idea of how each regex does on the data
 
     val cleanData = data.replaceAll("\n", " ")
-    //val regexChoices = List(NUMERICAL_BRACKETS, NUMERICAL_PARENS, AUTHOR_LAST)
-    val regexChoices = CitationTypeInformation.citationTypes
-    val citationManagers: Map[CitationType, CitationManager] = (for (r <- regexChoices) yield r -> new CitationManager(r.getRegex.findAllMatchIn(cleanData), r, data)).toMap
+    // AUTHOR_LAST is handled differently now.
+    val regexChoices = List(NUMERICAL_BRACKETS, NUMERICAL_PARENS, ALPHA_NUMERIC_BRACKETS, ALPHA_NUMERIC_PARENS )
+    //val regexChoices = CitationTypeInformation.citationTypes
+    val cm: Map[CitationType, CitationManager] = (for (r <- regexChoices) yield r -> new CitationManager(r.getRegex.findAllMatchIn(cleanData), r, data)).toMap
+    val alcm = getByAuthorLast(refList, cleanData)
+    val citationManagers = cm + (AUTHOR_LAST-> alcm)
 
     // compare the results - for now just who finds the most citations. Add More Later!
 
@@ -160,10 +181,10 @@ object CitationManager {
 
       // test one: who found the most citations?
       //
-      val testDiff = m._2.citationCount() - numReferences
+      val testDiff = m._2.citationCount() - refList.size
 
       // test two: what is the ratio of citations to references?
-      val testRatio : Float = m._2.citationCount().asInstanceOf[Float] / numReferences.asInstanceOf[Float] * 100;
+      val testRatio : Float = m._2.citationCount().asInstanceOf[Float] / refList.size.asInstanceOf[Float] * 100;
       m._1 -> (testDiff, testRatio)
     }
 
@@ -183,7 +204,7 @@ object CitationManager {
 
     reduced.foreach(test => {
      // if (Math.abs(test._2._1) < minDiff && test._2._2 < minPer) {
-      if (Math.abs(test._2._1) < minDiff && (test._2._2 < 200F && test._2._2 > 50F)) {
+      if (Math.abs(test._2._1) < minDiff && (test._2._2 <= 250F && test._2._2 > 50F)) {
         minDiff = test._2._1
         minPer = test._2._2
         theWinner = Some(test)
@@ -261,17 +282,40 @@ class CitationManager (citations: List[Citation], cType: CitationType, xmlText :
     // when cleaning the string here, only trim the front and back off, don't strip the commas
     // and semi-colons (yet)
 
-    val citStrings = CitationParser(Util.stripPrefixSuffix(cit.text), cType.getSimple.r).getOrElse(List[String]())
-
-    if (citStrings.length == 1) {
-      // there is only one; deal with it slightly differently
-      List(new Citation(cit.startPos, cit.endPos, Util.stripPrefixSuffix(cit.text), -1, false))
+    if (cType == AUTHOR_LAST) {
+      List (cit) // no op for author last...
     } else {
-      for ((str, i) <- citStrings.zipWithIndex) yield {
-        new Citation(cit.startPos, cit.endPos, str, i, citStrings.length - 1 == i)
+      val citStrings = CitationParser(Util.stripPrefixSuffix(cit.text), cType.getSimple.r).getOrElse(List[String]())
+
+      if (citStrings.length == 1) {
+        // there is only one; deal with it slightly differently
+        List(new Citation(cit.startPos, cit.endPos, Util.stripPrefixSuffix(cit.text), -1, false))
+      } else {
+        for ((str, i) <- citStrings.zipWithIndex) yield {
+          new Citation(cit.startPos, cit.endPos, str, i, citStrings.length - 1 == i)
+        }
       }
     }
   }
+  /*
+  def splitAuthorLastCitation (cit: Citation, cType: CitationType, xmlText: String) : List[Citation] = {
+
+    val text = (xmlText.substring(cit.startPos, 100)).trim() // <-- 100 enough? Probably
+    val andRegex = """([a-zA-Z-]+) ([aA][nN][dD]|&) ([a-zA-Z-]+) [(]?([0-9]{4})[)]?""".r.findAllIn(text)
+    val etalRegex = """([a-zA-Z-]+) ([eE][tT] [aA][lL][.]?) [(]?([0-9]{4})[)]?""".r.findAllIn(text)
+    val noneRegex = """[(]?([a-zA-Z-]+) [(]?([0-9]{4})[)]?[)]?""".r.findAllIn(text)
+
+    if (andRegex.nonEmpty) {
+      val m = andRegex.matchData.next()
+      val name1 = m.group(1)
+      val name2 = m.group(3)
+      val year = m.group(4)
+
+    } else if (etalRegex.nonEmpty) {
+    } else if (noneRegex.nonEmpty) {
+    }
+  }
+  */
 
   // this will walk through all the citations it found and replace them with an XML tag.
   def processCitations(referenceManager : ReferenceManager) : String = {
@@ -287,7 +331,7 @@ class CitationManager (citations: List[Citation], cType: CitationType, xmlText :
       logger.info(s"citation $index) " + citation.text)
 
       tagCitList = tagCitList :+ citation
-      val reference = referenceManager.findReference(citation, this)
+      val reference = referenceManager.findReference(citation, citationType, xmlText)
       tagRefList = tagRefList :+ reference
 
 
@@ -344,7 +388,7 @@ case class Citation (start: Int, end: Int, citation : String, multi: Int = -1, m
 object CitationTypeInformation {
 
   val Author = """[-A-Za-z, .]+ [0-9]{4}"""
-  val Number = """[0-9]+"""
+  val Number = """[0-9]{1,3}"""  // limit to three for now, so we don't greedily grab YYYY as a citation... this could backfire.
   val AlphaNumeric = """[a-zA-Z]{2,}[0-9]+"""
 
 
@@ -377,7 +421,8 @@ object CitationType {
   case object NUMERICAL_PARENS extends CitationType  (("""(\((""" + Number + """[ ,;]*)+\))""").r, "Numerical Parens", Number, "(", ")")
   case object ALPHA_NUMERIC_BRACKETS extends CitationType  (("""(\[(""" + AlphaNumeric + """[ ,;]*)+\])""").r, "Alpha Numeric Brackets", AlphaNumeric, "[", "]")
   case object ALPHA_NUMERIC_PARENS extends CitationType  (("""(\((""" + AlphaNumeric + """[ ,;]*)+\))""").r, "Alpha Numeric Parens", AlphaNumeric, "(", ")")
-  case object AUTHOR_LAST extends CitationType(("""(\((""" + Author + """)([ ]*[,;]{1}""" + Author + """)*\))+""").r, "Author Last", Author, "(", ")")
+  //case object AUTHOR_LAST extends CitationType(("""([(]?(""" + Author + """)([ ](and|&) """ + Author + """)?[)]?)+""").r, "Author Last", Author, "(", ")")
+  case object AUTHOR_LAST extends CitationType(("""([\[(]?[eE]?[.]?[gG]?[.]?([a-zA-Z-]+) (((and|&) [a-zA-Z-]+)|(et al[.]?){1})?[,]?[ ]?[(]?([0-9]{4}[a-z]?)[)]?[\])]?)+""").r, "Author Last", Author, "", "")
 
   val citationTypes  : List[CitationType] = List(NUMERICAL_BRACKETS, NUMERICAL_PARENS,
     ALPHA_NUMERIC_BRACKETS, ALPHA_NUMERIC_PARENS, AUTHOR_LAST)
@@ -412,8 +457,55 @@ class ReferenceManager (references : List[Reference]) {
     }).toMap
   }
 
-  def findReference(citation : Citation, citManager : CitationManager) : Option[Reference] = {
+  def findReference(citation : Citation, cType: CitationType, xmlText : String) : Option[Reference] = {
     // take the citation and parse it into something we recognize as a key
+
+    if (cType == AUTHOR_LAST) {
+      // parse the citation to extract the proper data to use as key
+      val text = (xmlText.substring(citation.startPos, citation.endPos)).trim()
+      val andRegex = """([a-zA-Z -]+) ([aA][nN][dD]|&) ([a-zA-Z-]+)[,]? [(]?([0-9]{4}[a-z]?)[)]?""".r.findAllIn(text)
+      val etalRegex = """([a-zA-Z -]+) ([eE][tT] [aA][lL][.]?[,]?) [(]?([0-9]{4}[a-z]?)[)]?""".r.findAllIn(text)
+      val noneRegex = """[(]?([a-zA-Z -]+) [(]?([0-9]{4})[)]?[)]?""".r.findAllIn(text)
+      var key = ""
+      var name1 = ""
+      var year = ""
+
+      if (andRegex.nonEmpty) {
+        val m = andRegex.matchData.next()
+        name1 = m.group(1)
+        val name2 = m.group(3)
+        year = m.group(4)
+        key = name1 + " " + name2 + " " + year
+
+      } else if (etalRegex.nonEmpty) {
+        val m = etalRegex.matchData.next()
+        name1 = m.group(1)
+        year = m.group(3)
+        key = name1 + " et al " + year
+
+      } else if (noneRegex.nonEmpty) {
+        val m = noneRegex.matchData.next()
+        name1 = m.group(1)
+        year = m.group(2)
+        key = name1 + " " + year
+      } else {
+        // hmm... wwhat is it?
+        logger.info("unable to match AUTHOR_LAST citation type to regex! '$text'")
+      }
+
+      var ref = refMap.get(key)
+
+      // try just by author last!
+      if (ref.isEmpty) {
+        ref = refMap.get(name1 + " " + year)
+      }
+
+      ref
+
+    } else {
+      val key = Util.cleanString(citation.text)
+      refMap.get(key)
+    }
 
 /*  NEXT STEP - Make this work.
     val andMatches = """( [aA][nN][dD] |&)""".r.findAllMatchIn(citation.text)
@@ -506,24 +598,29 @@ class ReferenceManager (references : List[Reference]) {
     }
     */
 
-    val key = Util.cleanString(citation.text)
-    refMap.get(key)
   }
 
 
-
+// Keys are expected to look like this:
+// Numerical: 1 2 3  (parens and brackets are removed)
+// String:  AuthorLast1 YYYY                 // citation listed as Author1 YYYY - only one author listed
+//          AuthorLast1 AuthorLast2 YYYY     // citation listed as Author1 and Author2 YYYY - 2 authors listed
+//          AuthorLast2 et al YYYY           // citation listed as Author1 et al[.]? YYYY - more then 2 listed
+//
   private def createKey(reference : Reference) : String = {
     if (reference.refmarker.nonEmpty) {
       Util.cleanString(reference.refmarker)
     } else {
+      val numAuthors = reference.authorList.length
 
-
-      // key off of the first listed author's last name and year the document was published.
-      val first = reference.authorList.head // this could die, but every reference has at least author.
-
-      Util.cleanString(first.name_last + " " + reference.date.headOption.getOrElse(""))
-
-      // link to the reference a few times... ?
+      // assumption is that there is at least one author. This could be ultimately be incorrect.
+      if (numAuthors == 1) {
+        Util.cleanString(reference.authorList.head.name_last + " " + reference.date.headOption.getOrElse(""))
+      } else if (numAuthors == 2) {
+        Util.cleanString(reference.authorList.head.name_last + " " + reference.authorList(1).name_last + " " + reference.date.headOption.getOrElse(""))
+      } else {
+        Util.cleanString(reference.authorList.head.name_last + " et al " + reference.date.headOption.getOrElse(""))
+      }
     }
   }
 }
