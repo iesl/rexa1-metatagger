@@ -10,7 +10,7 @@ body text), or finer-grained labelling, such as identifying reference fields.
 
 The stablest and most mature pipeline components are the coarse segementation system, the
 header field labeller, and the reference field labeller. Other components which are in various
-states of development include an "acknowledgements" section labeller, and grant number/granting
+states of development include an "acknowledgements" section labeller and grant number/granting
 institution labeller.
 
 ![Alt text](./docs/img/pdf-and-meta-hdr.png)
