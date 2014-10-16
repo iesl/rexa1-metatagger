@@ -92,11 +92,10 @@ object MetaTag {
 
   def buildScalaPipeline() : ScalaPipeline = {
     logger.info ("creating new scala component pipeline. Institution Dictionary: " + dataDir.getAbsoluteFile + "/" + INST_LOOKUP_FILE)
-    new ScalaPipeline(List(new AuthorEmailTaggingFilter(Some(getClass.getResourceAsStream("data/"+INST_LOOKUP_FILE)))))
+    new ScalaPipeline(List(new AuthorEmailTaggingFilter(Some(getClass.getClassLoader.getResourceAsStream("data/"+INST_LOOKUP_FILE)))))
   }
 
   def commandLineOptions : CommandLineOptions = {
-    if (true) return null
     new CommandLineOptions {
       def addOpt(longOpt : String, description : String, hasArgument : Boolean = false, isReq : Boolean = false) {
         // note: this looks funny, because commons-cli uses a private static instance variable which is updated
@@ -124,7 +123,7 @@ object MetaTag {
     try {
       val currentDirectory = new File(new File(".").getAbsolutePath());
       logger.debug("Current Directory Is: " + currentDirectory.getAbsolutePath())
-      val dictionary = EnglishDictionary.create(getClass.getResourceAsStream("data/" + DICT_FILE))
+      val dictionary = EnglishDictionary.create(getClass.getClassLoader.getResourceAsStream("data/" + DICT_FILE))
 
       val javaPipeline = buildJavaPipeline()
       val scalaPipeline = buildScalaPipeline()
