@@ -1,6 +1,6 @@
 package org.rexo.util
 
-import java.io.{PrintStream, File}
+import java.io.{FileInputStream, PrintStream, File}
 
 
 import scala.collection.immutable.List
@@ -156,7 +156,7 @@ class AnalyzeAuthorEmailTagging() extends TestFilter {
 
   def apply(XMLFile : File, expResults : Map[String,Map[String,String]], instDict: String) : TestFilterResults = {
 
-    val authorEmailFilter = new AuthorEmailTaggingFilter(instDict)
+    val authorEmailFilter = new AuthorEmailTaggingFilter(Some(new FileInputStream(instDict)))
 
     // open the XML and read in the header information:
     val xmlFile = XML.loadFile(XMLFile)

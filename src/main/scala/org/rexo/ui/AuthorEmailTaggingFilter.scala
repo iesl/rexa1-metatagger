@@ -1,5 +1,7 @@
 package org.rexo.ui
 
+import java.io.{FileInputStream, InputStream, File}
+
 import scala.xml.{Node,NodeSeq,XML,Elem,Attribute,Text,Null}
 import org.jdom.Document
 import java.io
@@ -152,18 +154,15 @@ class Institution(instName: String, refid: Int) {
 
 object Institution {
   val logger = LoggerFactory.getLogger(Institution.getClass())
-  private val map = scala.collection.mutable.Map[String,(String,String)]()
-  private var filename : Option[String] = None
 
   def toXML(instOpt : Option[Institution]) : NodeSeq = {
     instOpt.map(_.toXML).getOrElse(NodeSeq.Empty)
   }
 
-  def readInstitutionDictionary (instFilename : String)  {
-    if (instFilename == "")  return
-    filename = Some(instFilename)
-    val instData = scala.io.Source.fromFile(instFilename).mkString
-
+  def readInstitutionDictionary(instFilename : Option[InputStream]) : Map[String,(String,String)] = {
+    if (instFilename == None) return Map()
+    val instData = scala.io.Source.fromInputStream(instFilename.get).mkString
+    var map = scala.collection.mutable.Map[String,(String,String)]()
     val lines = instData split "\n"
     for((line,index) <- lines.zipWithIndex) {
       if (!line.startsWith("#") && """^[\s]*$""".r.findFirstIn(line).isEmpty  /*&& line.nonEmpty*/) { // don't parse comment lines or blank lines
@@ -175,9 +174,10 @@ object Institution {
     }
 
     logger.info("Institution Dictionary has " + map.size + " entries.")
+    map.toMap
   }
 
-  def lookupInstitution(domain: String): Option[(String,String)] = {
+  def lookupInstitution(domain: String, map : Map[String,(String,String)]): Option[(String,String)] = {
 
     // start from end and walk back til it is found.  Then walk back one more to see if
     // it can be refined
@@ -315,7 +315,7 @@ object AuthorEmailTaggingFilter {
       case e: NoSuchElementException =>
     }
 
-    new AuthorEmailTaggingFilter(dictFile).run(infile)
+    new AuthorEmailTaggingFilter(Some(new FileInputStream(new File(dictFile)))).run(infile)
   }
 
 
@@ -429,8 +429,9 @@ object AuthorEmailTaggingFilter {
   }
 }
 
-class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent {
+class AuthorEmailTaggingFilter(instDict: Option[InputStream]) extends ScalaPipelineComponent {
   val logger = LoggerFactory.getLogger(AuthorEmailTaggingFilter.getClass())
+  val institutionDict = Institution.readInstitutionDictionary(instDict)
 
   override def apply(xmldata: Node): Node = {
     AuthorEmailTaggingFilter.metrics.logStart("AuthorEmailTaggingFilter")
@@ -440,10 +441,6 @@ class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent
 
     newXML
   }
-
-	/* TODO - move the inst dictionary reference elsewhere - so that we only load it once
-	   per application, versus per file!!
-	 */
 
   def run(infile: String) {
 
@@ -464,9 +461,6 @@ class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent
     var instList: List[Institution] = List()
     AuthorEmailTaggingFilter.metrics.reset()
     AuthorEmailTaggingFilter.metrics.logStart("Parsing Header")
-
-		if (instDict != "")
-			Institution.readInstitutionDictionary(instDict)
 
     /* maybe pay attention to notes in the future. Currently they are not useful */
     authorList = getAuthors(headerXML)
@@ -493,7 +487,7 @@ class AuthorEmailTaggingFilter (instDict: String) extends ScalaPipelineComponent
 
     val thelist : List[(Email, Option[Institution])] =
       (for (email <- emailList) yield {
-				val dictInst = Institution.lookupInstitution(email.getDomain)
+				val dictInst = Institution.lookupInstitution(email.getDomain, institutionDict)
         if (dictInst.nonEmpty) {
 					// now we see if we can match it to an institution listed in the document
           val seDictInst = new StringExtras(dictInst.get._1)
