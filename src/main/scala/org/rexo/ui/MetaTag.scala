@@ -1,6 +1,7 @@
 package org.rexo.ui
 
 import java.io._
+import java.net.URL
 import java.util.{Map,HashMap}
 import java.util.zip.GZIPInputStream
 
@@ -59,7 +60,7 @@ object MetaTag {
 
     logger.info( "loading biblio-segmentation crf" )
 
-    val ois = new ObjectInputStream( new GZIPInputStream(new BufferedInputStream(getClass.getResourceAsStream("data/" + BIBLIO_SEG_CRF))))
+    val ois = new ObjectInputStream( new GZIPInputStream(new BufferedInputStream(getClass.getClassLoader.getResourceAsStream("data/" + BIBLIO_SEG_CRF))))
     val crf = ois.readObject().asInstanceOf[CRF4]
     ois.close()
     val crfBibSegmentor = new CRFBibliographySegmentor( crf )
@@ -197,7 +198,7 @@ object MetaTag {
     }
   }
 
-  private def writeOutput(outputFile: File, doc: Document) {
+  def writeOutput(outputFile: File, doc: Document) {
     var xmlOutputStream: FileOutputStream = null
 
     logger.info("writing xml file ({}) now", outputFile.toString)
@@ -256,12 +257,21 @@ object MetaTag {
 }
 
 class MetaTag extends Serializable {
-  lazy val dictionary = EnglishDictionary.create(getClass.getResourceAsStream("data/" + DICT_FILE))
+  var dictionary : EnglishDictionary = null
 
-  lazy val javaPipeline = buildJavaPipeline()
-  lazy val scalaPipeline = buildScalaPipeline()
+  @transient lazy val javaPipeline = buildJavaPipeline()
+  @transient lazy val scalaPipeline = buildScalaPipeline()
 
   def processFile(xmlDoc : Document) : Document = {
+    if (dictionary == null) {
+      val dictUrl: URL = getClass.getClassLoader.getResource("data/" + DICT_FILE)
+      logger.info("dictionaryUrl is: " + Option(dictUrl).getOrElse("null dictionary url!").toString)
+      if (dictUrl == null) {
+        return new Document()
+      }
+      val dictStream = dictUrl.openConnection().getInputStream
+      dictionary = EnglishDictionary.create(dictStream)
+    }
     val tokenization = NewHtmlTokenization.createNewHtmlTokenization(xmlDoc, dictionary)
     val rdoc = new RxDocument()
     rdoc.setTokenization( tokenization )
@@ -279,4 +289,11 @@ class MetaTag extends Serializable {
   }
 }
 
-
+object MetaTag2 {
+  def main(args: Array[String]) {
+    val metaTag = new MetaTag()
+    val xmlDoc = readInputDocument(new FileInputStream(args(0)))
+    val processedDoc = metaTag.processFile(xmlDoc)
+    writeOutput(new File(args(1)), processedDoc)
+  }
+}

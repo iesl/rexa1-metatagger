@@ -37,7 +37,7 @@ public class EnglishDictionary {
 	}
 
 	public static EnglishDictionary createDefault() {
-		return create( _defaultWords );
+		return create( EnglishDictionary.class.getClassLoader().getResourceAsStream("data/words.txt") );
 	}
 
 	public boolean contains(String word) {
