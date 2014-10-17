@@ -1,7 +1,64 @@
 <?php
-/* written by bseeger on Oct 2nd 2014
- * This script will take an output file from Analyzer - Analyze Citation In Context Filter.
- * It will parse the file, display the results. 
+/* 
+  written by bseeger on Oct 2nd 2014
+
+  This script will take an output file from Analyzer - Analyze Citation In Context Filter.
+  It will parse the file, display the results. 
+
+  To run this script you will need to enable apache with php on your computer. 
+  In your public directory (where ever you pointed apache to work out of) 
+  you should create a link to your data directory (where xml files are) and make a 
+  link to the CICWebAnalysis script, or put a copy of it there. 
+
+  Then, type in your browser: 
+    
+    localhost/CICWebAnalysis.php?filename=CitationAnalysis.txt&directory=dataset
+   
+  (replace localhost with your proper path)
+
+  At the top of the page you will see the Overall Analysis results. These are the cumulative
+  results for all the files listed in the CitationAnalysis.txt file you pointed it to.  It will not 
+  include information from the files you chose to ignore (see Ignore Files below). 
+
+  You can click "Back One File" and "Next File" to navigate through the dataset.  
+
+  After the Overall Analysis, there is a Summary From File section. This is the specific
+  summary about the file you're currently viewing.  
+
+  Below that you will find links to the various versions of this file -- the pstotext file, 
+  the meta tagger xml file and the original PDF file.  Clicking on the link will open them in a new tab,
+  so you can easily see what the file looks like. 
+
+
+  The Abstract and Body are displayed. The are both truncated, only staring with the special symbols generally associated
+  with citations. 
+  One can easily look at the start of the line and see which are citations and which ones may not be.  And find citations that might 
+  have been missed by the filter. There is a css style for each xml tag (paragraph, section marker, citation, and figure). 
+  You can change the colors if you want the citations to stick out more. 
+
+  --- Reset the page ---
+  To reset results - ie, clear SESSION and read in the CitationAnalysis.txt file again:
+
+  Clears it:    
+    localhost/CICWebAnalysis.php?CLEANUP
+
+  Reset it: 
+    localhost/CICWebAnalysis.php?filename=CitationAnalysis.txt&directory=dataset
+
+  --- Ignore Files --- 
+  If you'd like to eliminate a particular file from the results, you can click the "Ignore File" button.  
+  The file name will be appended onto a file called AnalysisIgnore.txt.  It will be removed from the 
+  file data that's stored in SESSION. 
+
+  --- Remember Files --- 
+  If you'd like to remember a file to look at closer, you can click on the "Add To Dataset" button. The filename 
+  will then be appended onto the file AnalyzeMore.txt. You can then grab the filename(s) from that file and look 
+  at them closer, e.g. if you want to run them through Meta Tagger again to see why their results are the way they are. 
+
+  --- Dependencies ---
+  This uses the analysis.css file (written with sass syntax: analysis.scss). To quickly edit it, edit the analysis.scss
+  file and then run sass > analysis.css
+
  */
 
 session_start();
@@ -231,7 +288,7 @@ function flattenXMLString ($xml) {
 }
 
 function writeReferences($references) { 
-  echo "<div class=\"references\">REFERENCES<br>";
+  echo "<div class=\"references\"><h2>References</h2><br>";
   $index = 1;
   foreach ($references as $ref) {
     $id = $ref['Id'];
@@ -248,58 +305,8 @@ function writeReferences($references) {
   echo "</div>";
 }
 
-/*
-function writeReferences($xml) {
-  $p = xml_parser_create();
-  xml_parse_into_struct($p, $xml, $elementArray, $index);
-  
-  echo "<div class=\"references\">REFERENCES<br>";
-  //print_r($elementArray);
-  foreach ($elementArray as $element) {
-    //echo "<pre>"; 
-    //print_r($element) ;
-    //echo "</pre>";
-    //echo "Element: " + $element['tag'] + "  '" + @$element['value']  + "'";
-    switch ($element['tag']) {
-      case "REFERENCE":
-        switch ($element['type']) { 
-          case 'open':
-            echo "----------------------------------<br>";
-            echo "&nbsp;&nbsp;RefMarker: " + $element['attributes']['REFID'] + "<br>";
-            break;
-          case 'close':
-            echo "<br>";
-            break;
-          case 'complete': // shouldn't hit this!
-            echo "---COMPLETE --- ";
-            break;
-          default:// ignore
-        }
-        break;
 
-      case "AUTHOR-FIRST":
-      case "AUTHOR-MIDDLE":
-        echo trim($element['value']) + "&nsbp; FIRST MIDDLE ";
-        break;
-      case "AUTHOR-LAST":
-        echo trim($element['value']) + "<br>";
-        break;
-      case "TITLE":
-      case "JOURNAL":
-        echo "  " + $element['value'] + "<br>";
-        break;
-      default: 
-        echo "Default: " + $element['tag'] + "<br>";
-        break;
-    }
-  }
-  echo "<pre>";
-  print_r($elementArray);
-  echo "</pre></div>";
-}*/
-
-
-function writeXML2($xml) {
+function writeXML($xml, $textName) {
   
   $p = xml_parser_create();
   //echo "XML:" .$xml->asXML();
@@ -315,7 +322,7 @@ function writeXML2($xml) {
   $regexStart = "[([{]";
   $regexStop = "[)\]}]";
 
-  echo "<div class=\"docText\">";
+  echo "<div class=\"docText\"> <h2>$textName</h2>";
   foreach ($elementArray as $element) {
 
     $eStr = @$element['value'];
@@ -496,7 +503,7 @@ function getBackNextButtons($filename) {
 	}
 
 
-	echo "<tr> <td class=\"pdfName\" colspan=\"2\">Website Summary</td></tr>
+	echo "<tr> <td class=\"pdfName\" colspan=\"2\">&nbsp;</td></tr>
           <tr> 
 		    <td class=\"pdfText\" colspan=\"2\">
           <div class=\"summary\">
@@ -531,10 +538,11 @@ function getBackNextButtons($filename) {
   echo "
     
     <tr>
-      <td class=\"pdfName\" colspan=\"2\">Summary From File</td>
+      <td class=\"pdfName\" colspan=\"2\">&nbsp;</td>
     <tr>
     <tr>
       <td class=\"pdfText\" colspan=\"2\">
+      <h2>Summary For File </h2>
       <pre>$curFile";
 
       echo print_r($fileData[$curFile]['Analysis'], true);
@@ -547,7 +555,7 @@ function getBackNextButtons($filename) {
       <td colspan=\"2\" class=\"submit\">" .  getBackNextButtons($filename) . " </td>
 		</tr>
     <tr>
-      <td class=\"pdfName\">$curFileIndex &nbsp;&nbsp;&nbsp;&nbsp;File
+      <td class=\"pdfName\" style=\"font-size: 125%;\">$curFileIndex &nbsp;&nbsp;&nbsp;&nbsp;
         <a target=\"_blank\" href=\"$pstotextFilename\">pstotext</a>&nbsp;&nbsp;&nbsp; <a target=\"_blank\" href=\"$xmlFilename\">$curFile</a>&nbsp;&nbsp;&nbsp;<a target=\"_blank\" href=\"$pdfFilename\">PDF</a></td></tr> </pre>
       </td>
       <td class=\"pdfName\">  
@@ -568,7 +576,7 @@ function getBackNextButtons($filename) {
   $refXML = $xml->xpath('//biblio');
 
 
-  echo "<div class=\"citations\">";
+  echo "<div class=\"citations\"> <H2>Citations Found</H2>";
   $index = 1;
   foreach ($citations as $cit) {
     echo "$index)  \t" . $cit  . " \t\t\t";
@@ -584,8 +592,8 @@ function getBackNextButtons($filename) {
   echo "</div>";
 
   echo "<div class=\"container\">";
-  writeXML2($abstract[0]->asXML());
-  writeXML2($body[0]->asXML());
+  writeXML($abstract[0]->asXML(), "Abstract");
+  writeXML($body[0]->asXML(), "Body");
   writeReferences($fileData[$curFile]['References']);
 	  
   echo "</div>";	
