@@ -12,8 +12,6 @@ import org.xml.sax.InputSource
 import org.slf4j.{Logger,LoggerFactory}
 
 trait ScalaPipelineComponent {
-
-
   def apply(xml: Node) : Node
 }
 
@@ -42,6 +40,6 @@ class ScalaPipeline (pipelineList : List[ScalaPipelineComponent]) {
     // todo - this might crash if xmldata is empty
     XML.write(writer, xmlfinal, "UTF-8", true, null)
 
-	builder.build(new InputSource(new StringReader(writer.toString)))
+    builder.build(new InputSource(new StringReader(writer.toString)))
   }
 }

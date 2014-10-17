@@ -1,4 +1,6 @@
-### Rexa metatagger: scientific paper header and reference extraction.
+Rexa metatagger: scientific paper header and reference extraction.
+===================
+-----
 
 Metatagger is a system which consumes the output of the Rexa's
 [pstotext](https://github.com/iesl/rexa1-pstotext) tool and produces an annotated version of the
@@ -8,9 +10,8 @@ body text), or finer-grained labelling, such as identifying reference fields.
 
 The stablest and most mature pipeline components are the coarse segementation system, the
 header field labeller, and the reference field labeller. Other components which are in various
-states of development include an "acknowledgements" section labeller, grant number/granting
-institution labeller, and citations-in-context identification (i.e., identifying the points in the
-document where the reference markers appear).
+states of development include an "acknowledgements" section labeller and grant number/granting
+institution labeller.
 
 ![Alt text](./docs/img/pdf-and-meta-hdr.png)
 
@@ -22,6 +23,7 @@ Header fields include:
    + address
    + email
    + abstract
+   + citation (this tag may appear in the asbtract)
 
 - - - 
 
@@ -32,12 +34,20 @@ Body fields include:
    + notext
    + figure-marker
    + table-marker
+   + citation
 
 - - - 
 
+Thoughout a document's body and abstract many other documents/sources are cited. These citations, e.g. [ 1 ], (1), or (AuthorLast 1999), 
+are now marked with an XML tag as well as linked to a reference in the biblio section.  When linked, the "refID" attribute of the citation 
+tag will contain the value of a reference's "refID" from the biblio section of the document.  If the algorithm was unable to find a 
+suiteable reference for a particular citation, the citation attribute "refID" will contain a "-1", signifying that no reference matched the citation. 
+
+- - -
+
 ![Alt text](./docs/img/pdf-and-meta-ref.png)
 
-Reference fields include:
+References are located in the biblio section of the document. Reference fields include:
 
    + address
    + author, author-first, author-last, authors
@@ -62,17 +72,19 @@ element was found within the original PDF file:
    + pageNum - page number element was found on
    + llx, lly, urx, ury - coordinates of the rectangle it was found in
 
-- - -
 
-Some reference XML tags are given the following attributes: 
+Reference XML tags are also given the following attribute: 
 
-   + id
+   + refID - a unique id with which to reference the reference by
 
 ### Compiling
+
+
 
     $prompt> ./sbt compile
 
 ### Running
+
 
 Basic usage: cat input-file-list | bin/runcrf
 

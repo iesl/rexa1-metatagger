@@ -2,4 +2,4 @@
 
 #
 # Analyzer will analzye how well the filters found data in the xml file. 
-exec ./sbt  "runMain org.rexo.util.Analyzer $*"
+exec ./sbt  "runMain org.rexo.util.AnalyzeFilter $*"

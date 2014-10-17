@@ -2,9 +2,10 @@ package org.rexo.util
 
 import java.io.{File, PrintStream}
 
-import org.rexo.ui.{Institution, Email, Author}
+import org.rexo.pipelinescala.extractors.Author
 
 import scala.collection.immutable.List
+
 
 abstract class TestFilterResults(filename : String, filtername: String) {
   val name = filtername
@@ -13,6 +14,9 @@ abstract class TestFilterResults(filename : String, filtername: String) {
   // filter found a match, but it wasn't the expected results
   var falseMatches: Int = 0
   //val time_ms: Double = 0 // unused
+  var errorMsgs : List[String] = List[String]()
+
+
 
   def upSampleCount() = {
     totalSamples += 1
@@ -28,19 +32,32 @@ abstract class TestFilterResults(filename : String, filtername: String) {
 
   def prettyPrint(stream: PrintStream)
 
+  def registerErrorMsg(msg: String) {
+    errorMsgs ::= msg
+  }
+
+
+  def nonEmpty : Boolean
+
   def addToTally(tally: Map[String,Float]) : Map[String, Float] = {
-    Map[String, Float] ("totalSamples" -> (tally("totalSamples") + totalSamples),
-     "totalSuccesses"-> (tally("totalSuccesses")+ fullSuccesses),
-     "totalFalseMatches" -> (tally("totalFalseMatches")+ falseMatches)
+    Map[String, Float] ("totalSamples" -> (tally.getOrElse("totalSamples", 0F) + totalSamples),
+     "totalSuccesses"-> (tally.getOrElse("totalSuccesses", 0F)+ fullSuccesses),
+     "totalFalseMatches" -> (tally.getOrElse("totalFalseMatches", 0F)+ falseMatches)
     )
   }
 }
 
 
 abstract class TestFilter() {
-  def apply(XMLfile : File, expectedResults : Map[String,Map[String,String]], instDict: String) : TestFilterResults
+  def apply(XMLfile : File, directory: String, expectedResults : Map[String,Map[String,String]], instDict: String) : TestFilterResults
 
   def getName : String
+
+  def testFile(csvRecord: Map[String,Map[String,String]]) : Boolean
+
+  def printSummary(results: List[TestFilterResults], stream : PrintStream)
+
+  def parseCSVData(csvFilename : String) : Map[String, Map[String, Map[String, String]]]
 
 }
 

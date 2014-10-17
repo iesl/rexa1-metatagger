@@ -1,14 +1,13 @@
-package org.rexo.ui
+package org.rexo.pipelinescala.extractors
 
 import java.io.{FileInputStream, InputStream, File}
 
-import scala.xml.{Node,NodeSeq,XML,Elem,Attribute,Text,Null}
-import org.jdom.Document
-import java.io
-import scala.collection.mutable.Stack
-import org.rexo.pipeline.components.RxDocument
-import org.slf4j.{Logger, LoggerFactory}
-import org.rexo.util.{ParseArgs,Metrics}
+import org.rexo.pipelinescala.extractors.AuthorType.AuthorType
+import org.rexo.ui.{ScalaPipelineComponent, StringExtras}
+import org.rexo.util.{Metrics, ParseArgs}
+import org.slf4j.LoggerFactory
+
+import scala.xml.{Attribute, Elem, Node, NodeSeq, Null, Text, XML}
 
 class Email(email: String, refid: Int, metatag: String) {
   val id = refid
@@ -56,6 +55,31 @@ object Email {
 
   def isValid(email: String): Boolean = email_regex.findFirstIn(email) != None
 
+  def getEmails(xml : NodeSeq) : List[Email] = {
+
+    val emailXML = xml \ "email"
+    var emailList = List[Email]()
+    for (emailTag @ <email>{_*}</email> <- emailXML) yield {
+      emailTag match {
+        case Elem(prefix, "email", metadata, scope, children @ _*) =>
+          // parse metadata
+          metadata.map(m => {
+            if(m.key.contains("email")) {
+
+            }
+          })
+          var index = 0;
+          val id = metadata.get("id").get.text.toInt
+          var emailaddr = metadata.get(s"email$index")
+          while (emailaddr != None) {
+            emailList ::= new Email(emailaddr.get.text, id, s"email$index")
+            index += 1
+            emailaddr = metadata.get(s"email$index")
+          }
+      }
+    }
+    emailList
+  }
   def extractEmails(emailStr: String, refid: Int): Either[String, List[Email]] = {
     val id = refid
     val parts = emailStr split "@"
@@ -65,7 +89,7 @@ object Email {
       // users, if there is more then one user in an email address.
       // Further down we will verify that the username is of the appropriate content (see isValid())
       val caseOne = """^[f{]([^,]+)(,[^,]+)+?[g}]$""".r         /* ffred,bob,jessg */
-      val caseTwo = """^[^f]([^,]+)(,[^,])+[^g]$""".r     /* fred,bob,jess */
+      val caseTwo = """^[^f]([^,]+)(,[^,]+)+[^g]$""".r     /* fred,bob,jess */
       val caseThree = """^([^,][^|]+)(|[^,][^|]+)+$""".r  /* fred|bob|jess */
       //val caseFour = ("""^(""" + username_regex + """)$""").r /* jess */
 
@@ -159,9 +183,9 @@ object Institution {
     instOpt.map(_.toXML).getOrElse(NodeSeq.Empty)
   }
 
-  def readInstitutionDictionary(instFilename : Option[InputStream]) : Map[String,(String,String)] = {
-    if (instFilename == None) return Map()
-    val instData = scala.io.Source.fromInputStream(instFilename.get).mkString
+  def readInstitutionDictionary(institutionsStream : Option[InputStream]) : Map[String,(String,String)] = {
+    if (institutionsStream == None) return Map()
+    val instData = scala.io.Source.fromInputStream(institutionsStream.get).mkString
     var map = scala.collection.mutable.Map[String,(String,String)]()
     val lines = instData split "\n"
     for((line,index) <- lines.zipWithIndex) {
@@ -176,6 +200,16 @@ object Institution {
     logger.info("Institution Dictionary has " + map.size + " entries.")
     map.toMap
   }
+
+    def getInstitutions(xml : NodeSeq) : List[Institution] = {
+      val instXML = xml \ "institution"
+      (for (instTag @ <institution>{_*}</institution> <- instXML) yield {
+        instTag.label match {
+          case institution =>
+            new Institution(instTag.text, (instTag \ "@id").text.toInt)
+        }
+      }).toList
+    }
 
   def lookupInstitution(domain: String, map : Map[String,(String,String)]): Option[(String,String)] = {
 
@@ -223,13 +257,18 @@ object cleaner
   // TODO - this sort of thing should probably be done earlier in this process (ie, before this filter)
   // consider foreign characters in this string (umlaut, etc)
   def cleanName(name: String) : String = {
-    val nameRe = """([a-zA-Z-\.]+)""".r
-    nameRe.findFirstIn(name).getOrElse("")
+    val nameRe = """([a-zA-Z-\. ]+)""".r
+    nameRe.findFirstIn(name).getOrElse("").trim()
   }
 }
 
+object AuthorType extends Enumeration {
+    type AuthorType = Value
+    val Reference, Header = Value
+  }
+
 class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
-  val id = (xmlseq \ "@id").text.toInt
+  val id = if (xmlseq \ "@id" != NodeSeq.Empty) (xmlseq \ "@id").text.toInt else -1
   val name_first = cleaner.cleanName((xmlseq \ "author-first").text)
   val name_middle = cleaner.cleanName((xmlseq \ "author-middle").text)
   val name_last = cleaner.cleanName((xmlseq \ "author-last").text)
@@ -248,6 +287,7 @@ class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
 
   def this (xmlseq: NodeSeq) { this(xmlseq, None) }
 
+
   override def toString : String =  {
     val attrs = (for ((attr, value) <- attributes ) yield { s"$attr: $value"}).mkString("\n")
 
@@ -257,11 +297,24 @@ class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
        |PDF Attributes:  \n$attrs
        """.stripMargin
   }
-  def getFullName : String = {
-    var name = name_first + " " + name_middle
-    if (name_middle != "") name += " "
-    name += name_last
-    name
+
+
+
+  // style can be
+  // 'Header'     First Middle Last
+  // 'Reference'  Last F. M.
+  def getFullName (style : AuthorType = AuthorType.Header) : String = {
+
+    if (style == AuthorType.Reference) {
+      val first : Option[Char] = name_first.headOption
+      val middle : Option[Char] = name_middle.headOption
+      s"$name_last " + (if (first.nonEmpty) first.get + ". " else "")  + (if (middle.nonEmpty) middle.get + "." else "")
+    } else {
+      var name = name_first + " " + name_middle
+      if (name_middle != "") name += " "
+      name += name_last
+      name
+    }
   }
 
   def getNote : Option[Note] = { note }
@@ -269,7 +322,7 @@ class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
   def addEmail(email : Email) { this.email = new Some(email)}
   def addInstitution(inst : Institution) { this.institution = new Some(inst)}
 
-  def toXML() : Elem = {
+  def toXML : Elem = {
     val instID = institution.map(f => f.id).getOrElse(-1)
     val emailID = email.map(f => f.id).getOrElse(-1)
     val instxml =
@@ -292,6 +345,23 @@ class Author (xmlseq: NodeSeq, emailOption : Option[Email]) {
       </authorsummary>
 
     node
+
+  }
+}
+
+object Author {
+
+  // this getAuthors will work on the headers xml. Not used (yet) and not quite right yet
+  def getAuthors(xml : NodeSeq) : List[Author] = {
+    // should add something to weed out potential duplicates, but I think it's a rare file
+    // that has them.
+    val authorXML = xml \ "authors" \ "author"
+    (for (authorTag @ <author>{_*}</author> <- authorXML) yield {
+      authorTag.label match {
+        case author =>
+          new Author(authorTag)
+      }
+    }).toList
 
   }
 }
@@ -463,9 +533,9 @@ class AuthorEmailTaggingFilter(instDict: Option[InputStream]) extends ScalaPipel
     AuthorEmailTaggingFilter.metrics.logStart("Parsing Header")
 
     /* maybe pay attention to notes in the future. Currently they are not useful */
-    authorList = getAuthors(headerXML)
-    emailList = getEmails(headerXML)
-    instList = getInstitutions(headerXML)
+    authorList = Author.getAuthors(headerXML)
+    emailList = Email.getEmails(headerXML)
+    instList = Institution.getInstitutions(headerXML)
 
     AuthorEmailTaggingFilter.metrics.logStop("Parsing Header")
 
@@ -647,52 +717,9 @@ class AuthorEmailTaggingFilter(instDict: Option[InputStream]) extends ScalaPipel
       */
   }
 
-  // this getAuthors will work on the headers xml. Not used (yet) and not quite right yet
-  def getAuthors(xml : NodeSeq) : List[Author] = {
-    val authorXML = xml \ "authors" \ "author"
-    (for (authorTag @ <author>{_*}</author> <- authorXML) yield {
-      authorTag.label match {
-        case author =>
-          new Author(authorTag)
-      }
-    }).toList
-  }
 
-  def getEmails(xml : NodeSeq) : List[Email] = {
 
-    val emailXML = xml \ "email"
-    var emailList = List[Email]()
-    for (emailTag @ <email>{_*}</email> <- emailXML) yield {
-      emailTag match {
-        case Elem(prefix, "email", metadata, scope, children @ _*) =>
-          // parse metadata
-          metadata.map(m => {
-            if(m.key.contains("email")) {
 
-            }
-          })
-          var index = 0;
-          val id = metadata.get("id").get.text.toInt
-          var emailaddr = metadata.get(s"email$index")
-          while (emailaddr != None) {
-            emailList ::= new Email(emailaddr.get.text, id, s"email$index")
-            index += 1
-            emailaddr = metadata.get(s"email$index")
-          }
-      }
-    }
-    emailList
-  }
-
-  def getInstitutions(xml : NodeSeq) : List[Institution] = {
-    val instXML = xml \ "institution"
-    (for (instTag @ <institution>{_*}</institution> <- instXML) yield {
-      instTag.label match {
-        case institution =>
-          new Institution(instTag.text, (instTag \ "@id").text.toInt)
-      }
-    }).toList
-  }
 }
 
 

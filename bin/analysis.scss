@@ -1,0 +1,141 @@
+
+$border-color: #452D07;
+$text-bgcolor: #FFD8BF;
+$citation-bgcolor: #FEC7A5;
+//#FFCCAC;
+//#FFC98A;
+$paragraph-bgcolor: #FFCEB0;
+//#FFB98E;
+
+$section-bgcolor: #FFAE7C;
+$notext-bgcolor: #FFD8BF;
+
+
+
+.message{
+	background-color: #B96666;
+	width: 70%;
+}
+
+.container {
+  background-color: $notext-bgcolor;
+  border: 1px solid red;
+  padding: 2px;
+  overflow: auto;
+}
+// fits in body
+.docText {
+  float: left;
+  width: 50%;
+  margin: 0;
+  border: 1px solid $border-color;
+}
+// fits in body
+.references {
+  background-color: $citation-bgcolor;
+  //width: 49%;
+  //float: right;
+  border: 1px solid $border-color;
+  //left:  50%;
+  //right: 0; 
+  margin-left:50%;
+  padding: 5px;
+  //width: 50%;
+}
+
+.reference {
+}
+
+.citation{
+  //background-color: $citation-bgcolor;
+  background-color: $citation-bgcolor;
+  //border: 1px solid $border-color;
+}
+
+.citations{
+  background-color: $citation-bgcolor;
+  border: 1px solid $border-color;
+}
+
+.section-marker {
+  background-color: $section-bgcolor;
+}
+
+.paragraph-marker{
+  background-color: $paragraph-bgcolor;
+} 
+
+.figure-marker {
+  background-color: $notext-bgcolor;
+}
+
+.notext {
+  background-color: $notext-bgcolor;
+}
+
+html, body,table{
+    height:100%;
+    width:100%;
+    padding:0;
+    margin:0;
+}
+
+td {
+	margin: 0;
+  width: 90%;
+  background-color: $notext-bgcolor;
+ /* height: 1px; hackish */
+}
+
+td.pdfName {
+	border-top: 4px solid $border-color;
+	border-left: 4px solid $border-color;
+	border-right: 4px solid $border-color;
+	border-bottom: 1px solid $border-color;
+	background-color: #EAA12F;
+}
+
+td.pdfText {
+	width: 80%; 
+	background-color: $text-bgcolor;
+	border-left: 4px solid $border-color;
+	border-bottom: 4px solid $border-color;
+	border-right: 1px solid $border-color;
+
+}
+
+td.pdfAdmin {
+	width: 20%;
+	background-color: $text-bgcolor;
+	border-right: 4px solid $border-color;
+	border-left: 1px solid $border-color;
+	border-bottom: 4px solid $border-color;
+}
+
+td.submit {
+	background-color: $text-bgcolor;
+	border: 4px solid $border-color;
+	text-align: center;
+}
+
+.summary {
+  font-size: 14px;
+  background-color: #C2F3FF;
+  border: 2px solid #7A593A;
+  width: 50%;
+  margin: auto;
+  /*position: absolute;  */
+  /*left: 40%; */
+  /*margin: 0 0 0 -150px;*/
+}
+
+
+pre {
+	border: none;
+	margin: 0;
+}
+
+tr { 
+	margin: 0;
+}
+

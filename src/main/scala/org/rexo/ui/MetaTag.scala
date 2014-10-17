@@ -7,6 +7,8 @@ import java.util.zip.GZIPInputStream
 
 import org.apache.commons.cli.OptionBuilder
 import org.rexo.ui.MetaTag._
+import org.rexo.pipelinescala.extractors.{CitationTaggingFilter, AuthorEmailTaggingFilter}
+import org.rexo.referencetagging.{CitationContextExtractor, CitationContextFilter}
 import org.slf4j.{Logger, LoggerFactory}
 
 import org.rexo.extraction.NewHtmlTokenization
@@ -92,7 +94,7 @@ object MetaTag {
 
   def buildScalaPipeline() : ScalaPipeline = {
     logger.info ("creating new scala component pipeline. Institution Dictionary: " + dataDir.getAbsoluteFile + "/" + INST_LOOKUP_FILE)
-    new ScalaPipeline(List(new AuthorEmailTaggingFilter(Some(classpathInputStream("data/"+INST_LOOKUP_FILE)))))
+    new ScalaPipeline(List(new AuthorEmailTaggingFilter(Some(classpathInputStream("data/"+INST_LOOKUP_FILE))), new CitationTaggingFilter()))
   }
 
   def commandLineOptions : CommandLineOptions = {
@@ -144,7 +146,7 @@ object MetaTag {
         val infile = new File( files(0).trim() )
         val outfile = new File( files(1).trim() )
 
-        logger.info( infile.getPath() + " -> " + outfile.getPath()  )
+        logger.info( infile.getPath + " -> " + outfile.getPath  )
         if ( infile.exists() ) {
           try {
             val document = readInputDocument(new FileInputStream(infile))
@@ -153,18 +155,18 @@ object MetaTag {
           }
           catch {
             case e: Exception => {
-              logger.error(e.getClass().getName() + ": " + e.getMessage())
+              logger.error(e.getClass.getName + ": " + e.getMessage)
             }
           }
         }
         else {
-          logger.error( "File not found: " + infile.getPath() )
+          logger.error( "File not found: " + infile.getPath )
         }
       }
     }
     catch {
       case e:Exception => {
-        logger.error( e.getClass().getName() + ": " + e.getMessage() )
+        logger.error( e.getClass.getName + ": " + e.getMessage )
       }
     }
   }
@@ -181,7 +183,7 @@ object MetaTag {
       saxBuilder.build( is )
     }
     catch {
-      case e:Exception => throw new RuntimeException(e.getClass().getName() + ": " + e.getMessage())
+      case e:Exception => throw new RuntimeException(e.getClass.getName + ": " + e.getMessage)
     }
     finally {
       is.close()
@@ -194,12 +196,12 @@ object MetaTag {
     logger.info("writing xml file ({}) now", outputFile.toString)
     try {
       xmlOutputStream = new FileOutputStream(outputFile)
-      val output = new XMLOutputter(Format.getPrettyFormat()) // XMLOutputter
+      val output = new XMLOutputter(Format.getPrettyFormat) // XMLOutputter
       output.output(doc, xmlOutputStream)
       logger.info("just wrote file ({})!", outputFile.toString)
     } catch {
       case e: java.io.IOException => {
-        logger.error( "xml writer " + e.getClass().getName() + ": " + e.getMessage())
+        logger.error( "xml writer " + e.getClass.getName + ": " + e.getMessage)
       }
     } finally {
       if (xmlOutputStream != null)
@@ -208,7 +210,7 @@ object MetaTag {
   }
 
   private def writeOutput(outputFile: File, rdoc: RxDocument) {
-    val tokenization = rdoc.getTokenization()
+    val tokenization = rdoc.getTokenization
     val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
 
 
@@ -216,7 +218,6 @@ object MetaTag {
       logger.error( "No xml content available for document " + rdoc )
       return
     }
-
     var xmlOutputStream : FileOutputStream = null;
 
     try {

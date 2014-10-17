@@ -17,17 +17,16 @@ function parseSummaryLine($line) {
 	$machineOutput = explode(";", $line);
 	$curPDF = trim($machineOutput[0], "## ");
 
-  $data = array("TotalSamples" => $machineOutput[2],  /* throw away 1, name of filter */
-                "NumFoundAuthors" => $machineOutput[3],
-                "NumExpectedAuthors" => $machineOutput[4],
-                "NumFoundEmails" => $machineOutput[5],
-                "NumExpectedEmails" => $machineOutput[6],
-                "NumFoundInst" => $machineOutput[7],
-                "NumExpectedInst" => $machineOutput[8],
-								"FullSuccess" => $machineOutput[9],
-							 	"PartialEmail" => $machineOutput[10],
-							 	"PartialInst" => $machineOutput[11],
-								"FalseMatches" => $machineOutput[12],
+  $data = array("NumFoundAuthors" => $machineOutput[2],  /* throw away 1, name of filter */
+                "NumExpectedAuthors" => $machineOutput[3],
+                "NumFoundEmails" => $machineOutput[4],
+                "NumExpectedEmails" => $machineOutput[5],
+                "NumFoundInst" => $machineOutput[6],
+                "NumExpectedInst" => $machineOutput[7],
+								"FullSuccess" => $machineOutput[8],
+							 	"PartialEmail" => $machineOutput[9],
+							 	"PartialInst" => $machineOutput[10],
+								"FalseMatches" => $machineOutput[11],
 								"Analysis" => "");
 
   return array($curPDF, $data);
@@ -58,7 +57,7 @@ function parseFile($filename) {
 			// finish the record
 			$inRecord = false;
 			$curPDF = "";
-	    } else if (startsWith("-----", $line)) {
+	  } else if (startsWith("-----", $line)) {
 			//Summary section!
 			if ($atSummary == false) {
 				$atSummary = true;

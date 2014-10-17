@@ -1,44 +1,81 @@
+.message {
+  background-color: #B96666;
+  width: 70%; }
 
-.message{
-	background-color: #B96666;
-	width: 70%;
-}
+.container {
+  background-color: #FFD8BF;
+  border: 1px solid red;
+  padding: 2px;
+  overflow: auto; }
+
+.docText {
+  float: left;
+  width: 50%;
+  margin: 0;
+  border: 1px solid #452D07; }
+
+.references {
+  background-color: #FEC7A5;
+  border: 1px solid #452D07;
+  margin-left: 50%;
+  padding: 5px; }
+
+.citation {
+  background-color: #FEC7A5; }
+
+.citations {
+  background-color: #FEC7A5;
+  border: 1px solid #452D07; }
+
+.section-marker {
+  background-color: #FFAE7C; }
+
+.paragraph-marker {
+  background-color: #FFCEB0; }
+
+.figure-marker {
+  background-color: #FFD8BF; }
+
+.notext {
+  background-color: #FFD8BF; }
+
+html, body, table {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0; }
 
 td {
-	margin: 0;
- /* height: 1px; hackish */
-}
+  margin: 0;
+  width: 90%;
+  background-color: #FFD8BF;
+  /* height: 1px; hackish */ }
 
 td.pdfName {
-	border-top: 4px solid #452D07;
-	border-left: 4px solid #452D07;
-	border-right: 4px solid #452D07;
-	border-bottom: 1px solid #452D07;
-	background-color: #EAA12F;
-}
+  border-top: 4px solid #452D07;
+  border-left: 4px solid #452D07;
+  border-right: 4px solid #452D07;
+  border-bottom: 1px solid #452D07;
+  background-color: #EAA12F; }
 
 td.pdfText {
-	width: 80%; 
-	background-color: #F8DFBA;
-	border-left: 4px solid #452D07;
-	border-bottom: 4px solid #452D07;
-	border-right: 1px solid #452D07;
-
-}
+  width: 80%;
+  background-color: #FFD8BF;
+  border-left: 4px solid #452D07;
+  border-bottom: 4px solid #452D07;
+  border-right: 1px solid #452D07; }
 
 td.pdfAdmin {
-	width: 20%;
-	background-color: #F8DFBA;
-	border-right: 4px solid #452D07;
-	border-left: 1px solid #452D07;
-	border-bottom: 4px solid #452D07;
-}
+  width: 20%;
+  background-color: #FFD8BF;
+  border-right: 4px solid #452D07;
+  border-left: 1px solid #452D07;
+  border-bottom: 4px solid #452D07; }
 
 td.submit {
-	background-color: #F8DFBA;
-	border: 4px solid #452D07;
-	text-align: center;
-}
+  background-color: #FFD8BF;
+  border: 4px solid #452D07;
+  text-align: center; }
 
 .summary {
   font-size: 14px;
@@ -48,16 +85,11 @@ td.submit {
   margin: auto;
   /*position: absolute;  */
   /*left: 40%; */
-  /*margin: 0 0 0 -150px;*/
-}
-
+  /*margin: 0 0 0 -150px;*/ }
 
 pre {
-	border: none;
-	margin: 0;
-}
+  border: none;
+  margin: 0; }
 
-tr { 
-	margin: 0;
-}
-
+tr {
+  margin: 0; }
