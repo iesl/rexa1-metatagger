@@ -173,7 +173,7 @@ public class ReferenceExtractionFilter extends AbstractFilter {
 		if (_headersExtractor != null) {
 			NewHtmlTokenization header = (NewHtmlTokenization)segmentations.get( "headerTokenization" );
 			if (header != null) {
-				log.info("running crf on header" );
+				log.trace("running crf on header" );
 				if( header.clearTokenFeatures() ) {
 					log.warn( "header tokens had features set before crf extraction" );
 				}
@@ -215,7 +215,7 @@ public class ReferenceExtractionFilter extends AbstractFilter {
 				if( reference.clearTokenFeatures() ) {
 					log.warn( "reference tokens had features set before crf extraction" );
 				}
-				log.info( "running crf on reference " + refNum + " of " + refList.size() );
+				log.trace("running crf on reference " + refNum + " of " + refList.size());
 				Extraction extraction = _referencesExtractor.extract( reference );
 				Sequence predictedLabels = extraction.getDocumentExtraction( 0 ).getPredictedLabels();
 
