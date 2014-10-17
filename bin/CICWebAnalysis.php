@@ -153,21 +153,31 @@ if (!isset($fileData)) {
   $curFileIndex = 0;
   //$curFile = key($fileData);
 
-	$_SESSION['FileData'] = $fileData;
-  $_SESSION['CurrentFileIndex'] = $curFileIndex;
 
   // Now weed out the files to ignore
   $iFile = fopen($ignoreFile, "r");
   echo "<pre>ignore file '$ignoreFile'</pre>";
 
   if ($iFile) {
+    echo "<pre>processing ignore file</pre>"; 
+
+    echo "<pre>";
+    echo print_r($fileData);
+    echo "</pre>";
+
     while (!feof($iFile)) {
-      $line = fgets($iFile);
+      //$line = fgets($iFile);
+      $line = stream_get_line($iFile, 1024, "\n");
+      echo "<pre> $line </pre>";
       unset($fileData[$line]);
     }
 
     fclose($iFile);
+
   }
+
+	$_SESSION['FileData'] = $fileData;
+  $_SESSION['CurrentFileIndex'] = $curFileIndex;
 	
 } else {
   if (isset($mode)) {
