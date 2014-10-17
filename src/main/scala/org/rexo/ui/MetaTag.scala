@@ -258,11 +258,10 @@ class MetaTag {
     val tokenization = NewHtmlTokenization.createNewHtmlTokenization(xmlDoc, dictionary)
     val rdoc = new RxDocument()
     rdoc.setTokenization( tokenization )
-    logger.info("exectuting java pipeline")
-    javaPipeline.execute( rdoc )
+    logger.info("executing java pipeline")
+    javaPipeline.execute(rdoc)
 
-    logger.info("exectuting scala pipeline")
-
+    logger.info("executing scala pipeline")
     //val tokenization = rdoc.getTokenization()
     val segmentations = rdoc.getScope("document").get("segmentation").asInstanceOf[Map[String, HashMap[Object, Object]]]
     try {

@@ -106,7 +106,7 @@ import scala.collection.breakOut
 
         // preserve everything else
         case other =>
-          logger.info(s"Subnode label is: ${subnode.label}");
+          logger.trace(s"Subnode label is: ${subnode.label}");
           other
         }
     }) (breakOut)
@@ -302,7 +302,7 @@ class CitationManager (citations: List[Citation], cType: CitationType, xmlText :
 
     for(citation <- citationList) {
       index += 1
-      logger.info(s"citation $index) " + citation.text)
+      logger.trace(s"citation $index) ${citation.text}")
 
       tagCitList = tagCitList :+ citation
       val reference = referenceManager.findReference(citation, citationType, xmlText)
@@ -311,7 +311,7 @@ class CitationManager (citations: List[Citation], cType: CitationType, xmlText :
 
       if (citation.multi == -1 || citation.isLastMulti) {
         val str = newText.substring(citation.startPos+offset, citation.endPos+offset)
-        logger.info(s"str is $str")
+        logger.trace(s"str is $str")
 
         val newTag = this.createCitationXMLTag(tagCitList, tagRefList)
 
@@ -648,11 +648,9 @@ class ReferenceExtractor {
   def getReferences(xml: NodeSeq) : List[Reference] = {
     var nextID = 0
     val referenceXML = xml \ "reference"
-    logger.info("about to loop over references!")
     (for (refTag @ <reference>{_*}</reference> <- referenceXML) yield {
       refTag.label match {
         case reference => {
-          logger.info("i've got my reference: " + reference)
           val ref = new Reference(refTag, nextID)
           if (ref.id == nextID.toString)
             nextID += 1
