@@ -96,7 +96,8 @@ object MetaTag {
 
   def buildScalaPipeline() : ScalaPipeline = {
     logger.info ("creating new scala component pipeline. Institution Dictionary: " + dataDir.getAbsoluteFile + "/" + INST_LOOKUP_FILE)
-    new ScalaPipeline(List(new AuthorEmailTaggingFilter(Some(classpathInputStream("data/"+INST_LOOKUP_FILE))), new CitationTaggingFilter()))
+    new ScalaPipeline(List(new AuthorEmailTaggingFilter(Some(classpathInputStream("data/"+INST_LOOKUP_FILE))),
+      new CitationTaggingFilter()))
   }
 
   def commandLineOptions : CommandLineOptions = {
