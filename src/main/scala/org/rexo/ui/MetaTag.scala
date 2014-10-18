@@ -47,8 +47,6 @@ object MetaTag {
 	val INST_LOOKUP_FILE = "institution.dict"
   val logger = LoggerFactory.getLogger(MetaTag.getClass())
 
-  var dataDir: File = new java.io.File("data")
-
   /* Construct the Metatagger pipeline from the given RxDocumentQueue and command
    * line options */
   def buildJavaPipeline(): RxPipeline = {
@@ -117,7 +115,7 @@ object MetaTag {
       }
       override protected def createOptions() {
         addOpt("enable-log", "enable logging")
-        addOpt("data-dir", "path to rexa-textmill/data/ directory", hasArgument = true, isReq = true)
+        addOpt("data-dir", "path to rexa-textmill/data/ directory", hasArgument = true)
         addOpt("input", "filename (instead of STDIN) for 'input_file -> output_file' pairs", hasArgument = true)
       }
     }
@@ -127,15 +125,10 @@ object MetaTag {
   def main(args: Array[String]) {
     // val initProperties: Map = null
     val commandLine = commandLineOptions.getCommandLine(args)
-    dataDir = new File(commandLine.getOptionValue("data-dir"))
     val metatag = new MetaTag()
     try {
       val currentDirectory = new File(new File(".").getAbsolutePath())
       logger.debug("Current Directory Is: " + currentDirectory.getAbsolutePath())
-      val dictionary = EnglishDictionary.create(classpathDataInputStream(DICT_FILE))
-
-      val javaPipeline = buildJavaPipeline()
-      val scalaPipeline = buildScalaPipeline()
       val input = if (commandLine.hasOption("input")) {
           new FileInputStream(commandLine.getOptionValue("input"))
         } else {

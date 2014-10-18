@@ -4,6 +4,7 @@ organization := "edu.umass.cs.iesl"
 
 name := "rexa1-metatagger"
 
+// TODO: add mallet to these once the proper jar is in nexus
 libraryDependencies ++=  Seq(
   "org.jdom" % "jdom" % "1.1",
   "junit" % "junit" % "4.10" % "test",
