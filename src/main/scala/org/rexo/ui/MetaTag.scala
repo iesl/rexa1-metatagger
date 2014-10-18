@@ -27,6 +27,8 @@ import org.rexo.util.EnglishDictionary
 
 import edu.umass.cs.mallet.base.fst.CRF4
 import edu.umass.cs.rexo.ghuang.segmentation.CRFBibliographySegmentor
+import edu.umass.cs.rexo.ghuang.segmentation.{SegmentationFilter => CRFSegmentationFilter}
+
 
 import org.jdom.input.SAXBuilder
 import org.jdom.Document
@@ -64,16 +66,18 @@ object MetaTag {
 
     logger.info("loading biblio-segmentation crf")
 
-    val ois = new ObjectInputStream( new GZIPInputStream(new BufferedInputStream(classpathInputStream("data/" + BIBLIO_SEG_CRF))))
+    val ois = new ObjectInputStream(
+      new GZIPInputStream(new BufferedInputStream(classpathDataInputStream(BIBLIO_SEG_CRF))))
     val crf = ois.readObject().asInstanceOf[CRF4]
     ois.close()
-    val crfBibSegmentor = new CRFBibliographySegmentor( crf )
-
-    pipeline.add( new edu.umass.cs.rexo.ghuang.segmentation.SegmentationFilter( crfBibSegmentor ) )
+    val crfBibSegmentor = new CRFBibliographySegmentor(crf)
 
     pipeline
+    .add(new CRFSegmentationFilter(crfBibSegmentor))
     .add(new GrantExtractionFilter())
-    .add(new ReferenceExtractionFilter(classpathInputStream("data/" + REFERENCE_CRF), classpathInputStream("data/" + HEADER_CRF)))
+    .add(new ReferenceExtractionFilter(
+      classpathDataInputStream(REFERENCE_CRF),
+      classpathDataInputStream(HEADER_CRF)))
     .add(new BodyExtractionFilter())
 
     // .add( new CitationContextFilter() )
@@ -95,8 +99,8 @@ object MetaTag {
   }
 
   def buildScalaPipeline() : ScalaPipeline = {
-    logger.info ("creating new scala component pipeline. Institution Dictionary: " + dataDir.getAbsoluteFile + "/" + INST_LOOKUP_FILE)
-    new ScalaPipeline(List(new AuthorEmailTaggingFilter(Some(classpathInputStream("data/"+INST_LOOKUP_FILE))),
+    logger.info("creating new scala component pipeline.")
+    new ScalaPipeline(List(new AuthorEmailTaggingFilter(Some(classpathDataInputStream(INST_LOOKUP_FILE))),
       new CitationTaggingFilter()))
   }
 
@@ -126,9 +130,9 @@ object MetaTag {
     dataDir = new File(commandLine.getOptionValue("data-dir"))
     val metatag = new MetaTag()
     try {
-      val currentDirectory = new File(new File(".").getAbsolutePath());
+      val currentDirectory = new File(new File(".").getAbsolutePath())
       logger.debug("Current Directory Is: " + currentDirectory.getAbsolutePath())
-      val dictionary = EnglishDictionary.create(classpathInputStream("data/" + DICT_FILE))
+      val dictionary = EnglishDictionary.create(classpathDataInputStream(DICT_FILE))
 
       val javaPipeline = buildJavaPipeline()
       val scalaPipeline = buildScalaPipeline()
@@ -169,8 +173,8 @@ object MetaTag {
     }
   }
 
-  def classpathInputStream(path : String) : InputStream = {
-    getClass.getClassLoader.getResourceAsStream(path)
+  def classpathDataInputStream(path : String) : InputStream = {
+    getClass.getClassLoader.getResourceAsStream("data/" + path)
   }
 
   @throws[java.io.IOException]("If SAXBuilder is unable to write to infile")
@@ -247,7 +251,7 @@ object MetaTag {
 }
 
 class MetaTag {
-  val dictionary : EnglishDictionary = EnglishDictionary.create(classpathInputStream("data/" + DICT_FILE))
+  val dictionary : EnglishDictionary = EnglishDictionary.create(classpathDataInputStream(DICT_FILE))
 
   lazy val javaPipeline = buildJavaPipeline()
   lazy val scalaPipeline = buildScalaPipeline()
@@ -282,7 +286,7 @@ object SingleFileMetaTag {
   def main(args: Array[String]) {
     val metaTag = new MetaTag()
     val xmlDoc = readInputDocument(new FileInputStream(args(0)))
-    val processedDoc = metaTag.processFile(xmlDoc)
+    val processedDoc = metaTag.processFile(xmlDoc, args(0))
     writeOutput(new File(args(1)), processedDoc)
   }
 }
