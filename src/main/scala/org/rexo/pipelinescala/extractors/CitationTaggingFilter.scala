@@ -3,18 +3,26 @@ package org.rexo.pipelinescala.extractors
 import java.io.PrintStream
 
 import org.rexo.pipelinescala.extractors.CitationTypeInformation._
-import org.rexo.ui.ScalaPipelineComponent
-import scala.Null
+import org.rexo.ui.{PipelineNode, ScalaPipelineComponent}
 import scala.util.matching.Regex
-import scala.util.matching.Regex.{Match, MatchIterator}
+import scala.util.matching.Regex.Match
 import scala.xml._
 import org.slf4j.LoggerFactory
 
 
-class CitationTaggingFilter extends ScalaPipelineComponent {
+class CitationTaggingFilter(logCitationMetadataToFile: Boolean = false) extends ScalaPipelineComponent {
   val logger = LoggerFactory.getLogger(CitationTaggingFilter.this.getClass())
 
-  override def apply(xmldata: Node): Node = {
+  class FileLogger(fileName : Option[String]) {
+    val printStream = fileName.map { fn: String => new PrintStream(fn + ".info") }
+    def println(s : String) {
+      printStream.foreach { _.println(s) }
+    }
+    def close {
+      printStream.foreach { _.close() }
+    }
+  }
+  override def apply(xmldata: PipelineNode): PipelineNode = {
     logger.info("Citation Filter Running!")
     val newXML = run_filter(xmldata);
     newXML;
@@ -24,13 +32,14 @@ class CitationTaggingFilter extends ScalaPipelineComponent {
   def run(infile: String) {
   }
 
-  def run_filter(xmldata: Node) : Node = {
-
+  def run_filter(xmldataNode: PipelineNode) : PipelineNode = {
+    val xmldata = xmldataNode.xml
+    val filename = xmldataNode.fileName
     val biblioxml = xmldata \ "content" \ "biblio"
     val refList = ReferenceExtractor(biblioxml)
     val referenceManager = new ReferenceManager(refList)
 
-    //val infoFile = new PrintStream(filename + ".info")
+    val infoLog = new FileLogger(if (logCitationMetadataToFile) Some(filename) else None)
     logger.info("reference list size: " + refList.size)
     logger.trace(s"reference list: ${refList.mkString("\n")}")
 
@@ -51,12 +60,12 @@ class CitationTaggingFilter extends ScalaPipelineComponent {
     if (citationManager == None) {
       logger.info("No current citation type worked well for this file!")
       // TODO - figure out what to do here, maybe default to one of them? For now, return
-      return xmldata
+      return PipelineNode(xmldata, filename)
     }
 
     val headerCitationManager = new CitationManager(citationManager.get.citationType.getRegex.findAllMatchIn(abstractStr.replaceAll("\n", "")), citationManager.get.citationType, abstractStr)
 
-    //infoFile.println("CitationType = " + citationManager.get.citationType)
+    infoLog.println("CitationType = " + citationManager.get.citationType)
 
     ///////////////////////////////////////////////////////////////////////////////
     // Now process the citations of the best matching Citation Type.
@@ -92,10 +101,11 @@ class CitationTaggingFilter extends ScalaPipelineComponent {
 
     val newXML = <document><content><headers>{headers}</headers>{newBody +: biblioxml}</content>{grants}</document>
 
-    //infoFile.close()
+    infoLog.close
 
-    newXML
+    PipelineNode(newXML, filename)
   }
+
 import scala.collection.breakOut
   // this is not the best way to do this, but will work for now.
   def updateAbstract(newAbstract : Node, header: Seq[Node]) : NodeSeq = {

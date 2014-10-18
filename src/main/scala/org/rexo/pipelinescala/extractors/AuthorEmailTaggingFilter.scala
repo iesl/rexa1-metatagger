@@ -3,11 +3,12 @@ package org.rexo.pipelinescala.extractors
 import java.io.{FileInputStream, InputStream, File}
 
 import org.rexo.pipelinescala.extractors.AuthorType.AuthorType
-import org.rexo.ui.{ScalaPipelineComponent, StringExtras}
+import org.rexo.ui.{PipelineNode, ScalaPipelineComponent, StringExtras}
 import org.rexo.util.{Metrics, ParseArgs}
 import org.slf4j.LoggerFactory
 
 import scala.xml.{Attribute, Elem, Node, NodeSeq, Null, Text, XML}
+import scalaz.Value
 
 class Email(email: String, refid: Int, metatag: String) {
   val id = refid
@@ -500,16 +501,16 @@ object AuthorEmailTaggingFilter {
 }
 
 class AuthorEmailTaggingFilter(instDict: Option[InputStream]) extends ScalaPipelineComponent {
-  val logger = LoggerFactory.getLogger(AuthorEmailTaggingFilter.getClass())
+  val logger = LoggerFactory.getLogger(getClass)
   val institutionDict = Institution.readInstitutionDictionary(instDict)
 
-  override def apply(xmldata: Node): Node = {
+  override def apply(xmldata: PipelineNode): PipelineNode = {
     AuthorEmailTaggingFilter.metrics.logStart("AuthorEmailTaggingFilter")
     //val xmldata = XML.loadString(doc.toString)
 
-    val newXML = run_filter(xmldata)
+    val newXML = run_filter(xmldata.xml)
 
-    newXML
+    PipelineNode(newXML, xmldata.fileName)
   }
 
   def run(infile: String) {

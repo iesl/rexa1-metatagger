@@ -33,6 +33,8 @@ import org.jdom.Document
 import org.jdom.output.XMLOutputter
 import org.jdom.output.Format
 
+import scala.io.Source
+
 //object MetaTag extends Logger ("MetaTag"){
 object MetaTag {
 
@@ -129,18 +131,13 @@ object MetaTag {
 
       val javaPipeline = buildJavaPipeline()
       val scalaPipeline = buildScalaPipeline()
-
-      val inputStream = if (commandLine.hasOption("input")) {
-        new InputStreamReader(new FileInputStream(new File(commandLine.getOptionValue("input"))))
-      } else {
-        new InputStreamReader(System.in)
-      }
-      val reader = new BufferedReader(inputStream)
-
-      var line: String = null
-      logger.info( "begin" )
-
-      while ({line = reader.readLine(); line != null}) {
+      val input = if (commandLine.hasOption("input")) {
+          new FileInputStream(commandLine.getOptionValue("input"))
+        } else {
+          System.in
+        }
+      logger.info("begin")
+      for (line <- Source.fromInputStream(input).getLines()) {
         // format is input-filename -> output-filename
         val files = line.split( "->" )
         val infile = new File( files(0).trim() )
@@ -150,7 +147,7 @@ object MetaTag {
         if ( infile.exists() ) {
           try {
             val document = readInputDocument(new FileInputStream(infile))
-            val newDoc = metatag.processFile(document)
+            val newDoc = metatag.processFile(document, infile.getPath)
             writeOutput( outfile, newDoc )
           }
           catch {
@@ -222,10 +219,10 @@ object MetaTag {
 
     try {
       logger.info("writing file {} now", outputFile.toString)
-      val document = MetaDataXMLDocument.createFromTokenization( null, segmentations ).getDocument()
-      xmlOutputStream = new FileOutputStream( outputFile )
-      val output =  new XMLOutputter( Format.getPrettyFormat() ) // XMLOutputter
-      output.output( document, xmlOutputStream )
+      val document = MetaDataXMLDocument.createFromTokenization(null, segmentations).getDocument()
+      xmlOutputStream = new FileOutputStream(outputFile)
+      val output =  new XMLOutputter(Format.getPrettyFormat()) // XMLOutputter
+      output.output(document, xmlOutputStream)
       logger.info("just wrote file {}!", outputFile.toString)
     }
     catch {
@@ -254,7 +251,7 @@ class MetaTag {
   lazy val javaPipeline = buildJavaPipeline()
   lazy val scalaPipeline = buildScalaPipeline()
 
-  def processFile(xmlDoc : Document) : Document = {
+  def processFile(xmlDoc : Document, fileName : String = "") : Document = {
     val tokenization = NewHtmlTokenization.createNewHtmlTokenization(xmlDoc, dictionary)
     val rdoc = new RxDocument()
     rdoc.setTokenization( tokenization )
@@ -266,9 +263,8 @@ class MetaTag {
     val segmentations = rdoc.getScope("document").get("segmentation").asInstanceOf[Map[String, HashMap[Object, Object]]]
     try {
       val doc = MetaDataXMLDocument.createFromTokenization(null, segmentations).getDocument()
-
       // run it!
-      scalaPipeline(doc)
+      scalaPipeline(doc, fileName)
     } catch {
       case npe: NullPointerException => {
         logger.info("unable to create MetaDataXMLDocument")
