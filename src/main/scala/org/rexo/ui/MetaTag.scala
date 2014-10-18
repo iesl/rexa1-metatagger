@@ -246,8 +246,8 @@ object MetaTag {
 class MetaTag {
   val dictionary : EnglishDictionary = EnglishDictionary.create(classpathDataInputStream(DICT_FILE))
 
-  lazy val javaPipeline = buildJavaPipeline()
-  lazy val scalaPipeline = buildScalaPipeline()
+  val javaPipeline = buildJavaPipeline()
+  val scalaPipeline = buildScalaPipeline()
 
   def processFile(xmlDoc : Document, fileName : String = "") : Document = {
     val tokenization = NewHtmlTokenization.createNewHtmlTokenization(xmlDoc, dictionary)
