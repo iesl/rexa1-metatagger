@@ -39,15 +39,59 @@ public class ReferenceExtractionFilter extends AbstractFilter {
 		initCrfs( referenceCrfFile, headerCrfFile );
 	}
 
+    public ReferenceExtractionFilter(InputStream referenceCrf, boolean isPartialReference, InputStream headerCrf, boolean isPartialHeader) {
+        initCrfs(referenceCrf, isPartialReference, headerCrf, isPartialHeader);
+    }
+
+    public ReferenceExtractionFilter(InputStream referenceCrf, InputStream headerCrf) {
+        this(referenceCrf, false, headerCrf, false);
+    }
+
+    private void initCrfs(InputStream referenceCrf, boolean isPartialReference, InputStream headerCrf, boolean isPartialHeader) {
+        try {
+            if (referenceCrf != null) {
+                if (isPartialReference) {
+                    _referencesExtractor = loadPartiallyTrainedModel( referenceCrf);
+                }
+                else {
+                    _referencesExtractor = loadCrfExtor( referenceCrf );
+                    Pipe pipe = _referencesExtractor.getFeaturePipe();
+                    pipe.setTargetProcessing( false );
+                }
+            }
+        }
+        catch (Exception e) {
+            log.error( "couldn't init reference crf, continuing..." + e );
+            _referencesExtractor = null;
+        }
+
+        try {
+            if (headerCrf != null) {
+                if (isPartialHeader) {
+                    _headersExtractor = loadPartiallyTrainedModel( headerCrf );
+                }
+                else {
+                    _headersExtractor = loadCrfExtor( headerCrf );
+                    Pipe pipe = _headersExtractor.getFeaturePipe();
+                    pipe.setTargetProcessing( false );
+                }
+            }
+        }
+        catch (Exception e) {
+            log.error( "couldn't init header crf, continuing..." );
+            _headersExtractor = null;
+        }
+    }
+
 	private void initCrfs(File referenceCrfFile, File headerCrfFile) {
 		try {
 			if (referenceCrfFile != null) {
 				if (referenceCrfFile.getName().endsWith( ".partial" )) {
-					_referencesExtractor = loadPartiallyTrainedModel( referenceCrfFile );
+					_referencesExtractor = loadPartiallyTrainedModel( new FileInputStream(referenceCrfFile) );
 					log.info( "loaded partial reference crf '" + referenceCrfFile.getPath() + "'" );
 				}
 				else {
-					_referencesExtractor = loadCrfExtor( referenceCrfFile );
+					_referencesExtractor = loadCrfExtor( new FileInputStream(referenceCrfFile) );
 					Pipe pipe = _referencesExtractor.getFeaturePipe();
 					pipe.setTargetProcessing( false );
 					log.info( "loaded reference crf '" + referenceCrfFile.getPath() + "'" );
@@ -62,11 +106,11 @@ public class ReferenceExtractionFilter extends AbstractFilter {
 		try {
 			if (headerCrfFile != null) {
 				if (headerCrfFile.getName().endsWith( ".partial" )) {
-					_headersExtractor = loadPartiallyTrainedModel( headerCrfFile );
+					_headersExtractor = loadPartiallyTrainedModel( new FileInputStream(headerCrfFile) );
 					log.info( "loaded partial header crf '" + headerCrfFile.getPath() + "'" );
 				}
 				else {
-					_headersExtractor = loadCrfExtor( headerCrfFile );
+					_headersExtractor = loadCrfExtor( new FileInputStream(headerCrfFile) );
 					Pipe pipe = _headersExtractor.getFeaturePipe();
 					pipe.setTargetProcessing( false );
 					log.info( "loaded header crf '" + headerCrfFile.getPath() + "'" );
@@ -80,8 +124,8 @@ public class ReferenceExtractionFilter extends AbstractFilter {
 
 	}
 
-	private CRFExtractor loadPartiallyTrainedModel(File crfFile) throws IOException, ClassNotFoundException {
-		CRF4 crf = (CRF4)new ObjectInputStream( new BufferedInputStream( new FileInputStream( crfFile ) ) ).readObject();
+	private CRFExtractor loadPartiallyTrainedModel(InputStream modelInputStream) throws IOException, ClassNotFoundException {
+		CRF4 crf = (CRF4)new ObjectInputStream( new BufferedInputStream( modelInputStream ) ).readObject();
 		// Create the trivial tokenization pipe
 		Pipe tokPipe = new SerialPipes( new Pipe[]{
 				new Noop(),
@@ -90,8 +134,8 @@ public class ReferenceExtractionFilter extends AbstractFilter {
 		return new CRFExtractor( crf, tokPipe );
 	}
 
-	private CRFExtractor loadCrfExtor(File crfFile) throws IOException, ClassNotFoundException {
-		ObjectInputStream ois = new ObjectInputStream( new GZIPInputStream(new BufferedInputStream( new FileInputStream( crfFile ))));
+	private CRFExtractor loadCrfExtor(InputStream crfInputStream) throws IOException, ClassNotFoundException {
+		ObjectInputStream ois = new ObjectInputStream( new GZIPInputStream(new BufferedInputStream( crfInputStream )));
 		return (CRFExtractor)ois.readObject();
 	}
 
@@ -129,7 +173,7 @@ public class ReferenceExtractionFilter extends AbstractFilter {
 		if (_headersExtractor != null) {
 			NewHtmlTokenization header = (NewHtmlTokenization)segmentations.get( "headerTokenization" );
 			if (header != null) {
-				log.info("running crf on header" );
+				log.trace("running crf on header" );
 				if( header.clearTokenFeatures() ) {
 					log.warn( "header tokens had features set before crf extraction" );
 				}
@@ -171,7 +215,7 @@ public class ReferenceExtractionFilter extends AbstractFilter {
 				if( reference.clearTokenFeatures() ) {
 					log.warn( "reference tokens had features set before crf extraction" );
 				}
-				log.info( "running crf on reference " + refNum + " of " + refList.size() );
+				log.trace("running crf on reference " + refNum + " of " + refList.size());
 				Extraction extraction = _referencesExtractor.extract( reference );
 				Sequence predictedLabels = extraction.getDocumentExtraction( 0 ).getPredictedLabels();
 

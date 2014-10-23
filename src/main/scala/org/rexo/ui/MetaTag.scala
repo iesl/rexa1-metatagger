@@ -1,17 +1,12 @@
 package org.rexo.ui
 
-import java.io.BufferedInputStream
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileReader
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStreamReader
-import java.io.ObjectInputStream
+import java.io._
+import java.net.URL
 import java.util.{Map,HashMap}
 import java.util.zip.GZIPInputStream
 
 import org.apache.commons.cli.OptionBuilder
+import org.rexo.ui.MetaTag._
 import org.rexo.pipelinescala.extractors.{CitationTaggingFilter, AuthorEmailTaggingFilter}
 import org.rexo.referencetagging.{CitationContextExtractor, CitationContextFilter}
 import org.slf4j.{Logger, LoggerFactory}
@@ -32,11 +27,15 @@ import org.rexo.util.EnglishDictionary
 
 import edu.umass.cs.mallet.base.fst.CRF4
 import edu.umass.cs.rexo.ghuang.segmentation.CRFBibliographySegmentor
+import edu.umass.cs.rexo.ghuang.segmentation.{SegmentationFilter => CRFSegmentationFilter}
+
 
 import org.jdom.input.SAXBuilder
 import org.jdom.Document
 import org.jdom.output.XMLOutputter
 import org.jdom.output.Format
+
+import scala.io.Source
 
 //object MetaTag extends Logger ("MetaTag"){
 object MetaTag {
@@ -48,20 +47,13 @@ object MetaTag {
 	val INST_LOOKUP_FILE = "institution.dict"
   val logger = LoggerFactory.getLogger(MetaTag.getClass())
 
-  var dataDir: File = new java.io.File("data")
-
   /* Construct the Metatagger pipeline from the given RxDocumentQueue and command
    * line options */
   def buildJavaPipeline(): RxPipeline = {
     val pipeline = new RxPipeline()
 
-    val hdrCrf = new File( dataDir, HEADER_CRF )
-    val refCrf = new File( dataDir, REFERENCE_CRF  )
-    val bibCrf = new File( dataDir, BIBLIO_SEG_CRF )
-
     // handle 'enable-log'2
     val logp = true
-    import scala.collection.JavaConverters._
 
     // val sessionScope: Map[String, ] = pipeline.getScope("session")
     // sessionScope.put( "log.boolean", logp)
@@ -70,18 +62,21 @@ object MetaTag {
 
     pipeline.addStandardFilters()
 
-    logger.info( "loading biblio-segmentation crf" )
-    val ois = new ObjectInputStream( new GZIPInputStream(new BufferedInputStream( new FileInputStream( bibCrf ))))
+    logger.info("loading biblio-segmentation crf")
+
+    val ois = new ObjectInputStream(
+      new GZIPInputStream(new BufferedInputStream(classpathDataInputStream(BIBLIO_SEG_CRF))))
     val crf = ois.readObject().asInstanceOf[CRF4]
     ois.close()
-    val crfBibSegmentor = new CRFBibliographySegmentor( crf )
-
-    pipeline.add( new edu.umass.cs.rexo.ghuang.segmentation.SegmentationFilter( crfBibSegmentor ) )
+    val crfBibSegmentor = new CRFBibliographySegmentor(crf)
 
     pipeline
-    .add( new GrantExtractionFilter() )
-    .add( new ReferenceExtractionFilter( refCrf, hdrCrf ))
-    .add( new BodyExtractionFilter())
+    .add(new CRFSegmentationFilter(crfBibSegmentor))
+    .add(new GrantExtractionFilter())
+    .add(new ReferenceExtractionFilter(
+      classpathDataInputStream(REFERENCE_CRF),
+      classpathDataInputStream(HEADER_CRF)))
+    .add(new BodyExtractionFilter())
 
     // .add( new CitationContextFilter() )
     // .add( new WriteAnnotatedXMLFilter() )
@@ -92,19 +87,18 @@ object MetaTag {
       // log document errors to '.list' and '.html'
       pipeline
       .addErrorFilters()
-      .add( new ErrorLogFilter() )
+      .add(new ErrorLogFilter())
       .addEpilogueFilters()
-      .add( new InfoLogFilter() )
-      .add( new PipelineMetricsFilter() )
+      .add(new InfoLogFilter())
+      .add(new PipelineMetricsFilter())
     }
 
     pipeline
   }
 
   def buildScalaPipeline() : ScalaPipeline = {
-   logger.info ("creating new scala component pipeline. Institution Dictionary: " + dataDir.getAbsoluteFile + "/" + INST_LOOKUP_FILE)
-    new ScalaPipeline(List(
-      new AuthorEmailTaggingFilter(dataDir.getAbsolutePath()+"/"+INST_LOOKUP_FILE),
+    logger.info("creating new scala component pipeline.")
+    new ScalaPipeline(List(new AuthorEmailTaggingFilter(Some(classpathDataInputStream(INST_LOOKUP_FILE))),
       new CitationTaggingFilter()))
   }
 
@@ -121,7 +115,7 @@ object MetaTag {
       }
       override protected def createOptions() {
         addOpt("enable-log", "enable logging")
-        addOpt("data-dir", "path to rexa-textmill/data/ directory", hasArgument = true, isReq = true)
+        addOpt("data-dir", "path to rexa-textmill/data/ directory", hasArgument = true)
         addOpt("input", "filename (instead of STDIN) for 'input_file -> output_file' pairs", hasArgument = true)
       }
     }
@@ -131,28 +125,17 @@ object MetaTag {
   def main(args: Array[String]) {
     // val initProperties: Map = null
     val commandLine = commandLineOptions.getCommandLine(args)
-    dataDir = new File(commandLine.getOptionValue("data-dir"))
-
+    val metatag = new MetaTag()
     try {
-      val currentDirectory = new File(new File(".").getAbsolutePath);
-      logger.debug("Current Directory Is: " + currentDirectory.getAbsolutePath)
-      EnglishDictionary.setDefaultWordfile( new File( dataDir, DICT_FILE ) )
-      val dictionary = EnglishDictionary.createDefault()
-
-      val javaPipeline = buildJavaPipeline()
-      val scalaPipeline = buildScalaPipeline()
-
-      val inputStream = if (commandLine.hasOption("input")) {
-        new InputStreamReader(new FileInputStream(new File(commandLine.getOptionValue("input"))))
-      } else {
-        new InputStreamReader(System.in)
-      }
-      val reader = new BufferedReader(inputStream)
-
-      var line: String = null
-      logger.info( "begin" )
-
-      while ({line = reader.readLine(); line != null}) {
+      val currentDirectory = new File(new File(".").getAbsolutePath())
+      logger.debug("Current Directory Is: " + currentDirectory.getAbsolutePath())
+      val input = if (commandLine.hasOption("input")) {
+          new FileInputStream(commandLine.getOptionValue("input"))
+        } else {
+          System.in
+        }
+      logger.info("begin")
+      for (line <- Source.fromInputStream(input).getLines()) {
         // format is input-filename -> output-filename
         val files = line.split( "->" )
         val infile = new File( files(0).trim() )
@@ -161,20 +144,8 @@ object MetaTag {
         logger.info( infile.getPath + " -> " + outfile.getPath  )
         if ( infile.exists() ) {
           try {
-            val document = readInputDocument( infile )
-            val tokenization = NewHtmlTokenization.createNewHtmlTokenization( document, dictionary )
-            val rdoc = new RxDocument()
-            rdoc.setTokenization( tokenization )
-            logger.info("exectuting java pipeline")
-            javaPipeline.execute( rdoc )
-
-            logger.info("exectuting scala pipeline")
-
-            //val tokenization = rdoc.getTokenization()
-            val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
-            val doc = MetaDataXMLDocument.createFromTokenization( null, segmentations).getDocument
-            // run it!
-            val newDoc = scalaPipeline(doc, outfile.getAbsolutePath)
+            val document = readInputDocument(new FileInputStream(infile))
+            val newDoc = metatag.processFile(document, infile.getPath)
             writeOutput( outfile, newDoc )
           }
           catch {
@@ -195,10 +166,14 @@ object MetaTag {
     }
   }
 
+  def classpathDataInputStream(path : String) : InputStream = {
+    getClass.getClassLoader.getResourceAsStream("data/" + path)
+  }
+
   @throws[java.io.IOException]("If SAXBuilder is unable to write to infile")
-  private def readInputDocument(infile: File) : Document = {
+  def readInputDocument(inputStream : InputStream) : Document = {
     val saxBuilder = new SAXBuilder()
-    val is = new BufferedInputStream( new FileInputStream( infile ) )
+    val is = new BufferedInputStream( inputStream )
     try {
       saxBuilder.build( is )
     }
@@ -210,7 +185,7 @@ object MetaTag {
     }
   }
 
-  private def writeOutput(outputFile: File, doc: Document) {
+  def writeOutput(outputFile: File, doc: Document) {
     var xmlOutputStream: FileOutputStream = null
 
     logger.info("writing xml file ({}) now", outputFile.toString)
@@ -228,6 +203,7 @@ object MetaTag {
         xmlOutputStream.close()
     }
   }
+
   private def writeOutput(outputFile: File, rdoc: RxDocument) {
     val tokenization = rdoc.getTokenization
     val segmentations : Map[String, HashMap[Object, Object]] =  rdoc.getScope( "document" ).get( "segmentation" ).asInstanceOf[Map[String, HashMap[Object, Object]]]
@@ -241,10 +217,10 @@ object MetaTag {
 
     try {
       logger.info("writing file {} now", outputFile.toString)
-      val document = MetaDataXMLDocument.createFromTokenization( null, segmentations ).getDocument()
-      xmlOutputStream = new FileOutputStream( outputFile )
-      val output =  new XMLOutputter( Format.getPrettyFormat() ) // XMLOutputter
-      output.output( document, xmlOutputStream )
+      val document = MetaDataXMLDocument.createFromTokenization(null, segmentations).getDocument()
+      xmlOutputStream = new FileOutputStream(outputFile)
+      val output =  new XMLOutputter(Format.getPrettyFormat()) // XMLOutputter
+      output.output(document, xmlOutputStream)
       logger.info("just wrote file {}!", outputFile.toString)
     }
     catch {
@@ -267,4 +243,43 @@ object MetaTag {
   }
 }
 
+class MetaTag {
+  val dictionary : EnglishDictionary = EnglishDictionary.create(classpathDataInputStream(DICT_FILE))
 
+  val javaPipeline = buildJavaPipeline()
+  val scalaPipeline = buildScalaPipeline()
+
+  def processFile(xmlDoc : Document, fileName : String = "") : Document = {
+    val tokenization = NewHtmlTokenization.createNewHtmlTokenization(xmlDoc, dictionary)
+    val rdoc = new RxDocument()
+    rdoc.setTokenization( tokenization )
+    logger.info("executing java pipeline")
+    javaPipeline.execute(rdoc)
+
+    logger.info("executing scala pipeline")
+    //val tokenization = rdoc.getTokenization()
+    val segmentations = rdoc.getScope("document").get("segmentation").asInstanceOf[Map[String, HashMap[Object, Object]]]
+    try {
+      val doc = MetaDataXMLDocument.createFromTokenization(null, segmentations).getDocument()
+      // run it!
+      scalaPipeline(doc, fileName)
+    } catch {
+      case npe: NullPointerException => {
+        logger.info("unable to create MetaDataXMLDocument")
+        null
+      }
+    }
+  }
+}
+
+object SingleFileMetaTag {
+  /**
+   * @param args: inputFileName outputFileName
+   */
+  def main(args: Array[String]) {
+    val metaTag = new MetaTag()
+    val xmlDoc = readInputDocument(new FileInputStream(args(0)))
+    val processedDoc = metaTag.processFile(xmlDoc, args(0))
+    writeOutput(new File(args(1)), processedDoc)
+  }
+}

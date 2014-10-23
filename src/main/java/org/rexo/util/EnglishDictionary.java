@@ -1,9 +1,6 @@
 package org.rexo.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashSet;
 
 /**
@@ -17,23 +14,30 @@ public class EnglishDictionary {
 		_defaultWords = f;
 	}
 
-	public static EnglishDictionary create(File words) {
+    public static EnglishDictionary create(File words) {
+        try {
+            return create(new FileInputStream(words));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException( e );
+        }
+    }
+	public static EnglishDictionary create(InputStream is) {
 		EnglishDictionary dict = new EnglishDictionary();
 		try {
-			BufferedReader in = new BufferedReader( new FileReader( words ) );
+			BufferedReader in = new BufferedReader( new InputStreamReader(is) );
 			String line;
 			while ((line = in.readLine()) != null) {
 				dict._words.add( line.trim().toLowerCase() );
 			}
 		}
 		catch (IOException e) {
-			throw new RuntimeException( e );
+            throw new RuntimeException( e );
 		}
 		return dict;
 	}
 
 	public static EnglishDictionary createDefault() {
-		return create( _defaultWords );
+		return create( EnglishDictionary.class.getClassLoader().getResourceAsStream("data/words.txt") );
 	}
 
 	public boolean contains(String word) {

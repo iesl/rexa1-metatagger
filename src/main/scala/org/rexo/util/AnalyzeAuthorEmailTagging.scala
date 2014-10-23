@@ -1,10 +1,12 @@
 package org.rexo.util
 
+import java.io.FileInputStream
 import java.io.{PrintStream, File}
+
 import org.rexo.pipelinescala.extractors._
 import scala.collection.immutable.{List,Map}
-import scala.xml.{Node, NodeSeq, XML, Elem, Attribute, Text, Null}
-import org.slf4j.{Logger, LoggerFactory}
+import scala.xml.XML
+import org.slf4j.LoggerFactory
 
 
 class AnalyzeAuthorEmailTagging() extends TestFilter {
@@ -38,7 +40,7 @@ class AnalyzeAuthorEmailTagging() extends TestFilter {
 
   def apply(XMLFile: File, directory: String, csvResults: Map[String, Map[String, String]], instDict: String): TestFilterResults = {
 
-    val authorEmailFilter = new AuthorEmailTaggingFilter(instDict)
+    val authorEmailFilter = new AuthorEmailTaggingFilter(Some(new FileInputStream(instDict)))
 
     // open the XML and read in the header information:
     val xmlFile = XML.loadFile(XMLFile)

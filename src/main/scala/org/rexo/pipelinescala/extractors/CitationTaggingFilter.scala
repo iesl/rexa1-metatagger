@@ -3,20 +3,28 @@ package org.rexo.pipelinescala.extractors
 import java.io.PrintStream
 
 import org.rexo.pipelinescala.extractors.CitationTypeInformation._
-import org.rexo.ui.ScalaPipelineComponent
-import scala.Null
+import org.rexo.ui.{PipelineNode, ScalaPipelineComponent}
 import scala.util.matching.Regex
-import scala.util.matching.Regex.{Match, MatchIterator}
+import scala.util.matching.Regex.Match
 import scala.xml._
 import org.slf4j.LoggerFactory
 
 
-class CitationTaggingFilter extends ScalaPipelineComponent{
+class CitationTaggingFilter(logCitationMetadataToFile: Boolean = false) extends ScalaPipelineComponent {
   val logger = LoggerFactory.getLogger(CitationTaggingFilter.this.getClass())
 
-  override def apply(xmldata: Node, filename : String):Node= {
+  class FileLogger(fileName : Option[String]) {
+    val printStream = fileName.map { fn: String => new PrintStream(fn + ".info") }
+    def println(s : String) {
+      printStream.foreach { _.println(s) }
+    }
+    def close {
+      printStream.foreach { _.close() }
+    }
+  }
+  override def apply(xmldata: PipelineNode): PipelineNode = {
     logger.info("Citation Filter Running!")
-    val newXML = run_filter(xmldata, filename);
+    val newXML = run_filter(xmldata);
     newXML;
   }
 
@@ -24,16 +32,16 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
   def run(infile: String) {
   }
 
-  def run_filter(xmldata: Node, filename: String) : Node = {
-
+  def run_filter(xmldataNode: PipelineNode) : PipelineNode = {
+    val xmldata = xmldataNode.xml
+    val filename = xmldataNode.fileName
     val biblioxml = xmldata \ "content" \ "biblio"
-    val refList = Reference.getReferences(biblioxml)
+    val refList = ReferenceExtractor(biblioxml)
     val referenceManager = new ReferenceManager(refList)
 
-    val infoFile = new PrintStream(filename + ".info")
-
-    println("reference list:")
-    refList.foreach(println(_))
+    val infoLog = new FileLogger(if (logCitationMetadataToFile) Some(filename) else None)
+    logger.info("reference list size: " + refList.size)
+    logger.trace(s"reference list: ${refList.mkString("\n")}")
 
     /* find citations in body of the xml */
     var body = (xmldata \ "content" \ "body").toString()  // this keeps the xml tags in, very important!
@@ -52,12 +60,12 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
     if (citationManager == None) {
       logger.info("No current citation type worked well for this file!")
       // TODO - figure out what to do here, maybe default to one of them? For now, return
-      return xmldata
+      return PipelineNode(xmldata, filename)
     }
 
     val headerCitationManager = new CitationManager(citationManager.get.citationType.getRegex.findAllMatchIn(abstractStr.replaceAll("\n", "")), citationManager.get.citationType, abstractStr)
 
-    infoFile.println("CitationType = " + citationManager.get.citationType)
+    infoLog.println("CitationType = " + citationManager.get.citationType)
 
     ///////////////////////////////////////////////////////////////////////////////
     // Now process the citations of the best matching Citation Type.
@@ -93,10 +101,11 @@ class CitationTaggingFilter extends ScalaPipelineComponent{
 
     val newXML = <document><content><headers>{headers}</headers>{newBody +: biblioxml}</content>{grants}</document>
 
-    infoFile.close()
+    infoLog.close
 
-    newXML
+    PipelineNode(newXML, filename)
   }
+
 import scala.collection.breakOut
   // this is not the best way to do this, but will work for now.
   def updateAbstract(newAbstract : Node, header: Seq[Node]) : NodeSeq = {
@@ -107,7 +116,7 @@ import scala.collection.breakOut
 
         // preserve everything else
         case other =>
-          logger.info(s"Subnode label is: ${subnode.label}");
+          logger.trace(s"Subnode label is: ${subnode.label}");
           other
         }
     }) (breakOut)
@@ -303,7 +312,7 @@ class CitationManager (citations: List[Citation], cType: CitationType, xmlText :
 
     for(citation <- citationList) {
       index += 1
-      logger.info(s"citation $index) " + citation.text)
+      logger.trace(s"citation $index) ${citation.text}")
 
       tagCitList = tagCitList :+ citation
       val reference = referenceManager.findReference(citation, citationType, xmlText)
@@ -312,7 +321,7 @@ class CitationManager (citations: List[Citation], cType: CitationType, xmlText :
 
       if (citation.multi == -1 || citation.isLastMulti) {
         val str = newText.substring(citation.startPos+offset, citation.endPos+offset)
-        logger.info(s"str is $str")
+        logger.trace(s"str is $str")
 
         val newTag = this.createCitationXMLTag(tagCitList, tagRefList)
 
@@ -428,8 +437,8 @@ class ReferenceManager (references : List[Reference]) {
     }
     (for(ref <- references) yield {
       val key = createKey(ref)
-      key -> ref
-    }).toMap
+      if (key.isEmpty) None else Some(key -> ref)
+    }).flatten.toMap
   }
 
   def findReference(citation : Citation, cType: CitationType, xmlText : String) : Option[Reference] = {
@@ -588,8 +597,9 @@ class ReferenceManager (references : List[Reference]) {
     } else {
       val numAuthors = reference.authorList.length
 
-      // assumption is that there is at least one author. This could be ultimately be incorrect.
-      if (numAuthors == 1) {
+      if (numAuthors == 0) {
+        ""
+      } else if (numAuthors == 1) {
         Util.cleanString(reference.authorList.head.name_last + " " + reference.date.headOption.getOrElse(""))
       } else if (numAuthors == 2) {
         Util.cleanString(reference.authorList.head.name_last + " " + reference.authorList(1).name_last + " " + reference.date.headOption.getOrElse(""))
@@ -638,12 +648,16 @@ class Reference (xmldata: Node, defaultID: Int = -1) {
   }
 }
 
-object Reference {
-  var nextID = 0
+object ReferenceExtractor {
+  def apply(xml: NodeSeq) : List[Reference] = new ReferenceExtractor().getReferences(xml)
+}
+
+class ReferenceExtractor {
+  val logger = LoggerFactory.getLogger(getClass)
 
   def getReferences(xml: NodeSeq) : List[Reference] = {
+    var nextID = 0
     val referenceXML = xml \ "reference"
-
     (for (refTag @ <reference>{_*}</reference> <- referenceXML) yield {
       refTag.label match {
         case reference => {

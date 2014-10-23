@@ -81,7 +81,7 @@ class AnalyzeCitationTagging (directory : String) extends TestFilter {
     val citationType = CitationTypeInformation.getCitationType(metaInfo.getOrElse("CitationType", ""))
     results.registerCitationType(citationType)
 
-    val references : List[Reference] = Reference.getReferences(xmlFile \ "content" \ "biblio")
+    val references : List[Reference] = ReferenceExtractor(xmlFile \ "content" \ "biblio")
     val citations : List[Citation] = getCitationList(xmlFile \ "content" \ "body") ++ getCitationList(xmlFile \ "content" \ "headers" \"abstract")
 
     //val citationManager = CitationManager.getManager(citationType, references, (xmlFile \ "content" \ "body").toString)
